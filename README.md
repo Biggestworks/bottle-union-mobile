@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # eight_barrels
 
 8 Barrels Mobile Application
@@ -18,4 +17,3 @@ samples, guidance on mobile development, and a full API reference.
 =======
 # eight-barrels-app
 8 Barrels Mobile Application with Flutter
->>>>>>> b36d5043697b511024700711cb1db849617a3fbf

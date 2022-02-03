@@ -9,8 +9,21 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_localizations:
+    sdk: flutter
+  material_design_icons_flutter: ^5.0.6595
+  font_awesome_flutter: ^9.2.0
   cupertino_icons: ^1.0.2
+  shared_preferences: ^2.0.7
+  provider: ^5.0.0
+  intl: ^0.17.0
+  get: 4.5.1
+  image_picker: ^0.8.4+1
+  timelines: ^0.1.0
+  location: ^4.3.0
+  geolocator: 7.0.1
+  google_maps_flutter: ^2.0.9
+  google_maps_place_picker: ^2.1.0-nullsafety.3
 
 dev_dependencies:
   flutter_test:
@@ -18,3 +31,13 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/locale/en.json
+    - assets/locale/id.json
+  fonts:
+    - family: Futura
+      fonts:
+        - asset: assets/fonts/futura/Futura-Book-font.ttf
+        - asset: assets/fonts/futura/Futura-Book-Italic-font.ttf
+          style: italic
