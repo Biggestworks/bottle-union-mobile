@@ -1,11 +1,13 @@
 import 'package:eight_barrels/helper/app-localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
+import 'package:eight_barrels/provider/auth/register_provider.dart';
 import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/auth/register_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 
 class StartScreen extends StatelessWidget {
   static String tag = '/start-screen';
@@ -13,6 +15,7 @@ class StartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _provider = Provider.of<RegisterProvider>(context, listen: false);
 
     Widget mainContent = Padding(
       padding: const EdgeInsets.all(20),
@@ -38,7 +41,7 @@ class StartScreen extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                'Masuk dengan',
+                AppLocalizations.instance.text('TXT_REGISTER_WITH'),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -68,7 +71,10 @@ class StartScreen extends StatelessWidget {
                   label: 'Google',
                   btnColor: Colors.red,
                   lblColor: Colors.white,
-                  function: () => print(''),
+                  function: () async {
+                    Get.back();
+                    await _provider.signInGoogle(context);
+                  },
                 ),
               ),
               SizedBox(

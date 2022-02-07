@@ -73,7 +73,10 @@ class _AppState extends State<App> {
         ),
         GetPage(
           name: StartScreen.tag,
-          page: () => StartScreen(),
+          page: () => ChangeNotifierProvider<RegisterProvider>(
+            create: (context) => RegisterProvider(),
+            child: StartScreen(),
+          ),
         ),
         GetPage(
           name: LoginScreen.tag,

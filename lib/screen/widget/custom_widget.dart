@@ -85,4 +85,33 @@ class CustomWidget {
     );
   }
 
+  static Widget circleIconBtn({
+    required IconData icon,
+    Color btnColor = Colors.white,
+    Color icColor = Colors.white,
+    bool isBold = false,
+    required void function(),
+  }) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        shape: CircleBorder(),
+        primary: btnColor,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        padding: EdgeInsets.zero,
+      ),
+      onPressed: () => function(),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Icon(icon, color: icColor, size: 20,),
+      ),
+    );
+  }
+
+  static showSnackBar({
+    required BuildContext context,
+    required Widget content,
+  }) {
+    return ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: content,));
+  }
+
 }

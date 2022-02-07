@@ -1,6 +1,6 @@
 class TextValidation {
-  String? validateEmail(String value) {
-    if (value.isEmpty) {
+  String? validateEmail(String? value) {
+    if (value!.isEmpty) {
       return "Field cannot be empty";
     } else {
       bool emailValid = RegExp(
@@ -13,8 +13,8 @@ class TextValidation {
     return null;
   }
 
-  String? validatePassword(String value) {
-    if (value.isEmpty) {
+  String? validatePassword(String? value) {
+    if (value!.isEmpty) {
       return "Field cannot be empty";
     } else {
       if (value.length < 6) {
@@ -24,8 +24,8 @@ class TextValidation {
     return null;
   }
 
-  String? validateConfirmPassword(String value, String confirmVal) {
-    if (confirmVal.isEmpty) {
+  String? validateConfirmPassword(String? value, String? confirmVal) {
+    if (confirmVal!.isEmpty) {
       return "Field cannot be empty";
     } else {
       if (confirmVal != value) {
@@ -35,10 +35,10 @@ class TextValidation {
     return null;
   }
 
-  String? validatePhoneNumber(String value) {
+  String? validatePhoneNumber(String? value) {
     String patttern = r'(^(?:[0]8)?[0-9]{10,16}$)';
     RegExp regExp = new RegExp(patttern);
-    if (value.isEmpty) {
+    if (value!.isEmpty) {
       return "Field cannot be empty";
     } else {
       if (value.length < 10 || value.length > 16) {

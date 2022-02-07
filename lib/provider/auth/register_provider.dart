@@ -1,25 +1,35 @@
-import 'dart:math';
 
+import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app-localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/key_helper.dart';
+import 'package:eight_barrels/model/auth/region_list_model.dart';
+import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/auth/start_screen.dart';
+import 'package:eight_barrels/screen/widget/BezierPainter.dart';
+import 'package:eight_barrels/screen/widget/custom_widget.dart';
+import 'package:eight_barrels/service/auth/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/route_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_place_picker/google_maps_place_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:location/location.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:timelines/timelines.dart';
 
 class RegisterProvider extends ChangeNotifier {
   TextEditingController nameController = new TextEditingController();
+  TextEditingController dobController = new TextEditingController();
   TextEditingController emailController = new TextEditingController();
   TextEditingController phoneController = new TextEditingController();
   TextEditingController addressController = new TextEditingController();
   TextEditingController passController = new TextEditingController();
   TextEditingController confirmPassController = new TextEditingController();
 
-  String gender = 'man';
+  List<String> genderList = ['male', 'female'];
+  String genderValue = 'male';
   int stepIndex = 0;
   
   AnimationController? animationController;
@@ -27,7 +37,27 @@ class RegisterProvider extends ChangeNotifier {
 
   LatLng? currLocation;
   LatLng? selectedLocation;
-  
+
+  AuthService _service = new AuthService();
+
+  List<DropdownMenuItem<String>> regionList = [];
+  String? selectedRegion;
+  int? selectedRegionId;
+  List<Data> regionData = [];
+
+  bool isHidePassword = true;
+  bool isHidePassword2 = true;
+  bool? isAgeValid;
+
+  final fKeyPersonal = new GlobalKey<FormState>();
+  final fKeyAddress = new GlobalKey<FormState>();
+  final fKeyPassword = new GlobalKey<FormState>();
+
+  LoadingView? _view;
+
+  fnGetView(LoadingView view) {
+    this._view = view;
+  }
 
   Color fnGetStepColor(int index) {
     if (index <= stepIndex) {
@@ -147,49 +177,6 @@ class RegisterProvider extends ChangeNotifier {
     );
   }
 
-  Future fnGetCurrLocation() async {
-    Location location = new Location();
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-    }
-
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-    }
-
-    try {
-      await location.getLocation().then((value) {
-        currLocation = LatLng(value.latitude!, value.longitude!);
-      });
-    } on Exception {
-      currLocation = null;
-    }
-  }
-
-  Widget fnShowMapPicker() {
-    return Container(
-      height: 300,
-      child: PlacePicker(
-        apiKey: KeyHelper.API_KEY,
-        enableMapTypeButton: false,
-        usePlaceDetailSearch: false,
-        onPlacePicked: (result) {
-          print(result);
-        },
-        region: 'ID',
-        initialPosition: currLocation!,
-        useCurrentLocation: true,
-        enableMyLocationButton: true,
-        resizeToAvoidBottomInset: true,
-      ),
-    );
-  }
-
   Future fnShowPlacePicker(BuildContext context) async {
     Location location = new Location();
     bool _serviceEnabled;
@@ -206,10 +193,11 @@ class RegisterProvider extends ChangeNotifier {
     }
 
     try {
-      await location.getLocation().then((value) {
-        currLocation = LatLng(value.latitude!, value.longitude!);
+      await Geolocator.getCurrentPosition().then((value) {
+        currLocation = LatLng(value.latitude, value.longitude);
       });
-    } on Exception {
+    } catch (e) {
+      print(e);
       currLocation = null;
     }
 
@@ -223,6 +211,7 @@ class RegisterProvider extends ChangeNotifier {
             Get.back();
             addressController.text = result.formattedAddress!;
             selectedLocation = LatLng(result.geometry!.location.lat, result.geometry!.location.lng);
+            notifyListeners();
           },
           region: 'ID',
           initialPosition: currLocation!,
@@ -234,9 +223,9 @@ class RegisterProvider extends ChangeNotifier {
 
   }
 
-  initAnimation({required TickerProvider vsync}) {
+  fnInitAnimation({required TickerProvider vsync}) {
     animationController = AnimationController(
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 550),
       vsync: vsync,
     );
     offsetAnimation = Tween<Offset>(
@@ -249,10 +238,9 @@ class RegisterProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future backTransition({required BuildContext context}) async {
+  Future fnOnBackTransition({required BuildContext context}) async {
     if (stepIndex == 0) {
-      await Navigator.pushNamedAndRemoveUntil(
-          context, StartScreen.tag, (Route<dynamic> route) => false);
+      await Get.offNamedUntil(StartScreen.tag, (route) => false);
     } else if (stepIndex >= 1) {
       animationController!.forward();
       animationController!.addStatusListener((status) {
@@ -267,100 +255,126 @@ class RegisterProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future forwardTransition({required BuildContext context}) async {
+  Future fnOnForwardTransition({required BuildContext context}) async {
     if (stepIndex == 0) {
-      await fnGetCurrLocation();
-
-      animationController!.forward();
-      animationController!.addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          animationController!.reverse();
-        }
-      });
-      await Future.delayed(Duration(milliseconds: 600)).then((value) async {
-        stepIndex++;
-      });
+      if (fKeyPersonal.currentState!.validate()) {
+        animationController!.forward();
+        animationController!.addStatusListener((status) {
+          if (status == AnimationStatus.completed) {
+            animationController!.reverse();
+          }
+        });
+        await Future.delayed(Duration(milliseconds: 550)).then((value) async {
+          stepIndex++;
+        });
+      }
     } else if (stepIndex == 1) {
-      animationController!.forward();
-      animationController!.addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          animationController!.reverse();
-        }
-      });
-      await Future.delayed(Duration(milliseconds: 550)).then((value) {
-        stepIndex++;
-      });
+      if (fKeyAddress.currentState!.validate()) {
+        animationController!.forward();
+        animationController!.addStatusListener((status) {
+          if (status == AnimationStatus.completed) {
+            animationController!.reverse();
+          }
+        });
+        await Future.delayed(Duration(milliseconds: 550)).then((value) {
+          stepIndex++;
+        });
+      }
     } else if (stepIndex == 2) {
+      if (fKeyPassword.currentState!.validate()) {
+        await _fnRegister(context: context);
+      }
     }
     notifyListeners();
   }
-}
 
-class BezierPainter extends CustomPainter {
-  const BezierPainter({
-    required this.color,
-    this.drawStart = true,
-    this.drawEnd = true,
-  });
+  Future fnFetchRegionList() async {
+    var _response = await _service.regionList();
 
-  final Color color;
-  final bool drawStart;
-  final bool drawEnd;
+    regionData = _response!.data!;
 
-  Offset _offset(double radius, double angle) {
-    return Offset(
-      radius * cos(angle) + radius,
-      radius * sin(angle) + radius,
+    List.generate(_response.data!.length, (i) {
+      regionList.add(
+        DropdownMenuItem(
+          child: Text(_response.data![i].name!, style: TextStyle(
+            color: Colors.black,
+          ),),
+          value: _response.data![i].id!.toString(),
+          onTap: () => selectedRegionId = _response.data![i].id!,
+        ),
+      );
+    });
+  }
+
+  fnOnChangeRadio(String? value) {
+    this.genderValue = value!;
+    notifyListeners();
+  }
+
+  fnOnSelectRegion(String? value) {
+    this.selectedRegion = value;
+    notifyListeners();
+  }
+
+  fnToggleVisibility(BuildContext context) {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
+    isHidePassword = !isHidePassword;
+    notifyListeners();
+  }
+
+  fnToggleVisibility2(BuildContext context) {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
+    isHidePassword2 = !isHidePassword2;
+    notifyListeners();
+  }
+
+  Future fnOnSelectDate(DateRangePickerSelectionChangedArgs args, BuildContext context) async {
+    this.dobController.text = DateFormat('yyyy-MM-dd').format(args.value);
+    isAgeValid = await _service.validateAge(dob: dobController.text);
+    if (isAgeValid == false) {
+      CustomWidget.showSnackBar(context: context, content: Text('not valid'));
+    }
+    notifyListeners();
+  }
+
+  Future _fnRegister({required BuildContext context}) async {
+    _view!.onProgressStart();
+
+    final response = await _service.register(
+      fullname: nameController.text,
+      dob: dobController.text,
+      email: emailController.text,
+      phone: phoneController.text,
+      gender: genderValue,
+      address: addressController.text,
+      latitude: selectedLocation!.latitude.toString(),
+      longitude: selectedLocation!.longitude.toString(),
+      idRegion: selectedRegionId!,
+      password: passController.text,
+      confirmPassword: confirmPassController.text,
     );
-  }
 
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..style = PaintingStyle.fill
-      ..color = color;
-
-    final radius = size.width / 2;
-
-    var angle;
-    var offset1;
-    var offset2;
-
-    var path;
-
-    if (drawStart) {
-      angle = 3 * pi / 4;
-      offset1 = _offset(radius, angle);
-      offset2 = _offset(radius, -angle);
-      path = Path()
-        ..moveTo(offset1.dx, offset1.dy)
-        ..quadraticBezierTo(0.0, size.height / 2, -radius,
-            radius) // TODO connector start & gradient
-        ..quadraticBezierTo(0.0, size.height / 2, offset2.dx, offset2.dy)
-        ..close();
-
-      canvas.drawPath(path, paint);
+    if (response!.status != null) {
+      if (response.status == true) {
+        _view!.onProgressFinish();
+        await Get.offAllNamed(LoginScreen.tag, arguments: LoginScreen(isRegister: true,));
+      } else {
+        _view!.onProgressFinish();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${response.message.toString()}')));
+      }
+    } else {
+      _view!.onProgressFinish();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Something wrong')));
     }
-    if (drawEnd) {
-      angle = -pi / 4;
-      offset1 = _offset(radius, angle);
-      offset2 = _offset(radius, -angle);
-
-      path = Path()
-        ..moveTo(offset1.dx, offset1.dy)
-        ..quadraticBezierTo(size.width, size.height / 2, size.width + radius,
-            radius) // TODO connector end & gradient
-        ..quadraticBezierTo(size.width, size.height / 2, offset2.dx, offset2.dy)
-        ..close();
-
-      canvas.drawPath(path, paint);
-    }
+    _view!.onProgressFinish();
   }
 
-  @override
-  bool shouldRepaint(BezierPainter oldDelegate) {
-    return oldDelegate.color != color ||
-        oldDelegate.drawStart != drawStart ||
-        oldDelegate.drawEnd != drawEnd;
-  }
+  Future signInGoogle(BuildContext context) async => await _service.signInWithGoogle();
+
 }

@@ -26,7 +26,7 @@ class AuthModel {
 }
 
 class Data {
-  String? idRegion;
+  int? idRegion;
   String? fullname;
   String? email;
   String? avatar;

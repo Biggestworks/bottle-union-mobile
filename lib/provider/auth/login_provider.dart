@@ -1,5 +1,6 @@
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
+import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/home/home_screen.dart';
 import 'package:eight_barrels/service/auth/auth_service.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,6 @@ class LoginProvider extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   bool isHidePassword = true;
   AuthService _service = new AuthService();
-  UserPreferences _userPreferences = new UserPreferences();
   LoadingView? _view;
 
   fnGetView(LoadingView view) {
@@ -27,7 +27,7 @@ class LoginProvider extends ChangeNotifier {
         password: passwordController.text,
       );
 
-      if (response != null) {
+      if (response!.status != null) {
         if (response.status == true) {
           await Get.offAllNamed(HomeScreen.tag);
         } else {
@@ -38,6 +38,15 @@ class LoginProvider extends ChangeNotifier {
       }
       _view!.onProgressFinish();
     }
+  }
+
+  fnToggleVisibility(BuildContext context) {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
+    isHidePassword = !isHidePassword;
+    notifyListeners();
   }
 
 }

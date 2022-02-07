@@ -1,17 +1,16 @@
+import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app-localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
-import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/helper/validation.dart';
 import 'package:eight_barrels/provider/auth/register_provider.dart';
-import 'package:eight_barrels/screen/home/home_screen.dart';
-import 'package:eight_barrels/screen/widget/state_progress_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_place_picker/google_maps_place_picker.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
-
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../widget/custom_widget.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -23,246 +22,470 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen>
-    with TextValidation, SingleTickerProviderStateMixin {
+    with TextValidation, SingleTickerProviderStateMixin implements LoadingView {
+  bool _isLoad = false;
 
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
-      Provider.of<RegisterProvider>(context, listen: false).initAnimation(vsync: this);
+      Provider.of<RegisterProvider>(context, listen: false).fnInitAnimation(vsync: this);
+      Provider.of<RegisterProvider>(context, listen: false).fnGetView(this);
+      Provider.of<RegisterProvider>(context, listen: false).fnFetchRegionList();
     });
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    Provider.of<RegisterProvider>(context, listen: false).animationController!.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final _provider = Provider.of<RegisterProvider>(context, listen: false);
 
-    Widget formPersonal = Card(
-      color: Colors.white38,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(AppLocalizations.instance.text('TXT_LBL_NAME'), style: TextStyle(
-              fontSize: 16,
-              color: Colors.white,
-            ),),
-            TextFormField(
-              controller: _provider.nameController,
-              textInputAction: TextInputAction.next,
-              validator: validateField,
-              decoration: InputDecoration(
-                isDense: true,
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: CustomColor.MAIN),
-                ),
+    _showDobDialog() {
+      return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) {
+          return Center(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              width: MediaQuery.of(context).size.width * 0.95,
+              height: 300,
+              padding: EdgeInsets.all(10),
+              child: SfDateRangePicker(
+                onSelectionChanged: (value) {
+                  Get.back();
+                  _provider.fnOnSelectDate(value, context);
+                },
               ),
             ),
-            SizedBox(height: 20,),
-            Text(AppLocalizations.instance.text('TXT_LBL_EMAIL'), style: TextStyle(
-              fontSize: 16,
-              color: Colors.white,
-            ),),
-            TextFormField(
-              controller: _provider.emailController,
-              textInputAction: TextInputAction.next,
-              validator: validateField,
-              decoration: InputDecoration(
-                isDense: true,
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: CustomColor.MAIN),
-                ),
-              ),
-            ),
-            SizedBox(height: 20,),
-            Text(AppLocalizations.instance.text('TXT_LBL_PHONE'), style: TextStyle(
-              fontSize: 16,
-              color: Colors.white,
-            ),),
-            TextFormField(
-              controller: _provider.phoneController,
-              textInputAction: TextInputAction.next,
-              validator: validateField,
-              decoration: InputDecoration(
-                isDense: true,
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: CustomColor.MAIN),
-                ),
-              ),
-            ),
-            SizedBox(height: 20,),
-            Text(AppLocalizations.instance.text('TXT_LBL_GENDER'), style: TextStyle(
-              fontSize: 16,
-              color: Colors.white,
-            ),),
-            TextFormField(
-              controller: _provider.nameController,
-              textInputAction: TextInputAction.next,
-              validator: validateField,
-              decoration: InputDecoration(
-                isDense: true,
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: CustomColor.MAIN),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+          );
+        },
+      );
+    }
 
-    Widget formAddress = Column(
+    Widget _formPersonal = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(AppLocalizations.instance.text('TXT_REGISTER_ADDRESS'), style: TextStyle(
-          color: Colors.white,
-        ), textAlign: TextAlign.center,),
-        SizedBox(height: 10,),
-        GestureDetector(
-          onTap: () async => await _provider.fnShowPlacePicker(context),
-          child: Card(
-            color: Colors.white38,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+        Card(
+          color: Colors.white38,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+            child: Form(
+              key: _provider.fKeyPersonal,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(AppLocalizations.instance.text('TXT_LBL_ADDRESS'), style: TextStyle(
+                  Text(AppLocalizations.instance.text('TXT_LBL_NAME'), style: TextStyle(
                     fontSize: 16,
                     color: Colors.white,
                   ),),
                   TextFormField(
-                    enabled: false,
-                    controller: _provider.addressController,
+                    controller: _provider.nameController,
+                    textInputAction: TextInputAction.next,
                     validator: validateField,
                     style: TextStyle(
                       color: Colors.white,
                     ),
-                    maxLines: null,
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 15),
-                      suffixIcon: Icon(FontAwesomeIcons.mapMarkedAlt, size: 24, color: Colors.white,),
+                      contentPadding: EdgeInsets.symmetric(vertical: 10),
                       isDense: true,
-                      disabledBorder: UnderlineInputBorder(
+                      enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
                       ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: CustomColor.MAIN),
+                      ),
+                      errorStyle: TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
+                  ),
+                  SizedBox(height: 20,),
+                  Text('${AppLocalizations.instance.text('TXT_LBL_DOB')} *', style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),),
+                  GestureDetector(
+                    onTap: () => _showDobDialog(),
+                    child: TextFormField(
+                      enabled: false,
+                      controller: _provider.dobController,
+                      textInputAction: TextInputAction.next,
+                      validator: validateField,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 10),
+                        suffixIcon: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Consumer<RegisterProvider>(
+                              child: Container(),
+                              builder: (context, provider, skeleton) {
+                                switch (provider.isAgeValid) {
+                                  case true:
+                                    return Icon(FontAwesomeIcons.solidCheckCircle, size: 20, color: Colors.greenAccent,);
+                                  case false:
+                                    return Icon(MdiIcons.closeCircle, size: 24, color: Colors.redAccent,);
+                                  default:
+                                    return skeleton!;
+                                }
+                              }
+                            ),
+                            SizedBox(width: 10,),
+                            Icon(FontAwesomeIcons.calendarAlt, size: 24, color: Colors.white,),
+                          ],
+                        ),
+                        isDense: true,
+                        disabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        errorBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red),
+                        ),
+                        errorStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20,),
+                  Text(AppLocalizations.instance.text('TXT_LBL_EMAIL'), style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),),
+                  TextFormField(
+                    controller: _provider.emailController,
+                    textInputAction: TextInputAction.next,
+                    validator: validateEmail,
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 10),
+                      isDense: true,
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: CustomColor.MAIN),
+                      ),
+                      errorStyle: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20,),
+                  Text(AppLocalizations.instance.text('TXT_LBL_PHONE'), style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),),
+                  TextFormField(
+                    controller: _provider.phoneController,
+                    textInputAction: TextInputAction.next,
+                    validator: validatePhoneNumber,
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 10),
+                      isDense: true,
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: CustomColor.MAIN),
+                      ),
+                      errorStyle: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20,),
+                  Text(AppLocalizations.instance.text('TXT_LBL_GENDER'), style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),),
+                  Consumer<RegisterProvider>(
+                      builder: (context, provider, _) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Row(
+                              children: [
+                                Radio(
+                                  value: _provider.genderList[0],
+                                  groupValue: provider.genderValue,
+                                  onChanged: provider.fnOnChangeRadio,
+                                  activeColor: Colors.white,
+                                ),
+                                Text(AppLocalizations.instance.text('TXT_LBL_MALE'), style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Radio(
+                                  value: _provider.genderList[1],
+                                  groupValue: provider.genderValue,
+                                  onChanged: provider.fnOnChangeRadio,
+                                  activeColor: Colors.white,
+                                ),
+                                Text(AppLocalizations.instance.text('TXT_LBL_FEMALE'), style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),),
+                              ],
+                            )
+                          ],
+                        );
+                      }
                   ),
                 ],
               ),
             ),
           ),
         ),
-        // Consumer<RegisterProvider>(
-        //   child: Container(),
-        //   builder: (context, provider, skeleton) {
-        //     switch (provider.stepIndex) {
-        //       case 1:
-        //         return _provider.fnShowMapPicker();
-        //       default:
-        //         return skeleton!;
-        //     }
-        //   },
-        // ),
+        SizedBox(height: 5,),
+        Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: Text('*${AppLocalizations.instance.text('TXT_AGE_INFO')}', style: TextStyle(
+            color: Colors.white,
+          ),),
+        ),
       ],
     );
 
-    Widget formPassword = Card(
+    Widget _formAddress = Form(
+      key: _provider.fKeyAddress,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(AppLocalizations.instance.text('TXT_REGISTER_ADDRESS'), style: TextStyle(
+            color: Colors.white,
+          ), textAlign: TextAlign.center,),
+          SizedBox(height: 10,),
+          GestureDetector(
+            onTap: () async => await _provider.fnShowPlacePicker(context),
+            child: Card(
+              color: Colors.white38,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(AppLocalizations.instance.text('TXT_LBL_ADDRESS'), style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),),
+                    TextFormField(
+                      enabled: false,
+                      controller: _provider.addressController,
+                      validator: validateField,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      maxLines: null,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 10),
+                        suffixIcon: Icon(FontAwesomeIcons.mapMarkedAlt, size: 24, color: Colors.white,),
+                        isDense: true,
+                        disabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 20,),
+          Consumer<RegisterProvider>(
+              child: Container(),
+              builder: (context, provider, skeleton) {
+                switch (provider.addressController.text) {
+                  case '':
+                    return skeleton!;
+                  default:
+                    return Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(AppLocalizations.instance.text('TXT_REGISTER_REGION'), style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),),
+                        ),
+                        SizedBox(height: 10,),
+                        Card(
+                          color: Colors.white38,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: DropdownButtonFormField<String>(
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                isDense: true,
+                                errorStyle: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              validator: validateField,
+                              items: provider.regionList,
+                              isExpanded: true,
+                              value: provider.selectedRegion,
+                              iconEnabledColor: Colors.white,
+                              menuMaxHeight: 250,
+                              onChanged: (value) => provider.fnOnSelectRegion(value!),
+                              selectedItemBuilder: (BuildContext context) {
+                                return provider.regionData.map<Widget>((item) {
+                                  return Text(
+                                      item.name!,
+                                      style: TextStyle(color: Colors.white,)
+                                  );
+                                }).toList();
+                              },
+                              hint: Text('-- ${AppLocalizations.instance.text('TXT_REGISTER_REGION')} --', style: TextStyle(
+                                color: Colors.white,
+                              ),),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                }
+              }
+          ),
+        ],
+      ),
+    );
+
+    Widget _formPassword = Card(
       color: Colors.white38,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(AppLocalizations.instance.text('TXT_LBL_PASS'), style: TextStyle(
-              fontSize: 16,
-              color: Colors.white,
-            ),),
-            TextFormField(
-              controller: _provider.passController,
-              textInputAction: TextInputAction.next,
-              validator: validateField,
-              decoration: InputDecoration(
-                isDense: true,
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+        child: Form(
+          key: _provider.fKeyPassword,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(AppLocalizations.instance.text('TXT_LBL_PASS'), style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+              ),),
+              TextFormField(
+                controller: _provider.passController,
+                textInputAction: TextInputAction.next,
+                validator: validatePassword,
+                obscureText: _provider.isHidePassword,
+                style: TextStyle(
+                  color: Colors.white,
                 ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: CustomColor.MAIN),
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(vertical: 15),
+                  isDense: true,
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: CustomColor.MAIN),
+                  ),
+                  errorStyle: TextStyle(
+                    color: Colors.white,
+                  ),
+                  suffixIcon: GestureDetector(
+                    child: Icon(
+                      _provider.isHidePassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                    onTap: () => _provider.fnToggleVisibility(context),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 20,),
-            Text(AppLocalizations.instance.text('TXT_LBL_PASS_CONFIRM'), style: TextStyle(
-              fontSize: 16,
-              color: Colors.white,
-            ),),
-            TextFormField(
-              controller: _provider.confirmPassController,
-              textInputAction: TextInputAction.next,
-              validator: validateField,
-              decoration: InputDecoration(
-                isDense: true,
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+              SizedBox(height: 20,),
+              Text(AppLocalizations.instance.text('TXT_LBL_PASS_CONFIRM'), style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+              ),),
+              TextFormField(
+                controller: _provider.confirmPassController,
+                textInputAction: TextInputAction.next,
+                validator: (value) => validateConfirmPassword(_provider.passController.text, value),
+                obscureText: _provider.isHidePassword2,
+                style: TextStyle(
+                  color: Colors.white,
                 ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: CustomColor.MAIN),
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(vertical: 15),
+                  isDense: true,
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: CustomColor.MAIN),
+                  ),
+                  errorStyle: TextStyle(
+                    color: Colors.white,
+                  ),
+                  suffixIcon: GestureDetector(
+                    child: Icon(
+                      _provider.isHidePassword2
+                          ? Icons.visibility_off
+                          : Icons.visibility,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                    onTap: () => _provider.fnToggleVisibility2(context),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
 
-    Widget mainContent = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-          child: Text(AppLocalizations.instance.text('TXT_SIGN_UP'), style: TextStyle(
-            fontSize: 24,
-            color: Colors.white,
-          ),),
-        ),
-        Consumer<RegisterProvider>(
-            builder: (context, provider, _) {
-              return Flexible(
-                child: provider.stepProgressBar(context: context),
-              );
-            }
-        ),
-        SingleChildScrollView(
-          child: Consumer<RegisterProvider>(
+    Widget _mainContent = SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+            child: Text(AppLocalizations.instance.text('TXT_SIGN_UP'), style: TextStyle(
+              fontSize: 24,
+              color: Colors.white,
+            ),),
+          ),
+          Consumer<RegisterProvider>(
+              builder: (context, provider, _) {
+                return Flexible(
+                  child: provider.stepProgressBar(context: context),
+                );
+              }
+          ),
+          Consumer<RegisterProvider>(
               child: Container(),
               builder: (context, provider, skeleton) {
                 switch (provider.offsetAnimation) {
@@ -274,20 +497,20 @@ class _RegisterScreenState extends State<RegisterScreen>
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: provider.stepIndex == 0
-                            ? formPersonal
+                            ? _formPersonal
                             : provider.stepIndex == 1
-                            ? formAddress
-                            : formPassword,
+                            ? _formAddress
+                            : _formPassword,
                       ),
                     );
                 }
               }
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
 
-    Widget submitBtn = Consumer<RegisterProvider>(
+    Widget _submitBtn = Consumer<RegisterProvider>(
         builder: (context, provider, _) {
           return Container(
             padding: EdgeInsets.all(20),
@@ -299,38 +522,58 @@ class _RegisterScreenState extends State<RegisterScreen>
               btnColor: CustomColor.SECONDARY,
               lblColor: CustomColor.MAIN,
               isBold: true,
-              function: () => provider.forwardTransition(context: context),
+              function: () => provider.fnOnForwardTransition(context: context),
             ),
           );
         }
     );
 
-    return Scaffold(
-      backgroundColor: CustomColor.MAIN,
-      appBar: AppBar(
+    return ModalProgressHUD(
+      inAsyncCall: _isLoad,
+      progressIndicator: SpinKitFadingCube(color: CustomColor.MAIN,),
+      opacity: 0.5,
+      child: Scaffold(
         backgroundColor: CustomColor.MAIN,
-        elevation: 0,
-        title: null,
-        centerTitle: false,
-        leading: GestureDetector(
-            onTap: () {
-              _provider.backTransition(context: context);
-            },
-            child: Icon(Icons.arrow_back_ios)),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: SizedBox(
-              width: 120,
-              child: Image.asset('assets/images/ic_logo_text_white.png',),
+        appBar: AppBar(
+          backgroundColor: CustomColor.MAIN,
+          elevation: 0,
+          title: null,
+          centerTitle: false,
+          leading: GestureDetector(
+              onTap: () {
+                _provider.fnOnBackTransition(context: context);
+              },
+              child: Icon(Icons.arrow_back_ios)),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: SizedBox(
+                width: 120,
+                child: Image.asset('assets/images/ic_logo_text_white.png',),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
+        body: _mainContent,
+        bottomNavigationBar: _submitBtn,
       ),
-      body: mainContent,
-      bottomNavigationBar: submitBtn,
-      // floatingActionButton: submitBtn,
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
+
+  @override
+  void onProgressFinish() {
+    if (mounted) {
+      _isLoad = false;
+      setState(() {});
+    }
+  }
+
+  @override
+  void onProgressStart() {
+    if (mounted) {
+      _isLoad = true;
+      setState(() {});
+    }
+  }
+
 }
