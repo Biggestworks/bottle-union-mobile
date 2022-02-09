@@ -9,7 +9,7 @@ class PictureProvider {
   final picker = ImagePicker();
 
   Future<File?> openCamera(BuildContext context) async {
-    PickedFile? _cameraPicture = await picker.getImage(
+    XFile? _cameraPicture = await picker.pickImage(
       source: ImageSource.camera,
       imageQuality: 50,
       maxHeight: 600,
@@ -23,7 +23,7 @@ class PictureProvider {
   }
 
   Future<File?> openGallery(BuildContext context) async {
-    PickedFile? _galleryPicture = await picker.getImage(
+    XFile? _galleryPicture = await picker.pickImage(
       source: ImageSource.gallery,
       imageQuality: 50,
       maxHeight: 600,

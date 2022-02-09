@@ -6,6 +6,7 @@ import 'package:eight_barrels/model/auth/region_list_model.dart';
 import 'package:eight_barrels/model/auth/user_model.dart';
 import 'package:eight_barrels/model/default_response.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get_connect.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -17,28 +18,17 @@ class AuthService extends GetConnect {
     "Content-Type": "application/json",
   };
 
-  Future<Map<String, String>?> _headersAuth() async {
-    var _user = await _userPreferences?.getUserData();
-    var _token = _user?.token;
-
-    return {
-      "Accept": "application/json",
-      "User-Agent": "Persada Apps 1.0",
-      "Authorization": "Bearer $_token",
-    };
-  }
-
   Future<UserModel?> login({
     required String username,
     required String password}) async {
     UserModel _user = new UserModel();
 
-    // var _fcmToken = await _userPreferences!.getFcmToken();
+    var _fcmToken = await _userPreferences!.getFcmToken();
 
     final Map<String, dynamic> _data = {
       "username": username,
       "password": password,
-      "fcm_token": "ABCD"
+      "fcm_token": _fcmToken
     };
 
     try {
@@ -56,9 +46,9 @@ class AuthService extends GetConnect {
     return _user;
   }
 
-  Future<AuthModel?> register({
+  Future<UserModel?> register({
     required int idRegion,
-    required String fullname,
+    required String fullName,
     required String dob,
     required String email,
     required String phone,
@@ -69,11 +59,11 @@ class AuthService extends GetConnect {
     required String password,
     required String confirmPassword,
   }) async {
-    AuthModel _auth = new AuthModel();
+    UserModel _user = new UserModel();
 
     final Map<String, dynamic> _data = {
       "id_region": idRegion,
-      "fullname": fullname,
+      "fullname": fullName,
       "date_of_birth": dob,
       "email": email,
       "phone": phone,
@@ -91,13 +81,12 @@ class AuthService extends GetConnect {
           _data,
           headers: _headers,
       );
-      print(_response.body);
-      _auth = AuthModel.fromJson(_response.body);
+      _user = UserModel.fromJson(_response.body);
     } catch (e) {
       print(e);
     }
 
-    return _auth;
+    return _user;
   }
 
   Future<RegionListModel?> regionList() async {
@@ -141,26 +130,135 @@ class AuthService extends GetConnect {
     return _isValidate;
   }
 
-  Future signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication googleAuth =
-    await googleUser!.authentication;
-    final OAuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-    final data = await FirebaseAuth.instance.signInWithCredential(credential);
+  Future<bool?> validateEmailPhone({
+    required String? value,
+  }) async {
+    DefaultResponse _res = new DefaultResponse();
+    bool _isValidate = false;
 
-    print(data.user!.providerData.single);
+    final Map<String, dynamic> _data = {
+      "username": value
+    };
 
-    // final res = await authenticationSocmed(
-    //   email: data.user.providerData.single.email,
-    //   displayName: data.user.providerData.single.displayName,
-    //   phoneNumber: data.user.providerData.single.phoneNumber,
-    //   photoURL: data.user.providerData.single.photoURL,
-    //   providerId: data.user.providerData.single.providerId,
-    //   uid: data.user.providerData.single.uid,
-    // );
-    // return res;
+    try {
+      Response _response = await post(
+        URLHelper.VALIDATE_EMAIL_PHONE_URL,
+        _data,
+        headers: _headers,
+      );
+      _res = DefaultResponse.fromJson(_response.body);
+      _isValidate = _res.status!;
+    } catch (e) {
+      print(e);
+    }
+
+    return _isValidate;
   }
+
+  Future<UserModel?> registerSocmed({
+    required String? email,
+    required String? fullName,
+    required String? phone,
+    required String? providerUid,
+    required String? providerId,
+    required String? avatar,
+  }) async {
+    UserModel _user = new UserModel();
+
+    final Map<String, dynamic> _data = {
+      "displayName": fullName,
+      "email": email,
+      "provider_uid": providerUid,
+      "provider_id": providerId,
+      "phone": phone,
+      "photoURL": avatar,
+    };
+
+    try {
+      Response _response = await post(
+        URLHelper.REGISTER_SOCMED_URL,
+        _data,
+        headers: _headers,
+      );
+      print(_response.body);
+      _user = UserModel.fromJson(_response.body);
+    } catch (e) {
+      print(e);
+    }
+
+    return _user;
+  }
+
+  Future<UserModel?> loginSocmed({
+    required String? email,
+    required String? fullName,
+    required String? phone,
+    required String? providerUid,
+    required String? providerId,
+    required String? avatar,
+  }) async {
+    UserModel _user = new UserModel();
+
+    var _fcmToken = await _userPreferences!.getFcmToken();
+
+    final Map<String, dynamic> _data = {
+      "fullname": fullName,
+      "email": email,
+      "provider_uid": providerUid,
+      "provider_id": providerId,
+      "phone": phone,
+      "photoURL": avatar,
+      "fcm_token": _fcmToken,
+    };
+
+    try {
+      Response _response = await post(
+        URLHelper.LOGIN_SOCMED_URL,
+        _data,
+        headers: _headers,
+      );
+      print(_response.body);
+      _user = UserModel.fromJson(_response.body);
+      await _userPreferences?.saveUserData(_response.body);
+    } catch (e) {
+      print(e);
+    }
+
+    return _user;
+  }
+
+  Future<UserCredential?> authGoogle() async {
+    UserCredential? _data;
+
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      _data = await FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (e) {
+      print(e);
+    }
+
+    return _data;
+  }
+
+  Future<UserCredential?> authFacebook() async {
+    UserCredential? _data;
+
+    try {
+      final LoginResult result = await FacebookAuth.instance.login();
+      final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(result.accessToken!.token);
+      final _data = await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+
+      print(_data);
+    } catch (e) {
+      print(e);
+    }
+
+    return _data;
+  }
+
 }

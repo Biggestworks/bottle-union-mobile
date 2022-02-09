@@ -33,6 +33,27 @@
         		<string>com.googleusercontent.apps.644292534336-d574qp7vt1ua9sobh0upfuukqeu19v7s</string>
         	</array>
         </dict>
+        <dict>
+        	<key>CFBundleTypeRole</key>
+        	<string>Editor</string>
+        	<key>CFBundleURLSchemes</key>
+        	<array>
+        		<string>fb307676218073250</string>
+        	</array>
+        </dict>
+    </array>
+    <key>FacebookAppID</key>
+    <string>307676218073250</string>
+    <key>FacebookClientToken</key>
+    <string>a72d5b13c64053658b917872b3379bac</string>
+    <key>FacebookDisplayName</key>
+    <string>Bottle Union</string>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+    	<string>fbapi</string>
+    	<string>fb-messenger-share-api</string>
+    	<string>fbauth2</string>
+    	<string>fbshareextension</string>
     </array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>

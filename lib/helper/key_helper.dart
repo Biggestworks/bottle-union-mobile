@@ -1,24 +1,13 @@
 class KeyHelper {
   static const KEY_FCM_TOKEN = 'fcm_token';
   static const API_KEY = "AIzaSyCuLLX57qWxuKkqQaoG1L3uXdF2xRXQMVs";
-  static const FCM_SERVER_KEY = "key=AAAAY3QspfI:APA91bHxHI65NTvXIvKbeWxuyaDx4xrBJUcEHhE3blct79Ma0GQEhlCbRONmhVklg-ol3qANnP6HJYNaJQSeVvtHhlvQ3SMmNm0uPuD1vNnCJ0BRnL-SgDPbdYUvBrhJ2puaeZ9xMRiQ";
+  static const FCM_SERVER_KEY = "key=AAAAlgLT4EA:APA91bFc1krVvQZMKvdM9oVks0ddPPly3wdRdyyIQL6rfsIVR0OzveUelpv-keZrBoCcITA4Mad8s7VZe8jIVwdc5Heo6D7Y_3eiRmemC_EmbW5pnyGeAxWtQy5uZIlXXW0XNXAlxi1z";
   static const TOKEN_KEY = 'token';
 
   static const USER_FLAG_KEY = 'user_flag';
 
   /// USER DATA
   static const USER = 'user';
-  static const UID_KEY = 'uid';
-  static const REGION_ID_KEY = 'region_id';
-  static const NAME_KEY = 'fullname';
-  static const EMAIL_KEY = 'email';
-  static const PHONE_KEY = 'phone';
-  static const AVATAR_KEY = 'avatar';
-
-  /// CUSTOMER DATA
-  static const CUSTOMER_UID_KEY = 'customer_id';
-  static const CUSTOMER_NAME_KEY = 'customer_name';
-  static const CUSTOMER_PHONE_KEY = 'customer_phone';
 
   /// SERVICE STATUS
   static const NEED_ASSIGNMENT_KEY = 'need assignment';

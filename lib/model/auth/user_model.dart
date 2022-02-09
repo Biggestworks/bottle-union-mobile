@@ -28,6 +28,8 @@ class UserModel {
 class Data {
   int? id;
   int? idRegion;
+  String? providerUid;
+  String? providerId;
   String? fullname;
   String? email;
   String? emailVerifiedAt;
@@ -38,6 +40,7 @@ class Data {
   int? isAdmin;
   int? isVerified;
   String? fcmToken;
+  String? validationCode;
   String? createdAt;
   String? updatedAt;
   String? deletedAt;
@@ -45,6 +48,8 @@ class Data {
   Data(
       {this.id,
         this.idRegion,
+        this.providerUid,
+        this.providerId,
         this.fullname,
         this.email,
         this.emailVerifiedAt,
@@ -55,6 +60,7 @@ class Data {
         this.isAdmin,
         this.isVerified,
         this.fcmToken,
+        this.validationCode,
         this.createdAt,
         this.updatedAt,
         this.deletedAt});
@@ -62,6 +68,8 @@ class Data {
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     idRegion = json['id_region'];
+    providerUid = json['provider_uid'];
+    providerId = json['provider_id'];
     fullname = json['fullname'];
     email = json['email'];
     emailVerifiedAt = json['email_verified_at'];
@@ -72,6 +80,7 @@ class Data {
     isAdmin = json['is_admin'];
     isVerified = json['is_verified'];
     fcmToken = json['fcm_token'];
+    validationCode = json['validation_code'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     deletedAt = json['deleted_at'];
@@ -81,6 +90,8 @@ class Data {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['id_region'] = this.idRegion;
+    data['provider_uid'] = this.providerUid;
+    data['provider_id'] = this.providerId;
     data['fullname'] = this.fullname;
     data['email'] = this.email;
     data['email_verified_at'] = this.emailVerifiedAt;
@@ -91,6 +102,7 @@ class Data {
     data['is_admin'] = this.isAdmin;
     data['is_verified'] = this.isVerified;
     data['fcm_token'] = this.fcmToken;
+    data['validation_code'] = this.validationCode;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['deleted_at'] = this.deletedAt;

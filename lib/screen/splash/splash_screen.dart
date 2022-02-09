@@ -1,4 +1,4 @@
-import 'package:eight_barrels/helper/color_helper.dart';
+ import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/provider/splash/splash_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

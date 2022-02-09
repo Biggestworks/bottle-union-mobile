@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/model/auth/user_model.dart';
-import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserPreferences {

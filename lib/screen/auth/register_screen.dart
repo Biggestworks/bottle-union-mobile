@@ -1,13 +1,12 @@
 import 'package:eight_barrels/abstract/loading.dart';
-import 'package:eight_barrels/helper/app-localization.dart';
+import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/validation.dart';
-import 'package:eight_barrels/provider/auth/register_provider.dart';
+import 'package:eight_barrels/provider/auth/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -28,16 +27,16 @@ class _RegisterScreenState extends State<RegisterScreen>
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
-      Provider.of<RegisterProvider>(context, listen: false).fnInitAnimation(vsync: this);
-      Provider.of<RegisterProvider>(context, listen: false).fnGetView(this);
-      Provider.of<RegisterProvider>(context, listen: false).fnFetchRegionList();
+      Provider.of<AuthProvider>(context, listen: false).fnInitAnimation(this);
+      Provider.of<AuthProvider>(context, listen: false).fnGetView(this);
+      Provider.of<AuthProvider>(context, listen: false).fnFetchRegionList();
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final _provider = Provider.of<RegisterProvider>(context, listen: false);
+    final _provider = Provider.of<AuthProvider>(context, listen: false);
 
     _showDobDialog() {
       return showDialog(
@@ -122,26 +121,29 @@ class _RegisterScreenState extends State<RegisterScreen>
                       ),
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(vertical: 10),
-                        suffixIcon: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Consumer<RegisterProvider>(
-                              child: Container(),
-                              builder: (context, provider, skeleton) {
-                                switch (provider.isAgeValid) {
-                                  case true:
-                                    return Icon(FontAwesomeIcons.solidCheckCircle, size: 20, color: Colors.greenAccent,);
-                                  case false:
-                                    return Icon(MdiIcons.closeCircle, size: 24, color: Colors.redAccent,);
-                                  default:
-                                    return skeleton!;
+                        suffixIcon: Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Consumer<AuthProvider>(
+                                child: Container(),
+                                builder: (context, provider, skeleton) {
+                                  switch (provider.isAgeValid) {
+                                    case true:
+                                      return Icon(FontAwesomeIcons.solidCheckCircle, size: 24, color: Colors.greenAccent,);
+                                    case false:
+                                      return Icon(FontAwesomeIcons.exclamationCircle, size: 24, color: Colors.amberAccent,);
+                                    default:
+                                      return skeleton!;
+                                  }
                                 }
-                              }
-                            ),
-                            SizedBox(width: 10,),
-                            Icon(FontAwesomeIcons.calendarAlt, size: 24, color: Colors.white,),
-                          ],
+                              ),
+                              SizedBox(width: 10,),
+                              Icon(FontAwesomeIcons.calendarAlt, size: 24, color: Colors.white,),
+                            ],
+                          ),
                         ),
                         isDense: true,
                         disabledBorder: UnderlineInputBorder(
@@ -164,12 +166,42 @@ class _RegisterScreenState extends State<RegisterScreen>
                   TextFormField(
                     controller: _provider.emailController,
                     textInputAction: TextInputAction.next,
-                    validator: validateEmail,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) {
+                      String? valid = validateEmail(value);
+                      if (valid == null) {
+                        _provider.fnValidateEmail(context, value!);
+                        return _provider.errEmail;
+                      }
+                      return valid;
+                    },
                     style: TextStyle(
                       color: Colors.white,
                     ),
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(vertical: 10),
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Consumer<AuthProvider>(
+                                child: Container(),
+                                builder: (context, provider, skeleton) {
+                                  switch (provider.isEmailValid) {
+                                    case false:
+                                      return Icon(FontAwesomeIcons.solidCheckCircle, size: 24, color: Colors.greenAccent,);
+                                    case true:
+                                      return Icon(FontAwesomeIcons.exclamationCircle, size: 24, color: Colors.amberAccent,);
+                                    default:
+                                      return skeleton!;
+                                  }
+                                }
+                            ),
+                          ],
+                        ),
+                      ),
                       isDense: true,
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
@@ -213,7 +245,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                     fontSize: 16,
                     color: Colors.white,
                   ),),
-                  Consumer<RegisterProvider>(
+                  Consumer<AuthProvider>(
                       builder: (context, provider, _) {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -313,7 +345,7 @@ class _RegisterScreenState extends State<RegisterScreen>
             ),
           ),
           SizedBox(height: 20,),
-          Consumer<RegisterProvider>(
+          Consumer<AuthProvider>(
               child: Container(),
               builder: (context, provider, skeleton) {
                 switch (provider.addressController.text) {
@@ -395,7 +427,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                 controller: _provider.passController,
                 textInputAction: TextInputAction.next,
                 validator: validatePassword,
-                obscureText: _provider.isHidePassword,
+                obscureText: _provider.isHidePassRegis,
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -413,13 +445,13 @@ class _RegisterScreenState extends State<RegisterScreen>
                   ),
                   suffixIcon: GestureDetector(
                     child: Icon(
-                      _provider.isHidePassword
+                      _provider.isHidePassRegis
                           ? Icons.visibility_off
                           : Icons.visibility,
                       color: Colors.white,
                       size: 24,
                     ),
-                    onTap: () => _provider.fnToggleVisibility(context),
+                    onTap: () => _provider.fnPassVblRegis(context),
                   ),
                 ),
               ),
@@ -432,7 +464,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                 controller: _provider.confirmPassController,
                 textInputAction: TextInputAction.next,
                 validator: (value) => validateConfirmPassword(_provider.passController.text, value),
-                obscureText: _provider.isHidePassword2,
+                obscureText: _provider.isHidePassRegisConfirm,
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -450,13 +482,13 @@ class _RegisterScreenState extends State<RegisterScreen>
                   ),
                   suffixIcon: GestureDetector(
                     child: Icon(
-                      _provider.isHidePassword2
+                      _provider.isHidePassRegisConfirm
                           ? Icons.visibility_off
                           : Icons.visibility,
                       color: Colors.white,
                       size: 24,
                     ),
-                    onTap: () => _provider.fnToggleVisibility2(context),
+                    onTap: () => _provider.fnPassVblRegisConfirm(context),
                   ),
                 ),
               ),
@@ -478,14 +510,14 @@ class _RegisterScreenState extends State<RegisterScreen>
               color: Colors.white,
             ),),
           ),
-          Consumer<RegisterProvider>(
+          Consumer<AuthProvider>(
               builder: (context, provider, _) {
                 return Flexible(
                   child: provider.stepProgressBar(context: context),
                 );
               }
           ),
-          Consumer<RegisterProvider>(
+          Consumer<AuthProvider>(
               child: Container(),
               builder: (context, provider, skeleton) {
                 switch (provider.offsetAnimation) {
@@ -510,7 +542,7 @@ class _RegisterScreenState extends State<RegisterScreen>
       ),
     );
 
-    Widget _submitBtn = Consumer<RegisterProvider>(
+    Widget _submitBtn = Consumer<AuthProvider>(
         builder: (context, provider, _) {
           return Container(
             padding: EdgeInsets.all(20),
@@ -522,7 +554,7 @@ class _RegisterScreenState extends State<RegisterScreen>
               btnColor: CustomColor.SECONDARY,
               lblColor: CustomColor.MAIN,
               isBold: true,
-              function: () => provider.fnOnForwardTransition(context: context),
+              function: () async => await provider.fnOnForwardTransition(context),
             ),
           );
         }
@@ -532,30 +564,31 @@ class _RegisterScreenState extends State<RegisterScreen>
       inAsyncCall: _isLoad,
       progressIndicator: SpinKitFadingCube(color: CustomColor.MAIN,),
       opacity: 0.5,
-      child: Scaffold(
-        backgroundColor: CustomColor.MAIN,
-        appBar: AppBar(
+      child: GestureDetector(
+        onTap: () => _provider.fnKeyboardUnFocus(context),
+        child: Scaffold(
           backgroundColor: CustomColor.MAIN,
-          elevation: 0,
-          title: null,
-          centerTitle: false,
-          leading: GestureDetector(
-              onTap: () {
-                _provider.fnOnBackTransition(context: context);
-              },
-              child: Icon(Icons.arrow_back_ios)),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: SizedBox(
-                width: 120,
-                child: Image.asset('assets/images/ic_logo_text_white.png',),
+          appBar: AppBar(
+            backgroundColor: CustomColor.MAIN,
+            elevation: 0,
+            title: null,
+            centerTitle: false,
+            leading: GestureDetector(
+                onTap: () async => await _provider.fnOnBackTransition(context),
+                child: Icon(Icons.arrow_back_ios)),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: SizedBox(
+                  width: 120,
+                  child: Image.asset('assets/images/ic_logo_text_white.png',),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
+          body: _mainContent,
+          bottomNavigationBar: _submitBtn,
         ),
-        body: _mainContent,
-        bottomNavigationBar: _submitBtn,
       ),
     );
   }
