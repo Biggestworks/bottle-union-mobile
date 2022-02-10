@@ -1,4 +1,8 @@
+import 'package:eight_barrels/helper/app_localization.dart';
+import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/route_manager.dart';
 
 class CustomWidget {
   static Widget roundBtn({
@@ -111,6 +115,74 @@ class CustomWidget {
     required Widget content,
   }) {
     return ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: content,));
+  }
+
+  static showConfirmationDialog(
+      BuildContext context, {
+        String desc = '',
+        required void function(),
+      }) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10))
+          ),
+          content: new Container(
+            width: MediaQuery.of(context).size.width,
+            height: 100.0,
+            child: new Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(FontAwesomeIcons.infoCircle, color: Colors.blue,),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Flexible(
+                      child: Text(AppLocalizations.instance.text('TXT_CONFIRMATION'), style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,),
+                      ),
+                    ),
+                  ],
+                ),
+                Divider(
+                  color: CustomColor.MAIN,
+                  thickness: 2,
+                  height: 30,
+                ),
+                Flexible(
+                  child: Text(desc, style: TextStyle(
+                    fontSize: 16.0,
+                      color: Colors.black,),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: Text(AppLocalizations.instance.text('TXT_CANCEL'), style: TextStyle(color: Colors.redAccent,),
+              ),
+              onPressed: () => Get.back(),
+            ),
+            TextButton(
+              child: Text(AppLocalizations.instance.text('TXT_YES'), style: TextStyle(color: Colors.green),
+              ),
+              onPressed: () {
+                Get.back();
+                function();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
 }

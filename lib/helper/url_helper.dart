@@ -18,6 +18,6 @@ class URLHelper {
   static const REGISTER_SOCMED_URL = BASE_URL + '/auth/register/socmed';
 
   ///PRODUCT
-  static const PRODUCT_LIST_URL = BASE_URL + '/product';
+  static const PRODUCT_LIST_URL = BASE_URL + '/product/publish';
 
 }

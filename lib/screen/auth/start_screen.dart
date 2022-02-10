@@ -121,6 +121,7 @@ class _StartScreenState extends State<StartScreen> implements LoadingView {
                 height: 10,
               ),
               if (Platform.isIOS) SignInWithAppleButton(
+                height: 40,
                 onPressed: () async {
                   Get.back();
                   // await provider.signInApple(context);

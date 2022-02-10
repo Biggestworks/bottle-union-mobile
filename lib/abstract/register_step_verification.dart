@@ -62,6 +62,7 @@ abstract class RegisterStepVerification {
   Future onForwardTransition(BuildContext context, Future<void> function()) async {
     if (stepIndex == 0) {
       if (fKeyPersonal.currentState!.validate() && isAgeValid == true) {
+        fKeyPersonal.currentState!.save();
         animationController!.forward();
         animationController!.addStatusListener((status) {
           if (status == AnimationStatus.completed) {
@@ -74,6 +75,7 @@ abstract class RegisterStepVerification {
       }
     } else if (stepIndex == 1) {
       if (fKeyAddress.currentState!.validate()) {
+        fKeyAddress.currentState!.save();
         animationController!.forward();
         animationController!.addStatusListener((status) {
           if (status == AnimationStatus.completed) {
@@ -86,6 +88,7 @@ abstract class RegisterStepVerification {
       }
     } else if (stepIndex == 2) {
       if (fKeyPassword.currentState!.validate()) {
+        fKeyPassword.currentState!.save();
         await function();
       }
     }

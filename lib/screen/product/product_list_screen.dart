@@ -21,10 +21,11 @@ class _ProductListScreenState extends State<ProductListScreen> {
   Widget build(BuildContext context) {
 
     Widget _mainContent = Container(
-      padding: EdgeInsets.all(15),
+      padding: EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: 20,),
           Text(AppLocalizations.instance.text('TXT_HEADER_CELLAR'), style: TextStyle(
             color: CustomColor.BROWN_TXT,
             fontSize: 24,
@@ -47,34 +48,31 @@ class _ProductListScreenState extends State<ProductListScreen> {
             ),
             // onChanged: (_) async => await _provider.onChangedProductFilter(),
           ),
-          SizedBox(height: 20,),
           Consumer<ProductListProvider>(
             child: Container(),
             builder: (context, provider, skeleton) {
-              switch (provider.productList.data) {
+              switch (provider.productList.result) {
                 case null:
                   return skeleton!;
                 default:
-                  switch (provider.productList.data!.length) {
+                  switch (provider.productList.result!.data!.length) {
                     case 0:
                       return Center(child: Text('empty'),);
                     default:
                       return Flexible(
-                        child: MediaQuery.removePadding(
-                          context: context,
-                          removeTop: true,
-                          child: GridView.builder(
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 2.0,
-                              mainAxisSpacing: 2.0,
-                              childAspectRatio: 0.7,
-                            ),
-                            itemCount: 6,
-                            itemBuilder: (context, index) {
-                              var _data = provider.productList.data![index];
-                              return Card(
-                                elevation: 0,
+                        child: GridView.builder(
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 2.0,
+                            childAspectRatio: 0.65,
+                          ),
+                          itemCount: provider.productList.result!.data!.length,
+                          itemBuilder: (context, index) {
+                            var _data = provider.productList.result!.data![index];
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: Card(
+                                elevation: 1,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadiusDirectional.circular(20),
                                 ),
@@ -122,9 +120,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                     ],
                                   ),
                                 ),
-                              );
-                            },
-                          ),
+                              ),
+                            );
+                          },
                         ),
                       );
                   }

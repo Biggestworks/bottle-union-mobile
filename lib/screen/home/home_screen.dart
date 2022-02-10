@@ -6,6 +6,7 @@ import 'package:eight_barrels/helper/push_notification_manager.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
 import 'package:eight_barrels/screen/auth/start_screen.dart';
+import 'package:eight_barrels/screen/profile/profile_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/screen/widget/sliver_title.dart';
 import 'package:flutter/material.dart';
@@ -271,52 +272,55 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () {},
               icon: Icon(FontAwesomeIcons.bell, size: 20,),
             ),
-            Consumer<HomeProvider>(
-              child: Container(
-                width: 30.0,
-                height: 30.0,
-                margin: EdgeInsets.only(right: 15, left: 5),
-                decoration: new BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white),
-                  color: Colors.white,
-                  image: new DecorationImage(
-                    fit: BoxFit.contain,
-                    image: AssetImage("assets/images/ic_profile.png"),
+            GestureDetector(
+              onTap: () => Get.toNamed(ProfileScreen.tag),
+              child: Consumer<HomeProvider>(
+                child: Container(
+                  width: 30.0,
+                  height: 30.0,
+                  margin: EdgeInsets.only(right: 15, left: 5),
+                  decoration: new BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white),
+                    color: Colors.white,
+                    image: new DecorationImage(
+                      fit: BoxFit.contain,
+                      image: AssetImage("assets/images/ic_profile.png"),
+                    ),
                   ),
                 ),
+                builder: (context, provider, skeleton) {
+                  switch (provider.userModel.data) {
+                    case null:
+                      return skeleton!;
+                    default:
+                      switch (provider.userModel.data!.avatar) {
+                        case null:
+                          return skeleton!;
+                        default:
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 15, left: 5),
+                            child: CachedNetworkImage(
+                              imageUrl: provider.userModel.data!.avatar!,
+                              imageBuilder: (context, imageProvider) {
+                                return Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: Colors.white),
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.contain,
+                                      )),
+                                );
+                              },
+                            ),
+                          );
+                      }
+                  }
+                },
               ),
-              builder: (context, provider, skeleton) {
-                switch (provider.userModel.data) {
-                  case null:
-                    return skeleton!;
-                  default:
-                    switch (provider.userModel.data!.avatar) {
-                      case null:
-                        return skeleton!;
-                      default:
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 15, left: 5),
-                          child: CachedNetworkImage(
-                            imageUrl: provider.userModel.data!.avatar!,
-                            imageBuilder: (context, imageProvider) {
-                              return Container(
-                                width: 30,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(color: Colors.white),
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.contain,
-                                    )),
-                              );
-                            },
-                          ),
-                        );
-                    }
-                }
-              },
             ),
           ],
           expandedHeight: 150,

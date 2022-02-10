@@ -4,6 +4,7 @@ import 'package:eight_barrels/provider/auth/auth_provider.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
 import 'package:eight_barrels/provider/product/product_list_provider.dart';
+import 'package:eight_barrels/provider/profile/profile_provider.dart';
 import 'package:eight_barrels/provider/splash/splash_provider.dart';
 import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/auth/register_screen.dart';
@@ -123,7 +124,10 @@ class _AppState extends State<App> {
         ),
         GetPage(
           name: ProfileScreen.tag,
-          page: () => ProfileScreen(),
+          page: () => ChangeNotifierProvider<ProfileProvider>(
+            create: (context) => ProfileProvider(),
+            child: ProfileScreen(),
+          ),
         ),
       ],
     );

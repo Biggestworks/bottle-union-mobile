@@ -14,10 +14,10 @@ class HomeProvider extends ChangeNotifier {
   ];
 
   HomeProvider() {
-    fnFetchUserInfo();
+    _fnFetchUserInfo();
   }
 
-  Future fnFetchUserInfo() async {
+  Future _fnFetchUserInfo() async {
     this.userModel = (await _userPreferences.getUserData())!;
     notifyListeners();
   }

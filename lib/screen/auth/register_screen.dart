@@ -4,6 +4,7 @@ import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/validation.dart';
 import 'package:eight_barrels/provider/auth/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
@@ -166,6 +167,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                   TextFormField(
                     controller: _provider.emailController,
                     textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.emailAddress,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value) {
                       String? valid = validateEmail(value);
@@ -222,6 +224,8 @@ class _RegisterScreenState extends State<RegisterScreen>
                   TextFormField(
                     controller: _provider.phoneController,
                     textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.phone,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     validator: validatePhoneNumber,
                     style: TextStyle(
                       color: Colors.white,
@@ -336,6 +340,9 @@ class _RegisterScreenState extends State<RegisterScreen>
                         isDense: true,
                         disabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
+                        ),
+                        errorStyle: TextStyle(
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -567,6 +574,7 @@ class _RegisterScreenState extends State<RegisterScreen>
       child: GestureDetector(
         onTap: () => _provider.fnKeyboardUnFocus(context),
         child: Scaffold(
+          key: _provider.scaffoldKey,
           backgroundColor: CustomColor.MAIN,
           appBar: AppBar(
             backgroundColor: CustomColor.MAIN,

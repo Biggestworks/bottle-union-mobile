@@ -59,6 +59,8 @@ class AuthProvider extends ChangeNotifier with RegisterStepVerification {
 
   LoadingView? _view;
 
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   fnKeyboardUnFocus(BuildContext context) {
     FocusScopeNode currentFocus = FocusScope.of(context);
     if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
@@ -188,7 +190,7 @@ class AuthProvider extends ChangeNotifier with RegisterStepVerification {
   }
   
   Future fnOnForwardTransition(BuildContext context) async {
-    await super.onForwardTransition(context, () async => await _fnRegister(context: context));
+    await super.onForwardTransition(context, () async => await _fnRegister(context: scaffoldKey.currentContext!));
     notifyListeners();
   }
 

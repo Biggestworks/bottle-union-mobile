@@ -299,7 +299,7 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation implement
                 icon: FontAwesomeIcons.apple,
                 btnColor: Colors.white,
                 icColor: Colors.black,
-                function: () async => print('ios'),
+                function: () async => CustomWidget.showSnackBar(context: context, content: Text('Coming Soon'),),
               ),
           ],
         ),
