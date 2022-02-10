@@ -11,6 +11,7 @@ import 'package:eight_barrels/screen/auth/start_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/home/home_screen.dart';
 import 'package:eight_barrels/screen/product/product_list_screen.dart';
+import 'package:eight_barrels/screen/profile/profile_screen.dart';
 import 'package:eight_barrels/screen/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -119,6 +120,10 @@ class _AppState extends State<App> {
         GetPage(
           name: ProductListScreen.tag,
           page: () => ProductListScreen(),
+        ),
+        GetPage(
+          name: ProfileScreen.tag,
+          page: () => ProfileScreen(),
         ),
       ],
     );

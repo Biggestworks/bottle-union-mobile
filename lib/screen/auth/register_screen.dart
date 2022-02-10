@@ -580,8 +580,8 @@ class _RegisterScreenState extends State<RegisterScreen>
               Padding(
                 padding: const EdgeInsets.only(right: 20),
                 child: SizedBox(
-                  width: 120,
-                  child: Image.asset('assets/images/ic_logo_text_white.png',),
+                  width: 150,
+                  child: Image.asset('assets/images/ic_logo_bu_white.png',),
                 ),
               ),
             ],

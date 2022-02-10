@@ -251,9 +251,7 @@ class AuthService extends GetConnect {
     try {
       final LoginResult result = await FacebookAuth.instance.login();
       final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(result.accessToken!.token);
-      final _data = await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
-
-      print(_data);
+      _data = await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
     } catch (e) {
       print(e);
     }

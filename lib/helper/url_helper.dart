@@ -2,7 +2,9 @@
 class URLHelper {
   // static const BASE_URL = 'https://bottleunion.com/api'; //PRODUCTION
 
-  static const String BASE_URL = 'http://192.168.100.9:8001/api'; // LOCAL
+  static const BASE_URL = 'http://dev.bottleunion.com/api'; //DEVELOPMENT
+
+  // static const String BASE_URL = 'http://192.168.100.9:8001/api'; // LOCAL
 
   // static const String BASE_URL = 'http://127.0.0.1:8001/api'; // LOCAL IOS
 

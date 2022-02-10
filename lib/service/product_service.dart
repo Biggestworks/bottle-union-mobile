@@ -25,7 +25,6 @@ class ProductService extends GetConnect {
         URLHelper.PRODUCT_LIST_URL,
         headers: await _headersAuth(),
       );
-      print(_response.body);
       _product = ProductListModel.fromJson(_response.body);
     } catch (e) {
       print(e);

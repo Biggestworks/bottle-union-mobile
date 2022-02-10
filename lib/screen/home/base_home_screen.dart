@@ -14,7 +14,7 @@ class BaseHomeScreen extends StatelessWidget {
     final _provider = Provider.of<BaseHomeProvider>(context, listen: false);
 
     return Scaffold(
-      bottomNavigationBar: PersistentTabView(
+      body: PersistentTabView(
         context,
         items: _provider.navBarItem,
         screens: _provider.screenList(),

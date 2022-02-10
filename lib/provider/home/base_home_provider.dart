@@ -51,12 +51,31 @@ class BaseHomeProvider extends ChangeNotifier {
     ),
   ];
 
+  Widget _underConstructionPage() {
+    return Container(
+      color: Colors.white,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 200,
+            child: Image.asset('assets/images/ic_under_construction.jpg'),
+          ),
+          SizedBox(height: 10,),
+          Text('Under Construction ...', style: TextStyle(
+            fontSize: 20,
+          ),),
+        ],
+      ),
+    );
+  }
+
   List<Widget> screenList() {
     return [
       HomeScreen(),
       ProductListScreen(),
-      HomeScreen(),
-      HomeScreen(),
+      _underConstructionPage(),
+      _underConstructionPage(),
     ];
   }
 }

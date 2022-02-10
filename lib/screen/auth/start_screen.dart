@@ -45,8 +45,8 @@ class _StartScreenState extends State<StartScreen> implements LoadingView {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset('assets/images/ic_logo_full_white.png', scale: 1.5,),
-          SizedBox(height: 10,),
+          Image.asset('assets/images/ic_logo_bu_white.png', scale: 1.5,),
+          SizedBox(height: 20,),
           Text(AppLocalizations.instance.text('TXT_MSG_START'), style: TextStyle(
             color: Colors.white,
           ), textAlign: TextAlign.center,),
