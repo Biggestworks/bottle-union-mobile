@@ -95,6 +95,9 @@ class Data {
   int? id;
   int? idBrand;
   int? idCategory;
+  String? manufactureCountry;
+  String? originCountry;
+  String? year;
   String? name;
   int? price;
   int? regularPrice;
@@ -102,7 +105,7 @@ class Data {
   String? description;
   int? weight;
   int? publish;
-  String? isPopular;
+  bool? isPopular;
   String? image1;
   String? image2;
   String? image3;
@@ -122,6 +125,9 @@ class Data {
       {this.id,
         this.idBrand,
         this.idCategory,
+        this.manufactureCountry,
+        this.originCountry,
+        this.year,
         this.name,
         this.price,
         this.regularPrice,
@@ -149,6 +155,9 @@ class Data {
     id = json['id'];
     idBrand = json['id_brand'];
     idCategory = json['id_category'];
+    manufactureCountry = json['manufacture_country'];
+    originCountry = json['origin_country'];
+    year = json['year'];
     name = json['name'];
     price = json['price'];
     regularPrice = json['regular_price'];
@@ -180,6 +189,9 @@ class Data {
     data['id'] = this.id;
     data['id_brand'] = this.idBrand;
     data['id_category'] = this.idCategory;
+    data['manufacture_country'] = this.manufactureCountry;
+    data['origin_country'] = this.originCountry;
+    data['year'] = this.year;
     data['name'] = this.name;
     data['price'] = this.price;
     data['regular_price'] = this.regularPrice;

@@ -1,7 +1,6 @@
 
 import 'package:eight_barrels/helper/url_helper.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
-import 'package:eight_barrels/model/auth/auth_model.dart';
 import 'package:eight_barrels/model/auth/region_list_model.dart';
 import 'package:eight_barrels/model/auth/user_model.dart';
 import 'package:eight_barrels/model/default_response.dart';

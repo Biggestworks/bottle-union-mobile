@@ -5,7 +5,7 @@ import 'package:eight_barrels/service/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
-abstract class RegisterStepVerification {
+abstract class RegisterStepInterface {
   AnimationController? animationController;
   Animation<Offset>? offsetAnimation;
 

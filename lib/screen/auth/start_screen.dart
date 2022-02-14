@@ -40,7 +40,7 @@ class _StartScreenState extends State<StartScreen> implements LoadingView {
   Widget build(BuildContext context) {
     final _provider = Provider.of<AuthProvider>(context, listen: false);
 
-    Widget mainContent = Padding(
+    Widget _mainContent = Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -57,7 +57,8 @@ class _StartScreenState extends State<StartScreen> implements LoadingView {
     void showRegisterSheet() {
       return CustomWidget.showSheet(
         context: context,
-        scroll: true,
+        isScroll: true,
+        isRounded: true,
         child: Container(
           height: 350,
           padding: EdgeInsets.all(20),
@@ -167,7 +168,7 @@ class _StartScreenState extends State<StartScreen> implements LoadingView {
       progressIndicator: SpinKitFadingCube(color: CustomColor.MAIN,),
       child: Scaffold(
         backgroundColor: CustomColor.MAIN,
-        body: mainContent,
+        body: _mainContent,
         floatingActionButton: authBtns,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),

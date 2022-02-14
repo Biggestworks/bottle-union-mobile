@@ -1,5 +1,5 @@
 import 'package:eight_barrels/abstract/loading.dart';
-import 'package:eight_barrels/abstract/register_step_verification.dart';
+import 'package:eight_barrels/abstract/register_step_interface.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/key_helper.dart';
@@ -8,7 +8,6 @@ import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/widget/BezierPainter.dart';
 import 'package:eight_barrels/service/auth/auth_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/route_manager.dart';
@@ -19,7 +18,7 @@ import 'package:location/location.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:timelines/timelines.dart';
 
-class AuthProvider extends ChangeNotifier with RegisterStepVerification {
+class AuthProvider extends ChangeNotifier with RegisterStepInterface {
 
   TextEditingController nameController = new TextEditingController();
   TextEditingController dobController = new TextEditingController();

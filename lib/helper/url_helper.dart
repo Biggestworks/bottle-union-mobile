@@ -19,5 +19,7 @@ class URLHelper {
 
   ///PRODUCT
   static const PRODUCT_LIST_URL = BASE_URL + '/product/publish';
+  static const BRAND_LIST_URL = BASE_URL + '/brand/publish';
+  static const CATEGORY_LIST_URL = BASE_URL + '/category-product/publish';
 
 }

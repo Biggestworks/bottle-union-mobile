@@ -11,6 +11,7 @@ import 'package:get/route_manager.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+
 import '../widget/custom_widget.dart';
 
 class RegisterScreen extends StatefulWidget {

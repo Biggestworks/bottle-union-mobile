@@ -3,6 +3,7 @@ import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CustomWidget {
   static Widget roundBtn({
@@ -49,19 +50,23 @@ class CustomWidget {
     );
   }
 
-  static showSheet(
-      {required BuildContext context, required Widget child, bool scroll = false}) {
+  static showSheet({
+    required BuildContext context,
+    required Widget child,
+    bool isScroll = false,
+    bool isRounded = false,}) {
     showModalBottomSheet(
-        context: context,
-        isScrollControlled: scroll,
-        shape: RoundedRectangleBorder(
-          borderRadius: new BorderRadius.only(
-              topLeft: const Radius.circular(15.0),
-              topRight: const Radius.circular(15.0)),
-        ),
-        builder: (BuildContext bc) {
-          return child;
-        });
+      context: context,
+      isScrollControlled: isScroll,
+      shape: isRounded ? RoundedRectangleBorder(
+        borderRadius: new BorderRadius.only(
+            topLeft: const Radius.circular(15.0),
+            topRight: const Radius.circular(15.0)),
+      ) : null,
+      builder: (BuildContext bc) {
+        return child;
+      },
+    );
   }
 
   static Widget roundIconBtn({
@@ -182,6 +187,35 @@ class CustomWidget {
           ],
         );
       },
+    );
+  }
+
+  static showShimmerGridList() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[200]!,
+      highlightColor: Colors.white,
+      child: GridView.builder(
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 2.0,
+          childAspectRatio: 0.65,
+        ),
+        itemCount: 6,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Card(
+              elevation: 1,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadiusDirectional.circular(20),
+              ),
+              child: Container(),
+            ),
+          );
+        },
+      ),
     );
   }
 

@@ -1,8 +1,8 @@
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:provider/provider.dart';
 
 class BaseHomeScreen extends StatelessWidget {
   static String tag = '/base-home-screen';

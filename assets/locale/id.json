@@ -62,6 +62,14 @@
 	"TXT_LABEL_LANGUAGE": "Bahasa",
 	"TXT_LABEL_LANG_LOCALE": "Bahasa Indonesia",
 	"TXT_LANGUAGE_INFO": "Anda yakin ingin mengganti bahasa ke ",
+	"TXT_LBL_FILTER": "Filter",
+	"TXT_LBL_BRAND": "Merek",
+	"TXT_LBL_CATEGORY": "Kategori",
+	"TXT_LBL_COUNTRY": "Negara",
+	"TXT_LBL_YEAR": "Tahun",
+	"TXT_LBL_PRICE": "Harga",
+	"TXT_LBL_MIN_PRICE": "Harga Min.",
+	"TXT_LBL_MAX_PRICE": "Harga Max.",
 
 
 	"app_name": "eRecycle",

@@ -1,21 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
-import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/helper/push_notification_manager.dart';
-import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
-import 'package:eight_barrels/screen/auth/start_screen.dart';
 import 'package:eight_barrels/screen/profile/profile_screen.dart';
-import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/screen/widget/sliver_title.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 class HomeScreen extends StatefulWidget {
   static String tag = '/home-screen';
@@ -40,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final _provider = Provider.of<HomeProvider>(context, listen: false);
 
-    Widget bannerContent = Column(
+    Widget _bannerContent = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
@@ -53,12 +48,13 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         CarouselSlider(
           options: CarouselOptions(
-            height: 180.0,
+            height: 200.0,
             autoPlay: true,
             enlargeCenterPage: false,
             enableInfiniteScroll: false,
+            viewportFraction: 1,
             onPageChanged: (index, reason) {
-              // _provider.onBannerChanged(index);
+              _provider.onBannerChanged(index);
             },
           ),
           items: _provider.bannerList.map((i) {
@@ -82,10 +78,35 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           }).toList(),
         ),
+        SizedBox(height: 10,),
+        Consumer<HomeProvider>(
+            builder: (context, provider, skeleton) {
+              return Padding(
+                padding: const EdgeInsets.only(left: 20,),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: provider.bannerList.map((i) {
+                    int index = provider.bannerList.indexOf(i);
+                    return Container(
+                      width: provider.currBanner == index ? 12.0 : 8.0,
+                      height: provider.currBanner == index ? 12.0 : 8.0,
+                      margin: EdgeInsets.symmetric(horizontal: 4),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: provider.currBanner == index
+                            ? CustomColor.MAIN
+                            : CustomColor.GREY_TXT,
+                      ),
+                    );
+                  }).toList(),
+                ),
+              );
+            }
+        ),
       ],
     );
 
-    Widget categoryContent = Container(
+    Widget _categoryContent = Container(
       width: MediaQuery.of(context).size.width,
       height: 200,
       child: Column(
@@ -100,42 +121,53 @@ class _HomeScreenState extends State<HomeScreen> {
             ),),
           ),
           Flexible(
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: EdgeInsets.only(left: index == 0 ? 50 : 0),
-                  child: Column(
-                    children: [
-                      Flexible(
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+            child: Consumer<HomeProvider>(
+              child: Container(),
+              builder: (context, provider, skeleton) {
+                switch (provider.categoryList.data) {
+                  case null:
+                    return skeleton!;
+                  default:
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemCount: provider.categoryList.data!.length,
+                      itemBuilder: (context, index) {
+                        var _data = provider.categoryList.data![index];
+                        return Padding(
+                          padding: EdgeInsets.only(left: index == 0 ? 50 : 0),
+                          child: Column(
+                            children: [
+                              Flexible(
+                                child: Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  elevation: 0,
+                                  child: ClipRRect(
+                                    child: Image.asset('assets/images/wine.jpg', fit: BoxFit.contain,),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 5,),
+                              Text(_data.name!, style: TextStyle(
+                                fontSize: 16,
+                              ),)
+                            ],
                           ),
-                          elevation: 0,
-                          child: ClipRRect(
-                            child: Image.asset('assets/images/wine.jpg', fit: BoxFit.contain,),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 5,),
-                      Text('Wine ${index+1}', style: TextStyle(
-                        fontSize: 16,
-                      ),)
-                    ],
-                  ),
-                );
-              },
+                        );
+                      },
+                    );
+                }
+              }
             ),
           ),
         ],
       ),
     );
 
-    Widget popularContent = Container(
+    Widget _popularContent = Container(
       width: MediaQuery.of(context).size.width,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -219,9 +251,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
 
-    Widget menuContent = SliverToBoxAdapter(
+    Widget _menuContent = SliverToBoxAdapter(
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 30),
+        padding: EdgeInsets.symmetric(vertical: 20),
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -232,34 +264,17 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: Column(
           children: [
-            bannerContent,
+            _bannerContent,
             SizedBox(height: 20,),
-            categoryContent,
+            _categoryContent,
             SizedBox(height: 20,),
-            popularContent,
-            SizedBox(height: 20,),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: CustomWidget.roundBtn(
-                label: 'Sign Out (tentative button)',
-                btnColor: CustomColor.MAIN,
-                lblColor: Colors.white,
-                function: () async {
-                  SharedPreferences _prefs = await SharedPreferences.getInstance();
-                  _prefs.setString(KeyHelper.KEY_LOCALE, 'en');
-                  AppLocalizations.instance.load(Locale('en'));
-                  await UserPreferences().removeUserData();
-                  Get.offAndToNamed(StartScreen.tag);
-                },
-              ),
-            ),
+            _popularContent,
           ],
         ),
       ),
     );
 
-    Widget mainContent = CustomScrollView(
+    Widget _mainContent = CustomScrollView(
       physics: ClampingScrollPhysics(),
       slivers: [
         SliverAppBar(
@@ -359,13 +374,13 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
         ),
-        menuContent,
+        _menuContent,
       ],
     );
 
     return Scaffold(
       backgroundColor: CustomColor.MAIN,
-      body: mainContent,
+      body: _mainContent,
     );
   }
 }

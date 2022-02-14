@@ -3,6 +3,7 @@ import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/provider/auth/auth_provider.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
+import 'package:eight_barrels/provider/product/product_by_category_provider.dart';
 import 'package:eight_barrels/provider/product/product_list_provider.dart';
 import 'package:eight_barrels/provider/profile/profile_provider.dart';
 import 'package:eight_barrels/provider/splash/splash_provider.dart';
@@ -11,6 +12,8 @@ import 'package:eight_barrels/screen/auth/register_screen.dart';
 import 'package:eight_barrels/screen/auth/start_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/home/home_screen.dart';
+import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
+import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/product/product_list_screen.dart';
 import 'package:eight_barrels/screen/profile/profile_screen.dart';
 import 'package:eight_barrels/screen/splash/splash_screen.dart';
@@ -121,6 +124,17 @@ class _AppState extends State<App> {
         GetPage(
           name: ProductListScreen.tag,
           page: () => ProductListScreen(),
+        ),
+        GetPage(
+          name: ProductDetailScreen.tag,
+          page: () => ProductDetailScreen(),
+        ),
+        GetPage(
+          name: ProductByCategoryScreen.tag,
+          page: () => ChangeNotifierProvider<ProductByCategoryProvider>(
+            create: (context) => ProductByCategoryProvider(),
+            child: ProductByCategoryScreen(),
+          ),
         ),
         GetPage(
           name: ProfileScreen.tag,
