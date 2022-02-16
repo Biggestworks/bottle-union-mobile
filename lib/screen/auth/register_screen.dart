@@ -562,6 +562,7 @@ class _RegisterScreenState extends State<RegisterScreen>
               btnColor: CustomColor.SECONDARY,
               lblColor: CustomColor.MAIN,
               isBold: true,
+              fontSize: 16,
               function: () async => await provider.fnOnForwardTransition(context),
             ),
           );

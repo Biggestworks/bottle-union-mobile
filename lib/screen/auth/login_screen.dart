@@ -325,6 +325,7 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation implement
               btnColor: CustomColor.SECONDARY,
               lblColor: CustomColor.MAIN,
               isBold: true,
+              fontSize: 16,
               function: () async {
                 if (_args.providerId != null) {
                   if (_args.providerId!.contains('google')) {

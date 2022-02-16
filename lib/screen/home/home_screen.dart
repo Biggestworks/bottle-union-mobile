@@ -4,7 +4,10 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/push_notification_manager.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
+import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
+import 'package:eight_barrels/screen/product/wishlist_screen.dart';
 import 'package:eight_barrels/screen/profile/profile_screen.dart';
+import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/screen/widget/sliver_title.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -134,27 +137,35 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemCount: provider.categoryList.data!.length,
                       itemBuilder: (context, index) {
                         var _data = provider.categoryList.data![index];
-                        return Padding(
-                          padding: EdgeInsets.only(left: index == 0 ? 50 : 0),
-                          child: Column(
-                            children: [
-                              Flexible(
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  elevation: 0,
-                                  child: ClipRRect(
-                                    child: Image.asset('assets/images/wine.jpg', fit: BoxFit.contain,),
-                                    borderRadius: BorderRadius.circular(20),
+                        return InkWell(
+                          onTap: () => Get.toNamed(ProductByCategoryScreen.tag, arguments: ProductByCategoryScreen(
+                            category: _data.name!,
+                          )),
+                          child: Padding(
+                            padding: EdgeInsets.only(left: index == 0 ? 50 : 0),
+                            child: Column(
+                              children: [
+                                Flexible(
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    elevation: 0,
+                                    child: Container(
+                                      width: 150,
+                                      child: ClipRRect(
+                                        child: CustomWidget.networkImg(context, _data.image),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(height: 5,),
-                              Text(_data.name!, style: TextStyle(
-                                fontSize: 16,
-                              ),)
-                            ],
+                                SizedBox(height: 5,),
+                                Text(_data.name!, style: TextStyle(
+                                  fontSize: 16,
+                                ),)
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -280,12 +291,14 @@ class _HomeScreenState extends State<HomeScreen> {
         SliverAppBar(
           actions: [
             IconButton(
-              onPressed: () {},
-              icon: Icon(FontAwesomeIcons.shoppingCart, size: 20,),
+              onPressed: () => Get.toNamed(WishListScreen.tag),
+              icon: Icon(FontAwesomeIcons.heart, size: 22,),
+              visualDensity: VisualDensity.compact,
             ),
             IconButton(
               onPressed: () {},
-              icon: Icon(FontAwesomeIcons.bell, size: 20,),
+              icon: Icon(FontAwesomeIcons.bell, size: 22,),
+              visualDensity: VisualDensity.compact,
             ),
             GestureDetector(
               onTap: () => Get.toNamed(ProfileScreen.tag),
@@ -316,7 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           return Padding(
                             padding: const EdgeInsets.only(right: 15, left: 5),
                             child: CachedNetworkImage(
-                              imageUrl: provider.userModel.data!.avatar!,
+                              imageUrl: provider.userModel.data!.avatar ?? '',
                               imageBuilder: (context, imageProvider) {
                                 return Container(
                                   width: 30,
@@ -378,9 +391,12 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
 
-    return Scaffold(
-      backgroundColor: CustomColor.MAIN,
-      body: _mainContent,
+    return RefreshIndicator(
+      onRefresh: () async => await _provider.onRefresh(),
+      child: Scaffold(
+        backgroundColor: CustomColor.MAIN,
+        body: _mainContent,
+      ),
     );
   }
 }

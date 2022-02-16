@@ -1,10 +1,10 @@
-class DefaultResponse {
+class DefaultModel {
   bool? status;
   String? message;
 
-  DefaultResponse({this.status, this.message});
+  DefaultModel({this.status, this.message});
 
-  DefaultResponse.fromJson(Map<String, dynamic> json) {
+  DefaultModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
   }

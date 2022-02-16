@@ -3,7 +3,7 @@ import 'package:eight_barrels/helper/url_helper.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/auth/region_list_model.dart';
 import 'package:eight_barrels/model/auth/user_model.dart';
-import 'package:eight_barrels/model/default_response.dart';
+import 'package:eight_barrels/model/default_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get_connect.dart';
@@ -20,7 +20,7 @@ class AuthService extends GetConnect {
   Future<UserModel?> login({
     required String username,
     required String password}) async {
-    UserModel _user = new UserModel();
+    UserModel _model = new UserModel();
 
     var _fcmToken = await _userPreferences!.getFcmToken();
 
@@ -36,13 +36,13 @@ class AuthService extends GetConnect {
         _data,
         headers: _headers,
       );
-      _user = UserModel.fromJson(_response.body);
+      _model = UserModel.fromJson(_response.body);
       await _userPreferences?.saveUserData(_response.body);
     } catch (e) {
       print(e);
     }
 
-    return _user;
+    return _model;
   }
 
   Future<UserModel?> register({
@@ -58,7 +58,7 @@ class AuthService extends GetConnect {
     required String password,
     required String confirmPassword,
   }) async {
-    UserModel _user = new UserModel();
+    UserModel _model = new UserModel();
 
     final Map<String, dynamic> _data = {
       "id_region": idRegion,
@@ -80,34 +80,34 @@ class AuthService extends GetConnect {
           _data,
           headers: _headers,
       );
-      _user = UserModel.fromJson(_response.body);
+      _model = UserModel.fromJson(_response.body);
     } catch (e) {
       print(e);
     }
 
-    return _user;
+    return _model;
   }
 
   Future<RegionListModel?> regionList() async {
-    RegionListModel _region = new RegionListModel();
+    RegionListModel _model = new RegionListModel();
 
     try {
       Response _response = await get(
         URLHelper.REGION_URL,
         headers: _headers,
       );
-      _region = RegionListModel.fromJson(_response.body);
+      _model = RegionListModel.fromJson(_response.body);
     } catch (e) {
       print(e);
     }
 
-    return _region;
+    return _model;
   }
 
   Future<bool?> validateAge({
     required String dob,
   }) async {
-    DefaultResponse _res = new DefaultResponse();
+    DefaultModel _model = new DefaultModel();
     bool _isValidate = false;
 
     final Map<String, dynamic> _data = {
@@ -120,8 +120,8 @@ class AuthService extends GetConnect {
         _data,
         headers: _headers,
       );
-      _res = DefaultResponse.fromJson(_response.body);
-      _isValidate = _res.status!;
+      _model = DefaultModel.fromJson(_response.body);
+      _isValidate = _model.status!;
     } catch (e) {
       print(e);
     }
@@ -132,7 +132,7 @@ class AuthService extends GetConnect {
   Future<bool?> validateEmailPhone({
     required String? value,
   }) async {
-    DefaultResponse _res = new DefaultResponse();
+    DefaultModel _model = new DefaultModel();
     bool _isValidate = false;
 
     final Map<String, dynamic> _data = {
@@ -145,8 +145,8 @@ class AuthService extends GetConnect {
         _data,
         headers: _headers,
       );
-      _res = DefaultResponse.fromJson(_response.body);
-      _isValidate = _res.status!;
+      _model = DefaultModel.fromJson(_response.body);
+      _isValidate = _model.status!;
     } catch (e) {
       print(e);
     }
@@ -162,7 +162,7 @@ class AuthService extends GetConnect {
     required String? providerId,
     required String? avatar,
   }) async {
-    UserModel _user = new UserModel();
+    UserModel _model = new UserModel();
 
     final Map<String, dynamic> _data = {
       "displayName": fullName,
@@ -180,12 +180,12 @@ class AuthService extends GetConnect {
         headers: _headers,
       );
       print(_response.body);
-      _user = UserModel.fromJson(_response.body);
+      _model = UserModel.fromJson(_response.body);
     } catch (e) {
       print(e);
     }
 
-    return _user;
+    return _model;
   }
 
   Future<UserModel?> loginSocmed({
@@ -196,7 +196,7 @@ class AuthService extends GetConnect {
     required String? providerId,
     required String? avatar,
   }) async {
-    UserModel _user = new UserModel();
+    UserModel _model = new UserModel();
 
     var _fcmToken = await _userPreferences!.getFcmToken();
 
@@ -217,13 +217,13 @@ class AuthService extends GetConnect {
         headers: _headers,
       );
       print(_response.body);
-      _user = UserModel.fromJson(_response.body);
+      _model = UserModel.fromJson(_response.body);
       await _userPreferences?.saveUserData(_response.body);
     } catch (e) {
       print(e);
     }
 
-    return _user;
+    return _model;
   }
 
   Future<UserCredential?> authGoogle() async {

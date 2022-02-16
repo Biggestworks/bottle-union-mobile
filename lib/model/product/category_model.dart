@@ -38,7 +38,7 @@ class Data {
   String? image;
   String? createdAt;
   String? updatedAt;
-  Null? deletedAt;
+  String? deletedAt;
 
   Data(
       {this.id,

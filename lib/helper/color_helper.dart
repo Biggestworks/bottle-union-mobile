@@ -5,7 +5,7 @@ class CustomColor {
    static const Color SECONDARY = Color(0xFFF5F5DC);
    static const Color BG = Color(0xFFfbfbf1);
    static const Color BROWN_TXT = Color(0xFFAB5F18);
-   static const Color BROWN_LIGHT_TXT = Color(0xFFc48f5d);
+   static const Color BROWN_LIGHT_TXT = Color(0xffc48f5d);
    static const Color MAIN_TXT = Color(0xB3800000);
    static const Color GREY_TXT = Color(0x80000000);
    static const Color GREY_BG = Color(0x66C4C4C4);

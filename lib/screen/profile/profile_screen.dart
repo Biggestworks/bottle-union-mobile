@@ -2,10 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/provider/profile/profile_provider.dart';
+import 'package:eight_barrels/screen/product/wishlist_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -27,7 +29,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       width: MediaQuery.of(context).size.width,
       height: 150,
       color: CustomColor.MAIN,
-      padding: EdgeInsets.only(top: 10),
       child: Center(
         child: Consumer<ProfileProvider>(
           child: Stack(
@@ -114,12 +115,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   title: Text(AppLocalizations.instance.text('TXT_LBL_CHANGE_PASSWORD'), style: TextStyle(
                       color: Colors.black,
                       fontSize: 15,
-                    ),
-                  ),
+                  ),),
                   subtitle: Text(AppLocalizations.instance.text('TXT_DESC_CHANGE_PASSWORD'), style: TextStyle(
                       fontSize: 14,
-                    ),
-                  ),
+                  ),),
                   leading: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Icon(
@@ -145,12 +144,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   title: Text(AppLocalizations.instance.text('TXT_LBL_MY_ADDRESS'), style: TextStyle(
                       color: Colors.black,
                       fontSize: 15,
-                    ),
-                  ),
+                  ),),
                   subtitle: Text(AppLocalizations.instance.text('TXT_DESC_MY_ADDRESS'), style: TextStyle(
                       fontSize: 14,
-                    ),
-                  ),
+                  ),),
                   leading: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Icon(
@@ -172,6 +169,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   thickness: 1,
                 ),
                 ListTile(
+                  dense: true,
+                  title: Text(AppLocalizations.instance.text('TXT_LBL_WISHLIST'), style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                  ),),
+                  subtitle: Text(AppLocalizations.instance.text('TXT_DESC_WISHLIST'), style: TextStyle(
+                    fontSize: 14,
+                  ),),
+                  leading: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Icon(
+                      FontAwesomeIcons.solidHeart,
+                      color: CustomColor.GREY_TXT,
+                      size: 18,
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    color: CustomColor.GREY_TXT,
+                    size: 15,
+                  ),
+                  onTap: () => Get.toNamed(WishListScreen.tag),
+                ),
+                Divider(
+                  thickness: 1,
+                ),
+                ListTile(
                   leading: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Icon(
@@ -180,8 +204,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       size: 20,
                     ),
                   ),
-                  title: Text(AppLocalizations.instance.text("TXT_LABEL_LANGUAGE")),
-                  subtitle: Text(AppLocalizations.instance.text("TXT_LABEL_LANG_LOCALE")),
+                  title: Text(AppLocalizations.instance.text("TXT_LBL_LANGUAGE")),
+                  subtitle: Text(AppLocalizations.instance.text("TXT_LBL_LANG_LOCALE")),
                   trailing: Consumer<ProfileProvider>(
                     builder: (context, provider, _) {
                       return Transform.scale(
@@ -274,10 +298,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 child: CustomWidget.roundIconBtn(
-                  icon: Icons.exit_to_app,
+                  icon: FontAwesomeIcons.signOutAlt,
                   label: AppLocalizations.instance.text('TXT_SIGN_OUT'),
                   btnColor: CustomColor.MAIN,
                   lblColor: Colors.white,
+                  fontSize: 16,
                   function: () => CustomWidget.showConfirmationDialog(
                     context,
                     desc: AppLocalizations.instance.text('TXT_LOGOUT_INFO'),

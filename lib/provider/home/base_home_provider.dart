@@ -1,5 +1,6 @@
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
+import 'package:eight_barrels/screen/cart/base_cart_screen.dart';
 import 'package:eight_barrels/screen/home/home_screen.dart';
 import 'package:eight_barrels/screen/product/product_list_screen.dart';
 import 'package:flutter/material.dart';
@@ -74,7 +75,7 @@ class BaseHomeProvider extends ChangeNotifier {
     return [
       HomeScreen(),
       ProductListScreen(),
-      _underConstructionPage(),
+      BaseCartScreen(),
       _underConstructionPage(),
     ];
   }

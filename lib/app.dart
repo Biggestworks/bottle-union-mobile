@@ -1,20 +1,25 @@
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/provider/auth/auth_provider.dart';
+import 'package:eight_barrels/provider/cart/base_cart_provider.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
 import 'package:eight_barrels/provider/product/product_by_category_provider.dart';
+import 'package:eight_barrels/provider/product/product_detail_provider.dart';
 import 'package:eight_barrels/provider/product/product_list_provider.dart';
+import 'package:eight_barrels/provider/product/wishlist_provider.dart';
 import 'package:eight_barrels/provider/profile/profile_provider.dart';
 import 'package:eight_barrels/provider/splash/splash_provider.dart';
 import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/auth/register_screen.dart';
 import 'package:eight_barrels/screen/auth/start_screen.dart';
+import 'package:eight_barrels/screen/cart/base_cart_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/home/home_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/product/product_list_screen.dart';
+import 'package:eight_barrels/screen/product/wishlist_screen.dart';
 import 'package:eight_barrels/screen/profile/profile_screen.dart';
 import 'package:eight_barrels/screen/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -113,6 +118,9 @@ class _AppState extends State<App> {
               ChangeNotifierProvider<ProductListProvider>(
                 create: (context) => ProductListProvider(),
               ),
+              ChangeNotifierProvider<BaseCartProvider>(
+                create: (context) => BaseCartProvider(),
+              ),
             ],
             child: BaseHomeScreen(),
           ),
@@ -127,7 +135,10 @@ class _AppState extends State<App> {
         ),
         GetPage(
           name: ProductDetailScreen.tag,
-          page: () => ProductDetailScreen(),
+          page: () => ChangeNotifierProvider<ProductDetailProvider>(
+            create: (context) => ProductDetailProvider(),
+            child: ProductDetailScreen(),
+          ),
         ),
         GetPage(
           name: ProductByCategoryScreen.tag,
@@ -142,6 +153,17 @@ class _AppState extends State<App> {
             create: (context) => ProfileProvider(),
             child: ProfileScreen(),
           ),
+        ),
+        GetPage(
+          name: WishListScreen.tag,
+          page: () => ChangeNotifierProvider<WishListProvider>(
+            create: (context) => WishListProvider(),
+            child: WishListScreen(),
+          ),
+        ),
+        GetPage(
+          name: BaseCartScreen.tag,
+          page: () => BaseCartScreen(),
         ),
       ],
     );

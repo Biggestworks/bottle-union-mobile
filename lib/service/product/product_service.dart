@@ -30,7 +30,7 @@ class ProductService extends GetConnect {
     String? maxPrice,
     String? page,
   }) async {
-    ProductListModel _product = new ProductListModel();
+    ProductListModel _model = new ProductListModel();
 
     final Map<String, dynamic> _query = {
       "name": name,
@@ -51,44 +51,44 @@ class ProductService extends GetConnect {
         query: _query,
         headers: await _headersAuth(),
       );
-      _product = ProductListModel.fromJson(_response.body);
+      _model = ProductListModel.fromJson(_response.body);
     } catch (e) {
       print(e);
     }
 
-    return _product;
+    return _model;
   }
 
   Future<BrandListModel?> brandList() async {
-    BrandListModel _brand = new BrandListModel();
+    BrandListModel _model = new BrandListModel();
 
     try {
       Response _response = await get(
         URLHelper.BRAND_LIST_URL,
         headers: await _headersAuth(),
       );
-      _brand = BrandListModel.fromJson(_response.body);
+      _model = BrandListModel.fromJson(_response.body);
     } catch (e) {
       print(e);
     }
 
-    return _brand;
+    return _model;
   }
 
   Future<CategoryListModel?> categoryList() async {
-    CategoryListModel _category = new CategoryListModel();
+    CategoryListModel _model = new CategoryListModel();
 
     try {
       Response _response = await get(
         URLHelper.CATEGORY_LIST_URL,
         headers: await _headersAuth(),
       );
-      _category = CategoryListModel.fromJson(_response.body);
+      _model = CategoryListModel.fromJson(_response.body);
     } catch (e) {
       print(e);
     }
 
-    return _category;
+    return _model;
   }
 
 }

@@ -1,17 +1,14 @@
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
-import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/provider/product/product_list_provider.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
@@ -51,33 +48,35 @@ class _ProductListScreenState extends State<ProductListScreen>
         isScroll: true,
         child: ChangeNotifierProvider.value(
           value : Provider.of<ProductListProvider>(context, listen: false),
-          child: SafeArea(
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.8,
-              padding: EdgeInsets.all(20),
-              child: Scaffold(
-                body: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.8,
+            child: Scaffold(
+              body: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(AppLocalizations.instance.text('TXT_LBL_FILTER'), style: TextStyle(
-                            fontSize: 20,
-                          ),),
-                          TextButton(
-                            onPressed: () async {
-                              Navigator.pop(context);
-                              await _provider.onResetFilter();
-                            },
-                            child: Text('Reset Filter', style: TextStyle(
-                              color: CustomColor.MAIN,
-                              fontSize: 16,
+                      Flexible(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(AppLocalizations.instance.text('TXT_LBL_FILTER'), style: TextStyle(
+                              fontSize: 20,
                             ),),
-                          ),
-                        ],
+                            TextButton(
+                              onPressed: () async {
+                                Navigator.pop(context);
+                                await _provider.onResetFilter();
+                              },
+                              child: Text('Reset Filter', style: TextStyle(
+                                color: CustomColor.MAIN,
+                                fontSize: 16,
+                              ),),
+                            ),
+                          ],
+                        ),
                       ),
                       SizedBox(height: 10,),
                       Flexible(
@@ -215,16 +214,28 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 ),),
                                 SizedBox(
                                   height: 150,
-                                  child: SfDateRangePicker(
-                                    view: DateRangePickerView.decade,
-                                    selectionMode: DateRangePickerSelectionMode.single,
-                                    enableMultiView: false,
-                                    allowViewNavigation: false,
-                                    onSelectionChanged: (value) {
-                                      _provider.fnOnSelectYear(value);
+                                  child: YearPicker(
+                                    firstDate: DateTime(DateTime.now().year - 100, 1),
+                                    lastDate: DateTime(DateTime.now().year + 100, 1),
+                                    initialDate: DateTime.now(),
+                                    selectedDate: DateTime.parse(_provider.selectedYear!),
+                                    onChanged: (value) {
+                                      _provider.fnOnSelectYear2(value);
                                     },
                                   ),
                                 ),
+                                // SizedBox(
+                                //   height: 150,
+                                //   child: SfDateRangePicker(
+                                //     view: DateRangePickerView.decade,
+                                //     selectionMode: DateRangePickerSelectionMode.single,
+                                //     enableMultiView: false,
+                                //     allowViewNavigation: false,
+                                //     onSelectionChanged: (value) {
+                                //       _provider.fnOnSelectYear(value);
+                                //     },
+                                //   ),
+                                // ),
                               ],
                             ),
                           ),
@@ -279,6 +290,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                                             ],
                                           ),
                                         ),
+                                        onChanged: (_) => _provider.fnOnChangedPrice(),
                                       ),
                                     ),
                                     SizedBox(width: 10,),
@@ -310,6 +322,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                                             ],
                                           ),
                                         ),
+                                        onChanged: (_) => _provider.fnOnChangedPrice(),
                                       ),
                                     ),
                                   ],
@@ -322,28 +335,29 @@ class _ProductListScreenState extends State<ProductListScreen>
                     ],
                   ),
                 ),
-                bottomNavigationBar: Consumer<ProductListProvider>(
-                  child: SizedBox(),
-                  builder: (context, provider, skeleton) {
-                    switch (provider.isFiltered) {
-                      case true:
-                        return Container(
-                          width: MediaQuery.of(context).size.width,
-                          child: CustomWidget.roundBtn(
-                            label: 'Submit Filter',
-                            btnColor: CustomColor.MAIN,
-                            lblColor: Colors.white,
-                            function: () async {
-                              Navigator.pop(context);
-                              await _provider.fnOnSubmitFilter();
-                            },
-                          ),
-                        );
-                      default:
-                        return skeleton!;
-                    }
+              ),
+              bottomNavigationBar: Consumer<ProductListProvider>(
+                child: SizedBox(),
+                builder: (context, provider, skeleton) {
+                  switch (provider.isFiltered) {
+                    case true:
+                      return Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: EdgeInsets.all(10),
+                        child: CustomWidget.roundBtn(
+                          label: 'Submit Filter',
+                          btnColor: CustomColor.MAIN,
+                          lblColor: Colors.white,
+                          function: () async {
+                            Navigator.pop(context);
+                            await _provider.fnOnSubmitFilter();
+                          },
+                        ),
+                      );
+                    default:
+                      return skeleton!;
                   }
-                ),
+                }
               ),
             ),
           ),
@@ -365,7 +379,10 @@ class _ProductListScreenState extends State<ProductListScreen>
                   default:
                     switch (provider.productList.result!.data!.length) {
                       case 0:
-                        return Center(child: Text('empty'),);
+                        return CustomWidget.emptyScreen(
+                          image: 'assets/images/ic_empty_product.png',
+                          title: AppLocalizations.instance.text('TXT_NO_PRODUCT'),
+                        );
                       default:
                         return NotificationListener<ScrollNotification>(
                           onNotification: provider.fnOnNotification,
@@ -377,105 +394,21 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
                                   crossAxisSpacing: 2.0,
-                                  childAspectRatio: 0.62,
+                                  childAspectRatio: 0.6,
                                 ),
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
                                 itemCount: provider.productList.result!.data!.length,
                                 itemBuilder: (context, index) {
                                   var _data = provider.productList.result!.data![index];
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 10),
-                                    child: Card(
-                                      elevation: 1,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadiusDirectional.circular(10),
-                                      ),
-                                      child: InkWell(
-                                        onTap: () => Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(
-                                          productList: _data,
-                                        )),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(10),
-                                                topLeft: Radius.circular(10),
-                                              ),
-                                              child: CachedNetworkImage(
-                                                imageUrl: _data.image1!,
-                                                width: MediaQuery.of(context).size.width,
-                                                alignment: Alignment.center,
-                                                fit: BoxFit.cover,
-                                                placeholder: (context, url) => Center(
-                                                    child: CircularProgressIndicator()),
-                                                errorWidget: (context, url, error) =>
-                                                    Center(child: Icon(Icons.error, size: 80,),),
-                                              ),
-                                            ),
-                                            Flexible(
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(10),
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Column(
-                                                      mainAxisSize: MainAxisSize.min,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text(_data.name!, style: TextStyle(
-                                                          color: CustomColor.BROWN_LIGHT_TXT,
-                                                          fontSize: 16,
-                                                        ), maxLines: 2, overflow: TextOverflow.ellipsis,),
-                                                        SizedBox(height: 5,),
-                                                        Row(
-                                                          children: [
-                                                            Icon(FontAwesomeIcons.solidStar, color: Colors.orangeAccent, size: 18,),
-                                                            SizedBox(width: 5,),
-                                                            Padding(
-                                                              padding: const EdgeInsets.only(top: 2),
-                                                              child: Text(_data.rating.toString()),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        SizedBox(height: 10,),
-                                                        Flexible(
-                                                          child: Text(FormatterHelper.moneyFormatter(_data.regularPrice), style: TextStyle(
-                                                            fontWeight: FontWeight.bold,
-                                                            color: CustomColor.MAIN_TXT,
-                                                            fontSize: 18,
-                                                          ),),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                      children: [
-                                                        Text('Stock: ${_data.stock}', style: TextStyle(
-                                                          color: CustomColor.GREY_TXT,
-                                                        ),),
-                                                        Flexible(
-                                                          child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.end,
-                                                            children: [
-                                                              Icon(FontAwesomeIcons.shoppingCart, color: CustomColor.GREY_ICON, size: 18,),
-                                                              SizedBox(width: 15,),
-                                                              Icon(FontAwesomeIcons.heart, color: CustomColor.GREY_ICON, size: 18,),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                  return CustomWidget.productCard(
+                                    context: context,
+                                    data: _data,
+                                    function: () => Get.toNamed(
+                                      ProductDetailScreen.tag, 
+                                      arguments: ProductDetailScreen(product: _data,),
                                     ),
+                                    wishlistFunc: () async => await provider.fnStoreWishlist(context, _data.id!)
                                   );
                                 },
                               ),
@@ -511,20 +444,15 @@ class _ProductListScreenState extends State<ProductListScreen>
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),),
-              TextButton.icon(
-                style: TextButton.styleFrom(
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-                onPressed: () async {
-                  await Future.delayed(Duration.zero).then((_) async {
-                    await _provider.fnFetchBrandList();
-                    await _provider.fnFetchCategoryList();
-                  }).then((_) => _showFilterSheet());
-                },
-                icon: Icon(MdiIcons.filterVariant, color: CustomColor.BROWN_TXT,),
-                label: Text('Sort/Filter', style: TextStyle(
-                  color: CustomColor.BROWN_LIGHT_TXT,
-                ),),
+              CustomWidget.textIconBtn(
+                icon: MdiIcons.filterVariant,
+                label: 'Sort/Filter',
+                lblColor: CustomColor.BROWN_LIGHT_TXT,
+                icColor: CustomColor.BROWN_TXT,
+                icSize: 24,
+                fontSize: 16,
+                function: () async => await _provider.fnInitFilter()
+                    .then((_) => _showFilterSheet()),
               ),
             ],
           ),
@@ -549,41 +477,28 @@ class _ProductListScreenState extends State<ProductListScreen>
       ),
     );
 
-    return Scaffold(
-      backgroundColor: CustomColor.BG,
-      appBar: AppBar(
+    return RefreshIndicator(
+      onRefresh: () async => await _provider.onResetFilter(),
+      child: Scaffold(
         backgroundColor: CustomColor.BG,
-        elevation: 0,
-        centerTitle: true,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20,),
-            child: SizedBox(
-              width: 140,
-              child: Image.asset('assets/images/ic_logo_bu.png',),
+        appBar: AppBar(
+          backgroundColor: CustomColor.BG,
+          elevation: 0,
+          centerTitle: true,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20,),
+              child: SizedBox(
+                width: 120,
+                child: Image.asset('assets/images/ic_logo_bu.png',),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
+        body: _mainContent,
       ),
-      body: _mainContent,
     );
   }
-
-  // @override
-  // void onPaginationLoadFinish() {
-  //   if (mounted) {
-  //     _isPaginateLoad = false;
-  //     setState(() {});
-  //   }
-  // }
-  //
-  // @override
-  // void onPaginationLoadStart() {
-  //   if (mounted) {
-  //     _isPaginateLoad = true;
-  //     setState(() {});
-  //   }
-  // }
 
   @override
   void onProgressFinish() {

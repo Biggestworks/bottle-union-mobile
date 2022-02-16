@@ -81,6 +81,7 @@ class _StartScreenState extends State<StartScreen> implements LoadingView {
                   label: 'Bottle Union Account',
                   btnColor: CustomColor.MAIN,
                   lblColor: CustomColor.MAIN,
+                  fontSize: 16,
                   function: () => Get.toNamed(RegisterScreen.tag),
                 ),
               ),
@@ -95,6 +96,7 @@ class _StartScreenState extends State<StartScreen> implements LoadingView {
                   label: 'Google',
                   btnColor: Colors.red,
                   lblColor: Colors.white,
+                  fontSize: 16,
                   function: () async {
                     Get.back();
                     await _provider.fnAuthGoogle(context);
@@ -112,6 +114,7 @@ class _StartScreenState extends State<StartScreen> implements LoadingView {
                   label: 'Facebook',
                   btnColor: Colors.blue,
                   lblColor: Colors.white,
+                  fontSize: 16,
                   function: () async {
                     Get.back();
                     await _provider.fnAuthFacebook(context);
@@ -146,6 +149,7 @@ class _StartScreenState extends State<StartScreen> implements LoadingView {
               btnColor: CustomColor.SECONDARY,
               lblColor: CustomColor.SECONDARY,
               isBold: true,
+              fontSize: 16,
               function: () => Get.toNamed(LoginScreen.tag, arguments: LoginScreen()),
             ),
           ),
@@ -156,6 +160,7 @@ class _StartScreenState extends State<StartScreen> implements LoadingView {
               btnColor: CustomColor.SECONDARY,
               lblColor: CustomColor.MAIN,
               isBold: true,
+              fontSize: 16,
               function: () => showRegisterSheet(),
             ),
           ),
