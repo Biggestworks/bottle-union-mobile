@@ -154,13 +154,15 @@ class ProductListProvider extends ChangeNotifier with PaginationInterface {
     );
 
     if (_res!.status != null) {
-      if (_res.status == true) {
-        CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_WISHLIST_ADD')));
+      if (_res.status == true && _res.message == 'Save Success') {
+        await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_WISHLIST_ADD')));
+      } else if (_res.status == true && _res.message == 'Success remove wishlist') {
+        await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_WISHLIST_DELETE')));
       } else {
-        CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
+        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
       }
     } else {
-      CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
   }
 

@@ -205,7 +205,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           Consumer<ProductDetailProvider>(
             builder: (context, provider, _) {
               return IconButton(
-                onPressed: () {},
+                onPressed: () async => await provider.fnStoreWishlist(provider.scaffoldKey.currentContext!),
                 icon: Icon(provider.isWishlist
                     ? FontAwesomeIcons.solidHeart
                     : FontAwesomeIcons.heart, color: CustomColor.MAIN,),
@@ -236,6 +236,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
 
     return Scaffold(
+      key: _provider.scaffoldKey,
       backgroundColor: CustomColor.BG,
       appBar: AppBar(
         backgroundColor: CustomColor.MAIN,

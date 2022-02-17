@@ -133,7 +133,10 @@ class _WishListScreenState extends State<WishListScreen> with LoadingView {
                                                         mainAxisSize: MainAxisSize.min,
                                                         children: [
                                                           IconButton(
-                                                            onPressed: () {},
+                                                            onPressed: () async => await provider.fnDeleteWishlist(
+                                                              provider.scaffoldKey.currentContext!,
+                                                              _data.id!,
+                                                            ),
                                                             icon: Icon(FontAwesomeIcons.trashAlt, size: 20,),
                                                             visualDensity: VisualDensity.compact,
                                                           ),
@@ -193,27 +196,32 @@ class _WishListScreenState extends State<WishListScreen> with LoadingView {
                 case null:
                   return skeleton!;
                 default:
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('${provider.wishlist.result!.total ?? '0'}'
-                          '${AppLocalizations.instance.text('TXT_WISHLIST_TOTAL')}', style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),),
-                      CustomWidget.textIconBtn(
-                        icon: FontAwesomeIcons.checkCircle,
-                        label: provider.isSelection
-                            ? AppLocalizations.instance.text('TXT_CANCEL')
-                            : AppLocalizations.instance.text('TXT_SELECT'),
-                        lblColor: CustomColor.BROWN_LIGHT_TXT,
-                        icColor: CustomColor.BROWN_TXT,
-                        fontSize: 16,
-                        function: () => provider.fnToggleSelection(),
-                      ),
-                    ],
-                  );
+                  switch (provider.wishlist.result!.data!.length) {
+                    case 0:
+                      return skeleton!;
+                    default:
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('${provider.wishlist.result!.total ?? '0'}'
+                              '${AppLocalizations.instance.text('TXT_WISHLIST_TOTAL')}', style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),),
+                          CustomWidget.textIconBtn(
+                            icon: FontAwesomeIcons.checkCircle,
+                            label: provider.isSelection
+                                ? AppLocalizations.instance.text('TXT_CANCEL')
+                                : AppLocalizations.instance.text('TXT_SELECT'),
+                            lblColor: CustomColor.BROWN_LIGHT_TXT,
+                            icColor: CustomColor.BROWN_TXT,
+                            fontSize: 16,
+                            function: () => provider.fnToggleSelection(),
+                          ),
+                        ],
+                      );
+                  }
               }
             },
           ),
@@ -232,11 +240,12 @@ class _WishListScreenState extends State<WishListScreen> with LoadingView {
         lblColor: Colors.white,
         isBold: true,
         fontSize: 16,
-        function: () async => await _provider.fnDeleteWishlist(context),
+        function: () async => await _provider.fnDeleteMultiWishlist(_provider.scaffoldKey.currentContext!),
       ),
     );
 
     return Scaffold(
+      key: _provider.scaffoldKey,
       backgroundColor: CustomColor.BG,
       appBar: AppBar(
         backgroundColor: CustomColor.BG,

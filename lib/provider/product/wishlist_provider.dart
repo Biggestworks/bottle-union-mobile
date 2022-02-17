@@ -18,6 +18,8 @@ class WishListProvider extends ChangeNotifier with PaginationInterface {
 
   LoadingView? _view;
 
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   fnGetView(LoadingView view) {
     this._view = view;
   }
@@ -51,7 +53,7 @@ class WishListProvider extends ChangeNotifier with PaginationInterface {
     notifyListeners();
   }
 
-  Future fnDeleteWishlist(BuildContext context) async {
+  Future fnDeleteMultiWishlist(BuildContext context) async {
     List.generate(selectionList.length, (index) {
       if (selectionList[index].status == true) {
         idList.add(selectionList[index].id);
@@ -69,19 +71,21 @@ class WishListProvider extends ChangeNotifier with PaginationInterface {
 
           if (_res!.status != null) {
             if (_res.status == true) {
+              idList.clear();
+              notifyListeners();
               await fnFetchWishlist();
-              CustomWidget.showSnackBar(
+              await CustomWidget.showSnackBar(
                 context: context,
                 content: Text(AppLocalizations.instance.text('TXT_WISHLIST_DELETE')),
               );
             } else {
-              CustomWidget.showSnackBar(
+              await CustomWidget.showSnackBar(
                 context: context,
                 content: Text(_res.message.toString()),
               );
             }
           } else {
-            CustomWidget.showSnackBar(
+            await CustomWidget.showSnackBar(
               context: context,
               content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')),
             );
@@ -94,6 +98,38 @@ class WishListProvider extends ChangeNotifier with PaginationInterface {
         content: Text(AppLocalizations.instance.text('TXT_SELECT_ITEM_INFO')),
       );
     }
+  }
+
+  Future fnDeleteWishlist(BuildContext context, int id) async {
+    CustomWidget.showConfirmationDialog(
+      context,
+      desc: AppLocalizations.instance.text('TXT_REMOVE_WISHLIST_INFO'),
+      function: () async {
+        var _res = await _service.deleteWishlist(
+            idList: [id]
+        );
+
+        if (_res!.status != null) {
+          if (_res.status == true) {
+            await fnFetchWishlist();
+            await CustomWidget.showSnackBar(
+              context: context,
+              content: Text(AppLocalizations.instance.text('TXT_WISHLIST_DELETE')),
+            );
+          } else {
+            await CustomWidget.showSnackBar(
+              context: context,
+              content: Text(_res.message.toString()),
+            );
+          }
+        } else {
+          await CustomWidget.showSnackBar(
+            context: context,
+            content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')),
+          );
+        }
+      },
+    );
   }
 
   @override
