@@ -1,14 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
-import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/provider/product/product_by_category_provider.dart';
-import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 
 class ProductByCategoryScreen extends StatefulWidget {
@@ -74,11 +69,18 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> with 
                                 itemCount: provider.productList.result!.data!.length,
                                 itemBuilder: (context, index) {
                                   var _data = provider.productList.result!.data![index];
-                                  return CustomWidget.productCard(
-                                    context: context,
-                                    data: _data,
-                                    function: () => Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(product: _data,)),
-                                  );
+                                  switch (_data.stock) {
+                                    case 0:
+                                      return provider.emptyProductCard(
+                                        context: context,
+                                        data: _data,
+                                      );
+                                    default:
+                                      return provider.productCard(
+                                        context: context,
+                                        data: _data,
+                                      );
+                                  }
                                 },
                               ),
                               Container(

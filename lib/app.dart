@@ -2,6 +2,7 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/provider/auth/auth_provider.dart';
 import 'package:eight_barrels/provider/cart/base_cart_provider.dart';
+import 'package:eight_barrels/provider/cart/cart_list_provider.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
 import 'package:eight_barrels/provider/product/product_by_category_provider.dart';
@@ -14,6 +15,7 @@ import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/auth/register_screen.dart';
 import 'package:eight_barrels/screen/auth/start_screen.dart';
 import 'package:eight_barrels/screen/cart/base_cart_screen.dart';
+import 'package:eight_barrels/screen/cart/cart_list_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/home/home_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
@@ -121,6 +123,9 @@ class _AppState extends State<App> {
               ChangeNotifierProvider<BaseCartProvider>(
                 create: (context) => BaseCartProvider(),
               ),
+              ChangeNotifierProvider<CartListProvider>(
+                create: (context) => CartListProvider(),
+              ),
             ],
             child: BaseHomeScreen(),
           ),
@@ -164,6 +169,10 @@ class _AppState extends State<App> {
         GetPage(
           name: BaseCartScreen.tag,
           page: () => BaseCartScreen(),
+        ),
+        GetPage(
+          name: CartListScreen.tag,
+          page: () => CartListScreen(),
         ),
       ],
     );

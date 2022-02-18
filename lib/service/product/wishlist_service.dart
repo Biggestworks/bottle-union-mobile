@@ -45,7 +45,7 @@ class WishlistService extends GetConnect {
     return _model;
   }
 
-  Future<UserWishlistModel?> getWishlist({String? page}) async {
+  Future<UserWishlistModel?> getWishlist({required String page}) async {
     UserWishlistModel _model = new UserWishlistModel();
 
     final Map<String, dynamic> _query = {
@@ -67,7 +67,7 @@ class WishlistService extends GetConnect {
     return _model;
   }
 
-  Future<UserWishlistModel?> deleteWishlist({List<int>? idList}) async {
+  Future<UserWishlistModel?> deleteWishlist({required List<int> idList}) async {
     UserWishlistModel _model = new UserWishlistModel();
 
     final Map<String, dynamic> _data = {
@@ -105,7 +105,6 @@ class WishlistService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
-      print(_response.body);
       _model = DefaultModel.fromJson(_response.body);
     } catch (e) {
       print(e);

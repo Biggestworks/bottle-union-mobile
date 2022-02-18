@@ -1,7 +1,6 @@
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
 class BaseHomeScreen extends StatelessWidget {
@@ -14,14 +13,35 @@ class BaseHomeScreen extends StatelessWidget {
     final _provider = Provider.of<BaseHomeProvider>(context, listen: false);
 
     return Scaffold(
-      body: PersistentTabView(
-        context,
-        items: _provider.navBarItem,
-        screens: _provider.screenList(),
-        navBarStyle: NavBarStyle.style7,
-        backgroundColor: CustomColor.MAIN,
-        confineInSafeArea: true,
-        hideNavigationBarWhenKeyboardShows: true,
+      body: Consumer<BaseHomeProvider>(
+        builder: (context, provider, _) => provider.screenList(),
+      ),
+      bottomNavigationBar: Consumer<BaseHomeProvider>(
+        child: Container(),
+        builder: (context, provider, skeleton) {
+          switch (provider.navBarItems().length) {
+            case (0):
+              return skeleton!;
+            default:
+              return Theme(
+                data: Theme.of(context).copyWith(
+                    canvasColor: CustomColor.MAIN,
+                ),
+                child: BottomNavigationBar(
+                  type: BottomNavigationBarType.fixed,
+                  elevation: 0,
+                  currentIndex: provider.pageIndex,
+                  items: provider.navBarItems(),
+                  selectedItemColor: Colors.white,
+                  unselectedItemColor: Colors.white,
+                  showUnselectedLabels: false,
+                  iconSize: 18,
+                  selectedFontSize: 14,
+                  onTap: provider.fnOnNavBarSelected,
+                ),
+              );
+          }
+        },
       ),
     );
   }

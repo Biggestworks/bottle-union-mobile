@@ -1,14 +1,18 @@
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/abstract/pagination_interface.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
+import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/product/user_wishlist_model.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
+import 'package:eight_barrels/service/cart/cart_service.dart';
 import 'package:eight_barrels/service/product/wishlist_service.dart';
 import 'package:flutter/material.dart';
 
 class WishListProvider extends ChangeNotifier with PaginationInterface {
   WishlistService _service = new WishlistService();
+  CartService _cartService = new CartService();
   UserWishlistModel wishlist = new UserWishlistModel();
+  UserPreferences _userPreferences = new UserPreferences();
 
   bool isPaginateLoad = false;
   bool isSelection = false;
@@ -76,7 +80,7 @@ class WishListProvider extends ChangeNotifier with PaginationInterface {
               await fnFetchWishlist();
               await CustomWidget.showSnackBar(
                 context: context,
-                content: Text(AppLocalizations.instance.text('TXT_WISHLIST_DELETE')),
+                content: Text(AppLocalizations.instance.text('TXT_WISHLIST_DELETE_SUCCESS')),
               );
             } else {
               await CustomWidget.showSnackBar(
@@ -114,7 +118,7 @@ class WishListProvider extends ChangeNotifier with PaginationInterface {
             await fnFetchWishlist();
             await CustomWidget.showSnackBar(
               context: context,
-              content: Text(AppLocalizations.instance.text('TXT_WISHLIST_DELETE')),
+              content: Text(AppLocalizations.instance.text('TXT_WISHLIST_DELETE_SUCCESS')),
             );
           } else {
             await CustomWidget.showSnackBar(
@@ -130,6 +134,25 @@ class WishListProvider extends ChangeNotifier with PaginationInterface {
         }
       },
     );
+  }
+
+  Future fnStoreCart(BuildContext context, int productId) async {
+    var _user = await _userPreferences.getUserData();
+
+    var _res = await _cartService.storeCart(
+      uid: _user!.data!.id!,
+      productId: productId,
+    );
+
+    if (_res!.status != null) {
+      if (_res.status == true) {
+        await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_CART_ADD_INFO')));
+      } else {
+        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
+      }
+    } else {
+      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+    }
   }
 
   @override

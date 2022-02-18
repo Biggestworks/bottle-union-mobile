@@ -75,7 +75,7 @@
 	"TXT_DESC_WISHLIST": "Manage your own Wishlist",
 	"TXT_SELECT": "Select",
 	"TXT_WISHLIST_ADD": "Success, added to wishlist",
-	"TXT_WISHLIST_DELETE": "Success, remove from wishlist",
+	"TXT_WISHLIST_DELETE_SUCCESS": "Success, remove from wishlist",
 	"TXT_WISHLIST_TOTAL": " Wishlist Item(s)",
 	"TXT_LBL_CHECKOUT": "Check-out",
 	"TXT_LBL_TRACK_ORDER": "Track Order",
@@ -89,6 +89,14 @@
 	"TXT_LBL_REMOVE_WISHLIST": "Remove Wishlist",
 	"TXT_REMOVE_WISHLIST_INFO": "Are you sure you want to remove items from Wishlist?",
 	"TXT_SELECT_ITEM_INFO": "Please select at least one item",
+	"TXT_LANGUAGE_SUCCESS": "You have successfully changed the language. The system will reloading to take full changes",
+	"TXT_CART_ADD_INFO": "Success, added to cart",
+	"TXT_CART_ADD": "Add to Cart",
+	"TXT_REMOVE_CART_INFO": "Are you sure you want to remove items from Cart?",
+	"TXT_CART_DELETE_SUCCESS": "Success, remove from Cart",
+	"TXT_LBL_BUY": "Buy",
+	"TXT_SOLD_OUT": "Sold out",
+
 
 
 	"app_name": "eRecycle",
@@ -146,7 +154,6 @@
 	"TXT_GANTI_UNIT": "\\nChange Current Default Waste Units",
 	"TXT_PENCAIRAN_SALDO_BS": "Change Waste Bank Unit \nList of Request Disbursement of Balances from Waste Banks",
 	"TXT_TITTLE_LANGUAGE": "Hooray! Language Successfully Changed!",
-	"TXT_MESSAGE_LANGUAGE": "You have successfully changed the language to %s. The system will reloading to take full changes",
 	"TXT_LANGUAGE_EN": "English",
 	"TXT_LANGUAGE_IN": "Bahasa Indonesia",
 	"BTN_CANCEL": "Cancel",

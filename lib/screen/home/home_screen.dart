@@ -111,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Widget _categoryContent = Container(
       width: MediaQuery.of(context).size.width,
-      height: 200,
+      height: 240,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -145,18 +145,17 @@ class _HomeScreenState extends State<HomeScreen> {
                             padding: EdgeInsets.only(left: index == 0 ? 50 : 0),
                             child: Column(
                               children: [
-                                Flexible(
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
+                                Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  elevation: 0,
+                                  child: Container(
+                                    width: 120,
+                                    height: 140,
+                                    child: ClipRRect(
+                                      child: CustomWidget.networkImg(context, _data.image),
                                       borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    elevation: 0,
-                                    child: Container(
-                                      width: 150,
-                                      child: ClipRRect(
-                                        child: CustomWidget.networkImg(context, _data.image),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
                                     ),
                                   ),
                                 ),
@@ -278,7 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _bannerContent,
             SizedBox(height: 20,),
             _categoryContent,
-            SizedBox(height: 20,),
+            SizedBox(height: 10,),
             _popularContent,
           ],
         ),

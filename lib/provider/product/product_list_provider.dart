@@ -1,20 +1,17 @@
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/abstract/pagination_interface.dart';
-import 'package:eight_barrels/helper/app_localization.dart';
+import 'package:eight_barrels/abstract/product_card_interface.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/product/brand_model.dart';
 import 'package:eight_barrels/model/product/category_model.dart';
 import 'package:eight_barrels/model/product/product_model.dart';
-import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/product/product_service.dart';
-import 'package:eight_barrels/service/product/wishlist_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
-class ProductListProvider extends ChangeNotifier with PaginationInterface {
+class ProductListProvider extends ChangeNotifier
+    with PaginationInterface, ProductCardInterface {
   ProductService _service = new ProductService();
-  WishlistService _wishlistService = new WishlistService();
   ProductListModel productList = new ProductListModel();
   BrandListModel brandList = new BrandListModel();
   CategoryListModel categoryList = new CategoryListModel();
@@ -30,6 +27,7 @@ class ProductListProvider extends ChangeNotifier with PaginationInterface {
   bool isBrandSelected = false;
   int? selectedCategoryIndex;
   bool isCategorySelected = false;
+  DateTime selectedDate = DateTime.now();
   String? selectedYear;
   bool isFiltered = false;
 
@@ -82,17 +80,18 @@ class ProductListProvider extends ChangeNotifier with PaginationInterface {
     notifyListeners();
   }
 
-  fnOnSelectYear(DateRangePickerSelectionChangedArgs args) {
-    selectedYear = DateFormat('yyyy').format(args.value);
-    isFiltered = true;
-    notifyListeners();
-  }
-
-  fnOnSelectYear2(DateTime value) {
+  fnOnSelectYear(DateTime value) {
+    selectedDate = value;
     selectedYear = DateFormat('yyyy').format(value);
     isFiltered = true;
     notifyListeners();
   }
+
+  // fnOnSelectYear(DateRangePickerSelectionChangedArgs args) {
+  //   selectedYear = DateFormat('yyyy').format(args.value);
+  //   isFiltered = true;
+  //   notifyListeners();
+  // }
 
   Future fnOnSearchProduct(String value) async {
     _view!.onProgressStart();
@@ -137,33 +136,13 @@ class ProductListProvider extends ChangeNotifier with PaginationInterface {
     selectedBrandIndex = null;
     selectedCategoryIndex = null;
     selectedYear = null;
+    selectedDate = DateTime.now();
     searchController.clear();
     minPriceController.clear();
     maxPriceController.clear();
     isFiltered = false;
     await fnFetchProductList();
     notifyListeners();
-  }
-
-  Future fnStoreWishlist(BuildContext context, int productId) async {
-    var _user = await _userPreferences.getUserData();
-
-    var _res = await _wishlistService.storeWishlist(
-      uid: _user!.data!.id!,
-      productId: productId,
-    );
-
-    if (_res!.status != null) {
-      if (_res.status == true && _res.message == 'Save Success') {
-        await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_WISHLIST_ADD')));
-      } else if (_res.status == true && _res.message == 'Success remove wishlist') {
-        await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_WISHLIST_DELETE')));
-      } else {
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
-      }
-    } else {
-      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
-    }
   }
 
   @override

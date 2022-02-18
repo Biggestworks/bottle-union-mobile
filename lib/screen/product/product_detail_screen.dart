@@ -13,9 +13,9 @@ import 'package:readmore/readmore.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   static String tag = '/product-detail-screen';
-  final Data? product;
+  final int? id;
 
-  const ProductDetailScreen({Key? key, this.product}) : super(key: key);
+  const ProductDetailScreen({Key? key, this.id}) : super(key: key);
 
   @override
   _ProductDetailScreenState createState() => _ProductDetailScreenState();
@@ -27,7 +27,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   void initState() {
     Future.delayed(Duration.zero).then((value) async {
       Provider.of<ProductDetailProvider>(context, listen: false).fnGetArguments(context);
-      Provider.of<ProductDetailProvider>(context, listen: false).fnCheckWishlist();
+      Provider.of<ProductDetailProvider>(context, listen: false).fnGetProduct()
+          .then((value) => Provider.of<ProductDetailProvider>(context, listen: false).fnCheckWishlist());
     });
     super.initState();
   }
@@ -54,147 +55,150 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     }
 
     Widget _descriptionContent = Consumer<ProductDetailProvider>(
-      builder: (context, provider, _) {
-        return Container(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(provider.product.name ?? '-', style: TextStyle(
-                color: Colors.black,
-                fontSize: 24,
-              ),),
-              Text(provider.product.categories?.name ?? '-', style: TextStyle(
-                color: CustomColor.GREY_TXT,
-                fontSize: 16,
-              ),),
-              SizedBox(height: 20,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(FormatterHelper.moneyFormatter(provider.product.regularPrice ?? 0), style: TextStyle(
-                    color: CustomColor.MAIN,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22,
-                  ),),
-                  Text('In stock ${provider.product.stock ?? '0'} item(s)', style: TextStyle(
-                    color: CustomColor.GREY_TXT,
-                    fontSize: 14,
-                  ),),
-                ],
-              ),
-              Divider(
-                color: CustomColor.MAIN,
-                thickness: 1.5,
-                height: 25,
-              ),
-              Text('Brand', style: TextStyle(
-                color: CustomColor.GREY_TXT,
-              ),),
-              SizedBox(height: 5,),
-              Text(provider.product.brand?.name ?? '-', style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-              ),),
-              SizedBox(height: 10,),
-              Text('Year', style: TextStyle(
-                color: CustomColor.GREY_TXT,
-              ),),
-              SizedBox(height: 5,),
-              Text(provider.product.year ?? '-', style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-              ),),
-              SizedBox(height: 10,),
-              Text('Manufacture Country', style: TextStyle(
-                color: CustomColor.GREY_TXT,
-              ),),
-              SizedBox(height: 5,),
-              Text(provider.product.manufactureCountry ?? '-', style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-              ),),
-              SizedBox(height: 10,),
-              Text('Description', style: TextStyle(
-                color: CustomColor.GREY_TXT,
-              ),),
-              SizedBox(height: 5,),
-              ReadMoreText(
-                provider.product.description ?? '-',
-                trimLines: 3,
-                trimMode: TrimMode.Line,
-                trimCollapsedText: 'Show more',
-                trimExpandedText: 'Show less',
-                lessStyle: TextStyle(
-                  fontSize: 14,
-                  color: Colors.pink,
+      child: CustomWidget.showShimmerProductDetail(),
+      builder: (context, provider, skeleton) {
+        switch (provider.product.data) {
+          case null:
+            return skeleton!;
+          default:
+            var _data = _provider.product.data!;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: CarouselSlider(
+                    options: CarouselOptions(
+                      height: 300.0,
+                      autoPlay: true,
+                      enlargeCenterPage: true,
+                      enableInfiniteScroll: true,
+                      onPageChanged: (index, reason) {
+                        // _provider.onBannerChanged(index);
+                      },
+                    ),
+                    items: [
+                      _imageContainer(_data.image1),
+                      _imageContainer(_data.image2),
+                      _imageContainer(_data.image3),
+                      _imageContainer(_data.image4),
+                    ],
+                  ),
                 ),
-                moreStyle: TextStyle(
-                  fontSize: 14,
-                  color: Colors.pink,
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(_data.name ?? '-', style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 24,
+                      ),),
+                      Text(_data.categories?.name ?? '-', style: TextStyle(
+                        color: CustomColor.GREY_TXT,
+                        fontSize: 16,
+                      ),),
+                      SizedBox(height: 20,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(FormatterHelper.moneyFormatter(_data.regularPrice ?? 0), style: TextStyle(
+                            color: CustomColor.MAIN,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                          ),),
+                          _data.stock != 0
+                              ? Text('In stock ${_data.stock ?? '0'} item(s)', style: TextStyle(
+                            color: CustomColor.GREY_TXT,
+                            fontSize: 14,
+                          ),)
+                              : Text('Sold Out', style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 16,
+                          ),),
+                        ],
+                      ),
+                      Divider(
+                        color: CustomColor.MAIN,
+                        thickness: 1.5,
+                        height: 25,
+                      ),
+                      Text('Brand', style: TextStyle(
+                        color: CustomColor.GREY_TXT,
+                      ),),
+                      SizedBox(height: 5,),
+                      Text(_data.brand?.name ?? '-', style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),),
+                      SizedBox(height: 10,),
+                      Text('Year', style: TextStyle(
+                        color: CustomColor.GREY_TXT,
+                      ),),
+                      SizedBox(height: 5,),
+                      Text(_data.year ?? '-', style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),),
+                      SizedBox(height: 10,),
+                      Text('Manufacture Country', style: TextStyle(
+                        color: CustomColor.GREY_TXT,
+                      ),),
+                      SizedBox(height: 5,),
+                      Text(_data.manufactureCountry ?? '-', style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),),
+                      SizedBox(height: 10,),
+                      Text('Description', style: TextStyle(
+                        color: CustomColor.GREY_TXT,
+                      ),),
+                      SizedBox(height: 5,),
+                      ReadMoreText(
+                        _data.description ?? '-',
+                        trimLines: 3,
+                        trimMode: TrimMode.Line,
+                        trimCollapsedText: 'Show more',
+                        trimExpandedText: 'Show less',
+                        lessStyle: TextStyle(
+                          fontSize: 14,
+                          color: Colors.pink,
+                        ),
+                        moreStyle: TextStyle(
+                          fontSize: 14,
+                          color: Colors.pink,
+                        ),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                ),
-              ),
-            ],
-          ),
-        );
+              ],
+            );
+        }
       },
     );
 
-    Widget _mainContent = Stack(
-      children: [
-        Container(
-          width: double.infinity,
-          height: 200,
-          decoration: BoxDecoration(
-            color: CustomColor.MAIN,
-            borderRadius: BorderRadius.vertical(
-                bottom: Radius.elliptical(MediaQuery.of(context).size.width, 100.0)
+    Widget _mainContent = SingleChildScrollView(
+      child: Stack(
+        children: [
+          Container(
+            width: double.infinity,
+            height: 200,
+            decoration: BoxDecoration(
+              color: CustomColor.MAIN,
+              borderRadius: BorderRadius.vertical(
+                  bottom: Radius.elliptical(MediaQuery.of(context).size.width, 100.0)
+              ),
             ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-            ],
-          ),
-        ),
-        SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.only(top: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Consumer<ProductDetailProvider>(
-                  builder: (context, provider, _) {
-                    return CarouselSlider(
-                      options: CarouselOptions(
-                        height: 300.0,
-                        autoPlay: true,
-                        enlargeCenterPage: true,
-                        enableInfiniteScroll: true,
-                        onPageChanged: (index, reason) {
-                          // _provider.onBannerChanged(index);
-                        },
-                      ),
-                      items: [
-                        _imageContainer(provider.product.image1),
-                        _imageContainer(provider.product.image2),
-                        _imageContainer(provider.product.image3),
-                        _imageContainer(provider.product.image4),
-                      ],
-                    );
-                  },
-                ),
-                _descriptionContent,
-              ],
-            ),
-          ),
-        ),
-      ],
+          _descriptionContent,
+        ],
+      ),
     );
 
     Widget _bottomMenuContent = Container(
@@ -216,10 +220,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           SizedBox(width: 10,),
           Expanded(
             child: CustomWidget.roundOutlinedBtn(
-              label: 'Add to Cart',
+              label: AppLocalizations.instance.text('TXT_CART_ADD'),
               lblColor: CustomColor.MAIN,
               btnColor: CustomColor.MAIN,
-              function: () {},
+              function: () async => await _provider.fnStoreCart(_provider.scaffoldKey.currentContext!),
             ),
           ),
           SizedBox(width: 10,),

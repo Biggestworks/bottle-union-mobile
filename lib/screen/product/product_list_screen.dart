@@ -7,6 +7,7 @@ import 'package:eight_barrels/provider/product/product_list_provider.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/route_manager.dart';
@@ -213,15 +214,17 @@ class _ProductListScreenState extends State<ProductListScreen>
                                   fontSize: 20,
                                 ),),
                                 SizedBox(
-                                  height: 150,
-                                  child: YearPicker(
-                                    firstDate: DateTime(DateTime.now().year - 100, 1),
-                                    lastDate: DateTime(DateTime.now().year + 100, 1),
-                                    initialDate: DateTime.now(),
-                                    selectedDate: DateTime.parse(_provider.selectedYear!),
-                                    onChanged: (value) {
-                                      _provider.fnOnSelectYear2(value);
-                                    },
+                                  height: 200,
+                                  child: Consumer<ProductListProvider>(
+                                    builder: (context, provider, _) {
+                                      return YearPicker(
+                                        firstDate: DateTime(DateTime.now().year - 100, 1),
+                                        lastDate: DateTime(DateTime.now().year),
+                                        initialDate: DateTime.now(),
+                                        selectedDate: provider.selectedDate,
+                                        onChanged: provider.fnOnSelectYear,
+                                      );
+                                    }
                                   ),
                                 ),
                                 // SizedBox(
@@ -401,15 +404,18 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 itemCount: provider.productList.result!.data!.length,
                                 itemBuilder: (context, index) {
                                   var _data = provider.productList.result!.data![index];
-                                  return CustomWidget.productCard(
-                                    context: context,
-                                    data: _data,
-                                    function: () => Get.toNamed(
-                                      ProductDetailScreen.tag, 
-                                      arguments: ProductDetailScreen(product: _data,),
-                                    ),
-                                    wishlistFunc: () async => await provider.fnStoreWishlist(context, _data.id!)
-                                  );
+                                  switch (_data.stock) {
+                                    case 0:
+                                      return provider.emptyProductCard(
+                                        context: context,
+                                        data: _data,
+                                      );
+                                    default:
+                                      return provider.productCard(
+                                        context: context,
+                                        data: _data,
+                                      );
+                                  }
                                 },
                               ),
                               Container(

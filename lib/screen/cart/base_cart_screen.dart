@@ -17,6 +17,7 @@ class BaseCartScreen extends StatefulWidget {
 class _BaseCartScreenState extends State<BaseCartScreen> {
   @override
   Widget build(BuildContext context) {
+    final _provider = Provider.of<BaseCartProvider>(context, listen: false);
 
     Widget _tabBar = Consumer<BaseCartProvider>(
       builder: (context, provider, skeleton) {
@@ -42,27 +43,22 @@ class _BaseCartScreenState extends State<BaseCartScreen> {
       },
     );
 
-    Widget _mainContent = Container(
-      padding: EdgeInsets.symmetric(horizontal: 15),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 20,),
-          Text(AppLocalizations.instance.text('TXT_HEADER_ORDER'), style: TextStyle(
+    Widget _mainContent = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(15, 20, 15, 40),
+          child: Text(AppLocalizations.instance.text('TXT_HEADER_ORDER'), style: TextStyle(
             color: CustomColor.BROWN_TXT,
             fontSize: 24,
             fontWeight: FontWeight.bold,
           ),),
-          SizedBox(height: 40,),
-          _tabBar,
-          Flexible(
-            child: CustomWidget.emptyScreen(
-              image: 'assets/images/ic_empty_cart.png',
-              title: AppLocalizations.instance.text('TXT_NO_CART'),
-            ),
-          ),
-        ],
-      ),
+        ),
+        _tabBar,
+        Flexible(
+          child: TabBarView(children: _provider.screenList()),
+        ),
+      ],
     );
 
     return DefaultTabController(

@@ -1,82 +1,65 @@
 import 'package:eight_barrels/helper/app_localization.dart';
-import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/screen/cart/base_cart_screen.dart';
 import 'package:eight_barrels/screen/home/home_screen.dart';
 import 'package:eight_barrels/screen/product/product_list_screen.dart';
+import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class BaseHomeProvider extends ChangeNotifier {
+  int pageIndex = 0;
 
-  List<PersistentBottomNavBarItem> navBarItem = [
-    PersistentBottomNavBarItem(
-      icon: Icon(
-        FontAwesomeIcons.home,
-        size: 20,
-      ),
-      title: AppLocalizations.instance.text('TXT_NAV_HOME'),
-      activeColorPrimary: Colors.white,
-      activeColorSecondary: CustomColor.MAIN,
-      inactiveColorPrimary: Colors.white,
-    ),
-    PersistentBottomNavBarItem(
-      icon: Icon(
-        FontAwesomeIcons.wineBottle,
-        size: 20,
-      ),
-      title: AppLocalizations.instance.text('TXT_NAV_PRODUCT'),
-      activeColorPrimary: Colors.white,
-      activeColorSecondary: CustomColor.MAIN,
-      inactiveColorPrimary: Colors.white,
-    ),
-    PersistentBottomNavBarItem(
-      icon: Icon(
-        FontAwesomeIcons.shoppingCart,
-        size: 20,
-      ),
-      title: AppLocalizations.instance.text('TXT_NAV_CART'),
-      activeColorPrimary: Colors.white,
-      activeColorSecondary: CustomColor.MAIN,
-      inactiveColorPrimary: Colors.white,
-    ),
-    PersistentBottomNavBarItem(
-      icon: Icon(
-        FontAwesomeIcons.history,
-        size: 20,
-      ),
-      title: AppLocalizations.instance.text('TXT_NAV_TRANSACTION'),
-      activeColorPrimary: Colors.white,
-      activeColorSecondary: CustomColor.MAIN,
-      inactiveColorPrimary: Colors.white,
-    ),
-  ];
-
-  Widget _underConstructionPage() {
-    return Container(
-      color: Colors.white,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 200,
-            child: Image.asset('assets/images/ic_under_construction.jpg'),
-          ),
-          SizedBox(height: 10,),
-          Text('Under Construction ...', style: TextStyle(
-            fontSize: 20,
-          ),),
-        ],
-      ),
-    );
-  }
-
-  List<Widget> screenList() {
+  List<BottomNavigationBarItem> navBarItems() {
     return [
-      HomeScreen(),
-      ProductListScreen(),
-      BaseCartScreen(),
-      _underConstructionPage(),
+      BottomNavigationBarItem(
+        icon: Padding(
+          padding: const EdgeInsets.only(bottom: 2),
+          child: Icon(FontAwesomeIcons.home),
+        ),
+        label: AppLocalizations.instance.text('TXT_NAV_HOME'),
+      ),
+      BottomNavigationBarItem(
+        icon: Padding(
+          padding: const EdgeInsets.only(bottom: 2),
+          child: Icon(FontAwesomeIcons.wineBottle),
+        ),
+        label: AppLocalizations.instance.text('TXT_NAV_PRODUCT'),
+      ),
+      BottomNavigationBarItem(
+        icon: Padding(
+          padding: const EdgeInsets.only(bottom: 2),
+          child: Icon(FontAwesomeIcons.shoppingCart),
+        ),
+        label: AppLocalizations.instance.text('TXT_NAV_CART'),
+      ),
+      BottomNavigationBarItem(
+        icon: Padding(
+          padding: const EdgeInsets.only(bottom: 2),
+          child: Icon(FontAwesomeIcons.history),
+        ),
+        label: AppLocalizations.instance.text('TXT_NAV_TRANSACTION'),
+      ),
     ];
   }
+
+  Widget screenList() {
+    switch (pageIndex) {
+      case 0:
+        return HomeScreen();
+      case 1:
+        return ProductListScreen();
+      case 2:
+        return BaseCartScreen();
+      case 3:
+        return CustomWidget.underConstructionPage();
+      default:
+        return Container();
+    }
+  }
+
+  fnOnNavBarSelected(int val) {
+    this.pageIndex = val;
+    notifyListeners();
+  }
+
 }

@@ -3,9 +3,11 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/provider/product/wishlist_provider.dart';
+import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 
 class WishListScreen extends StatefulWidget {
@@ -79,85 +81,91 @@ class _WishListScreenState extends State<WishListScreen> with LoadingView {
                                             : SizedBox(),
                                       ),
                                       Flexible(
-                                        child: Card(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(10),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                width: 120,
-                                                height: 120,
-                                                margin: EdgeInsets.only(left: 10),
-                                                child: ClipRRect(
-                                                  child: CustomWidget.networkImg(context, _data.product!.image1),
-                                                  borderRadius: BorderRadius.circular(10),
+                                        child: InkWell(
+                                          onTap: () async => await Get.toNamed(
+                                            ProductDetailScreen.tag,
+                                            arguments: ProductDetailScreen(id: _data.idProduct,),
+                                          )!.then((_) => provider.fnFetchWishlist()),
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  width: 120,
+                                                  height: 120,
+                                                  margin: EdgeInsets.only(left: 10),
+                                                  child: ClipRRect(
+                                                    child: CustomWidget.networkImg(context, _data.product!.image1),
+                                                    borderRadius: BorderRadius.circular(10),
+                                                  ),
                                                 ),
-                                              ),
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets.all(10.0),
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          Text(_data.product!.name ?? '-', style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 16,
-                                                          ),),
-                                                          SizedBox(height: 5,),
-                                                          Text(FormatterHelper.moneyFormatter(_data.product!.regularPrice), style: TextStyle(
-                                                            fontWeight: FontWeight.bold,
-                                                            color: CustomColor.MAIN_TXT,
-                                                            fontSize: 16,
-                                                          ),),
-                                                          SizedBox(height: 5,),
-                                                          Row(
-                                                            children: [
-                                                              Icon(FontAwesomeIcons.solidStar, color: Colors.orangeAccent, size: 16,),
-                                                              SizedBox(width: 5,),
-                                                              Text('320', style: TextStyle(
-                                                                fontSize: 12,
-                                                              ),),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                                                      child: Row(
-                                                        mainAxisSize: MainAxisSize.min,
-                                                        children: [
-                                                          IconButton(
-                                                            onPressed: () async => await provider.fnDeleteWishlist(
-                                                              provider.scaffoldKey.currentContext!,
-                                                              _data.id!,
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Padding(
+                                                        padding: const EdgeInsets.all(10.0),
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Text(_data.product!.name ?? '-', style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontSize: 16,
+                                                            ),),
+                                                            SizedBox(height: 5,),
+                                                            Text(FormatterHelper.moneyFormatter(_data.product!.regularPrice), style: TextStyle(
+                                                              fontWeight: FontWeight.bold,
+                                                              color: CustomColor.MAIN_TXT,
+                                                              fontSize: 16,
+                                                            ),),
+                                                            SizedBox(height: 5,),
+                                                            Row(
+                                                              children: [
+                                                                Icon(FontAwesomeIcons.solidStar, color: Colors.orangeAccent, size: 16,),
+                                                                SizedBox(width: 5,),
+                                                                Text('320', style: TextStyle(
+                                                                  fontSize: 12,
+                                                                ),),
+                                                              ],
                                                             ),
-                                                            icon: Icon(FontAwesomeIcons.trashAlt, size: 20,),
-                                                            visualDensity: VisualDensity.compact,
-                                                          ),
-                                                          SizedBox(width: 10,),
-                                                          Expanded(
-                                                            child: CustomWidget.roundIconBtn(
-                                                              function: () {},
-                                                              icon: Icons.add,
-                                                              label: 'Add to Cart',
-                                                              btnColor: CustomColor.MAIN,
-                                                              lblColor: Colors.white,
-                                                              radius: 10,
-                                                            ),
-                                                          ),
-                                                        ],
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ],
+                                                      Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                                                        child: Row(
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          children: [
+                                                            IconButton(
+                                                              onPressed: () async => await provider.fnDeleteWishlist(
+                                                                provider.scaffoldKey.currentContext!,
+                                                                _data.id!,
+                                                              ),
+                                                              icon: Icon(FontAwesomeIcons.trashAlt, size: 20,),
+                                                              visualDensity: VisualDensity.compact,
+                                                            ),
+                                                            SizedBox(width: 10,),
+                                                            Expanded(
+                                                              child: CustomWidget.roundIconBtn(
+                                                                function: () async => await provider.fnStoreCart(context, _data.idProduct!),
+                                                                icon: Icons.add,
+                                                                label: AppLocalizations.instance.text('TXT_CART_ADD'),
+                                                                btnColor: CustomColor.MAIN,
+                                                                lblColor: Colors.white,
+                                                                radius: 10,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),

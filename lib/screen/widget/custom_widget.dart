@@ -160,7 +160,12 @@ class CustomWidget {
     required BuildContext context,
     required Widget content,
   }) {
-    return ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: content,));
+    return ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: content,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
   }
 
   static showConfirmationDialog(
@@ -231,6 +236,64 @@ class CustomWidget {
     );
   }
 
+  static showSuccessDialog(
+      BuildContext context, {
+        String title = 'SUCCESS!',
+        String desc = '',
+        required void function(),
+      }) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          contentPadding: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10))
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: double.infinity,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: CustomColor.MAIN,
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.elliptical(MediaQuery.of(context).size.width, 200.0),
+                    top: Radius.circular(20),
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    title,
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Text(desc, textAlign: TextAlign.center,),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text(AppLocalizations.instance.text('TXT_YES'), style: TextStyle(
+                color: CustomColor.MAIN,),
+              ),
+              onPressed: () {
+                Get.back();
+                function();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   static showShimmerGridList() {
     return Shimmer.fromColors(
       baseColor: Colors.grey[100]!,
@@ -282,112 +345,59 @@ class CustomWidget {
       ),
     );
   }
-  
-  static Widget productCard({
-    required BuildContext context, 
-    required Data data,
-    required void function(),
-    void wishlistFunc()?,
-    void cartFunc()?,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Card(
-        elevation: 1,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusDirectional.circular(10),
-        ),
-        child: InkWell(
-          onTap: () => function(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: 150,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    topLeft: Radius.circular(10),
-                  ),
-                  child: CachedNetworkImage(
-                    imageUrl: data.image1 ?? '',
-                    width: MediaQuery.of(context).size.width,
-                    alignment: Alignment.center,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => Center(
-                        child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) =>
-                        Center(child: Icon(Icons.no_photography, size: 50, color: CustomColor.GREY_ICON,),),
-                  ),
-                ),
-              ),
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(data.name ?? '-', style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                          ), maxLines: 2, overflow: TextOverflow.ellipsis,),
-                          SizedBox(height: 5,),
-                          Row(
-                            children: [
-                              Icon(FontAwesomeIcons.solidStar, color: Colors.orangeAccent, size: 16,),
-                              SizedBox(width: 5,),
-                              Text(data.rating != null ? data.rating.toString() : '0', style: TextStyle(
-                                fontSize: 12,
-                              ),),
-                            ],
-                          ),
-                          SizedBox(height: 10,),
-                          Flexible(
-                            child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: CustomColor.MAIN_TXT,
-                              fontSize: 16,
-                            ),),
-                          ),
-                        ],
-                      ),
-                      Flexible(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Stock: ${data.stock ?? '0'}', style: TextStyle(
-                              color: CustomColor.GREY_TXT,
-                            ),),
-                            Flexible(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () => cartFunc!(),
-                                    child: Icon(FontAwesomeIcons.shoppingCart, color: CustomColor.GREY_ICON, size: 18,),
-                                  ),
-                                  SizedBox(width: 15,),
-                                  GestureDetector(
-                                    onTap: () => wishlistFunc!(),
-                                    child: Icon(FontAwesomeIcons.heart, color: CustomColor.GREY_ICON, size: 18,),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+
+  static showShimmerProductDetail() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[100]!,
+      highlightColor: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Container(
+                height: 300,
+                color: Colors.white,
+              )
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  color: Colors.white,
+                  height: 20,
+                ),
+                SizedBox(height: 20,),
+                Container(
+                  color: Colors.white,
+                  height: 20,
+                ),
+                SizedBox(height: 20,),
+                Container(
+                  color: Colors.white,
+                  height: 20,
+                ),
+                SizedBox(height: 20,),
+                Container(
+                  color: Colors.white,
+                  height: 20,
+                ),
+                SizedBox(height: 20,),
+                Container(
+                  color: Colors.white,
+                  height: 20,
+                ),
+                SizedBox(height: 20,),
+                Container(
+                  color: Colors.white,
+                  height: 100,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -422,6 +432,26 @@ class CustomWidget {
             ),)
           ],
         ),
+      ),
+    );
+  }
+
+  static Widget underConstructionPage() {
+    return Container(
+      width: double.infinity,
+      color: Colors.white,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 200,
+            child: Image.asset('assets/images/ic_under_construction.jpg'),
+          ),
+          SizedBox(height: 10,),
+          Text('Under Construction ...', style: TextStyle(
+            fontSize: 20,
+          ),),
+        ],
       ),
     );
   }

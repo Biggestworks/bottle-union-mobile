@@ -3,6 +3,7 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/provider/profile/profile_provider.dart';
 import 'package:eight_barrels/screen/product/wishlist_screen.dart';
+import 'package:eight_barrels/screen/splash/splash_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -211,8 +212,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       return Transform.scale(
                         scale: 1.4,
                         child: Switch(
-                          value: provider.langValue,
-                          onChanged: (value) => provider.fnOnSwitchLanguage(context, value),
+                          value: provider.switchVal,
+                          onChanged: (value) => CustomWidget.showConfirmationDialog(
+                            context,
+                            desc: '${AppLocalizations.instance.text('TXT_LANGUAGE_INFO')}${provider.language}',
+                            function: () async {
+                              await provider.fnOnSwitchLanguage(value)
+                                  .then((_) => CustomWidget.showSuccessDialog(
+                                context,
+                                desc: AppLocalizations.instance.text('TXT_LANGUAGE_SUCCESS'),
+                                function: () => Get.offNamedUntil(SplashScreen.tag, (route) => false),
+                              ));
+                            },
+                          ),
                           activeThumbImage: AssetImage('assets/images/ic_england.png'),
                           inactiveThumbImage: AssetImage('assets/images/ic_indonesia.png'),
                           activeColor: Colors.grey,
@@ -221,9 +233,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       );
                     }
                   ),
-                  onTap: () {
-                    // choseLanguage(context);
-                  },
                 ),
               ],
             ),

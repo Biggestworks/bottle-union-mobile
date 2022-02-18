@@ -21,8 +21,20 @@ class URLHelper {
   static const PRODUCT_LIST_URL = BASE_URL + '/product/publish';
   static const BRAND_LIST_URL = BASE_URL + '/brand/publish';
   static const CATEGORY_LIST_URL = BASE_URL + '/category-product/publish';
+  static productDetailUrl(String id) {
+    return BASE_URL + '/product/show/$id';
+  }
+
+  ///WISHLIST
   static const WISHLIST_URL = BASE_URL + '/wishlist';
   static const CHECK_WISHLIST_URL = BASE_URL + '/wishlist/check';
   static const DELETE_WISHLIST_URL = BASE_URL + '/wishlist/delete';
+
+  ///CART
   static const CART_URL = BASE_URL + '/cart';
+  static const UPDATE_CART_QTY_URL = BASE_URL + '/cart/update-qty';
+  static const DELETE_CART_URL = BASE_URL + '/cart/delete';
+  static const SELECT_CART_URL = BASE_URL + '/cart/selected';
+  static const TOTAL_CART_URL = BASE_URL + '/cart/total';
+
 }

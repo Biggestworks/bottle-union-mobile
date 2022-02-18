@@ -3,7 +3,6 @@ import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/auth/user_model.dart';
 import 'package:eight_barrels/screen/auth/start_screen.dart';
-import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -14,7 +13,8 @@ class ProfileProvider extends ChangeNotifier {
   UserModel userModel = new UserModel();
   String fullVersion = 'x.x.x';
   String locale = '';
-  bool langValue = true;
+  bool switchVal = true;
+  String language = '';
 
   ProfileProvider() {
     _fnFetchUserInfo();
@@ -36,17 +36,29 @@ class ProfileProvider extends ChangeNotifier {
   Future fnFetchLocale() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     locale = _prefs.getString(KeyHelper.KEY_LOCALE)!;
+    if (locale == 'en') {
+      language = 'Bahasa Indonesia';
+      switchVal = true;
+    } else {
+      language = 'English';
+      switchVal = false;
+    }
+    notifyListeners();
   }
 
-  Widget fnOnSwitchLanguage(BuildContext context, bool value) {
-    return CustomWidget.showConfirmationDialog(
-      context,
-      desc: AppLocalizations.instance.text('TXT_LANGUAGE_INFO'),
-      function: () {
-        this.langValue = value;
-        notifyListeners();
-      },
-    );
+  Future fnOnSwitchLanguage(bool value) async {
+    SharedPreferences? _prefs = await SharedPreferences.getInstance();
+    this.switchVal = value;
+
+    if (switchVal) {
+      locale = 'en';
+    } else {
+      locale = 'id';
+    }
+
+    _prefs.setString(KeyHelper.KEY_LOCALE, locale);
+    AppLocalizations.instance.load(Locale(locale));
+    notifyListeners();
   }
 
   Future fnLogout() async {
