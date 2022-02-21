@@ -1,7 +1,6 @@
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/provider/cart/base_cart_provider.dart';
-import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -47,10 +46,10 @@ class _BaseCartScreenState extends State<BaseCartScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(15, 20, 15, 40),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
           child: Text(AppLocalizations.instance.text('TXT_HEADER_ORDER'), style: TextStyle(
             color: CustomColor.BROWN_TXT,
-            fontSize: 24,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
           ),),
         ),

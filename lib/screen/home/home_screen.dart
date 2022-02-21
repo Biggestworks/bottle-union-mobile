@@ -111,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Widget _categoryContent = Container(
       width: MediaQuery.of(context).size.width,
-      height: 240,
+      height: 260,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -160,9 +160,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                                 SizedBox(height: 5,),
-                                Text(_data.name!, style: TextStyle(
-                                  fontSize: 16,
-                                ),)
+                                Flexible(
+                                  child: Text(_data.name!, style: TextStyle(
+                                    fontSize: 16,
+                                  ),),
+                                )
                               ],
                             ),
                           ),
@@ -277,7 +279,6 @@ class _HomeScreenState extends State<HomeScreen> {
             _bannerContent,
             SizedBox(height: 20,),
             _categoryContent,
-            SizedBox(height: 10,),
             _popularContent,
           ],
         ),

@@ -27,6 +27,8 @@ class CartListProvider extends ChangeNotifier with PaginationInterface {
   Future fnFetchCartList() async {
     _view!.onProgressStart();
 
+    super.currentPage = 1;
+
     cartList = (await _service.cartList(
       page: super.currentPage.toString(),
     ))!;

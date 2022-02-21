@@ -4,17 +4,14 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/provider/product/product_list_provider.dart';
-import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/route_manager.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 
 class ProductListScreen extends StatefulWidget {
@@ -220,7 +217,6 @@ class _ProductListScreenState extends State<ProductListScreen>
                                       return YearPicker(
                                         firstDate: DateTime(DateTime.now().year - 100, 1),
                                         lastDate: DateTime(DateTime.now().year),
-                                        initialDate: DateTime.now(),
                                         selectedDate: provider.selectedDate,
                                         onChanged: provider.fnOnSelectYear,
                                       );
@@ -393,14 +389,11 @@ class _ProductListScreenState extends State<ProductListScreen>
                             shrinkWrap: true,
                             physics: BouncingScrollPhysics(),
                             children: [
-                              GridView.builder(
-                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 2.0,
-                                  childAspectRatio: 0.6,
-                                ),
-                                shrinkWrap: true,
+                              MasonryGridView.count(
                                 physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 2,
                                 itemCount: provider.productList.result!.data!.length,
                                 itemBuilder: (context, index) {
                                   var _data = provider.productList.result!.data![index];
@@ -409,11 +402,13 @@ class _ProductListScreenState extends State<ProductListScreen>
                                       return provider.emptyProductCard(
                                         context: context,
                                         data: _data,
+                                        index: index,
                                       );
                                     default:
                                       return provider.productCard(
                                         context: context,
                                         data: _data,
+                                        index: index,
                                       );
                                   }
                                 },
@@ -447,7 +442,7 @@ class _ProductListScreenState extends State<ProductListScreen>
             children: [
               Text(AppLocalizations.instance.text('TXT_HEADER_CELLAR'), style: TextStyle(
                 color: CustomColor.BROWN_TXT,
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),),
               CustomWidget.textIconBtn(
@@ -478,6 +473,7 @@ class _ProductListScreenState extends State<ProductListScreen>
             ),
             onChanged: (value) async => await _provider.fnOnSearchProduct(value),
           ),
+          SizedBox(height: 10,),
           _productListContent,
         ],
       ),

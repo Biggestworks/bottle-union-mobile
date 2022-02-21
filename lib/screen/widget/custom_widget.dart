@@ -24,6 +24,7 @@ class CustomWidget {
             ? StadiumBorder()
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius),),
         primary: btnColor,
+        padding: EdgeInsets.zero,
       ),
       onPressed: () => function(),
       child: Text(label, style: TextStyle(
@@ -51,6 +52,7 @@ class CustomWidget {
         side: BorderSide(
           color: btnColor,
         ),
+        padding: EdgeInsets.zero,
       ),
       onPressed: () => function(),
       child: Text(label, style: TextStyle(
@@ -79,6 +81,7 @@ class CustomWidget {
             ? StadiumBorder()
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius),),
         primary: btnColor,
+        padding: EdgeInsets.zero,
       ),
       onPressed: () => function(),
       icon: Icon(icon, color: icColor, size: icSize,),
@@ -103,6 +106,7 @@ class CustomWidget {
     return TextButton.icon(
       style: ElevatedButton.styleFrom(
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        padding: EdgeInsets.zero,
       ),
       onPressed: () => function(),
       icon: Icon(icon, color: icColor, size: icSize,),
@@ -178,43 +182,42 @@ class CustomWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
+          insetPadding: EdgeInsets.symmetric(horizontal: 10),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10))
           ),
-          content: new Container(
-            width: MediaQuery.of(context).size.width,
-            height: 100.0,
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(FontAwesomeIcons.infoCircle, color: Colors.blue,),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Flexible(
-                      child: Text(AppLocalizations.instance.text('TXT_CONFIRMATION'), style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,),
-                      ),
-                    ),
-                  ],
-                ),
-                Divider(
-                  color: CustomColor.MAIN,
-                  thickness: 2,
-                  height: 30,
-                ),
-                Flexible(
-                  child: Text(desc, style: TextStyle(
-                    fontSize: 16.0,
-                      color: Colors.black,),
+          content: new Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(FontAwesomeIcons.infoCircle, color: Colors.blue,),
+                  SizedBox(
+                    width: 10,
                   ),
+                  Flexible(
+                    child: Text(AppLocalizations.instance.text('TXT_CONFIRMATION'), style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,),
+                    ),
+                  ),
+                ],
+              ),
+              Divider(
+                color: CustomColor.MAIN,
+                thickness: 2,
+                height: 30,
+              ),
+              Flexible(
+                child: Text(desc, style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.black,
                 ),
-              ],
-            ),
+                ),
+              ),
+            ],
           ),
           actions: [
             TextButton(
@@ -249,6 +252,7 @@ class CustomWidget {
         return AlertDialog(
           backgroundColor: Colors.white,
           contentPadding: EdgeInsets.zero,
+          insetPadding: EdgeInsets.symmetric(horizontal: 10),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10))
           ),
@@ -272,9 +276,11 @@ class CustomWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Text(desc, textAlign: TextAlign.center,),
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Text(desc, textAlign: TextAlign.center,),
+                ),
               ),
             ],
           ),

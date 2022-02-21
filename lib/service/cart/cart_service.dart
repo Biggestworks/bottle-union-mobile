@@ -26,7 +26,7 @@ class CartService extends GetConnect {
     CartListModel _model = new CartListModel();
 
     final Map<String, dynamic> _query = {
-      "page": page,
+      "page": page ?? '1',
       "per_page": '6',
     };
 

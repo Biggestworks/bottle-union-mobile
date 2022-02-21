@@ -215,7 +215,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           value: provider.switchVal,
                           onChanged: (value) => CustomWidget.showConfirmationDialog(
                             context,
-                            desc: '${AppLocalizations.instance.text('TXT_LANGUAGE_INFO')}${provider.language}',
+                            desc: '${AppLocalizations.instance.text('TXT_LANGUAGE_INFO')}${provider.language} ?',
                             function: () async {
                               await provider.fnOnSwitchLanguage(value)
                                   .then((_) => CustomWidget.showSuccessDialog(
@@ -334,7 +334,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
 
-    Widget _mainContent = Container(
+    Widget _mainContent = SingleChildScrollView(
       child: Column(
         children: [
           _headerContent,

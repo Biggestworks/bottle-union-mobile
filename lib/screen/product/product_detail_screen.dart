@@ -201,21 +201,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ),
     );
 
-    Widget _bottomMenuContent = Container(
-      padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
+    Widget _bottomMenuContent = SafeArea(
+      child: Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Consumer<ProductDetailProvider>(
-            builder: (context, provider, _) {
-              return IconButton(
-                onPressed: () async => await provider.fnStoreWishlist(provider.scaffoldKey.currentContext!),
-                icon: Icon(provider.isWishlist
-                    ? FontAwesomeIcons.solidHeart
-                    : FontAwesomeIcons.heart, color: CustomColor.MAIN,),
-                visualDensity: VisualDensity.compact,
-              );
-            }
+              builder: (context, provider, _) {
+                return IconButton(
+                  onPressed: () async => await provider.fnStoreWishlist(provider.scaffoldKey.currentContext!),
+                  icon: Icon(provider.isWishlist
+                      ? FontAwesomeIcons.solidHeart
+                      : FontAwesomeIcons.heart, color: CustomColor.MAIN,),
+                  visualDensity: VisualDensity.compact,
+                );
+              }
           ),
           SizedBox(width: 10,),
           Expanded(
@@ -237,6 +238,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
         ],
       ),
+    ),
     );
 
     return Scaffold(

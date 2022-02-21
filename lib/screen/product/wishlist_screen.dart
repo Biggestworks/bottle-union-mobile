@@ -90,81 +90,79 @@ class _WishListScreenState extends State<WishListScreen> with LoadingView {
                                             shape: RoundedRectangleBorder(
                                               borderRadius: BorderRadius.circular(10),
                                             ),
-                                            child: Row(
-                                              children: [
-                                                Container(
-                                                  width: 120,
-                                                  height: 120,
-                                                  margin: EdgeInsets.only(left: 10),
-                                                  child: ClipRRect(
-                                                    child: CustomWidget.networkImg(context, _data.product!.image1),
-                                                    borderRadius: BorderRadius.circular(10),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: Column(
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                              child: Column(
+                                                children: [
+                                                  Row(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                     children: [
-                                                      Padding(
-                                                        padding: const EdgeInsets.all(10.0),
-                                                        child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(_data.product!.name ?? '-', style: TextStyle(
-                                                              color: Colors.black,
-                                                              fontSize: 16,
-                                                            ),),
-                                                            SizedBox(height: 5,),
-                                                            Text(FormatterHelper.moneyFormatter(_data.product!.regularPrice), style: TextStyle(
-                                                              fontWeight: FontWeight.bold,
-                                                              color: CustomColor.MAIN_TXT,
-                                                              fontSize: 16,
-                                                            ),),
-                                                            SizedBox(height: 5,),
-                                                            Row(
-                                                              children: [
-                                                                Icon(FontAwesomeIcons.solidStar, color: Colors.orangeAccent, size: 16,),
-                                                                SizedBox(width: 5,),
-                                                                Text('320', style: TextStyle(
-                                                                  fontSize: 12,
-                                                                ),),
-                                                              ],
-                                                            ),
-                                                          ],
+                                                      Container(
+                                                        width: 120,
+                                                        height: 120,
+                                                        child: ClipRRect(
+                                                          child: CustomWidget.networkImg(context, _data.product!.image1),
+                                                          borderRadius: BorderRadius.circular(10),
                                                         ),
                                                       ),
-                                                      Padding(
-                                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                                                        child: Row(
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          children: [
-                                                            IconButton(
-                                                              onPressed: () async => await provider.fnDeleteWishlist(
-                                                                provider.scaffoldKey.currentContext!,
-                                                                _data.id!,
+                                                      Flexible(
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.all(10),
+                                                          child: Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
+                                                              Text(_data.product!.name ?? '-', style: TextStyle(
+                                                                color: Colors.black,
+                                                                fontSize: 16,
+                                                              ), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                                              SizedBox(height: 5,),
+                                                              Text(FormatterHelper.moneyFormatter(_data.product!.regularPrice), style: TextStyle(
+                                                                fontWeight: FontWeight.bold,
+                                                                color: CustomColor.MAIN_TXT,
+                                                                fontSize: 16,
+                                                              ),),
+                                                              SizedBox(height: 5,),
+                                                              Row(
+                                                                children: [
+                                                                  Icon(FontAwesomeIcons.solidStar, color: Colors.orangeAccent, size: 16,),
+                                                                  SizedBox(width: 5,),
+                                                                  Text(_data.product!.rating.toString(), style: TextStyle(
+                                                                    fontSize: 12,
+                                                                  ),),
+                                                                ],
                                                               ),
-                                                              icon: Icon(FontAwesomeIcons.trashAlt, size: 20,),
-                                                              visualDensity: VisualDensity.compact,
-                                                            ),
-                                                            SizedBox(width: 10,),
-                                                            Expanded(
-                                                              child: CustomWidget.roundIconBtn(
-                                                                function: () async => await provider.fnStoreCart(context, _data.idProduct!),
-                                                                icon: Icons.add,
-                                                                label: AppLocalizations.instance.text('TXT_CART_ADD'),
-                                                                btnColor: CustomColor.MAIN,
-                                                                lblColor: Colors.white,
-                                                                radius: 10,
-                                                              ),
-                                                            ),
-                                                          ],
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
                                                     ],
                                                   ),
-                                                ),
-                                              ],
+                                                  SizedBox(height: 5,),
+                                                  Row(
+                                                    children: [
+                                                      IconButton(
+                                                        onPressed: () async => await provider.fnDeleteWishlist(
+                                                          provider.scaffoldKey.currentContext!,
+                                                          _data.id!,
+                                                        ),
+                                                        icon: Icon(FontAwesomeIcons.trashAlt, size: 20,),
+                                                        visualDensity: VisualDensity.compact,
+                                                      ),
+                                                      SizedBox(width: 10,),
+                                                      Expanded(
+                                                        child: CustomWidget.roundIconBtn(
+                                                          function: () async => await provider.fnStoreCart(context, _data.idProduct!),
+                                                          icon: Icons.add,
+                                                          label: AppLocalizations.instance.text('TXT_CART_ADD'),
+                                                          btnColor: CustomColor.MAIN,
+                                                          lblColor: Colors.white,
+                                                          radius: 10,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),

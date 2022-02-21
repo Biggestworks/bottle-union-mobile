@@ -15,13 +15,12 @@ class ProductListProvider extends ChangeNotifier
   ProductListModel productList = new ProductListModel();
   BrandListModel brandList = new BrandListModel();
   CategoryListModel categoryList = new CategoryListModel();
+
   final TextEditingController searchController = new TextEditingController();
   final TextEditingController minPriceController = new TextEditingController();
   final TextEditingController maxPriceController = new TextEditingController();
 
-  UserPreferences _userPreferences = new UserPreferences();
-
-  List<Widget> brandChips = [];
+  List<FilterChips> filterVal = [];
 
   int? selectedBrandIndex;
   bool isBrandSelected = false;
@@ -60,6 +59,22 @@ class ProductListProvider extends ChangeNotifier
     notifyListeners();
   }
 
+  // Widget filterChips() {
+  //   return Container(
+  //     height: 50,
+  //     child: ListView.builder(
+  //       shrinkWrap: true,
+  //       scrollDirection: Axis.horizontal,
+  //       itemCount: filterVal.length,
+  //       itemBuilder: (context, index) {
+  //         return Chip(
+  //           label: Text(filterVal[index].value),
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
+
   fnOnSelectBrand(int index) {
     selectedBrandIndex = index;
     isBrandSelected = !isBrandSelected;
@@ -87,9 +102,37 @@ class ProductListProvider extends ChangeNotifier
     notifyListeners();
   }
 
-  // fnOnSelectYear(DateRangePickerSelectionChangedArgs args) {
-  //   selectedYear = DateFormat('yyyy').format(args.value);
-  //   isFiltered = true;
+  // fnAddBrandChip() {
+  //   if (selectedBrandIndex != null) {
+  //     if (isBrandSelected) {
+  //       filterVal.add(FilterChips(brandList.data![selectedBrandIndex!].name!, 'brand'));
+  //     } else {
+  //       filterVal.removeWhere((item) => item.flag == 'brand');
+  //     }
+  //   }
+  //   notifyListeners();
+  // }
+  //
+  // fnAddCategoryChip() {
+  //   if (selectedCategoryIndex != null) {
+  //     if (isCategorySelected) {
+  //       filterVal.add(FilterChips(categoryList.data![selectedCategoryIndex!].name!, 'category'));
+  //     } else {
+  //       filterVal.removeWhere((item) => item.flag == 'category');
+  //     }
+  //   }
+  //   notifyListeners();
+  // }
+  //
+  // fnAddYearChip() {
+  //   if (selectedYear != null) {
+  //     if (filterVal.where((item) => item.value == selectedYear).length == 0) {
+  //       filterVal.add(FilterChips(selectedYear!, 'year'));
+  //     } else {
+  //       filterVal.removeWhere((item) => item.flag == 'year');
+  //       filterVal.add(FilterChips(selectedYear!, 'year'));
+  //     }
+  //   }
   //   notifyListeners();
   // }
 
@@ -141,6 +184,8 @@ class ProductListProvider extends ChangeNotifier
     minPriceController.clear();
     maxPriceController.clear();
     isFiltered = false;
+    super.currentPage = 1;
+    filterVal.clear();
     await fnFetchProductList();
     notifyListeners();
   }
@@ -184,4 +229,11 @@ class ProductListProvider extends ChangeNotifier
     notifyListeners();
   }
 
+}
+
+class FilterChips {
+  final String value;
+  final String flag;
+
+  FilterChips(this.value, this.flag);
 }

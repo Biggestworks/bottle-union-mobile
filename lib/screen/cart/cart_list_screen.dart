@@ -196,7 +196,7 @@ class _CartListScreenState extends State<CartListScreen> implements LoadingView 
     );
 
     Widget _summaryContent = Consumer<CartListProvider>(
-        child: Container(),
+        child: SizedBox(),
         builder: (context, provider, skeleton) {
           switch (provider.cartList.result) {
             case null:
@@ -235,10 +235,13 @@ class _CartListScreenState extends State<CartListScreen> implements LoadingView 
                               SizedBox(
                                 width: 120,
                                 height: 40,
-                                child: CustomWidget.roundBtn(
+                                child: CustomWidget.roundIconBtn(
+                                  icon: MdiIcons.cartArrowUp,
                                   label: '${AppLocalizations.instance.text('TXT_LBL_BUY')} (${provider.totalCart})',
                                   isBold: true,
-                                  fontSize: 16,
+                                  fontSize: 14,
+                                  btnColor: Colors.green,
+                                  lblColor: Colors.white,
                                   radius: 10,
                                   function: () {},
                                 ),
@@ -254,11 +257,13 @@ class _CartListScreenState extends State<CartListScreen> implements LoadingView 
     );
 
     return Scaffold(
+      extendBody: true,
       key: _provider.scaffoldKey,
       backgroundColor: CustomColor.BG,
       body: _cartListContent,
-      floatingActionButton: _summaryContent,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: _summaryContent,
+      // floatingActionButton: _summaryContent,
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 

@@ -10,8 +10,6 @@ class BaseHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _provider = Provider.of<BaseHomeProvider>(context, listen: false);
-
     return Scaffold(
       body: Consumer<BaseHomeProvider>(
         builder: (context, provider, _) => provider.screenList(),

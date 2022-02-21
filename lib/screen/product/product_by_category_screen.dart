@@ -4,6 +4,7 @@ import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/provider/product/product_by_category_provider.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 
 class ProductByCategoryScreen extends StatefulWidget {
@@ -58,14 +59,11 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> with 
                             shrinkWrap: true,
                             physics: BouncingScrollPhysics(),
                             children: [
-                              GridView.builder(
-                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 2.0,
-                                  childAspectRatio: 0.6,
-                                ),
-                                shrinkWrap: true,
+                              MasonryGridView.count(
                                 physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 2,
                                 itemCount: provider.productList.result!.data!.length,
                                 itemBuilder: (context, index) {
                                   var _data = provider.productList.result!.data![index];
@@ -74,11 +72,13 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> with 
                                       return provider.emptyProductCard(
                                         context: context,
                                         data: _data,
+                                        index: index,
                                       );
                                     default:
                                       return provider.productCard(
                                         context: context,
                                         data: _data,
+                                        index: index,
                                       );
                                   }
                                 },
@@ -122,6 +122,7 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> with 
             ),
             onChanged: (value) async => await _provider.fnOnSearchProduct(value),
           ),
+          SizedBox(height: 10,),
           _productListContent,
         ],
       ),
