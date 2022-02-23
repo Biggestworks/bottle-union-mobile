@@ -394,6 +394,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 shrinkWrap: true,
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 2,
+                                mainAxisSpacing: 4,
                                 itemCount: provider.productList.result!.data!.length,
                                 itemBuilder: (context, index) {
                                   var _data = provider.productList.result!.data![index];

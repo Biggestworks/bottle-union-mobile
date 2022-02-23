@@ -91,7 +91,7 @@ class _WishListScreenState extends State<WishListScreen> with LoadingView {
                                               borderRadius: BorderRadius.circular(10),
                                             ),
                                             child: Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                              padding: const EdgeInsets.all(10),
                                               child: Column(
                                                 children: [
                                                   Row(
@@ -107,7 +107,7 @@ class _WishListScreenState extends State<WishListScreen> with LoadingView {
                                                       ),
                                                       Flexible(
                                                         child: Padding(
-                                                          padding: const EdgeInsets.all(10),
+                                                          padding: const EdgeInsets.symmetric(horizontal: 10),
                                                           child: Column(
                                                             crossAxisAlignment: CrossAxisAlignment.start,
                                                             children: [
@@ -115,12 +115,6 @@ class _WishListScreenState extends State<WishListScreen> with LoadingView {
                                                                 color: Colors.black,
                                                                 fontSize: 16,
                                                               ), maxLines: 2, overflow: TextOverflow.ellipsis,),
-                                                              SizedBox(height: 5,),
-                                                              Text(FormatterHelper.moneyFormatter(_data.product!.regularPrice), style: TextStyle(
-                                                                fontWeight: FontWeight.bold,
-                                                                color: CustomColor.MAIN_TXT,
-                                                                fontSize: 16,
-                                                              ),),
                                                               SizedBox(height: 5,),
                                                               Row(
                                                                 children: [
@@ -131,6 +125,12 @@ class _WishListScreenState extends State<WishListScreen> with LoadingView {
                                                                   ),),
                                                                 ],
                                                               ),
+                                                              SizedBox(height: 5,),
+                                                              Text(FormatterHelper.moneyFormatter(_data.product!.regularPrice), style: TextStyle(
+                                                                fontWeight: FontWeight.bold,
+                                                                color: CustomColor.MAIN_TXT,
+                                                                fontSize: 16,
+                                                              ),),
                                                             ],
                                                           ),
                                                         ),

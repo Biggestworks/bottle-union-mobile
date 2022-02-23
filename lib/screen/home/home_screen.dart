@@ -49,62 +49,77 @@ class _HomeScreenState extends State<HomeScreen> {
             fontWeight: FontWeight.bold,
           ),),
         ),
-        CarouselSlider(
-          options: CarouselOptions(
-            height: 200.0,
-            autoPlay: true,
-            enlargeCenterPage: false,
-            enableInfiniteScroll: false,
-            viewportFraction: 1,
-            onPageChanged: (index, reason) {
-              _provider.onBannerChanged(index);
-            },
-          ),
-          items: _provider.bannerList.map((i) {
-            return Builder(
-              builder: (BuildContext context) {
-                return Container(
-                  margin: EdgeInsets.symmetric(horizontal: 4),
-                  width: MediaQuery.of(context).size.width,
-                  child: Card(
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: ClipRRect(
-                      child: Image.asset(i, fit: BoxFit.fill,),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                );
-              },
-            );
-          }).toList(),
-        ),
-        SizedBox(height: 10,),
         Consumer<HomeProvider>(
-            builder: (context, provider, skeleton) {
-              return Padding(
-                padding: const EdgeInsets.only(left: 20,),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: provider.bannerList.map((i) {
-                    int index = provider.bannerList.indexOf(i);
-                    return Container(
-                      width: provider.currBanner == index ? 12.0 : 8.0,
-                      height: provider.currBanner == index ? 12.0 : 8.0,
-                      margin: EdgeInsets.symmetric(horizontal: 4),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: provider.currBanner == index
-                            ? CustomColor.MAIN
-                            : CustomColor.GREY_TXT,
+          child: CustomWidget.showShimmer(
+            child: Container(
+              height: 200,
+              color: Colors.white,
+            ),
+          ),
+          builder: (context, provider, skeleton) {
+            switch (provider.bannerList.data) {
+              case null:
+                return skeleton!;
+              default:
+                return Column(
+                  children: [
+                    CarouselSlider(
+                      options: CarouselOptions(
+                        height: 200.0,
+                        autoPlay: true,
+                        enlargeCenterPage: false,
+                        enableInfiniteScroll: false,
+                        viewportFraction: 1,
+                        onPageChanged: (index, reason) {
+                          _provider.onBannerChanged(index);
+                        },
                       ),
-                    );
-                  }).toList(),
-                ),
-              );
+                      items: provider.bannerList.data!.map((i) {
+                        return Builder(
+                          builder: (BuildContext context) {
+                            return Container(
+                              margin: EdgeInsets.symmetric(horizontal: 4),
+                              width: MediaQuery.of(context).size.width,
+                              child: Card(
+                                elevation: 4,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: ClipRRect(
+                                  child: CustomWidget.networkImg(context, i.image),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }).toList(),
+                    ),
+                    SizedBox(height: 10,),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20,),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: provider.bannerList.data!.map((i) {
+                          int index = provider.bannerList.data!.indexOf(i);
+                          return Container(
+                            width: provider.currBanner == index ? 12.0 : 8.0,
+                            height: provider.currBanner == index ? 12.0 : 8.0,
+                            margin: EdgeInsets.symmetric(horizontal: 4),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: provider.currBanner == index
+                                  ? CustomColor.MAIN
+                                  : CustomColor.GREY_TXT,
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
+                );
             }
+          },
         ),
       ],
     );

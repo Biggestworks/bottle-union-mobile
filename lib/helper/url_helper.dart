@@ -37,4 +37,8 @@ class URLHelper {
   static const SELECT_CART_URL = BASE_URL + '/cart/selected';
   static const TOTAL_CART_URL = BASE_URL + '/cart/total';
 
+  ///BANNER
+  static const BANNER_URL = BASE_URL + '/banner';
+
+
 }

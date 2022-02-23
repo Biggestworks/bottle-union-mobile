@@ -96,6 +96,16 @@
 	"TXT_CART_DELETE_SUCCESS": "Berhasil, hapus dari Keranjang",
 	"TXT_LBL_BUY": "Beli",
 	"TXT_SOLD_OUT": "Habis",
+	"TXT_PAYMENT": "Pembayaran",
+	"TXT_CHOOSE_PAYMENT": "Pilih Pembayaran",
+	"TXT_DELIVERY": "Pengiriman",
+	"TXT_DELIVERY_ADDRESS": "Alamat Pengiriman",
+	"TXT_CHOOSE_DELIVERY": "Pilih Pengiriman",
+	"TXT_ORDER_DETAIL": "Rincian Pesanan",
+	"TXT_ORDER_SUMMARY": "Ringkasan Pesanan",
+	"TXT_TOTAL_PAY": "Total Bayar",
+	"TXT_TOTAL_PRICE": "Total Harga",
+	"TXT_DELIVERY_COST": "Ongkos Kirim",
 
 
 	"app_name": "eRecycle",

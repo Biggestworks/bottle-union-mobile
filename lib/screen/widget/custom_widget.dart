@@ -1,8 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
-import 'package:eight_barrels/helper/formatter_helper.dart';
-import 'package:eight_barrels/model/product/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
@@ -24,7 +22,6 @@ class CustomWidget {
             ? StadiumBorder()
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius),),
         primary: btnColor,
-        padding: EdgeInsets.zero,
       ),
       onPressed: () => function(),
       child: Text(label, style: TextStyle(
@@ -52,7 +49,6 @@ class CustomWidget {
         side: BorderSide(
           color: btnColor,
         ),
-        padding: EdgeInsets.zero,
       ),
       onPressed: () => function(),
       child: Text(label, style: TextStyle(
@@ -81,7 +77,6 @@ class CustomWidget {
             ? StadiumBorder()
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius),),
         primary: btnColor,
-        padding: EdgeInsets.zero,
       ),
       onPressed: () => function(),
       icon: Icon(icon, color: icColor, size: icSize,),
@@ -168,6 +163,7 @@ class CustomWidget {
       SnackBar(
         content: content,
         behavior: SnackBarBehavior.floating,
+        duration: Duration(seconds: 1),
       ),
     );
   }
@@ -297,6 +293,14 @@ class CustomWidget {
           ],
         );
       },
+    );
+  }
+
+  static showShimmer({required Widget child}) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[100]!,
+      highlightColor: Colors.white,
+      child: child,
     );
   }
 

@@ -33,7 +33,9 @@ class CartListProvider extends ChangeNotifier with PaginationInterface {
       page: super.currentPage.toString(),
     ))!;
 
-    totalCart = cartList.result!.data!.where((i) => i.isSelected == 1).length;
+    if (cartList.result != null) {
+      totalCart = cartList.result!.data!.where((i) => i.isSelected == 1).length;
+    }
 
     _view!.onProgressFinish();
     notifyListeners();
@@ -78,7 +80,9 @@ class CartListProvider extends ChangeNotifier with PaginationInterface {
     if (_res!.status != null) {
       if (_res.status == true && _res.total != null) {
         totalPay = FormatterHelper.moneyFormatter(_res.total);
-        totalCart = cartList.result!.data!.where((i) => i.isSelected == 1).length;
+        if (cartList.result != null) {
+          totalCart = cartList.result!.data!.where((i) => i.isSelected == 1).length;
+        }
       }
     }
     notifyListeners();

@@ -90,14 +90,40 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(_data.name ?? '-', style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24,
-                      ),),
-                      Text(_data.categories?.name ?? '-', style: TextStyle(
-                        color: CustomColor.GREY_TXT,
-                        fontSize: 16,
-                      ),),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(_data.name!, style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 24,
+                                ), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                Text(_data.categories?.name ?? '-', style: TextStyle(
+                                  color: CustomColor.GREY_TXT,
+                                  fontSize: 16,
+                                ),),
+                              ],
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Icon(FontAwesomeIcons.solidStar, color: Colors.orangeAccent,),
+                              SizedBox(width: 5,),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 4),
+                                child: Text(_data.rating != null
+                                    ? _data.rating.toString()
+                                    : '0', style: TextStyle(
+                                  fontSize: 24,
+                                ),),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                       SizedBox(height: 20,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -183,6 +209,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       },
     );
 
+    Widget _discussionContent = Container(
+      child: Column(
+        children: [
+
+        ],
+      ),
+    );
+
     Widget _mainContent = SingleChildScrollView(
       child: Stack(
         children: [
@@ -203,42 +237,42 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
     Widget _bottomMenuContent = SafeArea(
       child: Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Consumer<ProductDetailProvider>(
-              builder: (context, provider, _) {
-                return IconButton(
-                  onPressed: () async => await provider.fnStoreWishlist(provider.scaffoldKey.currentContext!),
-                  icon: Icon(provider.isWishlist
-                      ? FontAwesomeIcons.solidHeart
-                      : FontAwesomeIcons.heart, color: CustomColor.MAIN,),
-                  visualDensity: VisualDensity.compact,
-                );
-              }
-          ),
-          SizedBox(width: 10,),
-          Expanded(
-            child: CustomWidget.roundOutlinedBtn(
-              label: AppLocalizations.instance.text('TXT_CART_ADD'),
-              lblColor: CustomColor.MAIN,
-              btnColor: CustomColor.MAIN,
-              function: () async => await _provider.fnStoreCart(_provider.scaffoldKey.currentContext!),
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Consumer<ProductDetailProvider>(
+                builder: (context, provider, _) {
+                  return IconButton(
+                    onPressed: () async => await provider.fnStoreWishlist(provider.scaffoldKey.currentContext!),
+                    icon: Icon(provider.isWishlist
+                        ? FontAwesomeIcons.solidHeart
+                        : FontAwesomeIcons.heart, color: CustomColor.MAIN,),
+                    visualDensity: VisualDensity.compact,
+                  );
+                }
             ),
-          ),
-          SizedBox(width: 10,),
-          Expanded(
-            child: CustomWidget.roundBtn(
-              label: 'Buy Now',
-              btnColor: CustomColor.MAIN,
-              lblColor: Colors.white,
-              function: () {},
+            SizedBox(width: 10,),
+            Expanded(
+              child: CustomWidget.roundOutlinedBtn(
+                label: AppLocalizations.instance.text('TXT_CART_ADD'),
+                lblColor: CustomColor.MAIN,
+                btnColor: CustomColor.MAIN,
+                function: () async => await _provider.fnStoreCart(_provider.scaffoldKey.currentContext!),
+              ),
             ),
-          ),
-        ],
+            SizedBox(width: 10,),
+            Expanded(
+              child: CustomWidget.roundBtn(
+                label: 'Buy Now',
+                btnColor: CustomColor.MAIN,
+                lblColor: Colors.white,
+                function: () {},
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
     );
 
     return Scaffold(
@@ -249,6 +283,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         elevation: 0,
         centerTitle: true,
         title: Text(AppLocalizations.instance.text('TXT_PRODUCT_DETAIL'),),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.share),
+            padding: EdgeInsets.only(right: 10,),
+          ),
+        ],
       ),
       body: _mainContent,
       bottomNavigationBar: _bottomMenuContent,

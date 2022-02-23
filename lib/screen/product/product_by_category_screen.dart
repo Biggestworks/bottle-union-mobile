@@ -64,6 +64,7 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> with 
                                 shrinkWrap: true,
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 2,
+                                mainAxisSpacing: 4,
                                 itemCount: provider.productList.result!.data!.length,
                                 itemBuilder: (context, index) {
                                   var _data = provider.productList.result!.data![index];
@@ -132,10 +133,9 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> with 
       backgroundColor: CustomColor.BG,
       appBar: AppBar(
         backgroundColor: CustomColor.BG,
-        elevation: 0,
         centerTitle: true,
         title: Text(_provider.category ?? 'Title', style: TextStyle(
-          color: CustomColor.MAIN,
+          color: CustomColor.BROWN_TXT,
         ),),
         iconTheme: IconThemeData(
           color: Colors.black,

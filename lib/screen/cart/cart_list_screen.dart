@@ -3,6 +3,7 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/provider/cart/cart_list_provider.dart';
+import 'package:eight_barrels/screen/cart/delivery_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
@@ -195,7 +196,7 @@ class _CartListScreenState extends State<CartListScreen> implements LoadingView 
       ),
     );
 
-    Widget _summaryContent = Consumer<CartListProvider>(
+    Widget _bottomMenuContent = Consumer<CartListProvider>(
         child: SizedBox(),
         builder: (context, provider, skeleton) {
           switch (provider.cartList.result) {
@@ -221,13 +222,13 @@ class _CartListScreenState extends State<CartListScreen> implements LoadingView 
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text('Total Pay', style: TextStyle(
+                                  Text(AppLocalizations.instance.text('TXT_TOTAL_PRICE'), style: TextStyle(
                                     color: Colors.white,
                                   ),),
                                   SizedBox(height: 5,),
                                   Text(provider.totalPay, style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 16,
+                                    fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                   ),),
                                 ],
@@ -242,8 +243,10 @@ class _CartListScreenState extends State<CartListScreen> implements LoadingView 
                                   fontSize: 14,
                                   btnColor: Colors.green,
                                   lblColor: Colors.white,
-                                  radius: 10,
-                                  function: () {},
+                                  radius: 8,
+                                  function: () => Get.toNamed(DeliveryScreen.tag, arguments: DeliveryScreen(
+                                    cartList: _provider.cartList.result!.data!,
+                                  )),
                                 ),
                               ),
                             ],
@@ -261,9 +264,7 @@ class _CartListScreenState extends State<CartListScreen> implements LoadingView 
       key: _provider.scaffoldKey,
       backgroundColor: CustomColor.BG,
       body: _cartListContent,
-      bottomNavigationBar: _summaryContent,
-      // floatingActionButton: _summaryContent,
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: _bottomMenuContent,
     );
   }
 

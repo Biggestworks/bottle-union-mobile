@@ -16,6 +16,7 @@ import 'package:eight_barrels/screen/auth/register_screen.dart';
 import 'package:eight_barrels/screen/auth/start_screen.dart';
 import 'package:eight_barrels/screen/cart/base_cart_screen.dart';
 import 'package:eight_barrels/screen/cart/cart_list_screen.dart';
+import 'package:eight_barrels/screen/cart/delivery_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/home/home_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
@@ -173,6 +174,10 @@ class _AppState extends State<App> {
         GetPage(
           name: CartListScreen.tag,
           page: () => CartListScreen(),
+        ),
+        GetPage(
+          name: DeliveryScreen.tag,
+          page: () => DeliveryScreen(),
         ),
       ],
     );

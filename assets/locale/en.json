@@ -96,6 +96,16 @@
 	"TXT_CART_DELETE_SUCCESS": "Success, remove from Cart",
 	"TXT_LBL_BUY": "Buy",
 	"TXT_SOLD_OUT": "Sold out",
+	"TXT_PAYMENT": "Payment",
+	"TXT_CHOOSE_PAYMENT": "Choose Payment",
+	"TXT_DELIVERY": "Delivery",
+	"TXT_DELIVERY_ADDRESS": "Delivery Address",
+	"TXT_CHOOSE_DELIVERY": "Choose Delivery",
+	"TXT_ORDER_DETAIL": "Order Detail",
+	"TXT_ORDER_SUMMARY": "Order Summary",
+	"TXT_TOTAL_PAY": "Total Pay",
+	"TXT_TOTAL_PRICE": "Total Price",
+	"TXT_DELIVERY_COST": "Delivery Cost",
 
 
 

@@ -63,103 +63,111 @@ abstract class ProductCardInterface {
     required Data data,
     required int index,
   }) {
-    return Card(
-      elevation: 1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadiusDirectional.circular(10),
-      ),
-      child: InkWell(
-        onTap: () => Get.toNamed(
-          ProductDetailScreen.tag,
-          arguments: ProductDetailScreen(id: data.id,),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 150,
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(10),
-                  topLeft: Radius.circular(10),
-                ),
-                child: CachedNetworkImage(
-                  imageUrl: data.image1 ?? '',
-                  width: MediaQuery.of(context).size.width,
-                  alignment: Alignment.center,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Center(
-                      child: CircularProgressIndicator()),
-                  errorWidget: (context, url, error) =>
-                      Center(child: Icon(Icons.no_photography, size: 50, color: CustomColor.GREY_ICON,),),
-                ),
-              ),
+    return Stack(
+      children: [
+        Card(
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadiusDirectional.circular(10),
+          ),
+          child: InkWell(
+            onTap: () => Get.toNamed(
+              ProductDetailScreen.tag,
+              arguments: ProductDetailScreen(id: data.id,),
             ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(data.name ?? '-', style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                  ), maxLines: 2, overflow: TextOverflow.ellipsis,),
-                  SizedBox(height: 5,),
-                  Flexible(
-                    child: Row(
-                      children: [
-                        Icon(FontAwesomeIcons.solidStar, color: Colors.orangeAccent, size: 16,),
-                        SizedBox(width: 5,),
-                        Text(data.rating != null ? data.rating.toString() : '0', style: TextStyle(
-                          fontSize: 12,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 150,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(10),
+                      topLeft: Radius.circular(10),
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: data.image1 ?? '',
+                      width: MediaQuery.of(context).size.width,
+                      alignment: Alignment.center,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Center(
+                          child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) =>
+                          Center(child: Icon(Icons.no_photography, size: 50, color: CustomColor.GREY_ICON,),),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(data.name ?? '-', style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                      SizedBox(height: 5,),
+                      Flexible(
+                        child: Row(
+                          children: [
+                            Icon(FontAwesomeIcons.solidStar, color: Colors.orangeAccent, size: 16,),
+                            SizedBox(width: 5,),
+                            Text(data.rating != null ? data.rating.toString() : '0', style: TextStyle(
+                              fontSize: 12,
+                            ),),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10,),
+                      Flexible(
+                        child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: CustomColor.MAIN_TXT,
+                          fontSize: 16,
                         ),),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 10,),
-                  Flexible(
-                    child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: CustomColor.MAIN_TXT,
-                      fontSize: 16,
-                    ),),
-                  ),
-                  SizedBox(height: index.isEven ? 20 : 40,),
-                  Flexible(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text('Stock: ${data.stock ?? '0'}', style: TextStyle(
-                            color: CustomColor.GREY_TXT,
-                          ),),
-                        ),
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              GestureDetector(
-                                onTap: () async => await fnStoreCart(context, data.id!),
-                                child: Icon(FontAwesomeIcons.shoppingCart, color: CustomColor.GREY_ICON, size: 18,),
+                      ),
+                      SizedBox(height: index.isEven ? 20 : 40,),
+                      Flexible(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text('Stock: ${data.stock ?? '0'}', style: TextStyle(
+                                color: CustomColor.GREY_TXT,
+                              ),),
+                            ),
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async => await fnStoreCart(context, data.id!),
+                                    child: Icon(FontAwesomeIcons.shoppingCart, color: CustomColor.GREY_ICON, size: 18,),
+                                  ),
+                                  SizedBox(width: 15,),
+                                  GestureDetector(
+                                    onTap: () async => await fnStoreWishlist(context, data.id!),
+                                    child: Icon(FontAwesomeIcons.heart, color: CustomColor.GREY_ICON, size: 18,),
+                                  ),
+                                ],
                               ),
-                              SizedBox(width: 15,),
-                              GestureDetector(
-                                onTap: () async => await fnStoreWishlist(context, data.id!),
-                                child: Icon(FontAwesomeIcons.heart, color: CustomColor.GREY_ICON, size: 18,),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+        // Positioned(
+        //   right: 0,
+        //   child: Image.asset('assets/images/ic_new.png', ),
+        // ),
+      ],
     );
   }
 
@@ -171,7 +179,7 @@ abstract class ProductCardInterface {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Card(
-        elevation: 1,
+        elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadiusDirectional.circular(10),
         ),
