@@ -106,6 +106,20 @@
 	"TXT_TOTAL_PAY": "Total Bayar",
 	"TXT_TOTAL_PRICE": "Total Harga",
 	"TXT_DELIVERY_COST": "Ongkos Kirim",
+	"TXT_SAVE": "Simpan",
+	"TXT_VERIFIED": "Terverifikasi",
+	"TXT_NOT_VERIFIED": "Belum verifikasi",
+	"TXT_VERIFY_EMAIL_INFO": "Mohon verifikasi ulang email Anda setelah melakukan perubahan",
+	"TXT_CHANGE_PASSWORD_INFO": "Mohon masukan kata sandi baru Anda",
+	"TXT_OLD_PASSWORD": "Kata Sandi Lama",
+	"TXT_NEW_PASSWORD": "Kata Sandi Baru",
+	"TXT_CONFIRM_PASSWORD": "Konfirmasi Kata Sandi",
+	"TXT_FORGOT_PASSWORD": "Lupa Kata Sandi?",
+	"TXT_SEND_OTP": "Kirim OTP",
+	"TXT_RESEND_OTP": "Kirim Ulang OTP",
+	"TXT_OTP_CODE": "Masukan Kode OTP",
+
+
 
 
 	"app_name": "eRecycle",
@@ -127,7 +141,6 @@
 	"TXT_ADDRESS": "Alamat Penjemputan",
 	"TXT_ADDRESS_ONLY": "Alamat",
 	"TXT_PASSWORD": "Kata Sandi",
-	"TXT_CONFIRM_PASSWORD": "Konfirmasi Kata Sandi",
 	"TXT_REGISTER": "Daftarkan",
 	"TXT_OPEN_MAPS": "Buka Maps",
 	"TXT_MASUK": "Masuk",

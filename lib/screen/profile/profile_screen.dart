@@ -3,6 +3,8 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/provider/profile/profile_provider.dart';
 import 'package:eight_barrels/screen/product/wishlist_screen.dart';
+import 'package:eight_barrels/screen/profile/change_password_screen.dart';
+import 'package:eight_barrels/screen/profile/update_profile_screen.dart';
 import 'package:eight_barrels/screen/splash/splash_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,71 +33,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
       height: 150,
       color: CustomColor.MAIN,
       child: Center(
-        child: Consumer<ProfileProvider>(
+        child: GestureDetector(
+          onTap: () => Get.toNamed(UpdateProfileScreen.tag),
           child: Stack(
             children: [
-              Container(
-                width: 120.0,
-                height: 120.0,
-                decoration: new BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white),
-                  color: Colors.white,
-                  image: new DecorationImage(
-                    fit: BoxFit.contain,
-                    image: AssetImage("assets/images/ic_profile.png"),
+              Consumer<ProfileProvider>(
+                child: Container(
+                  width: 120.0,
+                  height: 120.0,
+                  decoration: new BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white),
+                    color: Colors.white,
+                    image: new DecorationImage(
+                      fit: BoxFit.contain,
+                      image: AssetImage("assets/images/ic_profile.png"),
+                    ),
                   ),
                 ),
+                builder: (context, provider, skeleton) {
+                  switch (provider.userModel.user) {
+                    case null:
+                      return skeleton!;
+                    default:
+                      return CustomWidget.roundedAvatarImg(url: provider.userModel.user!.avatar!, size: 120);
+                  }
+                }
               ),
               Positioned(
                 bottom: 5,
-                right: 5,
-                child: Icon(CupertinoIcons.pencil_circle_fill, color: Colors.grey, size: 30,),
+                right: 0,
+                child: Icon(
+                  CupertinoIcons.pencil_circle_fill,
+                  color: Colors.white,
+                  size: 35,
+                ),
               ),
             ],
           ),
-          builder: (context, provider, skeleton) {
-            switch (provider.userModel.data) {
-              case null:
-                return skeleton!;
-              default:
-                switch (provider.userModel.data!.avatar) {
-                  case null:
-                    return skeleton!;
-                  default:
-                    return GestureDetector(
-                      // onTap: () => Get.toNamed(ProfileScreen.tag),
-                      child: Stack(
-                        children: [
-                          CachedNetworkImage(
-                            imageUrl: provider.userModel.data!.avatar!,
-                            imageBuilder: (context, imageProvider) {
-                              return Container(
-                                width: 120,
-                                height: 120,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(color: Colors.white, width: 3),
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.contain,
-                                    )),
-                              );
-                            },
-                            errorWidget: (context, url, error) => skeleton!,
-                          ),
-                          Positioned(
-                            bottom: 5,
-                            right: 5,
-                            child: Icon(CupertinoIcons.pencil_circle_fill, color: Colors.white, size: 30,),
-                          ),
-                        ],
-                      ),
-                    );
-                }
-
-            }
-          },
         ),
       ),
     );
@@ -133,9 +108,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: CustomColor.GREY_TXT,
                     size: 15,
                   ),
-                  onTap: () async {
-                    // Get.toNamed(ChangePasswordScreen.tag);
-                  },
+                  onTap: () async => await Get.toNamed(ChangePasswordScreen.tag)!.then((value) async {
+                    if (value == true) {
+                      await CustomWidget.showSnackBar(context: context, content: Text('Success update password'));
+                    }
+                  }),
                 ),
                 Divider(
                   thickness: 1,

@@ -1,4 +1,12 @@
+import 'package:eight_barrels/screen/widget/custom_widget.dart';
+import 'package:eight_barrels/service/auth/auth_service.dart';
+import 'package:flutter/material.dart';
+
+import 'app_localization.dart';
+
 class TextValidation {
+  AuthService _service = new AuthService();
+
   String? validateEmail(String? value) {
     if (value!.isEmpty) {
       return "Field cannot be empty";
@@ -55,4 +63,8 @@ class TextValidation {
       return "Field cannot be empty";
     }
   }
+
+  Future<bool?> validateAge(String dob) async => await _service.validateAge(dob: dob);
+
+  Future<bool?> validateEmailExist(String value) async => await _service.validateEmailPhone(value: value);
 }

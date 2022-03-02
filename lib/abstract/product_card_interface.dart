@@ -3,26 +3,22 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
+import 'package:eight_barrels/model/product/product_model.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/cart/cart_service.dart';
 import 'package:eight_barrels/service/product/wishlist_service.dart';
 import 'package:flutter/material.dart';
-import 'package:eight_barrels/model/product/product_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
 
 
 abstract class ProductCardInterface {
-  UserPreferences _userPreferences = new UserPreferences();
   WishlistService _wishlistService = new WishlistService();
   CartService _cartService = new CartService();
 
   Future fnStoreWishlist(BuildContext context, int productId) async {
-    var _user = await _userPreferences.getUserData();
-
     var _res = await _wishlistService.storeWishlist(
-      uid: _user!.data!.id!,
       productId: productId,
     );
 
@@ -40,10 +36,7 @@ abstract class ProductCardInterface {
   }
 
   Future fnStoreCart(BuildContext context, int productId) async {
-    var _user = await _userPreferences.getUserData();
-
     var _res = await _cartService.storeCart(
-      uid: _user!.data!.id!,
       productId: productId,
     );
 

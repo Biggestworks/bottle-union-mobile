@@ -246,7 +246,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
   GTMAppAuth: ad5c2b70b9a8689e1a04033c9369c4915bfcbe89
   GTMSessionFetcher: 43748f93435c2aa068b1cbe39655aaf600652e91
-  image_picker: e06f7a68f000bd36f552c1847e33cda96ed31f1f
+  image_picker: 50e7c7ff960e5f58faa4d1f4af84a771c671bc4a
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
   modal_progress_hud_nsn: f6fb744cd060653d66ed8f325360ef3650eb2fde
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96

@@ -1,15 +1,15 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
-import 'package:eight_barrels/model/product/product_model.dart';
 import 'package:eight_barrels/provider/product/product_detail_provider.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class ProductDetailScreen extends StatefulWidget {
   static String tag = '/product-detail-screen';
@@ -29,6 +29,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       Provider.of<ProductDetailProvider>(context, listen: false).fnGetArguments(context);
       Provider.of<ProductDetailProvider>(context, listen: false).fnGetProduct()
           .then((value) => Provider.of<ProductDetailProvider>(context, listen: false).fnCheckWishlist());
+      // Provider.of<ProductDetailProvider>(context, listen: false).fnHideOnScroll();
     });
     super.initState();
   }
@@ -36,6 +37,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final _provider = Provider.of<ProductDetailProvider>(context, listen: false);
+    // final _baseProvider = Provider.of<BaseHomeProvider>(context, listen: false);
 
     Widget _imageContainer(String? url) {
       return Container(
@@ -53,6 +55,142 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         ),
       );
     }
+
+    Widget _discussionContent = Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Product Discussion (4)', style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),),
+              IconButton(
+                icon: Icon(MdiIcons.chatPlus, color: Colors.green, size: 28,),
+                onPressed: () {},
+                constraints: BoxConstraints(),
+                padding: EdgeInsets.zero,
+              ),
+            ],
+          ),
+          SizedBox(height: 20,),
+          ListView.separated(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: 3,
+            separatorBuilder: (context, index) {
+              return Divider(color: CustomColor.GREY_ICON, height: 30,);
+            },
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 40.0,
+                        height: 40.0,
+                        decoration: new BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white),
+                          image: new DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage('assets/images/ic_profile.png'),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text("User ${index+1}", style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),),
+                                Text(" . ${timeago.format(DateTime.now(), locale: 'en_short')} ago",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 5,),
+                            Text("Ready kak?", style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10,),
+                  Row(
+                    children: [
+                      Container(
+                        width: 50,
+                      ),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 40.0,
+                              height: 40.0,
+                              decoration: new BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white),
+                                image: new DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: AssetImage('assets/images/ic_launcher.png'),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Flexible(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text("Bottle Union Admin", style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),),
+                                      Text(" . ${timeago.format(DateTime.now(), locale: 'en_short')} ago",
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5,),
+                                  Text("Ready gan, silahkan di order", style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                  ),),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+    );
 
     Widget _descriptionContent = Consumer<ProductDetailProvider>(
       child: CustomWidget.showShimmerProductDetail(),
@@ -200,6 +338,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           fontSize: 16,
                         ),
                       ),
+                      Divider(
+                        thickness: 1,
+                        height: 50,
+                      ),
+                      _discussionContent
                     ],
                   ),
                 ),
@@ -209,15 +352,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       },
     );
 
-    Widget _discussionContent = Container(
-      child: Column(
-        children: [
-
-        ],
-      ),
-    );
-
     Widget _mainContent = SingleChildScrollView(
+      // controller: _provider.scrollController,
       child: Stack(
         children: [
           Container(
@@ -237,7 +373,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
     Widget _bottomMenuContent = SafeArea(
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -258,7 +394,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 label: AppLocalizations.instance.text('TXT_CART_ADD'),
                 lblColor: CustomColor.MAIN,
                 btnColor: CustomColor.MAIN,
-                function: () async => await _provider.fnStoreCart(_provider.scaffoldKey.currentContext!),
+                function: () async {
+                  await _provider.fnStoreCart(_provider.scaffoldKey.currentContext!);
+                  // await _baseProvider.fnGetCartCount();
+                  setState(() {});
+                },
               ),
             ),
             SizedBox(width: 10,),

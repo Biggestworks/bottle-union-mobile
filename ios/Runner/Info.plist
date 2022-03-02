@@ -16,7 +16,7 @@
 		<string>id</string>
 	</array>
 	<key>CFBundleName</key>
-	<string>eight_barrels</string>
+	<string>Bottle Union</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -63,6 +63,10 @@
 	<string>This app requires access to your location to open Google map</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app requires access to your location to open Google map</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Bottle Union app requires access to your photos library to add picture to your photos library</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Bottle Union app requires access to your photos library to add picture for your profile photo account</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

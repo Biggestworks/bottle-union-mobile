@@ -258,7 +258,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                             Row(
                               children: [
                                 Radio(
-                                  value: _provider.genderList[0],
+                                  value: provider.genderList[0],
                                   groupValue: provider.genderValue,
                                   onChanged: provider.fnOnChangeRadio,
                                   activeColor: Colors.white,
@@ -272,7 +272,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                             Row(
                               children: [
                                 Radio(
-                                  value: _provider.genderList[1],
+                                  value: provider.genderList[1],
                                   groupValue: provider.genderValue,
                                   onChanged: provider.fnOnChangeRadio,
                                   activeColor: Colors.white,

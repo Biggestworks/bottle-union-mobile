@@ -137,10 +137,7 @@ class WishListProvider extends ChangeNotifier with PaginationInterface {
   }
 
   Future fnStoreCart(BuildContext context, int productId) async {
-    var _user = await _userPreferences.getUserData();
-
     var _res = await _cartService.storeCart(
-      uid: _user!.data!.id!,
       productId: productId,
     );
 

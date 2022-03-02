@@ -316,7 +316,8 @@ class _HomeScreenState extends State<HomeScreen> {
               visualDensity: VisualDensity.compact,
             ),
             GestureDetector(
-              onTap: () => Get.toNamed(ProfileScreen.tag),
+              onTap: () async => await Get.toNamed(ProfileScreen.tag)!
+                  .then((_) async => await _provider.fnFetchUserInfo()),
               child: Consumer<HomeProvider>(
                 child: Container(
                   width: 30.0,
@@ -333,32 +334,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 builder: (context, provider, skeleton) {
-                  switch (provider.userModel.data) {
+                  switch (provider.userModel.user) {
                     case null:
                       return skeleton!;
                     default:
-                      switch (provider.userModel.data!.avatar) {
+                      switch (provider.userModel.user!.avatar) {
                         case null:
                           return skeleton!;
                         default:
                           return Padding(
                             padding: const EdgeInsets.only(right: 15, left: 5),
-                            child: CachedNetworkImage(
-                              imageUrl: provider.userModel.data!.avatar ?? '',
-                              imageBuilder: (context, imageProvider) {
-                                return Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(color: Colors.white),
-                                      image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.contain,
-                                      )),
-                                );
-                              },
-                            ),
+                            child: CustomWidget.roundedAvatarImg(url: provider.userModel.user!.avatar!, size: 30),
                           );
                       }
                   }
@@ -374,7 +360,7 @@ class _HomeScreenState extends State<HomeScreen> {
           title: Consumer<HomeProvider>(
             child: Container(),
             builder: (context, provider, skeleton) {
-              switch (provider.userModel.data) {
+              switch (provider.userModel.user) {
                 case null:
                   return skeleton!;
                 default:
@@ -385,7 +371,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('${AppLocalizations.instance.text('TXT_HALLO_USER')}${provider.userModel.data!.fullname!}', style: TextStyle(
+                          Text('${AppLocalizations.instance.text('TXT_HALLO_USER')}${provider.userModel.user!.fullname!}', style: TextStyle(
                             fontSize: 12,
                           ),),
                           Text('Gold Member', style: TextStyle(

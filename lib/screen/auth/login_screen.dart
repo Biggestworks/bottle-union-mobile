@@ -5,10 +5,12 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/validation.dart';
 import 'package:eight_barrels/provider/auth/auth_provider.dart';
+import 'package:eight_barrels/screen/auth/forgot_password_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/route_manager.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 
@@ -167,6 +169,20 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation implement
                   ),
                 ),
               ),
+              SizedBox(height: 5,),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: GestureDetector(
+                    onTap: () => Get.toNamed(ForgotPasswordScreen.tag),
+                    child: Text(AppLocalizations.instance.text('TXT_FORGOT_PASSWORD'), style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -306,42 +322,44 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation implement
       ],
     );
 
-    Widget _submitBtn = Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 25),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            child: CustomWidget.roundBtn(
-              label: _args.providerId != null
-                  ?  _args.providerId!.contains('google')
-                  ? AppLocalizations.instance.text('TXT_SIGN_GOOGLE')
-                  : _args.providerId!.contains('facebook')
-                  ? AppLocalizations.instance.text('TXT_SIGN_FACEBOOK')
-                  : AppLocalizations.instance.text('TXT_SIGN_IN')
-                  : AppLocalizations.instance.text('TXT_SIGN_IN'),
-              btnColor: CustomColor.SECONDARY,
-              lblColor: CustomColor.MAIN,
-              isBold: true,
-              fontSize: 16,
-              function: () async {
-                if (_args.providerId != null) {
-                  if (_args.providerId!.contains('google')) {
-                    await _provider.fnAuthGoogle(context, isLogin: true);
-                  } else if (_args.providerId!.contains('facebook')) {
-                    await _provider.fnAuthFacebook(context, isLogin: true);
+    Widget _submitBtn = SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              child: CustomWidget.roundBtn(
+                label: _args.providerId != null
+                    ?  _args.providerId!.contains('google')
+                    ? AppLocalizations.instance.text('TXT_SIGN_GOOGLE')
+                    : _args.providerId!.contains('facebook')
+                    ? AppLocalizations.instance.text('TXT_SIGN_FACEBOOK')
+                    : AppLocalizations.instance.text('TXT_SIGN_IN')
+                    : AppLocalizations.instance.text('TXT_SIGN_IN'),
+                btnColor: CustomColor.SECONDARY,
+                lblColor: CustomColor.MAIN,
+                isBold: true,
+                fontSize: 16,
+                function: () async {
+                  if (_args.providerId != null) {
+                    if (_args.providerId!.contains('google')) {
+                      await _provider.fnAuthGoogle(context, isLogin: true);
+                    } else if (_args.providerId!.contains('facebook')) {
+                      await _provider.fnAuthFacebook(context, isLogin: true);
+                    }
+                  } else {
+                    await _provider.fnLogin(context: context);
                   }
-                } else {
-                  await _provider.fnLogin(context: context);
-                }
-              },
+                },
+              ),
             ),
-          ),
-          if (_args.providerId == null)
-            _socmedBtns
-        ],
+            if (_args.providerId == null)
+              _socmedBtns
+          ],
+        ),
       ),
     );
 

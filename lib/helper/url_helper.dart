@@ -1,11 +1,9 @@
 
 class URLHelper {
+  /// BASE URL
   // static const BASE_URL = 'https://bottleunion.com/api'; //PRODUCTION
-
   static const BASE_URL = 'http://dev.bottleunion.com/api'; //DEVELOPMENT
-
   // static const String BASE_URL = 'http://192.168.100.9:8001/api'; // LOCAL
-
   // static const String BASE_URL = 'http://127.0.0.1:8001/api'; // LOCAL IOS
 
   /// AUTH
@@ -40,5 +38,15 @@ class URLHelper {
   ///BANNER
   static const BANNER_URL = BASE_URL + '/banner';
 
+  ///USER
+  static const USER_URL = BASE_URL + '/auth/user';
+  static const UPDATE_PROFILE_URL = BASE_URL + '/user/update-profile';
+  static const UPDATE_AVATAR_URL = BASE_URL + '/user/update-avatar';
+  static const NEW_PASSWORD_URL = BASE_URL + '/user/password/new';
+  static const RESET_PASSWORD_URL = BASE_URL + '/user/password/reset';
+
+  ///OTP
+  static const SEND_OTP = BASE_URL + '/verification/send';
+  static const VALIDATE_OTP = BASE_URL + '/verification/validation';
 
 }

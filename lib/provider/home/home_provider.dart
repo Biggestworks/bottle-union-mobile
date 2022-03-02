@@ -1,5 +1,5 @@
 import 'package:eight_barrels/helper/user_preferences.dart';
-import 'package:eight_barrels/model/auth/user_model.dart';
+import 'package:eight_barrels/model/auth/user_detail_model.dart';
 import 'package:eight_barrels/model/banner/banner_list_model.dart';
 import 'package:eight_barrels/model/product/category_model.dart';
 import 'package:eight_barrels/service/banner/banner_service.dart';
@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 
 class HomeProvider extends ChangeNotifier {
   UserPreferences _userPreferences = new UserPreferences();
-  UserModel userModel = new UserModel();
+  UserDetailModel userModel = new UserDetailModel();
   int currBanner = 0;
 
   BannerService _bannerService = new BannerService();
@@ -18,12 +18,12 @@ class HomeProvider extends ChangeNotifier {
   BannerListModel bannerList = new BannerListModel();
 
   HomeProvider() {
-    _fnFetchUserInfo();
+    fnFetchUserInfo();
     _fnFetchCategoryList();
     _fnFetchBannerList();
   }
 
-  Future _fnFetchUserInfo() async {
+  Future fnFetchUserInfo() async {
     this.userModel = (await _userPreferences.getUserData())!;
     notifyListeners();
   }
@@ -39,7 +39,7 @@ class HomeProvider extends ChangeNotifier {
   }
 
   Future onRefresh() async {
-    await _fnFetchUserInfo();
+    await fnFetchUserInfo();
     await _fnFetchCategoryList();
     await _fnFetchBannerList();
   }

@@ -237,16 +237,18 @@ class _WishListScreenState extends State<WishListScreen> with LoadingView {
       ),
     );
 
-    Widget _submitBtn = Container(
-      padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
-      width: MediaQuery.of(context).size.width,
-      child: CustomWidget.roundBtn(
-        label: AppLocalizations.instance.text('TXT_LBL_REMOVE_WISHLIST'),
-        btnColor: CustomColor.MAIN,
-        lblColor: Colors.white,
-        isBold: true,
-        fontSize: 16,
-        function: () async => await _provider.fnDeleteMultiWishlist(_provider.scaffoldKey.currentContext!),
+    Widget _submitBtn = SafeArea(
+      child: Container(
+        padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
+        width: MediaQuery.of(context).size.width,
+        child: CustomWidget.roundBtn(
+          label: AppLocalizations.instance.text('TXT_LBL_REMOVE_WISHLIST'),
+          btnColor: CustomColor.MAIN,
+          lblColor: Colors.white,
+          isBold: true,
+          fontSize: 16,
+          function: () async => await _provider.fnDeleteMultiWishlist(_provider.scaffoldKey.currentContext!),
+        ),
       ),
     );
 

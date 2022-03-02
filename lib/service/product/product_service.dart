@@ -1,17 +1,17 @@
+import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/helper/url_helper.dart';
-import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/product/brand_model.dart';
 import 'package:eight_barrels/model/product/category_model.dart';
 import 'package:eight_barrels/model/product/product_detail_model.dart';
 import 'package:eight_barrels/model/product/product_model.dart';
 import 'package:get/get_connect.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductService extends GetConnect {
-  UserPreferences _userPreferences = new UserPreferences();
 
   Future<Map<String, String>?> _headersAuth() async {
-    var _user = await _userPreferences.getUserData();
-    var _token = _user?.token;
+    final SharedPreferences _prefs = await SharedPreferences.getInstance();
+    var _token = _prefs.getString(KeyHelper.KEY_TOKEN);
 
     return {
       "Accept": "application/json",

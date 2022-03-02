@@ -3,14 +3,16 @@ class UserModel {
   String? message;
   Data? data;
   String? token;
+  Map<String, dynamic>? errors;
 
-  UserModel({this.status, this.message, this.data, this.token});
+  UserModel({this.status, this.message, this.data, this.token, this.errors});
 
   UserModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
     token = json['token'];
+    errors = json['errors'];
   }
 
   Map<String, dynamic> toJson() {
@@ -21,6 +23,7 @@ class UserModel {
       data['data'] = this.data!.toJson();
     }
     data['token'] = this.token;
+    data['errors'] = this.errors;
     return data;
   }
 }

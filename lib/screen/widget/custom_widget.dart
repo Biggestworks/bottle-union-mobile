@@ -425,6 +425,30 @@ class CustomWidget {
     );
   }
 
+  static Widget roundedAvatarImg({required String url, double? size}) {
+    return CachedNetworkImage(
+      imageUrl: url,
+      imageBuilder: (context, imageProvider) {
+        return Container(
+          width: size ?? 150,
+          height: size ?? 150,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 2),
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.fill,
+            ),
+          ),
+        );
+      },
+      placeholder: (context, url) => Center(
+          child: CircularProgressIndicator()),
+      errorWidget: (context, url, error) =>
+          Image.asset("assets/images/ic_profile.png", fit: BoxFit.fill,),
+    );
+  }
+
   static Widget emptyScreen({required String image, String title = 'Title'}) {
     return Center(
       child: Padding(

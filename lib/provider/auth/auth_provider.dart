@@ -3,6 +3,7 @@ import 'package:eight_barrels/abstract/register_step_interface.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/key_helper.dart';
+import 'package:eight_barrels/helper/validation.dart';
 import 'package:eight_barrels/model/auth/region_list_model.dart';
 import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
@@ -42,7 +43,6 @@ class AuthProvider extends ChangeNotifier with RegisterStepInterface {
 
   List<DropdownMenuItem<String>> regionList = [];
   String? selectedRegion;
-  int? selectedRegionId;
   List<Data> regionData = [];
 
   bool isHidePassRegis = true;
@@ -247,16 +247,15 @@ class AuthProvider extends ChangeNotifier with RegisterStepInterface {
   Future fnFetchRegionList() async {
     var _response = await _service.regionList();
 
-    regionData = _response!.data!;
+    // regionData = _response!.data!;
 
-    List.generate(_response.data!.length, (i) {
+    List.generate(_response!.data!.length, (i) {
       regionList.add(
         DropdownMenuItem(
           child: Text(_response.data![i].name!, style: TextStyle(
             color: Colors.black,
           ),),
           value: _response.data![i].id!.toString(),
-          onTap: () => selectedRegionId = _response.data![i].id!,
         ),
       );
     });
@@ -320,7 +319,7 @@ class AuthProvider extends ChangeNotifier with RegisterStepInterface {
       address: addressController.text,
       latitude: selectedLocation!.latitude.toString(),
       longitude: selectedLocation!.longitude.toString(),
-      idRegion: selectedRegionId!,
+      idRegion: int.parse(selectedRegion!),
       password: passController.text,
       confirmPassword: confirmPassController.text,
     );

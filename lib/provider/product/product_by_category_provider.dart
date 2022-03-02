@@ -24,6 +24,7 @@ class ProductByCategoryProvider extends ChangeNotifier
   fnGetArguments(BuildContext context) {
     final _args = ModalRoute.of(context)!.settings.arguments as ProductByCategoryScreen;
     category = _args.category;
+    notifyListeners();
   }
 
   Future fnFetchProductList() async {

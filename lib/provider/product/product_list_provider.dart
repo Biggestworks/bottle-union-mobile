@@ -1,7 +1,6 @@
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/abstract/pagination_interface.dart';
 import 'package:eight_barrels/abstract/product_card_interface.dart';
-import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/product/brand_model.dart';
 import 'package:eight_barrels/model/product/category_model.dart';
 import 'package:eight_barrels/model/product/product_model.dart';

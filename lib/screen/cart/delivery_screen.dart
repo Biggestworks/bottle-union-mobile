@@ -5,7 +5,6 @@ import 'package:eight_barrels/model/cart/cart_list_model.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class DeliveryScreen extends StatefulWidget {
   static String tag = '/delivery-screen';

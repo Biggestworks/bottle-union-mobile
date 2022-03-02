@@ -1,17 +1,17 @@
+import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/helper/url_helper.dart';
-import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/cart/cart_list_model.dart';
 import 'package:eight_barrels/model/cart/cart_model.dart';
 import 'package:eight_barrels/model/cart/cart_total_model.dart';
 import 'package:eight_barrels/model/default_model.dart';
 import 'package:get/get_connect.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CartService extends GetConnect {
-  UserPreferences _userPreferences = new UserPreferences();
 
   Future<Map<String, String>?> _headersAuth() async {
-    var _user = await _userPreferences.getUserData();
-    var _token = _user?.token;
+    final SharedPreferences _prefs = await SharedPreferences.getInstance();
+    var _token = _prefs.getString(KeyHelper.KEY_TOKEN);
 
     return {
       "Accept": "application/json",
@@ -45,13 +45,11 @@ class CartService extends GetConnect {
   }
 
   Future<CartModel?> storeCart({
-    required int uid,
     required int productId,
   }) async {
     CartModel _model = new CartModel();
 
     final Map<String, dynamic> _data = {
-      "id_user": uid,
       "id_product": productId,
     };
 

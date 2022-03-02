@@ -1,37 +1,48 @@
 
-import 'dart:convert';
 
 import 'package:eight_barrels/helper/key_helper.dart';
-import 'package:eight_barrels/model/auth/user_model.dart';
+import 'package:eight_barrels/helper/url_helper.dart';
+import 'package:eight_barrels/model/auth/user_detail_model.dart';
+import 'package:get/get_connect.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UserPreferences {
+class UserPreferences extends GetConnect {
 
-  Future? saveUserData(Map<String, dynamic> response) async {
+  Future? saveUserToken(String token) async {
     try {
       final SharedPreferences _prefs = await SharedPreferences.getInstance();
-      String _user = jsonEncode(response);
-      _prefs.setString(KeyHelper.USER, _user);
+      _prefs.setString(KeyHelper.KEY_TOKEN, token);
     } catch (e) {
       print(e);
     }
   }
 
-  Future<UserModel?> getUserData() async {
+  Future<UserDetailModel?> getUserData() async {
+    UserDetailModel _model = new UserDetailModel();
+    final SharedPreferences _prefs = await SharedPreferences.getInstance();
+    var _token = _prefs.getString(KeyHelper.KEY_TOKEN);
+
     try {
-      final SharedPreferences _prefs = await SharedPreferences.getInstance();
-      Map<String, dynamic> _userMap = jsonDecode(_prefs.getString(KeyHelper.USER)!);
-      var user = UserModel.fromJson(_userMap);
-      return user;
+      Response _response = await get(
+        URLHelper.USER_URL,
+        headers: {
+          "Accept": "application/json",
+          "User-Agent": "Persada Apps 1.0",
+          "Authorization": "Bearer $_token",
+        }
+      );
+      _model = UserDetailModel.fromJson(_response.body);
     } catch (e) {
       print(e);
     }
+
+    return _model;
   }
 
-  removeUserData() async {
+  removeUserToken() async {
     try {
       final SharedPreferences _prefs = await SharedPreferences.getInstance();
-      _prefs.remove(KeyHelper.USER);
+      _prefs.remove(KeyHelper.KEY_TOKEN);
     } catch (e) {
       print(e);
     }

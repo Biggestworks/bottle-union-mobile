@@ -1,6 +1,7 @@
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/provider/auth/auth_provider.dart';
+import 'package:eight_barrels/provider/auth/forgot_password_provider.dart';
 import 'package:eight_barrels/provider/cart/base_cart_provider.dart';
 import 'package:eight_barrels/provider/cart/cart_list_provider.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
@@ -9,7 +10,12 @@ import 'package:eight_barrels/provider/product/product_by_category_provider.dart
 import 'package:eight_barrels/provider/product/product_detail_provider.dart';
 import 'package:eight_barrels/provider/product/product_list_provider.dart';
 import 'package:eight_barrels/provider/product/wishlist_provider.dart';
+import 'package:eight_barrels/provider/profile/change_password_provider.dart';
+import 'package:eight_barrels/screen/auth/forgot_password_screen.dart';
+import 'package:eight_barrels/screen/profile/change_password_screen.dart';
+import 'package:eight_barrels/provider/profile/profile_input_provider.dart';
 import 'package:eight_barrels/provider/profile/profile_provider.dart';
+import 'package:eight_barrels/provider/profile/update_profile_provider.dart';
 import 'package:eight_barrels/provider/splash/splash_provider.dart';
 import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/auth/register_screen.dart';
@@ -23,7 +29,9 @@ import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/product/product_list_screen.dart';
 import 'package:eight_barrels/screen/product/wishlist_screen.dart';
+import 'package:eight_barrels/screen/profile/profile_input_screen.dart';
 import 'package:eight_barrels/screen/profile/profile_screen.dart';
+import 'package:eight_barrels/screen/profile/update_profile_screen.dart';
 import 'package:eight_barrels/screen/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -178,6 +186,34 @@ class _AppState extends State<App> {
         GetPage(
           name: DeliveryScreen.tag,
           page: () => DeliveryScreen(),
+        ),
+        GetPage(
+          name: UpdateProfileScreen.tag,
+          page: () => ChangeNotifierProvider<UpdateProfileProvider>(
+            create: (context) => UpdateProfileProvider(),
+            child: UpdateProfileScreen(),
+          ),
+        ),
+        GetPage(
+          name: ProfileInputScreen.tag,
+          page: () => ChangeNotifierProvider<ProfileInputProvider>(
+            create: (context) => ProfileInputProvider(),
+            child: ProfileInputScreen(),
+          ),
+        ),
+        GetPage(
+          name: ChangePasswordScreen.tag,
+          page: () => ChangeNotifierProvider<ChangePasswordProvider>(
+            create: (context) => ChangePasswordProvider(),
+            child: ChangePasswordScreen(),
+          ),
+        ),
+        GetPage(
+          name: ForgotPasswordScreen.tag,
+          page: () => ChangeNotifierProvider<ForgotPasswordProvider>(
+            create: (context) => ForgotPasswordProvider(),
+            child: ForgotPasswordScreen(),
+          ),
         ),
       ],
     );

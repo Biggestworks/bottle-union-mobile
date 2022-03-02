@@ -1,18 +1,16 @@
 import 'dart:async';
 
-import 'package:eight_barrels/helper/user_preferences.dart';
-import 'package:eight_barrels/model/auth/user_model.dart';
+import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/screen/auth/start_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashProvider extends ChangeNotifier {
-  UserPreferences _userPreferences = new UserPreferences();
-
   Future fnAuthentication() async {
-    UserModel? _user = await _userPreferences.getUserData();
-    var _token = _user?.token;
+    final SharedPreferences _prefs = await SharedPreferences.getInstance();
+    var _token = _prefs.getString(KeyHelper.KEY_TOKEN);
 
     if (_token != null) {
       Future.delayed(Duration(seconds: 2)).then((_) => Get.offAndToNamed(BaseHomeScreen.tag));

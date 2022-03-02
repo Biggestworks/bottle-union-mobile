@@ -1,7 +1,6 @@
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/product/product_detail_model.dart';
-import 'package:eight_barrels/model/product/product_model.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/cart/cart_service.dart';
@@ -14,15 +13,31 @@ class ProductDetailProvider extends ChangeNotifier {
   WishlistService _wishlistService = new WishlistService();
   CartService _cartService = new CartService();
   UserPreferences _userPreferences = new UserPreferences();
-  bool isWishlist = false;
   ProductDetailModel product = new ProductDetailModel();
+
+  bool isWishlist = false;
   int? id;
+  // bool isVisible = true;
+  // ScrollController scrollController = new ScrollController();
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
+  // bool fnHideOnScroll(UserScrollNotification notification) {
+  //   final ScrollDirection direction = notification.direction;
+  //   if (direction == ScrollDirection.reverse) {
+  //     isVisible = false;
+  //     notifyListeners();
+  //   } else if (direction == ScrollDirection.forward) {
+  //     isVisible = true;
+  //     notifyListeners();
+  //   }
+  //   return true;
+  // }
 
   fnGetArguments(BuildContext context) {
     final _args = ModalRoute.of(context)!.settings.arguments as ProductDetailScreen;
     id = _args.id!;
+    notifyListeners();
   }
 
   Future fnGetProduct() async {
@@ -31,10 +46,7 @@ class ProductDetailProvider extends ChangeNotifier {
   }
 
   Future fnCheckWishlist() async {
-    var _user = await _userPreferences.getUserData();
-
     var _res = await _wishlistService.checkWishlist(
-      uid: _user!.data!.id!,
       productId: product.data!.id!,
     );
 
@@ -49,10 +61,7 @@ class ProductDetailProvider extends ChangeNotifier {
   }
 
   Future fnStoreWishlist(BuildContext context) async {
-    var _user = await _userPreferences.getUserData();
-
     var _res = await _wishlistService.storeWishlist(
-      uid: _user!.data!.id!,
       productId: product.data!.id!,
     );
 
@@ -72,10 +81,7 @@ class ProductDetailProvider extends ChangeNotifier {
   }
 
   Future fnStoreCart(BuildContext context) async {
-    var _user = await _userPreferences.getUserData();
-
     var _res = await _cartService.storeCart(
-      uid: _user!.data!.id!,
       productId: product.data!.id!,
     );
 

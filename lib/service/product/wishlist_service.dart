@@ -1,16 +1,16 @@
+import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/helper/url_helper.dart';
-import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/default_model.dart';
 import 'package:eight_barrels/model/product/user_wishlist_model.dart';
 import 'package:eight_barrels/model/product/wishlist_model.dart';
 import 'package:get/get_connect.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WishlistService extends GetConnect {
-  UserPreferences? _userPreferences = new UserPreferences();
 
   Future<Map<String, String>?> _headersAuth() async {
-    var _user = await _userPreferences?.getUserData();
-    var _token = _user?.token;
+    final SharedPreferences _prefs = await SharedPreferences.getInstance();
+    var _token = _prefs.getString(KeyHelper.KEY_TOKEN);
 
     return {
       "Accept": "application/json",
@@ -18,15 +18,12 @@ class WishlistService extends GetConnect {
       "Authorization": "Bearer $_token",
     };
   }
-
   Future<WishlistModel?> storeWishlist({
-    required int uid,
     required int productId,
   }) async {
     WishlistModel _model = new WishlistModel();
 
     final Map<String, dynamic> _data = {
-      "id_user": uid,
       "id_product": productId,
       "flag": 'wishlist',
     };
@@ -80,6 +77,7 @@ class WishlistService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
+      print(_response.body);
       _model = UserWishlistModel.fromJson(_response.body);
     } catch (e) {
       print(e);
@@ -89,13 +87,11 @@ class WishlistService extends GetConnect {
   }
 
   Future<DefaultModel?> checkWishlist({
-    required int uid,
     required int productId,
   }) async {
     DefaultModel _model = new DefaultModel();
 
     final Map<String, dynamic> _data = {
-      "id_user": uid,
       "id_product": productId,
     };
 

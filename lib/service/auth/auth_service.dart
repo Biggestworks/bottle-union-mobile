@@ -37,7 +37,9 @@ class AuthService extends GetConnect {
         headers: _headers,
       );
       _model = UserModel.fromJson(_response.body);
-      await _userPreferences?.saveUserData(_response.body);
+      if (_model.status == true) {
+        await _userPreferences?.saveUserToken(_model.token!);
+      }
     } catch (e) {
       print(e);
     }
@@ -218,7 +220,9 @@ class AuthService extends GetConnect {
       );
       print(_response.body);
       _model = UserModel.fromJson(_response.body);
-      await _userPreferences?.saveUserData(_response.body);
+      if (_model.status == true) {
+        await _userPreferences?.saveUserToken(_model.token!);
+      }
     } catch (e) {
       print(e);
     }
@@ -257,5 +261,4 @@ class AuthService extends GetConnect {
 
     return _data;
   }
-
 }

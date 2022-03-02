@@ -1,7 +1,8 @@
+
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
-import 'package:eight_barrels/model/auth/user_model.dart';
+import 'package:eight_barrels/model/auth/user_detail_model.dart';
 import 'package:eight_barrels/screen/auth/start_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
@@ -10,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileProvider extends ChangeNotifier {
   UserPreferences _userPreferences = new UserPreferences();
-  UserModel userModel = new UserModel();
+  UserDetailModel userModel = new UserDetailModel();
   String fullVersion = 'x.x.x';
   String locale = '';
   bool switchVal = true;
@@ -62,7 +63,7 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   Future fnLogout() async {
-    await UserPreferences().removeUserData();
+    await _userPreferences.removeUserToken();
     Get.offAndToNamed(StartScreen.tag);
   }
 }
