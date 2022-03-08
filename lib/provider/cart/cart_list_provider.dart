@@ -1,8 +1,8 @@
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/abstract/pagination_interface.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
-import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/model/cart/cart_list_model.dart';
+import 'package:eight_barrels/model/cart/cart_total_model.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/cart/cart_service.dart';
 import 'package:flutter/material.dart';
@@ -10,12 +10,13 @@ import 'package:flutter/material.dart';
 class CartListProvider extends ChangeNotifier with PaginationInterface {
   CartService _service = new CartService();
   CartListModel cartList = new CartListModel();
+  CartTotalModel cartTotalList = new CartTotalModel();
   
   LoadingView? _view;
 
   bool isPaginateLoad = false;
 
-  String totalPay = '0';
+  int totalPay = 0;
   int totalCart = 0;
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -33,56 +34,44 @@ class CartListProvider extends ChangeNotifier with PaginationInterface {
       page: super.currentPage.toString(),
     ))!;
 
-    if (cartList.result != null) {
-      totalCart = cartList.result!.data!.where((i) => i.isSelected == 1).length;
-    }
-
     _view!.onProgressFinish();
     notifyListeners();
   }
 
   Future fnDeleteCart(BuildContext context, int id) async {
-    CustomWidget.showConfirmationDialog(
-      context,
-      desc: AppLocalizations.instance.text('TXT_REMOVE_CART_INFO'),
-      function: () async {
-        var _res = await _service.deleteCart(
-            idList: [id]
-        );
-
-        if (_res!.status != null) {
-          if (_res.status == true) {
-            cartList = (await _service.cartList())!;
-            notifyListeners();
-            await CustomWidget.showSnackBar(
-              context: context,
-              content: Text(AppLocalizations.instance.text('TXT_CART_DELETE_SUCCESS')),
-            );
-          } else {
-            await CustomWidget.showSnackBar(
-              context: context,
-              content: Text(_res.message.toString()),
-            );
-          }
-        } else {
-          await CustomWidget.showSnackBar(
-            context: context,
-            content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')),
-          );
-        }
-      },
+    var _res = await _service.deleteCart(
+        idList: [id]
     );
+
+    if (_res!.status != null) {
+      if (_res.status == true) {
+        cartList = (await _service.cartList())!;
+        notifyListeners();
+        await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_CART_DELETE_SUCCESS')),
+        );
+      } else {
+        await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(_res.message.toString()),
+        );
+      }
+    } else {
+      await CustomWidget.showSnackBar(
+        context: context,
+        content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')),
+      );
+    }
     notifyListeners();
   }
 
   Future fnGetTotalPay() async {
-    var _res = await _service.getTotalPayCart();
-    if (_res!.status != null) {
-      if (_res.status == true && _res.total != null) {
-        totalPay = FormatterHelper.moneyFormatter(_res.total);
-        if (cartList.result != null) {
-          totalCart = cartList.result!.data!.where((i) => i.isSelected == 1).length;
-        }
+    cartTotalList = (await _service.getTotalPayCart())!;
+    if (cartTotalList.status != null) {
+      if (cartTotalList.status == true) {
+        totalPay = cartTotalList.total ?? 0;
+        totalCart = (cartTotalList.data != null ? cartTotalList.data?.length : 0)!;
       }
     }
     notifyListeners();

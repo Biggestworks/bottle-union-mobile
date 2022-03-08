@@ -2,6 +2,7 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
+import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/product/wishlist_provider.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
@@ -34,6 +35,7 @@ class _WishListScreenState extends State<WishListScreen> with LoadingView {
   @override
   Widget build(BuildContext context) {
     final _provider = Provider.of<WishListProvider>(context, listen: false);
+    final _baseProvider = Provider.of<BaseHomeProvider>(context, listen: false);
 
     Widget _productListContent = Flexible(
       child: Consumer<WishListProvider>(
@@ -151,7 +153,8 @@ class _WishListScreenState extends State<WishListScreen> with LoadingView {
                                                       SizedBox(width: 10,),
                                                       Expanded(
                                                         child: CustomWidget.roundIconBtn(
-                                                          function: () async => await provider.fnStoreCart(context, _data.idProduct!),
+                                                          function: () async => await provider.fnStoreCart(context, _data.idProduct!)
+                                                              .then((_) async => await _baseProvider.fnGetCartCount()),
                                                           icon: Icons.add,
                                                           label: AppLocalizations.instance.text('TXT_CART_ADD'),
                                                           btnColor: CustomColor.MAIN,
@@ -190,11 +193,10 @@ class _WishListScreenState extends State<WishListScreen> with LoadingView {
     );
 
     Widget _mainContent = Container(
-      padding: EdgeInsets.symmetric(horizontal: 15),
+      padding: EdgeInsets.fromLTRB(15, 10, 15, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20,),
           Consumer<WishListProvider>(
             child: Container(),
             builder: (context, provider, skeleton) {

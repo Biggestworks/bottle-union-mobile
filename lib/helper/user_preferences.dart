@@ -63,4 +63,20 @@ class UserPreferences extends GetConnect {
     final SharedPreferences _prefs = await SharedPreferences.getInstance();
     _prefs.remove(KeyHelper.KEY_FCM_TOKEN);
   }
+
+  Future? saveOtpToken(String token) async {
+    try {
+      final SharedPreferences _prefs = await SharedPreferences.getInstance();
+      _prefs.setString(KeyHelper.KEY_OTP_TOKEN, token);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<String?> getOtpToken() async {
+    final SharedPreferences _prefs = await SharedPreferences.getInstance();
+    String? token = _prefs.getString(KeyHelper.KEY_OTP_TOKEN);
+    return token;
+  }
+
 }

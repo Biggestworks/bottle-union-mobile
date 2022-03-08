@@ -13,8 +13,7 @@ class BaseHomeProvider extends ChangeNotifier {
 
   Future fnGetCartCount() async {
     var _res = await _cartService.cartList();
-    cartCount = _res!.result!.total!;
-    print(cartCount);
+    cartCount = _res!.result != null ? _res.result!.total! : 0;
     notifyListeners();
   }
 

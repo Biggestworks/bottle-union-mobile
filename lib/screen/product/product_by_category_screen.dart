@@ -1,6 +1,7 @@
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
+import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/product/product_by_category_provider.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
@@ -76,10 +77,15 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> with 
                                         index: index,
                                       );
                                     default:
-                                      return provider.productCard(
-                                        context: context,
-                                        data: _data,
-                                        index: index,
+                                      return Consumer<BaseHomeProvider>(
+                                        builder: (context, baseProvider, _) {
+                                          return provider.productCard(
+                                            context: context,
+                                            data: _data,
+                                            index: index,
+                                            onUpdateCart: () async => await baseProvider.fnGetCartCount(),
+                                          );
+                                        },
                                       );
                                   }
                                 },

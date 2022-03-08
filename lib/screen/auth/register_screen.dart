@@ -2,7 +2,7 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/validation.dart';
-import 'package:eight_barrels/provider/auth/auth_provider.dart';
+import 'package:eight_barrels/provider/auth/register_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -29,16 +29,17 @@ class _RegisterScreenState extends State<RegisterScreen>
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
-      Provider.of<AuthProvider>(context, listen: false).fnInitAnimation(this);
-      Provider.of<AuthProvider>(context, listen: false).fnGetView(this);
-      Provider.of<AuthProvider>(context, listen: false).fnFetchRegionList();
+      Provider.of<RegisterProvider>(context, listen: false).fnInitAnimation(this);
+      Provider.of<RegisterProvider>(context, listen: false).fnGetView(this);
+      Provider.of<RegisterProvider>(context, listen: false).fnFetchRegionList();
+      Provider.of<RegisterProvider>(context, listen: false).fnFetchProvinceList();
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final _provider = Provider.of<AuthProvider>(context, listen: false);
+    final _provider = Provider.of<RegisterProvider>(context, listen: false);
 
     _showDobDialog() {
       return showDialog(
@@ -129,7 +130,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Consumer<AuthProvider>(
+                              Consumer<RegisterProvider>(
                                 child: Container(),
                                 builder: (context, provider, skeleton) {
                                   switch (provider.isAgeValid) {
@@ -165,57 +166,54 @@ class _RegisterScreenState extends State<RegisterScreen>
                     fontSize: 16,
                     color: Colors.white,
                   ),),
-                  TextFormField(
-                    controller: _provider.emailController,
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.emailAddress,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      String? valid = validateEmail(value);
-                      if (valid == null) {
-                        _provider.fnValidateEmail(context, value!);
-                        return _provider.errEmail;
-                      }
-                      return valid;
-                    },
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 10),
-                      suffixIcon: Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Consumer<AuthProvider>(
-                                child: Container(),
-                                builder: (context, provider, skeleton) {
-                                  switch (provider.isEmailValid) {
-                                    case false:
-                                      return Icon(FontAwesomeIcons.solidCheckCircle, size: 24, color: Colors.greenAccent,);
-                                    case true:
-                                      return Icon(FontAwesomeIcons.exclamationCircle, size: 24, color: Colors.amberAccent,);
-                                    default:
-                                      return skeleton!;
-                                  }
-                                }
-                            ),
-                          ],
+                  Consumer<RegisterProvider>(
+                    builder: (context, provider, _) {
+                      return TextFormField(
+                        controller: provider.emailController,
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.emailAddress,
+                        onChanged: (value) async => await provider.fnValidateEmail(context, value),
+                        style: TextStyle(
+                          color: Colors.white,
                         ),
-                      ),
-                      isDense: true,
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: CustomColor.MAIN),
-                      ),
-                      errorStyle: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
+                        decoration: InputDecoration(
+                          errorText: provider.errEmail,
+                          contentPadding: EdgeInsets.symmetric(vertical: 10),
+                          suffixIcon: Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Consumer<RegisterProvider>(
+                                    child: Container(),
+                                    builder: (context, provider, skeleton) {
+                                      switch (provider.isEmailValid) {
+                                        case false:
+                                          return Icon(FontAwesomeIcons.solidCheckCircle, size: 24, color: Colors.greenAccent,);
+                                        case true:
+                                          return Icon(FontAwesomeIcons.exclamationCircle, size: 24, color: Colors.amberAccent,);
+                                        default:
+                                          return skeleton!;
+                                      }
+                                    }
+                                ),
+                              ],
+                            ),
+                          ),
+                          isDense: true,
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: CustomColor.MAIN),
+                          ),
+                          errorStyle: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    }
                   ),
                   SizedBox(height: 20,),
                   Text(AppLocalizations.instance.text('TXT_LBL_PHONE'), style: TextStyle(
@@ -250,7 +248,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                     fontSize: 16,
                     color: Colors.white,
                   ),),
-                  Consumer<AuthProvider>(
+                  Consumer<RegisterProvider>(
                       builder: (context, provider, _) {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -260,7 +258,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                 Radio(
                                   value: provider.genderList[0],
                                   groupValue: provider.genderValue,
-                                  onChanged: provider.fnOnChangeRadio,
+                                  onChanged: provider.fnOnChangeGender,
                                   activeColor: Colors.white,
                                 ),
                                 Text(AppLocalizations.instance.text('TXT_LBL_MALE'), style: TextStyle(
@@ -274,7 +272,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                 Radio(
                                   value: provider.genderList[1],
                                   groupValue: provider.genderValue,
-                                  onChanged: provider.fnOnChangeRadio,
+                                  onChanged: provider.fnOnChangeGender,
                                   activeColor: Colors.white,
                                 ),
                                 Text(AppLocalizations.instance.text('TXT_LBL_FEMALE'), style: TextStyle(
@@ -311,23 +309,23 @@ class _RegisterScreenState extends State<RegisterScreen>
             color: Colors.white,
           ), textAlign: TextAlign.center,),
           SizedBox(height: 10,),
-          GestureDetector(
-            onTap: () async => await _provider.fnShowPlacePicker(context),
-            child: Card(
-              color: Colors.white38,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(AppLocalizations.instance.text('TXT_LBL_ADDRESS'), style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),),
-                    TextFormField(
+          Card(
+            color: Colors.white38,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(AppLocalizations.instance.text('TXT_LBL_ADDRESS'), style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),),
+                  GestureDetector(
+                    onTap: () async => await _provider.fnShowPlacePicker(context),
+                    child: TextFormField(
                       enabled: false,
                       controller: _provider.addressController,
                       validator: validateField,
@@ -347,69 +345,239 @@ class _RegisterScreenState extends State<RegisterScreen>
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 20,),
-          Consumer<AuthProvider>(
-              child: Container(),
-              builder: (context, provider, skeleton) {
-                switch (provider.addressController.text) {
-                  case '':
-                    return skeleton!;
-                  default:
-                    return Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(AppLocalizations.instance.text('TXT_REGISTER_REGION'), style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),),
-                        ),
-                        SizedBox(height: 10,),
-                        Card(
-                          color: Colors.white38,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                  ),
+                  SizedBox(height: 20,),
+                  Text(AppLocalizations.instance.text('TXT_REGISTER_PROVINCE'), style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),),
+                  GestureDetector(
+                    onTap: () => CustomWidget.showSheet(
+                      context: context,
+                      isScroll: true,
+                      child: ChangeNotifierProvider.value(
+                        value: Provider.of<RegisterProvider>(context, listen: false),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          child: Consumer<RegisterProvider>(
+                            child: Container(),
+                            builder: (context, provider, skeleton) {
+                              switch (provider.provinceList.rajaongkir) {
+                                case null:
+                                  return skeleton!;
+                                default:
+                                  switch (provider.provinceList.rajaongkir?.results) {
+                                    case null:
+                                      return skeleton!;
+                                    default:
+                                      return ListView.separated(
+                                        shrinkWrap: true,
+                                        itemCount: provider.provinceList.rajaongkir!.results!.length,
+                                        itemBuilder: (context, index) {
+                                          var _data = provider.provinceList.rajaongkir!.results![index];
+                                          return GestureDetector(
+                                            onTap: () async {
+                                              Get.back();
+                                              await provider.fnOnSelectProvince(
+                                                name: _data.province!,
+                                                id: _data.provinceId!,
+                                              );
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                                              child: Text(_data.province ?? '-', style: TextStyle(
+                                                fontSize: 16,
+                                              ),),
+                                            ),
+                                          );
+                                        },
+                                        separatorBuilder: (context, index) {
+                                          return Divider();
+                                        },
+                                      );
+                                  }
+                              }
+                            },
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: DropdownButtonFormField<String>(
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                isDense: true,
-                                errorStyle: TextStyle(
-                                  color: Colors.white,
-                                ),
+                        ),
+                      ),
+                    ),
+                    child: TextFormField(
+                      enabled: false,
+                      controller: _provider.provinceController,
+                      validator: validateField,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      maxLines: null,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 10),
+                        isDense: true,
+                        disabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        errorStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20,),
+                  Text(AppLocalizations.instance.text('TXT_REGISTER_CITY'), style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),),
+                  GestureDetector(
+                    onTap: () {
+                      if (_provider.provinceController.text.isNotEmpty) {
+                        CustomWidget.showSheet(
+                          context: context,
+                          isScroll: true,
+                          child: ChangeNotifierProvider.value(
+                            value: Provider.of<RegisterProvider>(context, listen: false),
+                            child: Container(
+                              height: MediaQuery.of(context).size.height * 0.5,
+                              child: Consumer<RegisterProvider>(
+                                child: Container(),
+                                builder: (context, provider, skeleton) {
+                                  switch (provider.cityList.rajaongkir) {
+                                    case null:
+                                      return skeleton!;
+                                    default:
+                                      switch (provider.cityList.rajaongkir?.results) {
+                                        case null:
+                                          return skeleton!;
+                                        default:
+                                          return ListView.separated(
+                                            shrinkWrap: true,
+                                            itemCount: provider.cityList.rajaongkir!.results!.length,
+                                            itemBuilder: (context, index) {
+                                              var _data = provider.cityList.rajaongkir!.results![index];
+                                              return GestureDetector(
+                                                onTap: () async {
+                                                  Get.back();
+                                                  await provider.fnOnSelectCity(
+                                                    name: _data.cityName!,
+                                                    id: _data.cityId!,
+                                                  );
+                                                },
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                                                  child: Text(_data.cityName ?? '-', style: TextStyle(
+                                                    fontSize: 16,
+                                                  ),),
+                                                ),
+                                              );
+                                            },
+                                            separatorBuilder: (context, index) {
+                                              return Divider();
+                                            },
+                                          );
+                                      }
+                                  }
+                                },
                               ),
-                              validator: validateField,
-                              items: provider.regionList,
-                              isExpanded: true,
-                              value: provider.selectedRegion,
-                              iconEnabledColor: Colors.white,
-                              menuMaxHeight: 250,
-                              onChanged: (value) => provider.fnOnSelectRegion(value!),
-                              selectedItemBuilder: (BuildContext context) {
-                                return provider.regionData.map<Widget>((item) {
-                                  return Text(
-                                      item.name!,
-                                      style: TextStyle(color: Colors.white,)
-                                  );
-                                }).toList();
-                              },
-                              hint: Text('-- ${AppLocalizations.instance.text('TXT_REGISTER_REGION')} --', style: TextStyle(
-                                color: Colors.white,
-                              ),),
                             ),
                           ),
+                        );
+                      } else {
+                        CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_REGISTER_CITY_INFO')));
+                      }
+                    },
+                    child: TextFormField(
+                      enabled: false,
+                      controller: _provider.cityController,
+                      validator: validateField,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      maxLines: null,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 10),
+                        isDense: true,
+                        disabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
                         ),
-                      ],
-                    );
-                }
-              }
+                        errorStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20,),
+                  Text(AppLocalizations.instance.text('TXT_REGISTER_REGION'), style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),),
+                  GestureDetector(
+                    onTap: () => CustomWidget.showSheet(
+                      context: context,
+                      isScroll: true,
+                      child: ChangeNotifierProvider.value(
+                        value: Provider.of<RegisterProvider>(context, listen: false),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          child: Consumer<RegisterProvider>(
+                            child: Container(),
+                            builder: (context, provider, skeleton) {
+                              switch (provider.regionList.data) {
+                                case null:
+                                  return skeleton!;
+                                default:
+                                  return ListView.separated(
+                                    shrinkWrap: true,
+                                    itemCount: provider.regionList.data!.length,
+                                    itemBuilder: (context, index) {
+                                      var _data = provider.regionList.data![index];
+                                      return GestureDetector(
+                                        onTap: () async {
+                                          Get.back();
+                                          await provider.fnOnSelectRegion(
+                                            name: _data.name!,
+                                            id: _data.id!,
+                                          );
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                                          child: Text(_data.name ?? '-', style: TextStyle(
+                                            fontSize: 16,
+                                          ),),
+                                        ),
+                                      );
+                                    },
+                                    separatorBuilder: (context, index) {
+                                      return Divider();
+                                    },
+                                  );
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                    child: TextFormField(
+                      enabled: false,
+                      controller: _provider.regionController,
+                      validator: validateField,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      maxLines: null,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 10),
+                        isDense: true,
+                        disabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        errorStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
@@ -435,7 +603,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                 controller: _provider.passController,
                 textInputAction: TextInputAction.next,
                 validator: validatePassword,
-                obscureText: _provider.isHidePassRegis,
+                obscureText: _provider.isHidePass,
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -453,7 +621,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                   ),
                   suffixIcon: GestureDetector(
                     child: Icon(
-                      _provider.isHidePassRegis
+                      _provider.isHidePass
                           ? Icons.visibility_off
                           : Icons.visibility,
                       color: Colors.white,
@@ -472,7 +640,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                 controller: _provider.confirmPassController,
                 textInputAction: TextInputAction.next,
                 validator: (value) => validateConfirmPassword(_provider.passController.text, value),
-                obscureText: _provider.isHidePassRegisConfirm,
+                obscureText: _provider.isHidePassConfirm,
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -490,7 +658,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                   ),
                   suffixIcon: GestureDetector(
                     child: Icon(
-                      _provider.isHidePassRegisConfirm
+                      _provider.isHidePassConfirm
                           ? Icons.visibility_off
                           : Icons.visibility,
                       color: Colors.white,
@@ -518,14 +686,14 @@ class _RegisterScreenState extends State<RegisterScreen>
               color: Colors.white,
             ),),
           ),
-          Consumer<AuthProvider>(
+          Consumer<RegisterProvider>(
               builder: (context, provider, _) {
                 return Flexible(
                   child: provider.stepProgressBar(context: context),
                 );
               }
           ),
-          Consumer<AuthProvider>(
+          Consumer<RegisterProvider>(
               child: Container(),
               builder: (context, provider, skeleton) {
                 switch (provider.offsetAnimation) {
@@ -550,29 +718,29 @@ class _RegisterScreenState extends State<RegisterScreen>
       ),
     );
 
-    Widget _submitBtn = Consumer<AuthProvider>(
+    Widget _submitBtn = Consumer<RegisterProvider>(
         builder: (context, provider, _) {
-          return Container(
-            padding: EdgeInsets.all(20),
-            width: MediaQuery.of(context).size.width,
-            child: CustomWidget.roundBtn(
-              label: provider.stepIndex != 2
-                  ? AppLocalizations.instance.text('TXT_CONTINUE')
-                  : AppLocalizations.instance.text('TXT_JOIN'),
-              btnColor: CustomColor.SECONDARY,
-              lblColor: CustomColor.MAIN,
-              isBold: true,
-              fontSize: 16,
-              function: () async => await provider.fnOnForwardTransition(context),
+          return SafeArea(
+            child: Container(
+              padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+              width: MediaQuery.of(context).size.width,
+              child: CustomWidget.roundBtn(
+                label: provider.stepIndex != 2
+                    ? AppLocalizations.instance.text('TXT_CONTINUE')
+                    : AppLocalizations.instance.text('TXT_JOIN'),
+                btnColor: CustomColor.SECONDARY,
+                lblColor: CustomColor.MAIN,
+                isBold: true,
+                fontSize: 16,
+                function: () async => await provider.fnOnForwardTransition(context),
+              ),
             ),
           );
         }
     );
 
-    return ModalProgressHUD(
-      inAsyncCall: _isLoad,
-      progressIndicator: SpinKitFadingCube(color: CustomColor.MAIN,),
-      opacity: 0.5,
+    return CustomWidget.loadingHud(
+      isLoad: _isLoad,
       child: GestureDetector(
         onTap: () => _provider.fnKeyboardUnFocus(context),
         child: Scaffold(

@@ -211,31 +211,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                           onTap: () async => await provider.fnUpdateAvatar(provider.scaffoldKey.currentContext!),
                           child: Stack(
                             children: [
-                              Consumer<UpdateProfileProvider>(
-                                  child: Container(
-                                    width: 150.0,
-                                    height: 150.0,
-                                    decoration: new BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(color: Colors.white),
-                                      color: Colors.white,
-                                      image: new DecorationImage(
-                                        fit: BoxFit.contain,
-                                        image: AssetImage("assets/images/ic_profile.png"),
-                                      ),
-                                    ),
-                                  ),
-                                  builder: (context, provider, skeleton) {
-                                    switch (provider.userModel.user) {
-                                      case null:
-                                        return skeleton!;
-                                      default:
-                                        return CustomWidget.roundedAvatarImg(
-                                          url: provider.userModel.user!.avatar!,
-                                        );
-                                    }
-                                  }
-                              ),
+                              CustomWidget.roundedAvatarImg(url: provider.userModel.user?.avatar ?? '',),
                               Positioned(
                                 bottom: 5,
                                 right: 0,
@@ -520,10 +496,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
       ),
     );
 
-    return ModalProgressHUD(
-      inAsyncCall: _isLoad,
-      progressIndicator: SpinKitFadingCube(color: CustomColor.MAIN,),
-      opacity: 0.5,
+    return CustomWidget.loadingHud(
+      isLoad: _isLoad,
       child: Scaffold(
         key: _provider.scaffoldKey,
         backgroundColor: CustomColor.BG,

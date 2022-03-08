@@ -21,14 +21,14 @@ abstract class RegisterStepInterface {
   bool? isEmailValid;
   String? errEmail;
 
-  Future validateAge(BuildContext context, String dob) async {
+  Future validateAgeValid(BuildContext context, String dob) async {
     isAgeValid = await _service.validateAge(dob: dob);
     if (isAgeValid == false) {
       CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_AGE_ERROR')));
     }
   }
 
-  Future<bool?> validateEmail(BuildContext context, String value) async => await _service.validateEmailPhone(value: value);
+  Future<bool?> validateEmailValid(BuildContext context, String value) async => await _service.validateEmailPhone(value: value);
 
   void initAnimation(TickerProvider vsync) {
     animationController = AnimationController(

@@ -4,6 +4,7 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/push_notification_manager.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
+import 'package:eight_barrels/screen/home/banner_detail_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
 import 'package:eight_barrels/screen/product/wishlist_screen.dart';
 import 'package:eight_barrels/screen/profile/profile_screen.dart';
@@ -43,11 +44,20 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         Padding(
           padding: const EdgeInsets.all(20),
-          child: Text(AppLocalizations.instance.text('TXT_TITLE_BANNER'), style: TextStyle(
-            fontSize: 18,
-            color: CustomColor.BROWN_TXT,
-            fontWeight: FontWeight.bold,
-          ),),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(AppLocalizations.instance.text('TXT_TITLE_BANNER'), style: TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),),
+              SizedBox(height: 5,),
+              Text(AppLocalizations.instance.text('TXT_SUB_TITLE_BANNER'), style: TextStyle(
+                color: CustomColor.GREY_TXT,
+              ),),
+            ],
+          ),
         ),
         Consumer<HomeProvider>(
           child: CustomWidget.showShimmer(
@@ -80,14 +90,19 @@ class _HomeScreenState extends State<HomeScreen> {
                             return Container(
                               margin: EdgeInsets.symmetric(horizontal: 4),
                               width: MediaQuery.of(context).size.width,
-                              child: Card(
-                                elevation: 4,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: ClipRRect(
-                                  child: CustomWidget.networkImg(context, i.image),
-                                  borderRadius: BorderRadius.circular(20),
+                              child: GestureDetector(
+                                onTap: () => Get.toNamed(BannerDetailScreen.tag, arguments: BannerDetailScreen(
+                                  banner: i,
+                                )),
+                                child: Card(
+                                  elevation: 4,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: ClipRRect(
+                                    child: CustomWidget.networkImg(context, i.image,),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
                                 ),
                               ),
                             );
@@ -126,69 +141,88 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Widget _categoryContent = Container(
       width: MediaQuery.of(context).size.width,
-      height: 260,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      height: 250,
+      child: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Text(AppLocalizations.instance.text('TXT_TITLE_SELECT_CATEGORY'), style: TextStyle(
-              fontSize: 18,
+          Material(
+            elevation: 4,
+            child: Container(
               color: CustomColor.BROWN_TXT,
-              fontWeight: FontWeight.bold,
-            ),),
-          ),
-          Flexible(
-            child: Consumer<HomeProvider>(
-              child: Container(),
-              builder: (context, provider, skeleton) {
-                switch (provider.categoryList.data) {
-                  case null:
-                    return skeleton!;
-                  default:
-                    return ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      itemCount: provider.categoryList.data!.length,
-                      itemBuilder: (context, index) {
-                        var _data = provider.categoryList.data![index];
-                        return InkWell(
-                          onTap: () => Get.toNamed(ProductByCategoryScreen.tag, arguments: ProductByCategoryScreen(
-                            category: _data.name!,
-                          )),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: index == 0 ? 50 : 0),
-                            child: Column(
-                              children: [
-                                Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  elevation: 0,
-                                  child: Container(
-                                    width: 120,
-                                    height: 140,
-                                    child: ClipRRect(
-                                      child: CustomWidget.networkImg(context, _data.image),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 5,),
-                                Flexible(
-                                  child: Text(_data.name!, style: TextStyle(
-                                    fontSize: 16,
-                                  ),),
-                                )
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                }
-              }
+              height: 160,
             ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(AppLocalizations.instance.text('TXT_TITLE_SELECT_CATEGORY'), style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),),
+                    SizedBox(height: 5,),
+                    Text(AppLocalizations.instance.text('TXT_SUB_TITLE_SELECT_CATEGORY'), style: TextStyle(
+                      color: Colors.white,
+                    ),),
+                  ],
+                ),
+              ),
+              Flexible(
+                child: Consumer<HomeProvider>(
+                  child: Container(),
+                  builder: (context, provider, skeleton) {
+                    switch (provider.categoryList.data) {
+                      case null:
+                        return skeleton!;
+                      default:
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemCount: provider.categoryList.data!.length,
+                          itemBuilder: (context, index) {
+                            var _data = provider.categoryList.data![index];
+                            return InkWell(
+                              onTap: () => Get.toNamed(ProductByCategoryScreen.tag, arguments: ProductByCategoryScreen(
+                                category: _data.name!,
+                              )),
+                              child: Padding(
+                                padding: EdgeInsets.only(left: index == 0 ? 50 : 0, right: 10),
+                                child: Column(
+                                  children: [
+                                    Card(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      elevation: 0,
+                                      child: Container(
+                                        width: 120,
+                                        height: 140,
+                                        child: ClipRRect(
+                                          child: CustomWidget.networkImg(context, _data.image),
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Text(_data.name!, style: TextStyle(
+                                        fontSize: 16,
+                                      ),),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                    }
+                  }
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -207,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(AppLocalizations.instance.text('TXT_TITLE_POPUlAR_PICKED'), style: TextStyle(
                   fontSize: 18,
-                  color: CustomColor.BROWN_TXT,
+                  color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),),
                 TextButton.icon(
@@ -292,8 +326,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             _bannerContent,
-            SizedBox(height: 20,),
+            SizedBox(height: 60,),
             _categoryContent,
+            SizedBox(height: 20,),
             _popularContent,
           ],
         ),
@@ -315,40 +350,12 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: Icon(FontAwesomeIcons.bell, size: 22,),
               visualDensity: VisualDensity.compact,
             ),
-            GestureDetector(
-              onTap: () async => await Get.toNamed(ProfileScreen.tag)!
-                  .then((_) async => await _provider.fnFetchUserInfo()),
-              child: Consumer<HomeProvider>(
-                child: Container(
-                  width: 30.0,
-                  height: 30.0,
-                  margin: EdgeInsets.only(right: 15, left: 5),
-                  decoration: new BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white),
-                    color: Colors.white,
-                    image: new DecorationImage(
-                      fit: BoxFit.contain,
-                      image: AssetImage("assets/images/ic_profile.png"),
-                    ),
-                  ),
-                ),
-                builder: (context, provider, skeleton) {
-                  switch (provider.userModel.user) {
-                    case null:
-                      return skeleton!;
-                    default:
-                      switch (provider.userModel.user!.avatar) {
-                        case null:
-                          return skeleton!;
-                        default:
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 15, left: 5),
-                            child: CustomWidget.roundedAvatarImg(url: provider.userModel.user!.avatar!, size: 30),
-                          );
-                      }
-                  }
-                },
+            Padding(
+              padding: const EdgeInsets.only(right: 15, left: 5),
+              child: GestureDetector(
+                onTap: () async => await Get.toNamed(ProfileScreen.tag)!
+                    .then((_) async => await _provider.fnFetchUserInfo()),
+                child: CustomWidget.roundedAvatarImg(url: _provider.userModel.user?.avatar ?? '', size: 30),
               ),
             ),
           ],

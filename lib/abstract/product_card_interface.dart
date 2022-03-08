@@ -55,6 +55,7 @@ abstract class ProductCardInterface {
     required BuildContext context,
     required Data data,
     required int index,
+    required void onUpdateCart(),
   }) {
     return Stack(
       children: [
@@ -135,7 +136,7 @@ abstract class ProductCardInterface {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   GestureDetector(
-                                    onTap: () async => await fnStoreCart(context, data.id!),
+                                    onTap: () async => await fnStoreCart(context, data.id!).then((_) => onUpdateCart()),
                                     child: Icon(FontAwesomeIcons.shoppingCart, color: CustomColor.GREY_ICON, size: 18,),
                                   ),
                                   SizedBox(width: 15,),

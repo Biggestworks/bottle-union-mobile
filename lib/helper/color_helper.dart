@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustomColor {
    static const Color MAIN = Color(0xFF800000);
    static const Color SECONDARY = Color(0xFFF5F5DC);
-   static const Color BG = Color(0xFFfbfbf1);
+   static const Color BG = Color(0xfffbfbf1);
    static const Color BROWN_TXT = Color(0xFFAB5F18);
    static const Color BROWN_LIGHT_TXT = Color(0xffc48f5d);
    static const Color MAIN_TXT = Color(0xB3800000);

@@ -1,14 +1,14 @@
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
-import 'package:eight_barrels/model/cart/cart_list_model.dart';
+import 'package:eight_barrels/model/cart/cart_total_model.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class DeliveryScreen extends StatefulWidget {
   static String tag = '/delivery-screen';
-  final List<Data>? cartList;
+  final CartTotalModel? cartList;
   const DeliveryScreen({Key? key, this.cartList}) : super(key: key);
 
   @override
@@ -70,34 +70,31 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
               Text('Kav. DKI Blok E1/14, Pondok Kelapa, Duren Sawit, Jakarta TImur', style: TextStyle(
                 color: CustomColor.GREY_TXT,
               ),),
-            ],
-          ),
-        ),
-        SizedBox(height: 5,),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          color: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 15,),
-          child: ListTile(
-            dense: true,
-            title: Text(AppLocalizations.instance.text('TXT_CHOOSE_DELIVERY'), style: TextStyle(
-              color: Colors.black,
-              fontSize: 15,
-            ),),
-            leading: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Icon(
-                FontAwesomeIcons.truck,
-                color: CustomColor.BROWN_TXT,
-                size: 18,
+              Divider(height: 20, thickness: 1,),
+              ListTile(
+                dense: true,
+                visualDensity: VisualDensity.compact,
+                contentPadding: EdgeInsets.zero,
+                title: Text(AppLocalizations.instance.text('TXT_CHOOSE_DELIVERY'), style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 15,
+                ),),
+                leading: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Icon(
+                    FontAwesomeIcons.truck,
+                    color: CustomColor.BROWN_TXT,
+                    size: 18,
+                  ),
+                ),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  color: CustomColor.GREY_TXT,
+                  size: 15,
+                ),
+                onTap: () {},
               ),
-            ),
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              color: CustomColor.GREY_TXT,
-              size: 15,
-            ),
-            onTap: () {},
+            ],
           ),
         ),
       ],
@@ -110,7 +107,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
         child: ListTileTheme(
           dense: true,
           child: ExpansionTile(
-            title: Text('${AppLocalizations.instance.text('TXT_ORDER_DETAIL')} (3)', style: TextStyle(
+            title: Text('${AppLocalizations.instance.text('TXT_ORDER_DETAIL')} (${_args.cartList!.data!.length})', style: TextStyle(
               fontSize: 16,
             ),),
             initiallyExpanded: true,
@@ -121,12 +118,12 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
               ListView.separated(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: _args.cartList!.where((i) => i.isSelected == 1).length,
+                itemCount: _args.cartList!.data!.length,
                 separatorBuilder: (context, index) {
                   return Divider(color: CustomColor.GREY_ICON, indent: 10, endIndent: 10,);
                 },
                 itemBuilder: (context, index) {
-                  var _data = _args.cartList!.where((i) => i.isSelected == 1).toList()[index];
+                  var _data = _args.cartList!.data![index];
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                     child: Row(
@@ -195,7 +192,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(AppLocalizations.instance.text('TXT_TOTAL_PRICE')),
-                  Text('Rp 495.765'),
+                  Text(FormatterHelper.moneyFormatter(_args.cartList!.total)),
                 ],
               ),
               SizedBox(height: 10,),

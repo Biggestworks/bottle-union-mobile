@@ -54,11 +54,16 @@ class AuthService extends GetConnect {
     required String email,
     required String phone,
     required String gender,
-    required String address,
-    required String latitude,
-    required String longitude,
     required String password,
     required String confirmPassword,
+    ///Address
+    required String address,
+    required String provinceId,
+    required String province,
+    required String cityId,
+    required String city,
+    required String latitude,
+    required String longitude,
   }) async {
     UserModel _model = new UserModel();
 
@@ -69,11 +74,15 @@ class AuthService extends GetConnect {
       "email": email,
       "phone": phone,
       "gender": gender,
-      "address": address,
-      "latitude": latitude,
-      "longitude": longitude,
       "password": password,
       "password_confirmation": confirmPassword,
+      "address": address,
+      "province_code": provinceId,
+      "province_name": province,
+      "city_code": cityId,
+      "city_name": city,
+      "latitude": latitude,
+      "longitude": longitude,
     };
 
     try {
@@ -82,6 +91,7 @@ class AuthService extends GetConnect {
           _data,
           headers: _headers,
       );
+      print(_response.body);
       _model = UserModel.fromJson(_response.body);
     } catch (e) {
       print(e);
@@ -261,4 +271,5 @@ class AuthService extends GetConnect {
 
     return _data;
   }
+
 }

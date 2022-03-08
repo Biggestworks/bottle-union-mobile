@@ -27,7 +27,10 @@
 	"TXT_STEP_ADDRESS": "Alamat & Wilayah",
 	"TXT_STEP_PASSWORD": "Kata Sandi",
 	"TXT_REGISTER_ADDRESS": "Mohon masukan alamat sekarang Anda\nAlamat ini bisa digunakan untuk alamat pengiriman Anda",
-	"TXT_REGISTER_REGION": "Pilih Wilayah",
+	"TXT_REGISTER_REGION": "Wilayah Cabang",
+	"TXT_REGISTER_PROVINCE": "Provinsi",
+	"TXT_REGISTER_CITY": "Kota",
+	"TXT_REGISTER_CITY_INFO": "Mohon pilih provinsi terlebih dahulu",
 	"TXT_LBL_MALE": "Laki-laki",
 	"TXT_LBL_FEMALE": "Perempuan",
 	"TXT_REGISTER_WITH": "Masuk dengan",
@@ -42,7 +45,9 @@
 	"TXT_HEADER_TRANSACTION": "Transaksi Saya",
 	"TXT_HALLO_USER": "hai, ",
 	"TXT_TITLE_BANNER": "Untuk Anda",
-	"TXT_TITLE_SELECT_CATEGORY": "Temukan minuman mu berdasarkan kategori",
+	"TXT_SUB_TITLE_BANNER": "Lihat promo dan info menarik untuk Anda",
+	"TXT_TITLE_SELECT_CATEGORY": "Kategori Minuman",
+	"TXT_SUB_TITLE_SELECT_CATEGORY": "Temukan minuman favorit mu berdasarkan kategori",
 	"TXT_TITLE_POPUlAR_PICKED": "Paling Populer",
 	"TXT_AGE_ERROR": "Maaf, usia Anda harus lebih dari 21 tahun",
 	"TXT_EMAIL_ERROR": "Maaf, email ini sudah di pakai, mohon gunakan email lain",
@@ -118,6 +123,7 @@
 	"TXT_SEND_OTP": "Kirim OTP",
 	"TXT_RESEND_OTP": "Kirim Ulang OTP",
 	"TXT_OTP_CODE": "Masukan Kode OTP",
+	"TXT_RESEND_OTP_INFO": "Berhasil mengirim ulang OTP, mohon cek email Anda",
 
 
 

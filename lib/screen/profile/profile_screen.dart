@@ -4,6 +4,7 @@ import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/provider/profile/profile_provider.dart';
 import 'package:eight_barrels/screen/product/wishlist_screen.dart';
 import 'package:eight_barrels/screen/profile/change_password_screen.dart';
+import 'package:eight_barrels/screen/profile/edit_address_screen.dart';
 import 'package:eight_barrels/screen/profile/update_profile_screen.dart';
 import 'package:eight_barrels/screen/splash/splash_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
@@ -37,31 +38,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onTap: () => Get.toNamed(UpdateProfileScreen.tag),
           child: Stack(
             children: [
-              Consumer<ProfileProvider>(
-                child: Container(
-                  width: 120.0,
-                  height: 120.0,
-                  decoration: new BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white),
-                    color: Colors.white,
-                    image: new DecorationImage(
-                      fit: BoxFit.contain,
-                      image: AssetImage("assets/images/ic_profile.png"),
-                    ),
-                  ),
-                ),
-                builder: (context, provider, skeleton) {
-                  switch (provider.userModel.user) {
-                    case null:
-                      return skeleton!;
-                    default:
-                      return CustomWidget.roundedAvatarImg(url: provider.userModel.user!.avatar!, size: 120);
-                  }
-                }
+              CustomWidget.roundedAvatarImg(
+                url: _provider.userModel.user?.avatar ?? '',
+                size: 120,
               ),
               Positioned(
-                bottom: 5,
+                bottom: 0,
                 right: 0,
                 child: Icon(
                   CupertinoIcons.pencil_circle_fill,
@@ -108,7 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: CustomColor.GREY_TXT,
                     size: 15,
                   ),
-                  onTap: () async => await Get.toNamed(ChangePasswordScreen.tag)!.then((value) async {
+                  onTap: () async => await Get.toNamed(ChangePasswordScreen.tag, arguments: ChangePasswordScreen(token: null,))!.then((value) async {
                     if (value == true) {
                       await CustomWidget.showSnackBar(context: context, content: Text('Success update password'));
                     }
@@ -139,9 +121,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: CustomColor.GREY_TXT,
                     size: 15,
                   ),
-                  onTap: () async {
-                    // Get.toNamed(EditAddressScreen.tag);
-                  },
+                  onTap: () => Get.toNamed(EditAddressScreen.tag),
                 ),
                 Divider(
                   thickness: 1,

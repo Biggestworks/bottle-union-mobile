@@ -4,8 +4,9 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/validation.dart';
-import 'package:eight_barrels/provider/auth/auth_provider.dart';
+import 'package:eight_barrels/provider/auth/login_provider.dart';
 import 'package:eight_barrels/screen/auth/forgot_password_screen.dart';
+import 'package:eight_barrels/screen/auth/otp_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -31,14 +32,14 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation implement
   @override
   void initState() {
     Future.delayed(Duration.zero).then((value) async {
-      Provider.of<AuthProvider>(context, listen: false).fnGetView(this);
+      Provider.of<LoginProvider>(context, listen: false).fnGetView(this);
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final _provider = Provider.of<AuthProvider>(context, listen: false);
+    final _provider = Provider.of<LoginProvider>(context, listen: false);
     final _args = ModalRoute.of(context)!.settings.arguments as LoginScreen;
 
     Widget _mainContent = Center(
@@ -135,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation implement
                           controller: _provider.passwordController,
                           textInputAction: TextInputAction.next,
                           validator: validateField,
-                          obscureText: _provider.isHidePassLogin,
+                          obscureText: _provider.isHidePass,
                           style: TextStyle(
                             color: Colors.white,
                           ),
@@ -153,13 +154,13 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation implement
                             ),
                             suffixIcon: GestureDetector(
                               child: Icon(
-                                _provider.isHidePassLogin
+                                _provider.isHidePass
                                     ? Icons.visibility_off
                                     : Icons.visibility,
                                 color: Colors.white,
                                 size: 24,
                               ),
-                              onTap: () => _provider.fnPassVblLogin(context),
+                              onTap: () => _provider.fnPassVisible(context),
                             ),
                           ),
                           onFieldSubmitted: (_) async => await _provider.fnLogin(context: context),
@@ -175,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation implement
                 child: Padding(
                   padding: const EdgeInsets.only(right: 10),
                   child: GestureDetector(
-                    onTap: () => Get.toNamed(ForgotPasswordScreen.tag),
+                    onTap: () => Get.toNamed(OtpScreen.tag),
                     child: Text(AppLocalizations.instance.text('TXT_FORGOT_PASSWORD'), style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -363,10 +364,8 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation implement
       ),
     );
 
-    return ModalProgressHUD(
-      inAsyncCall: _isLoad,
-      progressIndicator: SpinKitFadingCube(color: CustomColor.MAIN,),
-      opacity: 0.5,
+    return CustomWidget.loadingHud(
+      isLoad: _isLoad,
       child: GestureDetector(
         onTap: () => _provider.fnKeyboardUnFocus(context),
         child: Scaffold(

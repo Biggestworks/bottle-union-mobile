@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
+import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/product/product_list_provider.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -406,10 +407,15 @@ class _ProductListScreenState extends State<ProductListScreen>
                                         index: index,
                                       );
                                     default:
-                                      return provider.productCard(
-                                        context: context,
-                                        data: _data,
-                                        index: index,
+                                      return Consumer<BaseHomeProvider>(
+                                        builder: (context, baseProvider, _) {
+                                          return provider.productCard(
+                                            context: context,
+                                            data: _data,
+                                            index: index,
+                                            onUpdateCart: () async => await baseProvider.fnGetCartCount(),
+                                          );
+                                        },
                                       );
                                   }
                                 },
@@ -433,11 +439,10 @@ class _ProductListScreenState extends State<ProductListScreen>
     );
 
     Widget _mainContent = Container(
-      padding: EdgeInsets.symmetric(horizontal: 15),
+      padding: EdgeInsets.fromLTRB(15, 10, 15, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

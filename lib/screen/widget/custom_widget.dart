@@ -2,8 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CustomWidget {
@@ -412,12 +414,12 @@ class CustomWidget {
     );
   }
 
-  static Widget networkImg(BuildContext context, String? url) {
+  static Widget networkImg(BuildContext context, String? url, {BoxFit? fit = BoxFit.fill}) {
     return CachedNetworkImage(
       imageUrl: url ?? '',
       width: MediaQuery.of(context).size.width,
       alignment: Alignment.center,
-      fit: BoxFit.fill,
+      fit: fit,
       placeholder: (context, url) => Center(
           child: CircularProgressIndicator()),
       errorWidget: (context, url, error) =>
@@ -445,7 +447,19 @@ class CustomWidget {
       placeholder: (context, url) => Center(
           child: CircularProgressIndicator()),
       errorWidget: (context, url, error) =>
-          Image.asset("assets/images/ic_profile.png", fit: BoxFit.fill,),
+          Container(
+            width: size ?? 150,
+            height: size ?? 150,
+            decoration: new BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white),
+              color: Colors.white,
+              image: new DecorationImage(
+                fit: BoxFit.contain,
+                image: AssetImage("assets/images/ic_profile.png"),
+              ),
+            ),
+          ),
     );
   }
 
@@ -487,6 +501,15 @@ class CustomWidget {
           ),),
         ],
       ),
+    );
+  }
+
+  static Widget loadingHud({required bool isLoad, required Widget child}) {
+    return ModalProgressHUD(
+      inAsyncCall: isLoad,
+      progressIndicator: SpinKitFadingCube(color: CustomColor.MAIN,),
+      opacity: 0.5,
+      child: child,
     );
   }
 

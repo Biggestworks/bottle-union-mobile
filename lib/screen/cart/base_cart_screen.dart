@@ -46,7 +46,7 @@ class _BaseCartScreenState extends State<BaseCartScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           child: Text(AppLocalizations.instance.text('TXT_HEADER_ORDER'), style: TextStyle(
             color: CustomColor.BROWN_TXT,
             fontSize: 20,

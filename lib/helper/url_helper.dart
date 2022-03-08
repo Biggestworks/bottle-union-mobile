@@ -46,7 +46,18 @@ class URLHelper {
   static const RESET_PASSWORD_URL = BASE_URL + '/user/password/reset';
 
   ///OTP
-  static const SEND_OTP = BASE_URL + '/verification/send';
-  static const VALIDATE_OTP = BASE_URL + '/verification/validation';
+  static const SEND_OTP_URL = BASE_URL + '/verification/send';
+  static const VALIDATE_OTP_URL = BASE_URL + '/verification/validation';
 
+  ///RAJAONGKIR
+  static const RO_PROVINCE_URL = BASE_URL + '/ro/province';
+  static roCityUrl(String id) {
+    return BASE_URL + '/ro/province/$id';
+  }
+
+  ///ADDRESS
+  static const GET_ADDRESS_URL = BASE_URL + '/user/address';
+  static const STORE_ADDRESS_URL = BASE_URL + '/address/store';
+  static const DELETE_ADDRESS_URL = BASE_URL + '/address/delete';
+  static const UPDATE_ADDRESS_URL = BASE_URL + '/address/update';
 }

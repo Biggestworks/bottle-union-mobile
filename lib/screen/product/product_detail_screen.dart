@@ -2,9 +2,11 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
+import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/product/product_detail_provider.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +39,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final _provider = Provider.of<ProductDetailProvider>(context, listen: false);
-    // final _baseProvider = Provider.of<BaseHomeProvider>(context, listen: false);
+    final _baseProvider = Provider.of<BaseHomeProvider>(context, listen: false);
 
     Widget _imageContainer(String? url) {
       return Container(
@@ -49,7 +51,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             borderRadius: BorderRadius.circular(20),
           ),
           child: ClipRRect(
-            child: CustomWidget.networkImg(context, url),
+            child: CustomWidget.networkImg(context, url, fit: BoxFit.fitHeight),
             borderRadius: BorderRadius.circular(20),
           ),
         ),
@@ -319,8 +321,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         color: CustomColor.GREY_TXT,
                       ),),
                       SizedBox(height: 5,),
-                      ReadMoreText(
-                        _data.description ?? '-',
+                      // Html(
+                      //   data: _data.description ?? '',
+                      //   style: {"body": Style(padding: EdgeInsets.zero, margin: EdgeInsets.zero, fontSize: FontSize.large,)},
+                      // ),
+                      ReadMoreText(_data.description ?? '-',
                         trimLines: 3,
                         trimMode: TrimMode.Line,
                         trimCollapsedText: 'Show more',
@@ -395,8 +400,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 lblColor: CustomColor.MAIN,
                 btnColor: CustomColor.MAIN,
                 function: () async {
-                  await _provider.fnStoreCart(_provider.scaffoldKey.currentContext!);
-                  // await _baseProvider.fnGetCartCount();
+                  await _provider.fnStoreCart(_provider.scaffoldKey.currentContext!)
+                      .then((_) async => await _baseProvider.fnGetCartCount());
                   setState(() {});
                 },
               ),

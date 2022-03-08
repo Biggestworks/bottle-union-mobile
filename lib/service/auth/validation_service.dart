@@ -1,10 +1,12 @@
 import 'package:eight_barrels/helper/url_helper.dart';
+import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/auth/auth_model.dart';
 import 'package:eight_barrels/model/auth/validation_model.dart';
 import 'package:eight_barrels/model/default_model.dart';
 import 'package:get/get_connect.dart';
 
 class ValidationService extends GetConnect {
+  UserPreferences _userPreferences = new UserPreferences();
 
   var _headers = {
     "Accept": "application/json",
@@ -20,7 +22,7 @@ class ValidationService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.RESET_PASSWORD_URL,
+        URLHelper.SEND_OTP_URL,
         _data,
         headers: _headers,
       );
@@ -42,12 +44,13 @@ class ValidationService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.VALIDATE_OTP,
+        URLHelper.VALIDATE_OTP_URL,
         _data,
         headers: _headers,
       );
       print(_response.body);
       _model = ValidationModel.fromJson(_response.body);
+      _userPreferences.saveOtpToken(_model.token ?? '');
     } catch (e) {
       print(e);
     }

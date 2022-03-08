@@ -1,18 +1,14 @@
 import 'dart:io';
 
-import 'package:eight_barrels/abstract/loading.dart';
+import 'package:eight_barrels/abstract/socmed_auth_interface.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
-import 'package:eight_barrels/provider/auth/auth_provider.dart';
 import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/auth/register_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/route_manager.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:provider/provider.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 
@@ -24,21 +20,12 @@ class StartScreen extends StatefulWidget {
   _StartScreenState createState() => _StartScreenState();
 }
 
-class _StartScreenState extends State<StartScreen> implements LoadingView {
+class _StartScreenState extends State<StartScreen>
+    with SocmedAuthInterface {
   bool _isLoad = false;
 
   @override
-  void initState() {
-    Future.delayed(Duration.zero).then((value) async {
-      Provider.of<AuthProvider>(context, listen: false).fnGetView(this);
-    });
-    super.initState();
-  }
-
-
-  @override
   Widget build(BuildContext context) {
-    final _provider = Provider.of<AuthProvider>(context, listen: false);
 
     Widget _mainContent = Padding(
       padding: const EdgeInsets.all(20),
@@ -102,7 +89,7 @@ class _StartScreenState extends State<StartScreen> implements LoadingView {
                   fontSize: 16,
                   function: () async {
                     Get.back();
-                    await _provider.fnAuthGoogle(context);
+                    await fnAuthGoogle(context);
                   },
                 ),
               ),
@@ -120,7 +107,7 @@ class _StartScreenState extends State<StartScreen> implements LoadingView {
                   fontSize: 16,
                   function: () async {
                     Get.back();
-                    await _provider.fnAuthFacebook(context);
+                    await fnAuthFacebook(context);
                   },
                 ),
               ),
@@ -171,9 +158,8 @@ class _StartScreenState extends State<StartScreen> implements LoadingView {
       ),
     );
 
-    return ModalProgressHUD(
-      inAsyncCall: _isLoad,
-      progressIndicator: SpinKitFadingCube(color: CustomColor.MAIN,),
+    return CustomWidget.loadingHud(
+      isLoad: _isLoad,
       child: Scaffold(
         backgroundColor: CustomColor.MAIN,
         body: _mainContent,
@@ -184,7 +170,7 @@ class _StartScreenState extends State<StartScreen> implements LoadingView {
   }
 
   @override
-  void onProgressFinish() {
+  onAuthFinish() {
     if (mounted) {
       _isLoad = false;
       setState(() {});
@@ -192,7 +178,7 @@ class _StartScreenState extends State<StartScreen> implements LoadingView {
   }
 
   @override
-  void onProgressStart() {
+  onAuthStart() {
     if (mounted) {
       _isLoad = true;
       setState(() {});

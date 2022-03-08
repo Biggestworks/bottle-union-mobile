@@ -3,6 +3,7 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/provider/cart/cart_list_provider.dart';
+import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/screen/cart/delivery_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
@@ -37,6 +38,7 @@ class _CartListScreenState extends State<CartListScreen> implements LoadingView 
   @override
   Widget build(BuildContext context) {
     final _provider = Provider.of<CartListProvider>(context, listen: false);
+    final _baseProvider = Provider.of<BaseHomeProvider>(context, listen: false);
 
     Widget _cartListContent = Padding(
       padding: const EdgeInsets.all(10),
@@ -124,7 +126,8 @@ class _CartListScreenState extends State<CartListScreen> implements LoadingView 
                                                     mainAxisAlignment: MainAxisAlignment.end,
                                                     children: [
                                                       IconButton(
-                                                        onPressed: () async => await provider.fnDeleteCart(_provider.scaffoldKey.currentContext!, _data.id!),
+                                                        onPressed: () async => await provider.fnDeleteCart(_provider.scaffoldKey.currentContext!, _data.id!)
+                                                            .then((_) async => await _baseProvider.fnGetCartCount()),
                                                         icon: Icon(FontAwesomeIcons.trashAlt, size: 20, color: CustomColor.GREY_TXT,),
                                                         visualDensity: VisualDensity.compact,
                                                       ),
@@ -143,7 +146,8 @@ class _CartListScreenState extends State<CartListScreen> implements LoadingView 
                                                           children: [
                                                             Expanded(
                                                               child: IconButton(
-                                                                onPressed: () async => await provider.fnUpdateCartQty(_data.id!, 'decrease'),
+                                                                onPressed: () async => await provider.fnUpdateCartQty(_data.id!, 'decrease')
+                                                                    .then((_) async {if (_data.qty == 1) await _baseProvider.fnGetCartCount();}),
                                                                 icon: Icon(Icons.remove, size: 18, color: _data.qty != 1
                                                                     ? Colors.green
                                                                     : CustomColor.GREY_ICON,
@@ -226,7 +230,7 @@ class _CartListScreenState extends State<CartListScreen> implements LoadingView 
                                     color: Colors.white,
                                   ),),
                                   SizedBox(height: 5,),
-                                  Text(provider.totalPay, style: TextStyle(
+                                  Text(FormatterHelper.moneyFormatter(provider.totalPay), style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
@@ -245,7 +249,7 @@ class _CartListScreenState extends State<CartListScreen> implements LoadingView 
                                   lblColor: Colors.white,
                                   radius: 8,
                                   function: () => Get.toNamed(DeliveryScreen.tag, arguments: DeliveryScreen(
-                                    cartList: _provider.cartList.result!.data!,
+                                    cartList: _provider.cartTotalList,
                                   )),
                                 ),
                               ),

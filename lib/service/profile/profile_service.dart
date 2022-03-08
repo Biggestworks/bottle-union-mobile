@@ -134,4 +134,35 @@ class ProfileService extends GetConnect {
     return _model;
   }
 
+  Future<DefaultModel?> resetPassword({
+    String? newPass,
+    String? confirmPass,
+    required String token,
+  }) async {
+    DefaultModel _model = new DefaultModel();
+
+    final Map<String, dynamic> _data = {
+      "password": newPass,
+      "password_confirmation": confirmPass,
+    };
+
+    try {
+      Response _response = await post(
+        URLHelper.RESET_PASSWORD_URL,
+        _data,
+        headers: {
+          "Accept": "application/json",
+          "User-Agent": "Persada Apps 1.0",
+          "Authorization": "Bearer $token",
+        },
+      );
+      print(_response.body);
+      _model = DefaultModel.fromJson(_response.body);
+    } catch (e) {
+      print(e);
+    }
+
+    return _model;
+  }
+
 }
