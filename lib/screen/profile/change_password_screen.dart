@@ -46,7 +46,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
               Text(AppLocalizations.instance.text('TXT_CHANGE_PASSWORD_INFO'),
                 style: TextStyle(
                   color: CustomColor.GREY_TXT,
-                  fontSize: 20,
+                  fontSize: 18,
                 ),
               ),
               SizedBox(
@@ -205,7 +205,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
       isLoad: _isLoad,
       child: Scaffold(
         key: _provider.scaffoldKey,
-        backgroundColor: CustomColor.BG,
         appBar: AppBar(
           backgroundColor: CustomColor.MAIN,
           centerTitle: true,

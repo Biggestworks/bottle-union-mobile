@@ -3,8 +3,8 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/provider/profile/profile_provider.dart';
 import 'package:eight_barrels/screen/product/wishlist_screen.dart';
+import 'package:eight_barrels/screen/profile/address_list_screen.dart';
 import 'package:eight_barrels/screen/profile/change_password_screen.dart';
-import 'package:eight_barrels/screen/profile/edit_address_screen.dart';
 import 'package:eight_barrels/screen/profile/update_profile_screen.dart';
 import 'package:eight_barrels/screen/splash/splash_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
@@ -32,15 +32,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Widget _headerContent = Container(
       width: MediaQuery.of(context).size.width,
       height: 150,
-      color: CustomColor.MAIN,
+      // color: CustomColor.MAIN,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/bg_marron.png',),
+          fit: BoxFit.cover,
+        ),
+      ),
       child: Center(
         child: GestureDetector(
           onTap: () => Get.toNamed(UpdateProfileScreen.tag),
           child: Stack(
             children: [
-              CustomWidget.roundedAvatarImg(
-                url: _provider.userModel.user?.avatar ?? '',
-                size: 120,
+              Consumer<ProfileProvider>(
+                builder: (context, provider, _) {
+                  return CustomWidget.roundedAvatarImg(
+                    url: provider.userModel.user?.avatar ?? '',
+                    size: 120,
+                  );
+                }
               ),
               Positioned(
                 bottom: 0,
@@ -121,7 +131,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: CustomColor.GREY_TXT,
                     size: 15,
                   ),
-                  onTap: () => Get.toNamed(EditAddressScreen.tag),
+                  onTap: () => Get.toNamed(AddressListScreen.tag),
                 ),
                 Divider(
                   thickness: 1,
@@ -305,7 +315,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: CustomColor.BG,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: CustomColor.MAIN,
+        // backgroundColor: CustomColor.MAIN,
+        flexibleSpace: Image.asset('assets/images/bg_marron.png', fit: BoxFit.cover,),
         centerTitle: true,
         title: Text(AppLocalizations.instance.text('TXT_MY_ACCOUNT')),
       ),

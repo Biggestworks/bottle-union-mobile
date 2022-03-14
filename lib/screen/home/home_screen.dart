@@ -147,15 +147,21 @@ class _HomeScreenState extends State<HomeScreen> {
           Material(
             elevation: 4,
             child: Container(
-              color: CustomColor.BROWN_TXT,
-              height: 160,
+              // color: CustomColor.BROWN_TXT,
+              height: 150,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/bg_brown.png',),
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

@@ -250,14 +250,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ),
                           Row(
                             children: [
-                              Icon(FontAwesomeIcons.solidStar, color: Colors.orangeAccent,),
+                              Icon(FontAwesomeIcons.solidStar, color: Colors.orangeAccent, size: 18,),
                               SizedBox(width: 5,),
                               Padding(
                                 padding: const EdgeInsets.only(top: 4),
                                 child: Text(_data.rating != null
                                     ? _data.rating.toString()
                                     : '0', style: TextStyle(
-                                  fontSize: 24,
+                                  fontSize: 18,
                                 ),),
                               ),
                             ],
@@ -272,7 +272,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           Text(FormatterHelper.moneyFormatter(_data.regularPrice ?? 0), style: TextStyle(
                             color: CustomColor.MAIN,
                             fontWeight: FontWeight.bold,
-                            fontSize: 22,
+                            fontSize: 20,
                           ),),
                           _data.stock != 0
                               ? Text('In stock ${_data.stock ?? '0'} item(s)', style: TextStyle(
@@ -365,7 +365,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             width: double.infinity,
             height: 200,
             decoration: BoxDecoration(
-              color: CustomColor.MAIN,
+              // color: CustomColor.MAIN,
+              image: DecorationImage(
+                image: AssetImage('assets/images/bg_marron.png',),
+                fit: BoxFit.cover,
+              ),
               borderRadius: BorderRadius.vertical(
                   bottom: Radius.elliptical(MediaQuery.of(context).size.width, 100.0)
               ),
@@ -424,7 +428,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       key: _provider.scaffoldKey,
       backgroundColor: CustomColor.BG,
       appBar: AppBar(
-        backgroundColor: CustomColor.MAIN,
+        // backgroundColor: CustomColor.MAIN,
+        flexibleSpace: Image.asset('assets/images/bg_marron.png', fit: BoxFit.cover,),
         elevation: 0,
         centerTitle: true,
         title: Text(AppLocalizations.instance.text('TXT_PRODUCT_DETAIL'),),

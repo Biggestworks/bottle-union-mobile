@@ -13,11 +13,14 @@ import 'package:eight_barrels/provider/product/product_by_category_provider.dart
 import 'package:eight_barrels/provider/product/product_detail_provider.dart';
 import 'package:eight_barrels/provider/product/product_list_provider.dart';
 import 'package:eight_barrels/provider/product/wishlist_provider.dart';
+import 'package:eight_barrels/provider/profile/add_address_provider.dart';
+import 'package:eight_barrels/provider/profile/address_list_provider.dart';
 import 'package:eight_barrels/provider/profile/change_password_provider.dart';
-import 'package:eight_barrels/provider/profile/edit_address_provider.dart';
 import 'package:eight_barrels/screen/auth/forgot_password_screen.dart';
 import 'package:eight_barrels/screen/auth/otp_screen.dart';
 import 'package:eight_barrels/screen/home/banner_detail_screen.dart';
+import 'package:eight_barrels/screen/profile/add_address_screen.dart';
+import 'package:eight_barrels/screen/profile/address_list_screen.dart';
 import 'package:eight_barrels/screen/profile/change_password_screen.dart';
 import 'package:eight_barrels/provider/profile/profile_input_provider.dart';
 import 'package:eight_barrels/provider/profile/profile_provider.dart';
@@ -35,7 +38,6 @@ import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/product/product_list_screen.dart';
 import 'package:eight_barrels/screen/product/wishlist_screen.dart';
-import 'package:eight_barrels/screen/profile/edit_address_screen.dart';
 import 'package:eight_barrels/screen/profile/profile_input_screen.dart';
 import 'package:eight_barrels/screen/profile/profile_screen.dart';
 import 'package:eight_barrels/screen/profile/update_profile_screen.dart';
@@ -230,10 +232,10 @@ class _AppState extends State<App> {
             ),
           ),
           GetPage(
-            name: EditAddressScreen.tag,
-            page: () => ChangeNotifierProvider<EditAddressProvider>(
-              create: (context) => EditAddressProvider(),
-              child: EditAddressScreen(),
+            name: AddressListScreen.tag,
+            page: () => ChangeNotifierProvider<AddressListProvider>(
+              create: (context) => AddressListProvider(),
+              child: AddressListScreen(),
             ),
           ),
           GetPage(
@@ -241,6 +243,13 @@ class _AppState extends State<App> {
             page: () => ChangeNotifierProvider<BannerDetailProvider>(
               create: (context) => BannerDetailProvider(),
               child: BannerDetailScreen(),
+            ),
+          ),
+          GetPage(
+            name: AddAddressScreen.tag,
+            page: () => ChangeNotifierProvider<AddAddressProvider>(
+              create: (context) => AddAddressProvider(),
+              child: AddAddressScreen(),
             ),
           ),
         ],

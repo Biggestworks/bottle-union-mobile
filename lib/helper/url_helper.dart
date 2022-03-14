@@ -56,8 +56,9 @@ class URLHelper {
   }
 
   ///ADDRESS
-  static const GET_ADDRESS_URL = BASE_URL + '/user/address';
+  static const ADDRESS_URL = BASE_URL + '/address';
   static const STORE_ADDRESS_URL = BASE_URL + '/address/store';
   static const DELETE_ADDRESS_URL = BASE_URL + '/address/delete';
   static const UPDATE_ADDRESS_URL = BASE_URL + '/address/update';
+  static const SELECT_ADDRESS_URL = BASE_URL + '/address/selected';
 }

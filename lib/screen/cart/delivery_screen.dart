@@ -154,7 +154,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                                   color: CustomColor.GREY_TXT,
                                 ),),
                                 SizedBox(height: 5,),
-                                Text('Subtotal: ${FormatterHelper.moneyFormatter(_data.product!.regularPrice)}', style: TextStyle(
+                                Text('Subtotal: ${FormatterHelper.moneyFormatter((_data.product!.regularPrice! * _data.qty!))}', style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: CustomColor.MAIN_TXT,
                                 ),),
@@ -237,7 +237,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   color: Colors.white,
                 ),),
                 SizedBox(height: 5,),
-                Text('Rp 512.765', style: TextStyle(
+                Text(FormatterHelper.moneyFormatter(_args.cartList!.total), style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

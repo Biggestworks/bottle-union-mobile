@@ -22,6 +22,8 @@
 	"TXT_LBL_PHONE": "Phone",
 	"TXT_LBL_GENDER": "Gender",
 	"TXT_LBL_ADDRESS": "Address",
+	"TXT_LBL_DETAIL_NOTE": "Detail Note",
+	"TXT_LBL_ADDRESS_LABEL": "Label",
 	"TXT_LBL_REGION": "Region",
 	"TXT_STEP_PERSONAL": "Personal Data",
 	"TXT_STEP_ADDRESS": "Address & Region",
@@ -30,6 +32,7 @@
 	"TXT_REGISTER_REGION": "Branch Region",
 	"TXT_REGISTER_PROVINCE": "Province",
 	"TXT_REGISTER_CITY": "City",
+	"TXT_POST_CODE": "Postal Code",
 	"TXT_REGISTER_CITY_INFO": "Please select province first",
 	"TXT_LBL_MALE": "Male",
 	"TXT_LBL_FEMALE": "Female",
@@ -124,6 +127,10 @@
 	"TXT_RESEND_OTP": "Resend OTP",
 	"TXT_OTP_CODE": "Enter OTP Code",
 	"TXT_RESEND_OTP_INFO": "Success resend OTP, please check your email",
+	"TXT_NO_ADDRESS": "You have no registered address yet",
+	"TXT_NO_ADDRESS_SELECTED": "You have no selected address yet",
+	"TXT_ADD_ADDRESS": "Add Address",
+	"TXT_UPDATE_ADDRESS": "Update Address",
 
 
 	"app_name": "eRecycle",

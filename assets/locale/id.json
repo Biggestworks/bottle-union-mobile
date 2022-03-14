@@ -22,6 +22,8 @@
 	"TXT_LBL_PHONE": "No. Handphone",
 	"TXT_LBL_GENDER": "Kelamin",
 	"TXT_LBL_ADDRESS": "Alamat",
+	"TXT_LBL_DETAIL_NOTE": "Catatan Tambahan",
+	"TXT_LBL_ADDRESS_LABEL": "Label",
 	"TXT_LBL_REGION": "Wilayah",
 	"TXT_STEP_PERSONAL": "Data Pribadi",
 	"TXT_STEP_ADDRESS": "Alamat & Wilayah",
@@ -30,6 +32,7 @@
 	"TXT_REGISTER_REGION": "Wilayah Cabang",
 	"TXT_REGISTER_PROVINCE": "Provinsi",
 	"TXT_REGISTER_CITY": "Kota",
+	"TXT_POST_CODE": "Kode Pos",
 	"TXT_REGISTER_CITY_INFO": "Mohon pilih provinsi terlebih dahulu",
 	"TXT_LBL_MALE": "Laki-laki",
 	"TXT_LBL_FEMALE": "Perempuan",
@@ -124,7 +127,10 @@
 	"TXT_RESEND_OTP": "Kirim Ulang OTP",
 	"TXT_OTP_CODE": "Masukan Kode OTP",
 	"TXT_RESEND_OTP_INFO": "Berhasil mengirim ulang OTP, mohon cek email Anda",
-
+	"TXT_NO_ADDRESS": "Anda belum memiliki alamat yang terdaftar",
+	"TXT_NO_ADDRESS_SELECTED": "Anda belum memilih alamat",
+	"TXT_ADD_ADDRESS": "Tambah Alamat",
+	"TXT_UPDATE_ADDRESS": "Perbarui Alamat",
 
 
 

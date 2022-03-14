@@ -1,0 +1,146 @@
+import 'package:eight_barrels/abstract/map_picker_interface.dart';
+import 'package:eight_barrels/helper/app_localization.dart';
+import 'package:eight_barrels/model/address/address_list_model.dart';
+import 'package:eight_barrels/model/address/ro_city_model.dart';
+import 'package:eight_barrels/model/address/ro_province_model.dart';
+import 'package:eight_barrels/screen/profile/add_address_screen.dart';
+import 'package:eight_barrels/screen/widget/custom_widget.dart';
+import 'package:eight_barrels/service/address/address_service.dart';
+import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:get/route_manager.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_place_picker/google_maps_place_picker.dart';
+
+class AddAddressProvider extends ChangeNotifier with MapPickerInterface {
+  AddressService _service = new AddressService();
+  TextEditingController addressController = new TextEditingController();
+  TextEditingController noteController = new TextEditingController();
+  TextEditingController provinceController = new TextEditingController();
+  TextEditingController cityController = new TextEditingController();
+  TextEditingController posCodeController = new TextEditingController();
+  TextEditingController labelController = new TextEditingController();
+
+  LatLng? _currLocation;
+
+  RoProvinceModel provinceList = new RoProvinceModel();
+  RoCityModel cityList = new RoCityModel();
+
+  String? selectedProvinceId;
+  String? selectedCityId;
+
+  Data? _addr;
+
+  String title = '';
+
+  fnGetArguments(BuildContext context) {
+    final _args = ModalRoute.of(context)!.settings.arguments as AddAddressScreen;
+    _addr = _args.address ?? null;
+    if (_addr != null) {
+      title = AppLocalizations.instance.text('TXT_UPDATE_ADDRESS');
+      addressController.text = _addr?.address ?? '';
+      noteController.text = _addr?.detailNote ?? '';
+      provinceController.text = _addr?.provinceName ?? '';
+      cityController.text = _addr?.cityName ?? '';
+      posCodeController.text = _addr?.postCode ?? '';
+      labelController.text = _addr?.label ?? '';
+      _currLocation = LatLng(double.parse(_addr?.latitude ?? '0'), double.parse(_addr?.longitude ?? '0'));
+    } else {
+      title = AppLocalizations.instance.text('TXT_ADD_ADDRESS');
+    }
+    notifyListeners();
+  }
+
+  Future fnShowMapPicker() async {
+    double _lat = 0;
+    double _lng = 0;
+    if (_addr != null) {
+      if (_currLocation != null) {
+        await super.showMapPicker(currLocation: LatLng(_currLocation!.latitude, _currLocation!.longitude));
+      } else {
+        _lat = double.parse(_addr?.latitude ?? '0');
+        _lng = double.parse(_addr?.longitude ?? '0');
+        await super.showMapPicker(currLocation: LatLng(_lat, _lng));
+      }
+    } else {
+      await Geolocator.getCurrentPosition().then((value) {
+        _currLocation = LatLng(value.latitude, value.longitude);
+      });
+      await super.showMapPicker(currLocation: LatLng(_currLocation!.latitude, _currLocation!.longitude));
+    }
+  }
+
+  Future fnFetchProvinceList() async {
+    provinceList = (await _service.getProvince())!;
+    notifyListeners();
+  }
+
+  Future fnOnSelectProvince({required String name, required String id}) async {
+    provinceController.text = name;
+    selectedProvinceId = id;
+    cityList = (await _service.getCity(provinceId: selectedProvinceId!))!;
+    notifyListeners();
+  }
+
+  fnOnSelectCity({required String name, required String id}) {
+    cityController.text = name;
+    selectedCityId = id;
+    notifyListeners();
+  }
+
+  Future fnStoreAddress(BuildContext context) async {
+    var _res;
+
+    if (_addr != null) {
+      _res = await _service.updateAddress(
+        address: addressController.text,
+        detailNote: noteController.text,
+        provinceId: selectedProvinceId!,
+        province: provinceController.text,
+        cityId: selectedCityId!,
+        city: cityController.text,
+        postCode: posCodeController.text,
+        label: labelController.text,
+        latitude: _currLocation!.latitude.toString(),
+        longitude: _currLocation!.latitude.toString(),
+      );
+    } else {
+      _res = await _service.storeAddress(
+        address: addressController.text,
+        detailNote: noteController.text,
+        provinceId: selectedProvinceId!,
+        province: provinceController.text,
+        cityId: selectedCityId!,
+        city: cityController.text,
+        postCode: posCodeController.text,
+        label: labelController.text,
+        latitude: _currLocation!.latitude.toString(),
+        longitude: _currLocation!.latitude.toString(),
+      );
+    }
+
+    if (_res!.status != null) {
+      if (_res.status == true) {
+        Get.back(result: true);
+      } else {
+        await CustomWidget.showSnackBar(context: context, content: Text(_res.message ?? '-'));
+      }
+    } else {
+      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+    }
+    notifyListeners();
+  }
+
+  @override
+  Future onPlacePicked(PickResult result) async {
+    Get.back();
+    addressController.text = result.formattedAddress!;
+    _currLocation = LatLng(result.geometry!.location.lat, result.geometry!.location.lng);
+    List<Placemark> _address = await placemarkFromCoordinates(_currLocation!.latitude, _currLocation!.longitude);
+    posCodeController.text = _address[0].postalCode ?? '';
+    print(_address[0].postalCode);
+    notifyListeners();
+  }
+
+}

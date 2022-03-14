@@ -335,7 +335,7 @@ class CustomWidget {
     );
   }
 
-  static showShimmerListView() {
+  static showShimmerListView({double height = 150}) {
     return Shimmer.fromColors(
       baseColor: Colors.grey[100]!,
       highlightColor: Colors.white,
@@ -350,7 +350,7 @@ class CustomWidget {
               borderRadius: BorderRadiusDirectional.circular(20),
             ),
             child: Container(
-              height: 150,
+              height: height,
             ),
           );
         },
@@ -463,7 +463,7 @@ class CustomWidget {
     );
   }
 
-  static Widget emptyScreen({required String image, String title = 'Title'}) {
+  static Widget emptyScreen({required String image, String title = 'Title', double size = 220}) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(bottom: 50),
@@ -471,8 +471,8 @@ class CustomWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              height: 220,
-              width: 220,
+              height: size,
+              width: size,
               child: Image.asset(image,),
             ),
             Text(title, style: TextStyle(
