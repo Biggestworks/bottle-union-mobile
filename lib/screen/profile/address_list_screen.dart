@@ -97,41 +97,41 @@ class _AddressListScreenState extends State<AddressListScreen> implements Loadin
 
     Widget _mainContent = Padding(
       padding: EdgeInsets.all(15),
-      child: Consumer<AddressListProvider>(
-        child: CustomWidget.showShimmerListView(height: 200),
-        builder: (context, provider, skeleton) {
-          switch (provider.addressList.data) {
-            case null:
-              return skeleton!;
-            default:
-              switch (provider.addressList.data?.length) {
-                case 0:
-                  return CustomWidget.emptyScreen(
-                    image: 'assets/images/ic_empty.png',
-                    title: AppLocalizations.instance.text('TXT_NO_ADDRESS'),
-                    size: 180
-                  );
-                default:
-                  return Column(
-                    children: [
-                      TextFormField(
-                        controller: _provider.searchController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                          hintText: 'Search address...',
-                          isDense: true,
-                          filled: true,
-                          prefixIcon: Icon(Icons.search),
-                          fillColor: CustomColor.GREY_BG,
-                        ),
-                        // onChanged: (text) async => await provider.onChangedAddressFilter(),
-                      ),
-                      SizedBox(height: 10,),
-                      Flexible(
-                        child: ListView.builder(
+      child: Column(
+        children: [
+          TextFormField(
+            controller: _provider.searchController,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide.none,
+              ),
+              hintText: 'Search address...',
+              isDense: true,
+              filled: true,
+              prefixIcon: Icon(Icons.search),
+              fillColor: CustomColor.GREY_BG,
+            ),
+            onChanged: (value) async => await _provider.fnOnSearchAddress(),
+          ),
+          SizedBox(height: 10,),
+          Flexible(
+            child: Consumer<AddressListProvider>(
+              child: CustomWidget.showShimmerListView(height: 200),
+              builder: (context, provider, skeleton) {
+                switch (provider.addressList.data) {
+                  case null:
+                    return skeleton!;
+                  default:
+                    switch (provider.addressList.data?.length) {
+                      case 0:
+                        return CustomWidget.emptyScreen(
+                          image: 'assets/images/ic_empty.png',
+                          title: AppLocalizations.instance.text('TXT_NO_ADDRESS'),
+                          size: 180
+                        );
+                      default:
+                        return ListView.builder(
                           shrinkWrap: true,
                           itemCount: provider.addressList.data?.length,
                           itemBuilder: (context, index) {
@@ -234,15 +234,15 @@ class _AddressListScreenState extends State<AddressListScreen> implements Loadin
                               ),
                             );
                           },
-                        ),
-                      ),
-                    ],
-                  );
-                  break;
-              }
-              break;
-          }
-        },
+                        );
+                        break;
+                    }
+                    break;
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
 

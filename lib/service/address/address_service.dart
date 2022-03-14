@@ -90,7 +90,6 @@ class AddressService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
-      print(_response.body);
       _model = DefaultModel.fromJson(_response.body);
     } catch (e) {
       print(e);
@@ -99,12 +98,17 @@ class AddressService extends GetConnect {
     return _model;
   }
 
-  Future<AddressListModel?> getAddress() async {
+  Future<AddressListModel?> getAddress({String? search}) async {
     AddressListModel _model = new AddressListModel();
+
+    final Map<String, dynamic> _query = {
+      "keyword": search,
+    };
 
     try {
       Response _response = await get(
         URLHelper.ADDRESS_URL,
+        query: _query,
         headers: await _headersAuth(),
       );
       _model = AddressListModel.fromJson(_response.body);
@@ -169,7 +173,6 @@ class AddressService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
-      print(_response.body);
       _model = DefaultModel.fromJson(_response.body);
     } catch (e) {
       print(e);

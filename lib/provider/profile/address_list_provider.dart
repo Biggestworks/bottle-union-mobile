@@ -23,7 +23,7 @@ class AddressListProvider extends ChangeNotifier {
   Future fnFetchAddressList() async {
     _view!.onProgressStart();
 
-    addressList = (await _service.getAddress())!;
+    addressList = (await _service.getAddress(search: searchController.text))!;
 
     _view!.onProgressFinish();
     notifyListeners();
@@ -58,6 +58,11 @@ class AddressListProvider extends ChangeNotifier {
     } else {
       await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
+    notifyListeners();
+  }
+
+  Future fnOnSearchAddress() async {
+    await fnFetchAddressList();
     notifyListeners();
   }
 
