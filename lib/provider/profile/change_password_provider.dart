@@ -75,7 +75,7 @@ class ChangePasswordProvider extends ChangeNotifier {
         Get.back(result: true);
       } else {
         _view!.onProgressFinish();
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message!));
+        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
       }
     } else {
       _view!.onProgressFinish();
@@ -103,7 +103,7 @@ class ChangePasswordProvider extends ChangeNotifier {
         );
       } else {
         _view!.onProgressFinish();
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message!));
+        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
       }
     } else {
       _view!.onProgressFinish();

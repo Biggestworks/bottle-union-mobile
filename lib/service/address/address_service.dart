@@ -141,6 +141,7 @@ class AddressService extends GetConnect {
   }
 
   Future<DefaultModel?> updateAddress({
+    required String addressId,
     required String address,
     required String detailNote,
     required String provinceId,
@@ -155,6 +156,7 @@ class AddressService extends GetConnect {
     DefaultModel _model = new DefaultModel();
 
     final Map<String, dynamic> _data = {
+      "id": addressId,
       "address": address,
       "detail_note": detailNote,
       "province_code": provinceId,
@@ -173,6 +175,7 @@ class AddressService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
+      print(_response.body);
       _model = DefaultModel.fromJson(_response.body);
     } catch (e) {
       print(e);

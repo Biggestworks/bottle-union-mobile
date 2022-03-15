@@ -37,7 +37,7 @@ class AddressListProvider extends ChangeNotifier {
         await fnFetchAddressList();
         await CustomWidget.showSnackBar(context: context, content: Text('Success delete'));
       } else {
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message ?? '-'));
+        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString().toString()));
       }
     } else {
       await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
@@ -53,7 +53,7 @@ class AddressListProvider extends ChangeNotifier {
         await fnFetchAddressList();
         await CustomWidget.showSnackBar(context: context, content: Text('Success select address'));
       } else {
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message ?? '-'));
+        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
       }
     } else {
       await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));

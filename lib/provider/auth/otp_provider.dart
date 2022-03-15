@@ -53,7 +53,7 @@ class OtpProvider extends ChangeNotifier {
         });
       } else {
         _view!.onProgressFinish();
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message!));
+        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
       }
     } else {
       _view!.onProgressFinish();
@@ -76,7 +76,7 @@ class OtpProvider extends ChangeNotifier {
       } else {
         _view!.onProgressFinish();
         errorController.add(ErrorAnimationType.shake);
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message!));
+        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
       }
     } else {
       _view!.onProgressFinish();
@@ -96,7 +96,7 @@ class OtpProvider extends ChangeNotifier {
         await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_RESEND_OTP_INFO')));
       } else {
         _view!.onProgressFinish();
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message!));
+        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
       }
     } else {
       _view!.onProgressFinish();

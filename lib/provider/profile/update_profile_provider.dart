@@ -87,7 +87,7 @@ class UpdateProfileProvider extends ChangeNotifier with TextValidation {
           await CustomWidget.showSnackBar(context: context, content: Text('Success update avatar'));
           _view!.onProgressFinish();
         } else {
-          await CustomWidget.showSnackBar(context: context, content: Text(_res.message!));
+          await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
           _view!.onProgressFinish();
         }
       } else {
@@ -110,7 +110,7 @@ class UpdateProfileProvider extends ChangeNotifier with TextValidation {
     if (_res!.status != null) {
       if (_res.status == true) {
         await fnFetchUserData().then((_) async => await fnFetchRegionList());
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message!));
+        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
       } else {
         await CustomWidget.showSnackBar(context: context, content: Text(_res.errors.toString()));
       }
@@ -131,7 +131,7 @@ class UpdateProfileProvider extends ChangeNotifier with TextValidation {
     if (_res!.status != null) {
       if (_res.status == true) {
         await fnFetchUserData();
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message!));
+        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
       } else {
         await CustomWidget.showSnackBar(context: context, content: Text(_res.errors.toString()));
       }
@@ -155,7 +155,7 @@ class UpdateProfileProvider extends ChangeNotifier with TextValidation {
       if (_res!.status != null) {
         if (_res.status == true) {
           await fnFetchUserData();
-          await CustomWidget.showSnackBar(context: context, content: Text(_res.message!));
+          await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
         } else {
           await CustomWidget.showSnackBar(context: context, content: Text(_res.errors.toString()));
         }
