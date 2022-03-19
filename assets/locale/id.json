@@ -103,6 +103,7 @@
 	"TXT_REMOVE_CART_INFO": "Anda yakin ingin menghapus barang dari Keranjang?",
 	"TXT_CART_DELETE_SUCCESS": "Berhasil, hapus dari Keranjang",
 	"TXT_LBL_BUY": "Beli",
+	"TXT_LBL_BUY_NOW": "Beli Sekarang",
 	"TXT_SOLD_OUT": "Habis",
 	"TXT_PAYMENT": "Pembayaran",
 	"TXT_CHOOSE_PAYMENT": "Pilih Pembayaran",
@@ -131,6 +132,12 @@
 	"TXT_NO_ADDRESS_SELECTED": "Anda belum memilih alamat",
 	"TXT_ADD_ADDRESS": "Tambah Alamat",
 	"TXT_UPDATE_ADDRESS": "Perbarui Alamat",
+	"TXT_NO_DATA": "Tidak ada data tersedia",
+	"TXT_FINISH": "Selesai",
+	"TXT_PAYMENT_METHOD": "Metode Pembayaran",
+	"TXT_CHOOSE_PAYMENT_METHOD": "Pilih Metode Pembayaran",
+	"TXT_PAY": "Bayar",
+	"TXT_CHOOSE_COURIER_INFO": "Mohon pilih kurir pengiriman terlebih dahulu",
 
 
 
@@ -185,7 +192,6 @@
 	"TXT_ATAU": "Atau",
 	"TXT_SIMPAN": "Simpan",
 	"TXT_SEARCH": "Cari",
-	"TXT_FINISH": "Selesai",
 	"TXT_UNFINISHED": "Dibatalkan",
 	"TXT_SUCCESS": "Berhasil",
 	"TXT_WAITING": "Menunggu",

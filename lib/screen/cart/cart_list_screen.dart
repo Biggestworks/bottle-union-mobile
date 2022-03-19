@@ -4,7 +4,7 @@ import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/provider/cart/cart_list_provider.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
-import 'package:eight_barrels/screen/cart/delivery_screen.dart';
+import 'package:eight_barrels/screen/checkout/delivery_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';

@@ -19,7 +19,7 @@ class KeyHelper {
   static const REPAIRING_KEY = 'repairing';
   static const QC_KEY = 'qc';
   static const DONE_REPAIRING_KEY = 'done repairing';
-  static const WAITING_FOR_DELIVERY_KEY = 'waiting for delivery';
+  static const WAITING_FOR_DELIVERY_KEY = 'waiting for checkout';
   static const DELIVERING_KEY = 'delivering';
   static const RECEIVED_BY_CUSTOMER_KEY = 'received by customer';
   static const COMPLETE_KEY = 'complete';

@@ -61,4 +61,26 @@ class URLHelper {
   static const DELETE_ADDRESS_URL = BASE_URL + '/address/delete';
   static const UPDATE_ADDRESS_URL = BASE_URL + '/address/update';
   static const SELECT_ADDRESS_URL = BASE_URL + '/address/selected';
+
+  ///DISCUSSION
+  static discussionUrl(String id) {
+    return BASE_URL + '/discussion/$id';
+  }
+  static const STORE_DISCUSSION_URL = BASE_URL + '/discussion/store';
+  static deleteDiscussionUrl(String id) {
+    return BASE_URL + '/discussion/delete/$id';
+  }
+  static const STORE_DISCUSSION_REPLY_URL = BASE_URL + '/discussion/reply/store';
+  static deleteDiscussionReplyUrl(String id) {
+    return BASE_URL + '/discussion/reply/delete/$id';
+  }
+
+  ///DELIVERY
+  static const COURIER_URL = BASE_URL + '/courier';
+  static const CHOOSE_COURIER_URL = BASE_URL + '/courier/choose';
+  static const ORDER_SUMMARY_URL = BASE_URL + '/orders/summary';
+
+  ///PAYMENT
+  static const PAYMENT_METHOD_URL = BASE_URL + '/enabled-payment';
+
 }

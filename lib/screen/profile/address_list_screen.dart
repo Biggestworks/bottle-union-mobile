@@ -235,9 +235,7 @@ class _AddressListScreenState extends State<AddressListScreen> implements Loadin
                             );
                           },
                         );
-                        break;
                     }
-                    break;
                 }
               },
             ),

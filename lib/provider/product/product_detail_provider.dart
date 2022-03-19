@@ -1,38 +1,35 @@
+import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
+import 'package:eight_barrels/model/product/discussion_list_model.dart';
 import 'package:eight_barrels/model/product/product_detail_model.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/cart/cart_service.dart';
+import 'package:eight_barrels/service/product/discussion_service.dart';
 import 'package:eight_barrels/service/product/product_service.dart';
 import 'package:eight_barrels/service/product/wishlist_service.dart';
 import 'package:flutter/material.dart';
+import 'package:html/parser.dart' show parse;
 
 class ProductDetailProvider extends ChangeNotifier {
   ProductService _productService = new ProductService();
   WishlistService _wishlistService = new WishlistService();
+  DiscussionService _discussionService = new DiscussionService();
   CartService _cartService = new CartService();
-  UserPreferences _userPreferences = new UserPreferences();
   ProductDetailModel product = new ProductDetailModel();
+  DiscussionListModel discussionList = new DiscussionListModel();
 
   bool isWishlist = false;
   int? id;
-  // bool isVisible = true;
-  // ScrollController scrollController = new ScrollController();
+
+  LoadingView? _view;
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // bool fnHideOnScroll(UserScrollNotification notification) {
-  //   final ScrollDirection direction = notification.direction;
-  //   if (direction == ScrollDirection.reverse) {
-  //     isVisible = false;
-  //     notifyListeners();
-  //   } else if (direction == ScrollDirection.forward) {
-  //     isVisible = true;
-  //     notifyListeners();
-  //   }
-  //   return true;
-  // }
+  fnGetView(LoadingView view) {
+    this._view = view;
+  }
 
   fnGetArguments(BuildContext context) {
     final _args = ModalRoute.of(context)!.settings.arguments as ProductDetailScreen;
@@ -40,8 +37,10 @@ class ProductDetailProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future fnGetProduct() async {
+  Future fnFetchProduct() async {
+    _view!.onProgressStart();
     product = (await _productService.productDetail(id: id))!;
+    _view!.onProgressFinish();
     notifyListeners();
   }
 
@@ -95,6 +94,17 @@ class ProductDetailProvider extends ChangeNotifier {
     } else {
       await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
+  }
+
+  Future fnFetchDiscussionList(BuildContext context) async {
+    _view!.onProgressStart();
+    discussionList = (await _discussionService.getDiscussionList(productId: product.data!.id!))!;
+    _view!.onProgressFinish();
+    notifyListeners();
+  }
+
+  fnConvertHtmlString(String text) {
+    return parse(text).documentElement?.text;
   }
 
 }

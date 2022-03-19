@@ -1,13 +1,15 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/product/product_detail_provider.dart';
+import 'package:eight_barrels/screen/checkout/delivery_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/route_manager.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
@@ -23,15 +25,19 @@ class ProductDetailScreen extends StatefulWidget {
   _ProductDetailScreenState createState() => _ProductDetailScreenState();
 }
 
-class _ProductDetailScreenState extends State<ProductDetailScreen> {
+class _ProductDetailScreenState extends State<ProductDetailScreen> implements LoadingView {
+  bool _isLoad = false;
   
   @override
   void initState() {
     Future.delayed(Duration.zero).then((value) async {
+      Provider.of<ProductDetailProvider>(context, listen: false).fnGetView(this);
       Provider.of<ProductDetailProvider>(context, listen: false).fnGetArguments(context);
-      Provider.of<ProductDetailProvider>(context, listen: false).fnGetProduct()
-          .then((value) => Provider.of<ProductDetailProvider>(context, listen: false).fnCheckWishlist());
-      // Provider.of<ProductDetailProvider>(context, listen: false).fnHideOnScroll();
+      Provider.of<ProductDetailProvider>(context, listen: false).fnFetchProduct()
+          .then((_) {
+        Provider.of<ProductDetailProvider>(context, listen: false).fnCheckWishlist();
+        Provider.of<ProductDetailProvider>(context, listen: false).fnFetchDiscussionList(context);
+      });
     });
     super.initState();
   }
@@ -62,133 +68,172 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Product Discussion (4)', style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),),
-              IconButton(
-                icon: Icon(MdiIcons.chatPlus, color: Colors.green, size: 28,),
-                onPressed: () {},
-                constraints: BoxConstraints(),
-                padding: EdgeInsets.zero,
-              ),
-            ],
-          ),
-          SizedBox(height: 20,),
-          ListView.separated(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: 3,
-            separatorBuilder: (context, index) {
-              return Divider(color: CustomColor.GREY_ICON, height: 30,);
-            },
-            itemBuilder: (context, index) {
-              return Column(
+          Consumer<ProductDetailProvider>(
+            builder: (context, provider, _) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 40.0,
-                        height: 40.0,
-                        decoration: new BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white),
-                          image: new DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage('assets/images/ic_profile.png'),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Flexible(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text("User ${index+1}", style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),),
-                                Text(" . ${timeago.format(DateTime.now(), locale: 'en_short')} ago",
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 5,),
-                            Text("Ready kak?", style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10,),
-                  Row(
-                    children: [
-                      Container(
-                        width: 50,
-                      ),
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 40.0,
-                              height: 40.0,
-                              decoration: new BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(color: Colors.white),
-                                image: new DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: AssetImage('assets/images/ic_launcher.png'),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Flexible(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text("Bottle Union Admin", style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),),
-                                      Text(" . ${timeago.format(DateTime.now(), locale: 'en_short')} ago",
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 5,),
-                                  Text("Ready gan, silahkan di order", style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                  ),),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  Text('Product Discussion (${provider.discussionList.data?.length})', style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),),
+                  IconButton(
+                    icon: Icon(MdiIcons.chatPlus, color: Colors.green, size: 28,),
+                    onPressed: () {},
+                    constraints: BoxConstraints(),
+                    padding: EdgeInsets.zero,
                   ),
                 ],
               );
             },
+          ),
+          SizedBox(height: 20,),
+          Consumer<ProductDetailProvider>(
+            child: CustomWidget.showShimmer(
+              child: ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: 4,
+                itemBuilder: (context, index) {
+                  return Container(
+                    color: Colors.white,
+                    height: 50,
+                  );
+                },
+              ),
+            ),
+            builder: (context, provider, skeleton) {
+              switch (_isLoad) {
+                case true:
+                  return skeleton!;
+                default:
+                  switch (provider.discussionList.data) {
+                    case null:
+                      return skeleton!;
+                    default:
+                      switch (provider.discussionList.data?.length) {
+                        case 0:
+                          return CustomWidget.emptyScreen(
+                            image: 'assets/images/ic_empty_product.png',
+                            title: AppLocalizations.instance.text('TXT_NO_PRODUCT'),
+                          );
+                        default:
+                          return ListView.separated(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: 3,
+                            separatorBuilder: (context, index) {
+                              return Divider(color: CustomColor.GREY_ICON, height: 30,);
+                            },
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 40.0,
+                                        height: 40.0,
+                                        decoration: new BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(color: Colors.white),
+                                          image: new DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: AssetImage('assets/images/ic_profile.png'),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Flexible(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text("User ${index+1}", style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),),
+                                                Text(" . ${timeago.format(DateTime.now(), locale: 'en_short')} ago",
+                                                  style: TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 5,),
+                                            Text("Ready kak?", style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black,
+                                            ),),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10,),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 50,
+                                      ),
+                                      Expanded(
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: 40.0,
+                                              height: 40.0,
+                                              decoration: new BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(color: Colors.white),
+                                                image: new DecorationImage(
+                                                  fit: BoxFit.cover,
+                                                  image: AssetImage('assets/images/ic_launcher.png'),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Flexible(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Text("Bottle Union Admin", style: TextStyle(
+                                                        fontWeight: FontWeight.bold,
+                                                      ),),
+                                                      Text(" . ${timeago.format(DateTime.now(), locale: 'en_short')} ago",
+                                                        style: TextStyle(
+                                                          color: Colors.grey,
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(height: 5,),
+                                                  Text("Ready gan, silahkan di order", style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.black,
+                                                  ),),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                      }
+                  }
+              }
+            }
           ),
         ],
       ),
@@ -197,168 +242,168 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     Widget _descriptionContent = Consumer<ProductDetailProvider>(
       child: CustomWidget.showShimmerProductDetail(),
       builder: (context, provider, skeleton) {
-        switch (provider.product.data) {
-          case null:
+        switch (_isLoad) {
+          case true:
             return skeleton!;
           default:
-            var _data = _provider.product.data!;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: CarouselSlider(
-                    options: CarouselOptions(
-                      height: 300.0,
-                      autoPlay: true,
-                      enlargeCenterPage: true,
-                      enableInfiniteScroll: true,
-                      onPageChanged: (index, reason) {
-                        // _provider.onBannerChanged(index);
-                      },
+            switch (provider.product.data) {
+              case null:
+                return skeleton!;
+              default:
+                var _data = _provider.product.data!;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: CarouselSlider(
+                        options: CarouselOptions(
+                          height: 300.0,
+                          autoPlay: true,
+                          enlargeCenterPage: true,
+                          enableInfiniteScroll: true,
+                          onPageChanged: (index, reason) {
+                            // _provider.onBannerChanged(index);
+                          },
+                        ),
+                        items: [
+                          _imageContainer(_data.image1),
+                          _imageContainer(_data.image2),
+                          _imageContainer(_data.image3),
+                          _imageContainer(_data.image4),
+                        ],
+                      ),
                     ),
-                    items: [
-                      _imageContainer(_data.image1),
-                      _imageContainer(_data.image2),
-                      _imageContainer(_data.image3),
-                      _imageContainer(_data.image4),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Flexible(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(_data.name!, style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 24,
-                                ), maxLines: 2, overflow: TextOverflow.ellipsis,),
-                                Text(_data.categories?.name ?? '-', style: TextStyle(
-                                  color: CustomColor.GREY_TXT,
-                                  fontSize: 16,
-                                ),),
-                              ],
-                            ),
-                          ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Icon(FontAwesomeIcons.solidStar, color: Colors.orangeAccent, size: 18,),
-                              SizedBox(width: 5,),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 4),
-                                child: Text(_data.rating != null
-                                    ? _data.rating.toString()
-                                    : '0', style: TextStyle(
-                                  fontSize: 18,
-                                ),),
+                              Flexible(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(_data.name!, style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 24,
+                                    ), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                    Text(_data.categories?.name ?? '-', style: TextStyle(
+                                      color: CustomColor.GREY_TXT,
+                                      fontSize: 16,
+                                    ),),
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Icon(FontAwesomeIcons.solidStar, color: Colors.orangeAccent, size: 18,),
+                                  SizedBox(width: 5,),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4),
+                                    child: Text(_data.rating != null
+                                        ? _data.rating.toString()
+                                        : '0', style: TextStyle(
+                                      fontSize: 18,
+                                    ),),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 20,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(FormatterHelper.moneyFormatter(_data.regularPrice ?? 0), style: TextStyle(
+                          SizedBox(height: 20,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(FormatterHelper.moneyFormatter(_data.regularPrice ?? 0), style: TextStyle(
+                                color: CustomColor.MAIN,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),),
+                              _data.stock != 0
+                                  ? Text('In stock ${_data.stock ?? '0'} item(s)', style: TextStyle(
+                                color: CustomColor.GREY_TXT,
+                                fontSize: 14,
+                              ),)
+                                  : Text('Sold Out', style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 16,
+                              ),),
+                            ],
+                          ),
+                          Divider(
                             color: CustomColor.MAIN,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),),
-                          _data.stock != 0
-                              ? Text('In stock ${_data.stock ?? '0'} item(s)', style: TextStyle(
+                            thickness: 1.5,
+                            height: 25,
+                          ),
+                          Text('Brand', style: TextStyle(
                             color: CustomColor.GREY_TXT,
-                            fontSize: 14,
-                          ),)
-                              : Text('Sold Out', style: TextStyle(
-                            color: Colors.red,
+                          ),),
+                          SizedBox(height: 5,),
+                          Text(_data.brand?.name ?? '-', style: TextStyle(
+                            color: Colors.black,
                             fontSize: 16,
                           ),),
+                          SizedBox(height: 10,),
+                          Text('Year', style: TextStyle(
+                            color: CustomColor.GREY_TXT,
+                          ),),
+                          SizedBox(height: 5,),
+                          Text(_data.year ?? '-', style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                          ),),
+                          SizedBox(height: 10,),
+                          Text('Manufacture Country', style: TextStyle(
+                            color: CustomColor.GREY_TXT,
+                          ),),
+                          SizedBox(height: 5,),
+                          Text(_data.manufactureCountry ?? '-', style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                          ),),
+                          SizedBox(height: 10,),
+                          Text('Description', style: TextStyle(
+                            color: CustomColor.GREY_TXT,
+                          ),),
+                          SizedBox(height: 5,),
+                          ReadMoreText(provider.fnConvertHtmlString(_data.description ?? '-'),
+                            trimLines: 3,
+                            trimMode: TrimMode.Line,
+                            trimCollapsedText: 'Show more',
+                            trimExpandedText: 'Show less',
+                            lessStyle: TextStyle(
+                              fontSize: 14,
+                              color: Colors.pink,
+                            ),
+                            moreStyle: TextStyle(
+                              fontSize: 14,
+                              color: Colors.pink,
+                            ),
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                            ),
+                          ),
+                          Divider(
+                            thickness: 1,
+                            height: 50,
+                          ),
+                          _discussionContent
                         ],
                       ),
-                      Divider(
-                        color: CustomColor.MAIN,
-                        thickness: 1.5,
-                        height: 25,
-                      ),
-                      Text('Brand', style: TextStyle(
-                        color: CustomColor.GREY_TXT,
-                      ),),
-                      SizedBox(height: 5,),
-                      Text(_data.brand?.name ?? '-', style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                      ),),
-                      SizedBox(height: 10,),
-                      Text('Year', style: TextStyle(
-                        color: CustomColor.GREY_TXT,
-                      ),),
-                      SizedBox(height: 5,),
-                      Text(_data.year ?? '-', style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                      ),),
-                      SizedBox(height: 10,),
-                      Text('Manufacture Country', style: TextStyle(
-                        color: CustomColor.GREY_TXT,
-                      ),),
-                      SizedBox(height: 5,),
-                      Text(_data.manufactureCountry ?? '-', style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                      ),),
-                      SizedBox(height: 10,),
-                      Text('Description', style: TextStyle(
-                        color: CustomColor.GREY_TXT,
-                      ),),
-                      SizedBox(height: 5,),
-                      // Html(
-                      //   data: _data.description ?? '',
-                      //   style: {"body": Style(padding: EdgeInsets.zero, margin: EdgeInsets.zero, fontSize: FontSize.large,)},
-                      // ),
-                      ReadMoreText(_data.description ?? '-',
-                        trimLines: 3,
-                        trimMode: TrimMode.Line,
-                        trimCollapsedText: 'Show more',
-                        trimExpandedText: 'Show less',
-                        lessStyle: TextStyle(
-                          fontSize: 14,
-                          color: Colors.pink,
-                        ),
-                        moreStyle: TextStyle(
-                          fontSize: 14,
-                          color: Colors.pink,
-                        ),
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                        ),
-                      ),
-                      Divider(
-                        thickness: 1,
-                        height: 50,
-                      ),
-                      _discussionContent
-                    ],
-                  ),
-                ),
-              ],
-            );
+                    ),
+                  ],
+                );
+            }
         }
       },
     );
 
     Widget _mainContent = SingleChildScrollView(
-      // controller: _provider.scrollController,
       child: Stack(
         children: [
           Container(
@@ -413,10 +458,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             SizedBox(width: 10,),
             Expanded(
               child: CustomWidget.roundBtn(
-                label: 'Buy Now',
+                label: AppLocalizations.instance.text('TXT_LBL_BUY_NOW'),
                 btnColor: CustomColor.MAIN,
                 lblColor: Colors.white,
-                function: () {},
+                function: () => Get.toNamed(DeliveryScreen.tag, arguments: DeliveryScreen(
+                  product: _provider.product,
+                )),
               ),
             ),
           ],
@@ -445,4 +492,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       bottomNavigationBar: _bottomMenuContent,
     );
   }
+
+  @override
+  void onProgressFinish() {
+    if (mounted) {
+      _isLoad = false;
+      setState(() {});
+    }
+  }
+
+  @override
+  void onProgressStart() {
+    if (mounted) {
+      _isLoad = true;
+      setState(() {});
+    }
+  }
+
 }

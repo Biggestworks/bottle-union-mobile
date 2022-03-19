@@ -6,6 +6,8 @@ import 'package:eight_barrels/provider/auth/otp_provider.dart';
 import 'package:eight_barrels/provider/auth/register_provider.dart';
 import 'package:eight_barrels/provider/cart/base_cart_provider.dart';
 import 'package:eight_barrels/provider/cart/cart_list_provider.dart';
+import 'package:eight_barrels/provider/checkout/delivery_provider.dart';
+import 'package:eight_barrels/provider/checkout/payment_provider.dart';
 import 'package:eight_barrels/provider/home/banner_detail_provider.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
@@ -18,6 +20,8 @@ import 'package:eight_barrels/provider/profile/address_list_provider.dart';
 import 'package:eight_barrels/provider/profile/change_password_provider.dart';
 import 'package:eight_barrels/screen/auth/forgot_password_screen.dart';
 import 'package:eight_barrels/screen/auth/otp_screen.dart';
+import 'package:eight_barrels/screen/checkout/delivery_screen.dart';
+import 'package:eight_barrels/screen/checkout/payment_screen.dart';
 import 'package:eight_barrels/screen/home/banner_detail_screen.dart';
 import 'package:eight_barrels/screen/profile/add_address_screen.dart';
 import 'package:eight_barrels/screen/profile/address_list_screen.dart';
@@ -31,7 +35,6 @@ import 'package:eight_barrels/screen/auth/register_screen.dart';
 import 'package:eight_barrels/screen/auth/start_screen.dart';
 import 'package:eight_barrels/screen/cart/base_cart_screen.dart';
 import 'package:eight_barrels/screen/cart/cart_list_screen.dart';
-import 'package:eight_barrels/screen/cart/delivery_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/home/home_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
@@ -194,7 +197,10 @@ class _AppState extends State<App> {
           ),
           GetPage(
             name: DeliveryScreen.tag,
-            page: () => DeliveryScreen(),
+            page: () => ChangeNotifierProvider<DeliveryProvider>(
+              create: (context) => DeliveryProvider(),
+              child: DeliveryScreen(),
+            ),
           ),
           GetPage(
             name: UpdateProfileScreen.tag,
@@ -250,6 +256,13 @@ class _AppState extends State<App> {
             page: () => ChangeNotifierProvider<AddAddressProvider>(
               create: (context) => AddAddressProvider(),
               child: AddAddressScreen(),
+            ),
+          ),
+          GetPage(
+            name: PaymentScreen.tag,
+            page: () => ChangeNotifierProvider<PaymentProvider>(
+              create: (context) => PaymentProvider(),
+              child: PaymentScreen(),
             ),
           ),
         ],

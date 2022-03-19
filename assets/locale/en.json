@@ -103,6 +103,7 @@
 	"TXT_REMOVE_CART_INFO": "Are you sure you want to remove items from Cart?",
 	"TXT_CART_DELETE_SUCCESS": "Success, remove from Cart",
 	"TXT_LBL_BUY": "Buy",
+	"TXT_LBL_BUY_NOW": "Buy Now",
 	"TXT_SOLD_OUT": "Sold out",
 	"TXT_PAYMENT": "Payment",
 	"TXT_CHOOSE_PAYMENT": "Choose Payment",
@@ -131,6 +132,13 @@
 	"TXT_NO_ADDRESS_SELECTED": "You have no selected address yet",
 	"TXT_ADD_ADDRESS": "Add Address",
 	"TXT_UPDATE_ADDRESS": "Update Address",
+	"TXT_NO_DATA": "No data available",
+	"TXT_FINISH": "Finish",
+	"TXT_PAYMENT_METHOD": "Payment Method",
+	"TXT_CHOOSE_PAYMENT_METHOD": "Choose Payment Method",
+	"TXT_PAY": "Pay",
+	"TXT_CHOOSE_COURIER_INFO": "Please select the delivery courier first",
+
 
 
 	"app_name": "eRecycle",
@@ -361,7 +369,6 @@
 	"TXT_END_DATE_PROMO": "Valid Till",
 	"TXT_ESTIMATED_PICKUP": "Picked Up Estimation:",
 	"TXT_FAILED_INPUT_PIN_MSG_SECURITY": "Failed to Confirm",
-	"TXT_FINISH": "Finish",
 	"TXT_FORGET_INPUT_PIN_MSG_SECURITY": "Forgot your Security PIN?",
 	"TXT_FORGOT_PHONE_TITLE": "Please Enter the Email Address That Has Been Registered in Your Account for the Authentication Process",
 	"TXT_FOTO_LIMBAH": "Take a Photo of Your Waste?",
