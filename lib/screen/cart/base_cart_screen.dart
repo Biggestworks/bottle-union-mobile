@@ -13,32 +13,48 @@ class BaseCartScreen extends StatefulWidget {
   _BaseCartScreenState createState() => _BaseCartScreenState();
 }
 
-class _BaseCartScreenState extends State<BaseCartScreen> {
+class _BaseCartScreenState extends State<BaseCartScreen> with SingleTickerProviderStateMixin {
+
+  @override
+  void initState() {
+    Future.delayed(Duration.zero, () {
+      Provider.of<BaseCartProvider>(context, listen: false).fnInitTabController(this);
+    },);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final _provider = Provider.of<BaseCartProvider>(context, listen: false);
 
     Widget _tabBar = Consumer<BaseCartProvider>(
+      child: Container(),
       builder: (context, provider, skeleton) {
-        return TabBar(
-          indicatorSize: TabBarIndicatorSize.tab,
-          indicatorColor: CustomColor.MAIN,
-          indicatorWeight: 2,
-          labelColor: CustomColor.BROWN_TXT,
-          labelStyle: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-          unselectedLabelColor: CustomColor.BROWN_LIGHT_TXT,
-          // onTap: (value) => provider.onSelectTab(value),
-          tabs: [
-            new Tab(
-              text: AppLocalizations.instance.text('TXT_LBL_CHECKOUT'),
-            ),
-            new Tab(
-              text: AppLocalizations.instance.text('TXT_LBL_TRACK_ORDER'),
-            ),
-          ],
-        );
+        switch (provider.tabController) {
+          case null:
+            return skeleton!;
+          default:
+            return TabBar(
+              controller: provider.tabController,
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicatorColor: CustomColor.MAIN,
+              indicatorWeight: 2,
+              labelColor: CustomColor.BROWN_TXT,
+              labelStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+              unselectedLabelColor: CustomColor.BROWN_LIGHT_TXT,
+              onTap: provider.fnOnChangeTab,
+              tabs: [
+                new Tab(
+                  text: AppLocalizations.instance.text('TXT_LBL_CHECKOUT'),
+                ),
+                new Tab(
+                  text: AppLocalizations.instance.text('TXT_LBL_TRACK_ORDER'),
+                ),
+              ],
+            );
+        }
       },
     );
 
@@ -55,31 +71,41 @@ class _BaseCartScreenState extends State<BaseCartScreen> {
         ),
         _tabBar,
         Flexible(
-          child: TabBarView(children: _provider.screenList()),
+          child: Consumer<BaseCartProvider>(
+            child: Container(),
+            builder: (context, provider, skeleton) {
+              switch (provider.tabController) {
+                case null:
+                  return skeleton!;
+                default:
+                  return TabBarView(
+                    controller: provider.tabController,
+                    children: provider.screenList(),
+                  );
+              }
+            }
+          ),
         ),
       ],
     );
 
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: CustomColor.BG,
+      appBar: AppBar(
         backgroundColor: CustomColor.BG,
-        appBar: AppBar(
-          backgroundColor: CustomColor.BG,
-          elevation: 0,
-          centerTitle: true,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 20,),
-              child: SizedBox(
-                width: 120,
-                child: Image.asset('assets/images/ic_logo_bu.png',),
-              ),
+        elevation: 0,
+        centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20,),
+            child: SizedBox(
+              width: 120,
+              child: Image.asset('assets/images/ic_logo_bu.png',),
             ),
-          ],
-        ),
-        body: _mainContent,
+          ),
+        ],
       ),
+      body: _mainContent,
     );
   }
 }

@@ -1,7 +1,10 @@
+import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
-import 'package:eight_barrels/model/checkout/order_summary_model.dart';
+import 'package:eight_barrels/model/checkout/courier_list_model.dart' as courier;
+import 'package:eight_barrels/model/checkout/order_summary_model.dart' as summary;
+import 'package:eight_barrels/model/product/product_detail_model.dart';
 import 'package:eight_barrels/provider/checkout/payment_provider.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
@@ -10,19 +13,25 @@ import 'package:provider/provider.dart';
 
 class PaymentScreen extends StatefulWidget {
   static String tag = '/payment-screen';
-  final Data? orderSummary;
+  final summary.Data? orderSummary;
+  final int? addressId;
+  final ProductDetailModel? product;
+  final courier.Data? selectedCourier;
+  final bool? isCart;
 
-  const PaymentScreen({Key? key, this.orderSummary}) : super(key: key);
+  const PaymentScreen({Key? key, this.orderSummary, this.addressId, this.product, this.selectedCourier, this.isCart}) : super(key: key);
 
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
 }
 
-class _PaymentScreenState extends State<PaymentScreen> {
+class _PaymentScreenState extends State<PaymentScreen> implements LoadingView {
+  bool _isLoad = false;
 
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
+      Provider.of<PaymentProvider>(context, listen: false).fnGetView(this);
       Provider.of<PaymentProvider>(context, listen: false).fnGetArguments(context);
       Provider.of<PaymentProvider>(context, listen: false).fnFetchPaymentList();
     },);
@@ -31,6 +40,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _provider = Provider.of<PaymentProvider>(context, listen: false);
 
     _showPaymentSheet() {
       return CustomWidget.showSheet(
@@ -41,45 +51,72 @@ class _PaymentScreenState extends State<PaymentScreen> {
           child: Container(
             height: MediaQuery.of(context).size.height * 0.6,
             padding: EdgeInsets.symmetric(vertical: 10),
-            child: Consumer<PaymentProvider>(
-              child: CustomWidget.showShimmerListView(height: 200),
-              builder: (context, provider, skeleton) {
-                switch (provider.paymentList.data) {
-                  case null:
-                    return skeleton!;
-                  default:
-                    switch (provider.paymentList.data?.length) {
-                      case 0:
-                        return CustomWidget.emptyScreen(
-                            image: 'assets/images/ic_empty.png',
-                            title: AppLocalizations.instance.text('TXT_NO_DATA'),
-                            size: 180
-                        );
-                      default:
-                        return ListView.separated(
-                          shrinkWrap: true,
-                          itemCount: provider.paymentList.data?.length ?? 0,
-                          separatorBuilder: (context, index) {
-                            return Divider();
-                          },
-                          itemBuilder: (context, index) {
-                            var _data = provider.paymentList.data?[index];
-                            return GestureDetector(
-                              onTap: () => provider.fnOnSelectPayment(_data!),
-                              child: ListTile(
-                                title: Text(_data?.description ?? '-'),
-                                leading: Container(
-                                  height: 50,
-                                  width: 80,
-                                  child: CustomWidget.networkImg(context, _data?.image, fit: BoxFit.contain),
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                    }
-                }
-              },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Text.rich(TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Powered By  ',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                      WidgetSpan(
+                        child: Container(
+                          width: 100,
+                          child: Image.asset('assets/images/midtrans_logo.png'),
+                        ),
+                      ),
+                    ],
+                  )),
+                ),
+                SizedBox(height: 10,),
+                Flexible(
+                  child: Consumer<PaymentProvider>(
+                    child: CustomWidget.showShimmerListView(height: 200),
+                    builder: (context, provider, skeleton) {
+                      switch (provider.paymentList.data) {
+                        case null:
+                          return skeleton!;
+                        default:
+                          switch (provider.paymentList.data?.length) {
+                            case 0:
+                              return CustomWidget.emptyScreen(
+                                  image: 'assets/images/ic_empty.png',
+                                  title: AppLocalizations.instance.text('TXT_NO_DATA'),
+                                  size: 180
+                              );
+                            default:
+                              return ListView.separated(
+                                shrinkWrap: true,
+                                itemCount: provider.paymentList.data?.length ?? 0,
+                                separatorBuilder: (context, index) {
+                                  return Divider();
+                                },
+                                itemBuilder: (context, index) {
+                                  var _data = provider.paymentList.data?[index];
+                                  return GestureDetector(
+                                    onTap: () => provider.fnOnSelectPayment(_data!),
+                                    child: ListTile(
+                                      title: Text(_data?.description ?? '-'),
+                                      leading: Container(
+                                        height: 50,
+                                        width: 80,
+                                        child: CustomWidget.networkImg(context, _data?.image, fit: BoxFit.contain),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                          }
+                      }
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -109,7 +146,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(AppLocalizations.instance.text('TXT_TOTAL_PRICE')),
-                        Text(FormatterHelper.moneyFormatter(_data?.totalPrice ?? 0)),
+                        Flexible(child: Text(FormatterHelper.moneyFormatter(_data?.totalPrice ?? 0))),
                       ],
                     ),
                     if (_data?.deliveryCost != null)
@@ -121,7 +158,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(AppLocalizations.instance.text('TXT_DELIVERY_COST')),
-                              Text(FormatterHelper.moneyFormatter(_data?.deliveryCost ?? 0)),
+                              Flexible(child: Text(FormatterHelper.moneyFormatter(_data?.deliveryCost ?? 0))),
                             ],
                           ),
                         ],
@@ -149,15 +186,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   Text(AppLocalizations.instance.text('TXT_PAYMENT_METHOD'), style: TextStyle(
                     fontSize: 16,
                   ),),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      visualDensity: VisualDensity.compact,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  Flexible(
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        visualDensity: VisualDensity.compact,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      onPressed: () => _showPaymentSheet(),
+                      child: Text(AppLocalizations.instance.text('TXT_CHOOSE_PAYMENT_METHOD'), style: TextStyle(
+                        color: CustomColor.BROWN_TXT,
+                      ),),
                     ),
-                    onPressed: () => _showPaymentSheet(),
-                    child: Text(AppLocalizations.instance.text('TXT_CHOOSE_PAYMENT_METHOD'), style: TextStyle(
-                      color: CustomColor.BROWN_TXT,
-                    ),),
                   ),
                 ],
               ),
@@ -249,7 +288,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           lblColor: Colors.white,
                           icColor: Colors.white,
                           radius: 8,
-                          function: () {},
+                          function: () async => await _provider.fnStoreOrder(_provider.scaffoldKey.currentContext!),
                         ),
                       ),
                     ],
@@ -260,51 +299,75 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ),
     );
 
-    return Scaffold(
-      backgroundColor: CustomColor.BG,
-      appBar: AppBar(
+    return CustomWidget.loadingHud(
+      isLoad: _isLoad,
+      child: Scaffold(
+        key: _provider.scaffoldKey,
         backgroundColor: CustomColor.BG,
-        centerTitle: true,
-        title: Text.rich(TextSpan(
-            children: [
-              TextSpan(
-                text: AppLocalizations.instance.text('TXT_DELIVERY'),
-                style: TextStyle(
-                  color: CustomColor.GREY_TXT,
+        appBar: AppBar(
+          backgroundColor: CustomColor.BG,
+          centerTitle: true,
+          title: RichText(text: TextSpan(
+              children: [
+                TextSpan(
+                  text: AppLocalizations.instance.text('TXT_DELIVERY'),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: CustomColor.GREY_TXT,
+                  ),
                 ),
-              ),
-              WidgetSpan(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  child: Icon(Icons.arrow_forward_ios, size: 18,),
+                WidgetSpan(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
+                    child: Icon(Icons.arrow_forward_ios, size: 18,),
+                  ),
                 ),
-              ),
-              TextSpan(
-                text: AppLocalizations.instance.text('TXT_PAYMENT'),
-                style: TextStyle(
-                  color: CustomColor.BROWN_TXT,
+                TextSpan(
+                  text: AppLocalizations.instance.text('TXT_PAYMENT'),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: CustomColor.BROWN_TXT,
+                  ),
                 ),
-              ),
-              WidgetSpan(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  child: Icon(Icons.arrow_forward_ios, size: 18,),
+                WidgetSpan(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
+                    child: Icon(Icons.arrow_forward_ios, size: 18,),
+                  ),
                 ),
-              ),
-              TextSpan(
-                text: AppLocalizations.instance.text('TXT_FINISH'),
-                style: TextStyle(
-                  color: CustomColor.GREY_TXT,
+                TextSpan(
+                  text: AppLocalizations.instance.text('TXT_FINISH'),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: CustomColor.GREY_TXT,
+                  ),
                 ),
-              ),
-            ]
-        )),
-        iconTheme: IconThemeData(
-          color: Colors.black,
+              ]
+          )),
+          iconTheme: IconThemeData(
+            color: Colors.black,
+          ),
         ),
+        body: _mainContent,
+        bottomNavigationBar: _bottomMenuContent,
       ),
-      body: _mainContent,
-      bottomNavigationBar: _bottomMenuContent,
     );
   }
+
+  @override
+  void onProgressFinish() {
+    if (mounted) {
+      _isLoad = false;
+      setState(() {});
+    }
+  }
+
+  @override
+  void onProgressStart() {
+    if (mounted) {
+      _isLoad = true;
+      setState(() {});
+    }
+  }
+
 }

@@ -6,6 +6,8 @@ import 'package:eight_barrels/model/product/category_model.dart';
 import 'package:eight_barrels/model/product/product_model.dart';
 import 'package:eight_barrels/service/product/product_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
+import 'package:get/route_manager.dart';
 import 'package:intl/intl.dart';
 
 class ProductListProvider extends ChangeNotifier
@@ -16,18 +18,20 @@ class ProductListProvider extends ChangeNotifier
   CategoryListModel categoryList = new CategoryListModel();
 
   final TextEditingController searchController = new TextEditingController();
+  final TextEditingController yearController = new TextEditingController();
   final TextEditingController minPriceController = new TextEditingController();
   final TextEditingController maxPriceController = new TextEditingController();
 
+  List<String> yearList = [];
   List<FilterChips> filterVal = [];
 
   int? selectedBrandIndex;
   bool isBrandSelected = false;
   int? selectedCategoryIndex;
   bool isCategorySelected = false;
-  DateTime selectedDate = DateTime.now();
-  String? selectedYear;
   bool isFiltered = false;
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   LoadingView? _view;
 
@@ -40,6 +44,8 @@ class ProductListProvider extends ChangeNotifier
   Future fnFetchProductList() async {
     _view!.onProgressStart();
 
+    super.currentPage = 1;
+
     productList = (await _service.productList(
       name: searchController.text,
       brand: selectedBrandIndex != null
@@ -48,9 +54,9 @@ class ProductListProvider extends ChangeNotifier
       category: selectedCategoryIndex != null
           ? categoryList.data![selectedCategoryIndex!].name
           : null,
-      year: selectedYear ?? null,
-      minPrice: minPriceController.text,
-      maxPrice: maxPriceController.text,
+      year: yearController.text,
+      minPrice: toNumericString(minPriceController.text),
+      maxPrice: toNumericString(maxPriceController.text),
       page: super.currentPage.toString(),
     ))!;
 
@@ -58,21 +64,21 @@ class ProductListProvider extends ChangeNotifier
     notifyListeners();
   }
 
-  // Widget filterChips() {
-  //   return Container(
-  //     height: 50,
-  //     child: ListView.builder(
-  //       shrinkWrap: true,
-  //       scrollDirection: Axis.horizontal,
-  //       itemCount: filterVal.length,
-  //       itemBuilder: (context, index) {
-  //         return Chip(
-  //           label: Text(filterVal[index].value),
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
+  Widget filterChips() {
+    return Container(
+      height: 50,
+      child: ListView.builder(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: filterVal.length,
+        itemBuilder: (context, index) {
+          return Chip(
+            label: Text(filterVal[index].value),
+          );
+        },
+      ),
+    );
+  }
 
   fnOnSelectBrand(int index) {
     selectedBrandIndex = index;
@@ -94,46 +100,74 @@ class ProductListProvider extends ChangeNotifier
     notifyListeners();
   }
 
-  fnOnSelectYear(DateTime value) {
-    selectedDate = value;
-    selectedYear = DateFormat('yyyy').format(value);
+  fnOnChangedYear(String value) {
     isFiltered = true;
     notifyListeners();
   }
 
-  // fnAddBrandChip() {
-  //   if (selectedBrandIndex != null) {
-  //     if (isBrandSelected) {
-  //       filterVal.add(FilterChips(brandList.data![selectedBrandIndex!].name!, 'brand'));
-  //     } else {
-  //       filterVal.removeWhere((item) => item.flag == 'brand');
-  //     }
-  //   }
-  //   notifyListeners();
-  // }
-  //
-  // fnAddCategoryChip() {
-  //   if (selectedCategoryIndex != null) {
-  //     if (isCategorySelected) {
-  //       filterVal.add(FilterChips(categoryList.data![selectedCategoryIndex!].name!, 'category'));
-  //     } else {
-  //       filterVal.removeWhere((item) => item.flag == 'category');
-  //     }
-  //   }
-  //   notifyListeners();
-  // }
-  //
-  // fnAddYearChip() {
-  //   if (selectedYear != null) {
-  //     if (filterVal.where((item) => item.value == selectedYear).length == 0) {
-  //       filterVal.add(FilterChips(selectedYear!, 'year'));
-  //     } else {
-  //       filterVal.removeWhere((item) => item.flag == 'year');
-  //       filterVal.add(FilterChips(selectedYear!, 'year'));
-  //     }
-  //   }
-  //   notifyListeners();
-  // }
+  fnAddBrandChip() {
+    if (selectedBrandIndex != null) {
+      if (filterVal.where((i) => i.flag == 'brand').length == 0) {
+        filterVal.add(FilterChips(brandList.data![selectedBrandIndex!].name!, 'brand'));
+      }
+    } else {
+      filterVal.removeWhere((item) => item.flag == 'brand');
+    }
+    notifyListeners();
+  }
+
+  fnAddCategoryChip() {
+    if (selectedCategoryIndex != null) {
+      if (filterVal.where((i) => i.flag == 'category').length == 0) {
+        filterVal.add(FilterChips(categoryList.data![selectedCategoryIndex!].name!, 'category'));
+      }
+    } else {
+      filterVal.removeWhere((item) => item.flag == 'category');
+    }
+    notifyListeners();
+  }
+
+  fnAddYearChip() {
+    if (yearController.text.isNotEmpty) {
+      if (filterVal.where((item) => item.flag == 'year').length == 0) {
+        filterVal.add(FilterChips(yearController.text, 'year'));
+      } else {
+        filterVal.removeWhere((item) => item.flag == 'year');
+        filterVal.add(FilterChips(yearController.text, 'year'));
+      }
+    } else {
+      filterVal.removeWhere((item) => item.flag == 'year');
+    }
+    notifyListeners();
+  }
+
+  fnAddMinPriceChip() {
+    if (minPriceController.text.isNotEmpty) {
+      if (filterVal.where((item) => item.flag == 'min').length == 0) {
+        filterVal.add(FilterChips('Min: Rp${minPriceController.text}', 'min'));
+      } else {
+        filterVal.removeWhere((item) => item.flag == 'min');
+        filterVal.add(FilterChips('Min: Rp${minPriceController.text}', 'min'));
+      }
+    } else {
+      filterVal.removeWhere((item) => item.flag == 'min');
+    }
+    notifyListeners();
+  }
+
+  fnAddMaxPriceChip() {
+    if (maxPriceController.text.isNotEmpty) {
+      if (filterVal.where((item) => item.flag == 'max').length == 0) {
+        filterVal.add(FilterChips('Max: Rp${maxPriceController.text}', 'max'));
+      } else {
+        filterVal.removeWhere((item) => item.flag == 'max');
+        filterVal.add(FilterChips('Max: Rp${maxPriceController.text}', 'max'));
+      }
+    } else {
+      filterVal.removeWhere((item) => item.flag == 'max');
+    }
+    notifyListeners();
+  }
 
   Future fnOnSearchProduct(String value) async {
     _view!.onProgressStart();
@@ -146,9 +180,9 @@ class ProductListProvider extends ChangeNotifier
       category: selectedCategoryIndex != null
           ? categoryList.data![selectedCategoryIndex!].name
           : null,
-      year: selectedYear,
-      minPrice: minPriceController.text,
-      maxPrice: maxPriceController.text,
+      year: yearController.text,
+      minPrice: toNumericString(minPriceController.text),
+      maxPrice: toNumericString(maxPriceController.text),
     ))!;
 
     isFiltered = true;
@@ -162,28 +196,43 @@ class ProductListProvider extends ChangeNotifier
     notifyListeners();
   }
 
+  fnGenerateYearList() {
+    DateTime _start = DateTime(DateTime.now().year - 100, 1);
+    DateTime _end = DateTime(DateTime.now().year);
+    final daysToGenerate = _end.difference(_start).inDays ~/ 365;
+    yearList.clear();
+    yearList = List.generate(daysToGenerate, (i) => DateTime(_start.year + (i + 1)).year.toString());
+  }
+
   Future fnInitFilter() async {
     brandList = (await _service.brandList())!;
     categoryList = (await _service.categoryList())!;
+    fnGenerateYearList();
     isFiltered = false;
     notifyListeners();
   }
 
   Future fnOnSubmitFilter() async {
-    await fnFetchProductList();
+    if (formKey.currentState!.validate()) {
+      Get.back();
+      fnAddBrandChip();
+      fnAddCategoryChip();
+      fnAddYearChip();
+      fnAddMinPriceChip();
+      fnAddMaxPriceChip();
+      await fnFetchProductList();
+    }
     notifyListeners();
   }
 
   Future onResetFilter() async {
     selectedBrandIndex = null;
     selectedCategoryIndex = null;
-    selectedYear = null;
-    selectedDate = DateTime.now();
+    yearController.clear();
     searchController.clear();
     minPriceController.clear();
     maxPriceController.clear();
     isFiltered = false;
-    super.currentPage = 1;
     filterVal.clear();
     await fnFetchProductList();
     notifyListeners();
@@ -202,9 +251,9 @@ class ProductListProvider extends ChangeNotifier
       category: selectedCategoryIndex != null
           ? categoryList.data![selectedCategoryIndex!].name
           : null,
-      year: selectedYear ?? null,
-      minPrice: minPriceController.text,
-      maxPrice: maxPriceController.text,
+      year: yearController.text,
+      minPrice: toNumericString(minPriceController.text),
+      maxPrice: toNumericString(maxPriceController.text),
       page: super.currentPage.toString(),
     );
 

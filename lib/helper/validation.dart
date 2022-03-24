@@ -67,4 +67,11 @@ class TextValidation {
   Future<bool?> validateAge(String dob) async => await _service.validateAge(dob: dob);
 
   Future<bool?> validateEmailExist(String value) async => await _service.validateEmailPhone(value: value);
+
+  String? validateYear(String? value) {
+    if ((value?.length ?? 0) > 0 && (value?.length ?? 0) < 4) {
+      return "Invalid Year";
+    }
+    return null;
+  }
 }

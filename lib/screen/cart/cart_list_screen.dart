@@ -40,8 +40,7 @@ class _CartListScreenState extends State<CartListScreen> implements LoadingView 
     final _provider = Provider.of<CartListProvider>(context, listen: false);
     final _baseProvider = Provider.of<BaseHomeProvider>(context, listen: false);
 
-    Widget _cartListContent = Padding(
-      padding: const EdgeInsets.all(10),
+    Widget _cartListContent = Flexible(
       child: Consumer<CartListProvider>(
           child: CustomWidget.showShimmerListView(),
           builder: (context, provider, skeleton) {
@@ -200,6 +199,22 @@ class _CartListScreenState extends State<CartListScreen> implements LoadingView 
       ),
     );
 
+    Widget _mainContent = Container(
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(AppLocalizations.instance.text('TXT_HEADER_ORDER'), style: TextStyle(
+            color: CustomColor.BROWN_TXT,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),),
+          SizedBox(height: 5,),
+          _cartListContent,
+        ],
+      ),
+    );
+
     Widget _bottomMenuContent = Consumer<CartListProvider>(
         child: SizedBox(),
         builder: (context, provider, skeleton) {
@@ -250,6 +265,7 @@ class _CartListScreenState extends State<CartListScreen> implements LoadingView 
                                   radius: 8,
                                   function: () => Get.toNamed(DeliveryScreen.tag, arguments: DeliveryScreen(
                                     cartList: _provider.cartTotalList,
+                                    isCart: true,
                                   )),
                                 ),
                               ),
@@ -264,10 +280,27 @@ class _CartListScreenState extends State<CartListScreen> implements LoadingView 
     );
 
     return Scaffold(
-      extendBody: true,
       key: _provider.scaffoldKey,
       backgroundColor: CustomColor.BG,
-      body: _cartListContent,
+      appBar: AppBar(
+        backgroundColor: CustomColor.BG,
+        elevation: 0,
+        // centerTitle: true,
+        // title: SizedBox(
+        //   width: 150,
+        //   child: Image.asset('assets/images/ic_logo_bu_white.png',),
+        // ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20,),
+            child: SizedBox(
+              width: 120,
+              child: Image.asset('assets/images/ic_logo_bu.png',),
+            ),
+          ),
+        ],
+      ),
+      body: _mainContent,
       bottomNavigationBar: _bottomMenuContent,
     );
   }

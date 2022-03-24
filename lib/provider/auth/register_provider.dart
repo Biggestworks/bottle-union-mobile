@@ -279,6 +279,7 @@ class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextVa
           initialPosition: currLocation!,
           useCurrentLocation: true,
           enableMyLocationButton: true,
+          selectInitialPosition: true,
         ),
       ),
     );

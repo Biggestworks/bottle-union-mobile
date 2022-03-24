@@ -1,7 +1,8 @@
+import 'dart:async';
+
 import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/helper/url_helper.dart';
 import 'package:eight_barrels/model/checkout/courier_list_model.dart';
-import 'package:eight_barrels/model/checkout/courier_select_model.dart';
 import 'package:eight_barrels/model/checkout/order_summary_model.dart';
 import 'package:get/get_connect.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,33 +45,15 @@ class DeliveryService extends GetConnect {
     return _model;
   }
 
-  Future<CourierListModel?> getCourierList() async {
-    CourierListModel _model = new CourierListModel();
-
-    try {
-      Response _response = await get(
-        URLHelper.COURIER_URL,
-        headers: await _headersAuth(),
-      );
-      _model = CourierListModel.fromJson(_response.body);
-    } catch (e) {
-      print(e);
-    }
-
-    return _model;
-  }
-
-  Future<CourierSelectModel?> chooseCourier({
+  Future<CourierListModel?> getCourierList({
     required String destination,
-    required String weight,
-    required String courier,
+    required double weight,
   }) async {
-    CourierSelectModel _model = new CourierSelectModel();
+    CourierListModel _model = new CourierListModel();
 
     final Map<String, dynamic> _data = {
       "destination": destination,
-      "weight": weight,
-      "courier": courier
+      "weight": weight
     };
 
     try {
@@ -79,7 +62,7 @@ class DeliveryService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
-      _model = CourierSelectModel.fromJson(_response.body);
+      _model = CourierListModel.fromJson(_response.body);
     } catch (e) {
       print(e);
     }

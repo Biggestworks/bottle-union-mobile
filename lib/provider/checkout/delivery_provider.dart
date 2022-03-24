@@ -3,8 +3,7 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/model/address/address_list_model.dart' as address;
 import 'package:eight_barrels/model/cart/cart_total_model.dart';
-import 'package:eight_barrels/model/checkout/courier_list_model.dart';
-import 'package:eight_barrels/model/checkout/courier_select_model.dart' as courierSelect;
+import 'package:eight_barrels/model/checkout/courier_list_model.dart' as courier;
 import 'package:eight_barrels/model/checkout/order_summary_model.dart';
 import 'package:eight_barrels/model/product/product_detail_model.dart';
 import 'package:eight_barrels/screen/checkout/delivery_screen.dart';
@@ -24,15 +23,16 @@ class DeliveryProvider extends ChangeNotifier {
   ProductDetailModel? product;
   CartTotalModel? cartList;
   OrderSummaryModel orderSummary = new OrderSummaryModel();
-  CourierListModel courierList = new CourierListModel();
-  courierSelect.CourierSelectModel courierServiceList = new courierSelect.CourierSelectModel();
+  courier.CourierListModel courierList = new courier.CourierListModel();
 
   List<int> _prices = [];
   double _totalWeight = 0;
   int? deliveryCost;
   String? destination;
-  String? selectedCourier;
-  courierSelect.Data? selectedCourierService;
+  courier.Data? selectedCourier;
+  // String? selectedCourier;
+  // courierSelect.Data? selectedCourierService;
+  bool? isCart;
 
   LoadingView? _view;
 
@@ -44,6 +44,7 @@ class DeliveryProvider extends ChangeNotifier {
     final _args = ModalRoute.of(context)!.settings.arguments as DeliveryScreen;
     product = _args.product;
     cartList = _args.cartList;
+    isCart = _args.isCart;
     notifyListeners();
   }
 
@@ -103,6 +104,7 @@ class DeliveryProvider extends ChangeNotifier {
         });
       } else {
         _prices.add(product?.data?.regularPrice ?? 0);
+        _totalWeight = (product?.data?.weight != null ? product?.data?.weight?.toDouble() : 0)!;
       }
     });
     notifyListeners();
@@ -125,41 +127,23 @@ class DeliveryProvider extends ChangeNotifier {
 
   Future fnFetchCourierList() async {
     _view!.onProgressStart();
-    courierList = (await _deliveryService.getCourierList())!;
-    _view!.onProgressFinish();
-    notifyListeners();
-  }
-
-  Future fnFetchCourierServiceList() async {
-    _view!.onProgressStart();
-    courierServiceList = (await _deliveryService.chooseCourier(
+    courierList = (await _deliveryService.getCourierList(
       destination: destination ?? '',
-      weight: _totalWeight.toString(),
-      courier: selectedCourier ?? '',
+      weight: _totalWeight,
     ))!;
     _view!.onProgressFinish();
     notifyListeners();
   }
 
-  Future fnOnSelectCourier(String value) async {
+  Future fnOnSelectCourier(courier.Data value) async {
     _view!.onProgressStart();
     Get.back();
     selectedCourier = value;
-    await fnFetchCourierServiceList();
-    if (courierServiceList.data != null) {
-      selectedCourierService = courierServiceList.data?[0];
-      deliveryCost = selectedCourierService?.price ?? 0;
+    if (courierList.data != null) {
+      deliveryCost = selectedCourier?.price ?? 0;
       await fnGetOrderSummary();
     }
     _view!.onProgressFinish();
-    notifyListeners();
-  }
-
-  Future fnOnSelectCourierService(courierSelect.Data value) async {
-    Get.back();
-    selectedCourierService = value;
-    deliveryCost = selectedCourierService?.price ?? 0;
-    await fnGetOrderSummary();
     notifyListeners();
   }
 

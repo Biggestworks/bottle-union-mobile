@@ -114,8 +114,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> implements Lo
                       switch (provider.discussionList.data?.length) {
                         case 0:
                           return CustomWidget.emptyScreen(
-                            image: 'assets/images/ic_empty_product.png',
-                            title: AppLocalizations.instance.text('TXT_NO_PRODUCT'),
+                            image: 'assets/images/ic_empty.png',
+                            size: 150,
+                            title: AppLocalizations.instance.text('TXT_NO_DISCUSSION'),
                           );
                         default:
                           return ListView.separated(
@@ -463,6 +464,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> implements Lo
                 lblColor: Colors.white,
                 function: () => Get.toNamed(DeliveryScreen.tag, arguments: DeliveryScreen(
                   product: _provider.product,
+                  isCart: false,
                 )),
               ),
             ),

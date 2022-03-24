@@ -46,6 +46,7 @@ dependencies:
   timeago: ^3.2.2
   pin_code_fields: ^7.3.0
   flutter_html: ^2.1.5
+  webview_flutter: ^2.0.13
 
 dev_dependencies:
   flutter_test:

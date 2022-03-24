@@ -1,13 +1,11 @@
 class CourierListModel {
   bool? status;
-  String? message;
   List<Data>? data;
 
-  CourierListModel({this.status, this.message, this.data});
+  CourierListModel({this.status, this.data});
 
   CourierListModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    message = json['message'];
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
@@ -19,7 +17,6 @@ class CourierListModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
-    data['message'] = this.message;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -28,38 +25,26 @@ class CourierListModel {
 }
 
 class Data {
-  int? id;
-  String? title;
+  String? courier;
   String? description;
-  String? code;
-  String? createdAt;
-  String? updatedAt;
+  String? etd;
+  int? price;
 
-  Data(
-      {this.id,
-        this.title,
-        this.description,
-        this.code,
-        this.createdAt,
-        this.updatedAt});
+  Data({this.courier, this.description, this.etd, this.price});
 
   Data.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
+    courier = json['courier'];
     description = json['description'];
-    code = json['code'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
+    etd = json['etd'];
+    price = json['price'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
+    data['courier'] = this.courier;
     data['description'] = this.description;
-    data['code'] = this.code;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
+    data['etd'] = this.etd;
+    data['price'] = this.price;
     return data;
   }
 }

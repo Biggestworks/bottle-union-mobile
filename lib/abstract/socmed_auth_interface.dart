@@ -26,7 +26,7 @@ abstract class SocmedAuthInterface {
           if (_res!.status != null) {
             if (_res.status == true) {
               onAuthFinish();
-              Get.offAllNamed(BaseHomeScreen.tag);
+              Get.offAllNamed(BaseHomeScreen.tag, arguments: BaseHomeScreen());
             } else {
               onAuthFinish();
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${_res.message.toString()}')));
@@ -90,7 +90,7 @@ abstract class SocmedAuthInterface {
           if (_res!.status != null) {
             if (_res.status == true) {
               onAuthFinish();
-              Get.offAllNamed(BaseHomeScreen.tag);
+              Get.offAllNamed(BaseHomeScreen.tag, arguments: BaseHomeScreen());
             } else {
               onAuthFinish();
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${_res.message.toString()}')));

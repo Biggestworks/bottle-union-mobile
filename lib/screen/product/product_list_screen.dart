@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
+import 'package:eight_barrels/helper/validation.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/product/product_list_provider.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
@@ -25,7 +26,7 @@ class ProductListScreen extends StatefulWidget {
 }
 
 class _ProductListScreenState extends State<ProductListScreen>
-    with LoadingView {
+    with LoadingView, TextValidation {
   bool _isLoad = false;
 
   @override
@@ -53,286 +54,287 @@ class _ProductListScreenState extends State<ProductListScreen>
               body: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Flexible(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(AppLocalizations.instance.text('TXT_LBL_FILTER'), style: TextStyle(
-                              fontSize: 20,
-                            ),),
-                            TextButton(
-                              onPressed: () async {
-                                Navigator.pop(context);
-                                await _provider.onResetFilter();
-                              },
-                              child: Text('Reset Filter', style: TextStyle(
-                                color: CustomColor.MAIN,
-                                fontSize: 16,
+                  child: Form(
+                    key: _provider.formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(AppLocalizations.instance.text('TXT_LBL_FILTER'), style: TextStyle(
+                                fontSize: 20,
                               ),),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 10,),
-                      Flexible(
-                        child: Card(
-                          color: CustomColor.GREY_LIGHT_BG,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(AppLocalizations.instance.text('TXT_LBL_BRAND'), style: TextStyle(
-                                  fontSize: 20,
+                              TextButton(
+                                onPressed: () async {
+                                  Navigator.pop(context);
+                                  await _provider.onResetFilter();
+                                },
+                                child: Text('Reset Filter', style: TextStyle(
+                                  color: CustomColor.MAIN,
+                                  fontSize: 16,
                                 ),),
-                                SizedBox(height: 10,),
-                                Flexible(
-                                  child: Consumer<ProductListProvider>(
-                                    child: Container(),
-                                    builder: (context, provider, skeleton) {
-                                      switch (provider.brandList.data) {
-                                        case null:
-                                          return skeleton!;
-                                        default:
-                                          return GridView.builder(
-                                            physics: NeverScrollableScrollPhysics(),
-                                            shrinkWrap: true,
-                                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 4,
-                                              childAspectRatio: 2,
-                                            ),
-                                            itemCount: provider.brandList.data!.length,
-                                            itemBuilder: (context, index) {
-                                              var _data = provider.brandList.data![index];
-                                              return FilterChip(
-                                                label: Text(_data.name!),
-                                                labelStyle: TextStyle(color: Colors.white),
-                                                backgroundColor: CustomColor.GREY_ICON,
-                                                selectedColor: CustomColor.MAIN,
-                                                selected: provider.selectedBrandIndex == index && provider.isBrandSelected,
-                                                checkmarkColor: Colors.white,
-                                                onSelected: (_) {
-                                                  provider.fnOnSelectBrand(index);
-                                                },
-                                              );
-                                            },
-                                          );
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 10,),
+                        Flexible(
+                          child: Card(
+                            color: CustomColor.GREY_LIGHT_BG,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(AppLocalizations.instance.text('TXT_LBL_BRAND'), style: TextStyle(
+                                    fontSize: 20,
+                                  ),),
+                                  SizedBox(height: 10,),
+                                  Flexible(
+                                    child: Consumer<ProductListProvider>(
+                                      child: Container(),
+                                      builder: (context, provider, skeleton) {
+                                        switch (provider.brandList.data) {
+                                          case null:
+                                            return skeleton!;
+                                          default:
+                                            return GridView.builder(
+                                              physics: NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true,
+                                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                crossAxisCount: 4,
+                                                childAspectRatio: 2,
+                                              ),
+                                              itemCount: provider.brandList.data!.length,
+                                              itemBuilder: (context, index) {
+                                                var _data = provider.brandList.data![index];
+                                                return FilterChip(
+                                                  label: Text(_data.name!),
+                                                  labelStyle: TextStyle(color: Colors.white),
+                                                  backgroundColor: CustomColor.GREY_ICON,
+                                                  selectedColor: CustomColor.MAIN,
+                                                  selected: provider.selectedBrandIndex == index && provider.isBrandSelected,
+                                                  checkmarkColor: Colors.white,
+                                                  onSelected: (_) {
+                                                    provider.fnOnSelectBrand(index);
+                                                  },
+                                                );
+                                              },
+                                            );
+                                        }
                                       }
-                                    }
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(height: 10,),
-                      Flexible(
-                        child: Card(
-                          color: CustomColor.GREY_LIGHT_BG,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                        SizedBox(height: 10,),
+                        Flexible(
+                          child: Card(
+                            color: CustomColor.GREY_LIGHT_BG,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(AppLocalizations.instance.text('TXT_LBL_CATEGORY'), style: TextStyle(
+                                    fontSize: 20,
+                                  ),),
+                                  SizedBox(height: 10,),
+                                  Flexible(
+                                    child: Consumer<ProductListProvider>(
+                                      child: Container(),
+                                      builder: (context, provider, skeleton) {
+                                        switch (provider.categoryList.data) {
+                                          case null:
+                                            return skeleton!;
+                                          default:
+                                            return GridView.builder(
+                                              physics: NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true,
+                                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                crossAxisCount: 4,
+                                                childAspectRatio: 2,
+                                              ),
+                                              itemCount: provider.categoryList.data!.length,
+                                              itemBuilder: (context, index) {
+                                                var _data = provider.categoryList.data![index];
+                                                return FilterChip(
+                                                  label: Text(_data.name!),
+                                                  labelStyle: TextStyle(color: Colors.white),
+                                                  backgroundColor: CustomColor.GREY_ICON,
+                                                  selectedColor: CustomColor.MAIN,
+                                                  selected: provider.selectedCategoryIndex == index && provider.isCategorySelected,
+                                                  checkmarkColor: Colors.white,
+                                                  onSelected: (_) {
+                                                    provider.fnOnSelectCategory(index);
+                                                  },
+                                                );
+                                              },
+                                            );
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(AppLocalizations.instance.text('TXT_LBL_CATEGORY'), style: TextStyle(
-                                  fontSize: 20,
-                                ),),
-                                SizedBox(height: 10,),
-                                Flexible(
-                                  child: Consumer<ProductListProvider>(
-                                    child: Container(),
-                                    builder: (context, provider, skeleton) {
-                                      switch (provider.categoryList.data) {
-                                        case null:
-                                          return skeleton!;
-                                        default:
-                                          return GridView.builder(
-                                            physics: NeverScrollableScrollPhysics(),
-                                            shrinkWrap: true,
-                                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 4,
-                                              childAspectRatio: 2,
+                        ),
+                        // SizedBox(height: 10,),
+                        // Text(AppLocalizations.instance.text('TXT_LBL_COUNTRY'), style: TextStyle(
+                        //   fontSize: 20,
+                        // ),),
+                        SizedBox(height: 10,),
+                        Flexible(
+                          child: Card(
+                            color: CustomColor.GREY_LIGHT_BG,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(AppLocalizations.instance.text('TXT_LBL_YEAR'), style: TextStyle(
+                                    fontSize: 20,
+                                  ),),
+                                  SizedBox(height: 10,),
+                                  TextFormField(
+                                    controller: _provider.yearController,
+                                    keyboardType: TextInputType.number,
+                                    textInputAction: TextInputAction.next,
+                                    maxLength: 4,
+                                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                    validator: validateYear,
+                                    decoration: InputDecoration(
+                                      counter: Offstage(),
+                                      hintText: AppLocalizations.instance.text('TXT_LBL_YEAR'),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      isDense: true,
+                                      filled: true,
+                                      fillColor: CustomColor.GREY_BG,
+                                    ),
+                                    onChanged: _provider.fnOnChangedYear,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10,),
+                        Flexible(
+                          child: Card(
+                            color: CustomColor.GREY_LIGHT_BG,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(AppLocalizations.instance.text('TXT_LBL_PRICE'), style: TextStyle(
+                                    fontSize: 20,
+                                  ),),
+                                  SizedBox(height: 10,),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Expanded(
+                                        child: TextFormField(
+                                          controller: _provider.minPriceController,
+                                          keyboardType: TextInputType.number,
+                                          textInputAction: TextInputAction.next,
+                                          inputFormatters: [
+                                            MoneyInputFormatter(
+                                              thousandSeparator: ThousandSeparator.Period,
+                                              useSymbolPadding: false,
+                                              mantissaLength: 0,
                                             ),
-                                            itemCount: provider.categoryList.data!.length,
-                                            itemBuilder: (context, index) {
-                                              var _data = provider.categoryList.data![index];
-                                              return FilterChip(
-                                                label: Text(_data.name!),
-                                                labelStyle: TextStyle(color: Colors.white),
-                                                backgroundColor: CustomColor.GREY_ICON,
-                                                selectedColor: CustomColor.MAIN,
-                                                selected: provider.selectedCategoryIndex == index && provider.isCategorySelected,
-                                                checkmarkColor: Colors.white,
-                                                onSelected: (_) {
-                                                  provider.fnOnSelectCategory(index);
-                                                },
-                                              );
-                                            },
-                                          );
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      // SizedBox(height: 10,),
-                      // Text(AppLocalizations.instance.text('TXT_LBL_COUNTRY'), style: TextStyle(
-                      //   fontSize: 20,
-                      // ),),
-                      SizedBox(height: 10,),
-                      Flexible(
-                        child: Card(
-                          color: CustomColor.GREY_LIGHT_BG,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(AppLocalizations.instance.text('TXT_LBL_YEAR'), style: TextStyle(
-                                  fontSize: 20,
-                                ),),
-                                SizedBox(
-                                  height: 200,
-                                  child: Consumer<ProductListProvider>(
-                                    builder: (context, provider, _) {
-                                      return YearPicker(
-                                        firstDate: DateTime(DateTime.now().year - 100, 1),
-                                        lastDate: DateTime(DateTime.now().year),
-                                        selectedDate: provider.selectedDate,
-                                        onChanged: provider.fnOnSelectYear,
-                                      );
-                                    }
-                                  ),
-                                ),
-                                // SizedBox(
-                                //   height: 150,
-                                //   child: SfDateRangePicker(
-                                //     view: DateRangePickerView.decade,
-                                //     selectionMode: DateRangePickerSelectionMode.single,
-                                //     enableMultiView: false,
-                                //     allowViewNavigation: false,
-                                //     onSelectionChanged: (value) {
-                                //       _provider.fnOnSelectYear(value);
-                                //     },
-                                //   ),
-                                // ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10,),
-                      Flexible(
-                        child: Card(
-                          color: CustomColor.GREY_LIGHT_BG,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(AppLocalizations.instance.text('TXT_LBL_PRICE'), style: TextStyle(
-                                  fontSize: 20,
-                                ),),
-                                SizedBox(height: 10,),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Expanded(
-                                      child: TextFormField(
-                                        controller: _provider.minPriceController,
-                                        keyboardType: TextInputType.number,
-                                        textInputAction: TextInputAction.next,
-                                        inputFormatters: [
-                                          MoneyInputFormatter(
-                                            thousandSeparator: ThousandSeparator.Period,
-                                            useSymbolPadding: false,
+                                          ],
+                                          decoration: InputDecoration(
+                                            hintText: AppLocalizations.instance.text('TXT_LBL_MIN_PRICE'),
+                                            border: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(10),
+                                              borderSide: BorderSide.none,
+                                            ),
+                                            isDense: true,
+                                            filled: true,
+                                            fillColor: CustomColor.GREY_BG,
+                                            prefixIcon: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text('Rp'),
+                                              ],
+                                            ),
                                           ),
-                                        ],
-                                        decoration: InputDecoration(
-                                          hintText: AppLocalizations.instance.text('TXT_LBL_MIN_PRICE'),
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(10),
-                                            borderSide: BorderSide.none,
-                                          ),
-                                          isDense: true,
-                                          filled: true,
-                                          fillColor: CustomColor.GREY_BG,
-                                          prefixIcon: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text('Rp'),
-                                            ],
-                                          ),
+                                          onChanged: (_) => _provider.fnOnChangedPrice(),
                                         ),
-                                        onChanged: (_) => _provider.fnOnChangedPrice(),
                                       ),
-                                    ),
-                                    SizedBox(width: 10,),
-                                    Expanded(
-                                      child: TextFormField(
-                                        controller: _provider.maxPriceController,
-                                        keyboardType: TextInputType.number,
-                                        textInputAction: TextInputAction.next,
-                                        inputFormatters: [
-                                          MoneyInputFormatter(
-                                            thousandSeparator: ThousandSeparator.Period,
-                                            useSymbolPadding: false,
+                                      SizedBox(width: 10,),
+                                      Expanded(
+                                        child: TextFormField(
+                                          controller: _provider.maxPriceController,
+                                          keyboardType: TextInputType.number,
+                                          textInputAction: TextInputAction.next,
+                                          inputFormatters: [
+                                            MoneyInputFormatter(
+                                              thousandSeparator: ThousandSeparator.Period,
+                                              useSymbolPadding: false,
+                                              mantissaLength: 0,
+                                            ),
+                                          ],
+                                          decoration: InputDecoration(
+                                            hintText: AppLocalizations.instance.text('TXT_LBL_MAX_PRICE'),
+                                            border: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(10),
+                                              borderSide: BorderSide.none,
+                                            ),
+                                            isDense: true,
+                                            filled: true,
+                                            fillColor: CustomColor.GREY_BG,
+                                            prefixIcon: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text('Rp'),
+                                              ],
+                                            ),
                                           ),
-                                        ],
-                                        decoration: InputDecoration(
-                                          hintText: AppLocalizations.instance.text('TXT_LBL_MAX_PRICE'),
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(10),
-                                            borderSide: BorderSide.none,
-                                          ),
-                                          isDense: true,
-                                          filled: true,
-                                          fillColor: CustomColor.GREY_BG,
-                                          prefixIcon: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text('Rp'),
-                                            ],
-                                          ),
+                                          onChanged: (_) => _provider.fnOnChangedPrice(),
                                         ),
-                                        onChanged: (_) => _provider.fnOnChangedPrice(),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -348,10 +350,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                           label: 'Submit Filter',
                           btnColor: CustomColor.MAIN,
                           lblColor: Colors.white,
-                          function: () async {
-                            Navigator.pop(context);
-                            await _provider.fnOnSubmitFilter();
-                          },
+                          function: () async => await provider.fnOnSubmitFilter(),
                         ),
                       );
                     default:
@@ -479,6 +478,36 @@ class _ProductListScreenState extends State<ProductListScreen>
             ),
             onChanged: (value) async => await _provider.fnOnSearchProduct(value),
           ),
+          Consumer<ProductListProvider>(
+            child: SizedBox(),
+            builder: (context, provider, skeleton) {
+              switch (provider.filterVal.length) {
+                case 0:
+                  return skeleton!;
+                default:
+                  return Container(
+                    height: 50,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: provider.filterVal.length,
+                      itemBuilder: (context, index) {
+                        var _data = provider.filterVal[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Chip(
+                            backgroundColor: CustomColor.BROWN_TXT,
+                            label: Text(_data.value, style: TextStyle(
+                              color: Colors.white,
+                            ),),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+              }
+            },
+          ),
           SizedBox(height: 10,),
           _productListContent,
         ],
@@ -492,7 +521,11 @@ class _ProductListScreenState extends State<ProductListScreen>
         appBar: AppBar(
           backgroundColor: CustomColor.BG,
           elevation: 0,
-          centerTitle: true,
+          // centerTitle: true,
+          // title: SizedBox(
+          //   width: 150,
+          //   child: Image.asset('assets/images/ic_logo_bu_white.png',),
+          // ),
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 20,),

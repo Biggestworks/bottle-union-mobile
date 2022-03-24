@@ -78,9 +78,14 @@ class URLHelper {
   ///DELIVERY
   static const COURIER_URL = BASE_URL + '/courier';
   static const CHOOSE_COURIER_URL = BASE_URL + '/courier/choose';
-  static const ORDER_SUMMARY_URL = BASE_URL + '/orders/summary';
 
   ///PAYMENT
   static const PAYMENT_METHOD_URL = BASE_URL + '/enabled-payment';
+  static const MIDTRANS_PAYMENT_URL = BASE_URL + '/midtrans/payment';
+
+  ///ORDER
+  static const ORDER_SUMMARY_URL = BASE_URL + '/orders/summary';
+  static const STORE_ORDER_URL = BASE_URL + '/orders/checkout';
+
 
 }

@@ -67,6 +67,15 @@
     <string>Bottle Union app requires access to your photos library to add picture to your photos library</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Bottle Union app requires access to your photos library to add picture for your profile photo account</string>
+    <key>io.flutter.embedded_views_preview</key>
+    <true/>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+        <key>NSAllowsArbitraryLoadsInWebContent</key>
+        <true/>
+    </dict>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

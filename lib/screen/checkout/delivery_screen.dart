@@ -16,7 +16,8 @@ class DeliveryScreen extends StatefulWidget {
   static String tag = '/checkout-screen';
   final CartTotalModel? cartList;
   final ProductDetailModel? product;
-  const DeliveryScreen({Key? key, this.cartList, this.product}) : super(key: key);
+  final bool? isCart;
+  const DeliveryScreen({Key? key, this.cartList, this.product, this.isCart}) : super(key: key);
 
   @override
   _DeliveryScreenState createState() => _DeliveryScreenState();
@@ -130,9 +131,9 @@ class _DeliveryScreenState extends State<DeliveryScreen> implements LoadingView 
           value: Provider.of<DeliveryProvider>(context, listen: false),
           child: Container(
             height: MediaQuery.of(context).size.height * 0.6,
-            padding: EdgeInsets.symmetric(vertical: 10),
+            padding: EdgeInsets.all(10),
             child: Consumer<DeliveryProvider>(
-              child: CustomWidget.showShimmerListView(height: 200),
+              child: CustomWidget.showShimmerListView(height: 100),
               builder: (context, provider, skeleton) {
                 switch (provider.courierList.data) {
                   case null:
@@ -155,62 +156,12 @@ class _DeliveryScreenState extends State<DeliveryScreen> implements LoadingView 
                           itemBuilder: (context, index) {
                             var _data = provider.courierList.data?[index];
                             return GestureDetector(
-                              onTap: () async => await provider.fnOnSelectCourier(_data?.title ?? '-'),
-                              child: ListTile(
-                                title: Text(_data?.title ?? '-'),
-                                subtitle: Text(_data?.description ?? '-'),
-                              ),
-                            );
-                          },
-                        );
-                    }
-                }
-              },
-            ),
-          ),
-        ),
-      );
-    }
-
-    _showCourierServiceSheet() {
-      return CustomWidget.showSheet(
-        context: context,
-        isScroll: true,
-        child: ChangeNotifierProvider.value(
-          value: Provider.of<DeliveryProvider>(context, listen: false),
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.6,
-            padding: EdgeInsets.all(10),
-            child: Consumer<DeliveryProvider>(
-              child: CustomWidget.showShimmerListView(height: 200),
-              builder: (context, provider, skeleton) {
-                switch (provider.courierServiceList.data) {
-                  case null:
-                    return skeleton!;
-                  default:
-                    switch (provider.courierServiceList.data?.length) {
-                      case 0:
-                        return CustomWidget.emptyScreen(
-                            image: 'assets/images/ic_empty.png',
-                            title: AppLocalizations.instance.text('TXT_NO_DATA'),
-                            size: 180
-                        );
-                      default:
-                        return ListView.separated(
-                          shrinkWrap: true,
-                          itemCount: provider.courierServiceList.data?.length ?? 0,
-                          separatorBuilder: (context, index) {
-                            return Divider();
-                          },
-                          itemBuilder: (context, index) {
-                            var _data = provider.courierServiceList.data?[index];
-                            return GestureDetector(
-                              onTap: () async => await provider.fnOnSelectCourierService(_data!),
+                              onTap: () async => await provider.fnOnSelectCourier(_data!),
                               child: ListTile(
                                 dense: true,
                                 visualDensity: VisualDensity.compact,
                                 contentPadding: EdgeInsets.zero,
-                                title: Text('${_data?.etd ?? '-'} (${FormatterHelper.moneyFormatter(_data?.price ?? 0)})', style: TextStyle(
+                                title: Text('${_data?.courier ?? '-'} ${_data?.etd ?? '-'} (${FormatterHelper.moneyFormatter(_data?.price ?? 0)})', style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 15,
                                 ),),
@@ -228,85 +179,108 @@ class _DeliveryScreenState extends State<DeliveryScreen> implements LoadingView 
       );
     }
 
-    Widget _deliveryContent = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          color: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    Widget _deliveryContent = Container(
+      width: MediaQuery.of(context).size.width,
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(AppLocalizations.instance.text('TXT_DELIVERY_ADDRESS'), style: TextStyle(
-                    fontSize: 16,
-                  ),),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      visualDensity: VisualDensity.compact,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    onPressed: () => _showAddressSheet(),
-                    child: Text('Change', style: TextStyle(
-                      color: CustomColor.BROWN_TXT,
-                    ),),
-                  ),
-                ],
-              ),
-              Divider(height: 20, thickness: 1,),
-              Consumer<DeliveryProvider>(
-                child: Container(
-                  child: Text('no address selected'),
+              Container(
+                height: 22,
+                width: 22,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: CustomColor.MAIN),
                 ),
-                builder: (context, provider, skeleton) {
-                  switch (provider.selectedAddress) {
-                    case null:
-                      return skeleton!;
-                    default:
-                      var _data = provider.selectedAddress;
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(_data?.user?.fullname ?? '-'),
-                              if (_data?.label != null)
-                                Text(' (${_data?.label})', style: TextStyle(
-                                  color: CustomColor.MAIN,
-                                  fontWeight: FontWeight.bold,
-                                ),),
-                            ],
-                          ),
-                          SizedBox(height: 5,),
-                          Text(_data?.user?.phone ?? '-'),
-                          SizedBox(height: 5,),
-                          Text(_data?.address ?? '-', style: TextStyle(
-                            color: CustomColor.GREY_TXT,
-                          ), maxLines: 2, overflow: TextOverflow.ellipsis,),
-                          SizedBox(height: 5,),
-                          Text(_data?.cityName ?? '-', style: TextStyle(
-                            color: CustomColor.GREY_TXT,
-                          ),),
-                          SizedBox(height: 5,),
-                          Text(_data?.provinceName ?? '-', style: TextStyle(
-                            color: CustomColor.GREY_TXT,
-                          ),),
-                        ],
-                      );
-                  }
-                }
+                child: Center(
+                  child: Text('1', style: TextStyle(
+                    fontSize: 16,
+                    color: CustomColor.MAIN,
+                  ), textAlign: TextAlign.center,),
+                ),
               ),
-              Divider(height: 20, thickness: 1,),
-              Consumer<DeliveryProvider>(
-                builder: (context, provider, _) {
+              SizedBox(width: 10,),
+              Text('Shipment Information', style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),),
+            ],
+          ),
+          SizedBox(height: 10,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(AppLocalizations.instance.text('TXT_DELIVERY_ADDRESS'), style: TextStyle(
+                fontSize: 16,
+              ),),
+              TextButton(
+                style: TextButton.styleFrom(
+                  visualDensity: VisualDensity.compact,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                onPressed: () => _showAddressSheet(),
+                child: Text('Change', style: TextStyle(
+                  color: CustomColor.BROWN_TXT,
+                ),),
+              ),
+            ],
+          ),
+          Divider(height: 20, thickness: 1,),
+          Consumer<DeliveryProvider>(
+            child: Container(
+              child: Text('no address selected'),
+            ),
+            builder: (context, provider, skeleton) {
+              switch (provider.selectedAddress) {
+                case null:
+                  return skeleton!;
+                default:
+                  var _data = provider.selectedAddress;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(_data?.user?.fullname ?? '-'),
+                          if (_data?.label != null)
+                            Text(' (${_data?.label})', style: TextStyle(
+                              color: CustomColor.MAIN,
+                              fontWeight: FontWeight.bold,
+                            ),),
+                        ],
+                      ),
+                      SizedBox(height: 5,),
+                      Text(_data?.user?.phone ?? '-'),
+                      SizedBox(height: 5,),
+                      Text(_data?.address ?? '-', style: TextStyle(
+                        color: CustomColor.GREY_TXT,
+                      ), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                      SizedBox(height: 5,),
+                      Text(_data?.cityName ?? '-', style: TextStyle(
+                        color: CustomColor.GREY_TXT,
+                      ),),
+                      SizedBox(height: 5,),
+                      Text(_data?.provinceName ?? '-', style: TextStyle(
+                        color: CustomColor.GREY_TXT,
+                      ),),
+                    ],
+                  );
+              }
+            }
+          ),
+          Divider(height: 20, thickness: 1,),
+          Consumer<DeliveryProvider>(
+            builder: (context, provider, _) {
+              switch (provider.selectedCourier) {
+                case null:
                   return ListTile(
                     dense: true,
                     visualDensity: VisualDensity.compact,
                     contentPadding: EdgeInsets.zero,
-                    title: Text(provider.selectedCourier ?? AppLocalizations.instance.text('TXT_CHOOSE_DELIVERY'), style: TextStyle(
+                    title: Text(AppLocalizations.instance.text('TXT_CHOOSE_DELIVERY'), style: TextStyle(
                       color: Colors.black,
                       fontSize: 15,
                     ),),
@@ -326,39 +300,38 @@ class _DeliveryScreenState extends State<DeliveryScreen> implements LoadingView 
                     onTap: () async => await provider.fnFetchCourierList()
                         .then((_) => _showCourierSheet()),
                   );
-                },
-              ),
-              Consumer<DeliveryProvider>(
-                child: SizedBox(),
-                builder: (context, provider, skeleton) {
-                  switch (provider.courierServiceList.data) {
-                    case null:
-                      return skeleton!;
-                    default:
-                      var _data = provider.selectedCourierService;
-                      return ListTile(
-                        dense: true,
-                        visualDensity: VisualDensity.compact,
-                        contentPadding: EdgeInsets.zero,
-                        title: Text('${_data?.etd ?? '-'} (${FormatterHelper.moneyFormatter(_data?.price ?? 0)})', style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                        ),),
-                        subtitle: Text(_data?.description ?? '-'),
-                        trailing: Icon(
-                          Icons.arrow_forward_ios,
-                          color: CustomColor.GREY_TXT,
-                          size: 15,
-                        ),
-                        onTap: () => _showCourierServiceSheet(),
-                      );
-                  }
-                },
-              ),
-            ],
+                default:
+                  var _data = provider.selectedCourier;
+                  return ListTile(
+                    dense: true,
+                    visualDensity: VisualDensity.compact,
+                    contentPadding: EdgeInsets.zero,
+                    title: Text('${_data?.courier ?? '-'} ${_data?.etd ?? '-'} (${FormatterHelper.moneyFormatter(_data?.price ?? 0)})', style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                    ),),
+                    subtitle: Text(_data?.description ?? '-'),
+                    leading: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Icon(
+                        FontAwesomeIcons.truck,
+                        color: CustomColor.BROWN_TXT,
+                        size: 18,
+                      ),
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: CustomColor.GREY_TXT,
+                      size: 15,
+                    ),
+                    onTap: () async => await provider.fnFetchCourierList()
+                        .then((_) => _showCourierSheet()),
+                  );
+              }
+            },
           ),
-        ),
-      ],
+        ],
+      ),
     );
 
     Widget _orderDetailContent = Container(
@@ -372,9 +345,29 @@ class _DeliveryScreenState extends State<DeliveryScreen> implements LoadingView 
                 return ListTileTheme(
                   dense: true,
                   child: ExpansionTile(
-                    title: Text('${AppLocalizations.instance.text('TXT_ORDER_DETAIL')} (1)', style: TextStyle(
-                      fontSize: 16,
-                    ),),
+                    title: Row(
+                      children: [
+                        Container(
+                          height: 22,
+                          width: 22,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: CustomColor.MAIN),
+                          ),
+                          child: Center(
+                            child: Text('2', style: TextStyle(
+                              fontSize: 16,
+                              color: CustomColor.MAIN,
+                            ), textAlign: TextAlign.center,),
+                          ),
+                        ),
+                        SizedBox(width: 10,),
+                        Text('${AppLocalizations.instance.text('TXT_ORDER_DETAIL')} (1)', style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),),
+                      ],
+                    ),
                     initiallyExpanded: true,
                     iconColor: Colors.black,
                     textColor: Colors.black,
@@ -439,9 +432,29 @@ class _DeliveryScreenState extends State<DeliveryScreen> implements LoadingView 
                 return ListTileTheme(
                   dense: true,
                   child: ExpansionTile(
-                    title: Text('${AppLocalizations.instance.text('TXT_ORDER_DETAIL')} (${provider.cartList?.data?.length})', style: TextStyle(
-                      fontSize: 16,
-                    ),),
+                    title: Row(
+                      children: [
+                        Container(
+                          height: 22,
+                          width: 22,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: CustomColor.MAIN),
+                          ),
+                          child: Center(
+                            child: Text('2', style: TextStyle(
+                              fontSize: 16,
+                              color: CustomColor.MAIN,
+                            ), textAlign: TextAlign.center,),
+                          ),
+                        ),
+                        SizedBox(width: 10,),
+                        Text('${AppLocalizations.instance.text('TXT_ORDER_DETAIL')} (${provider.cartList?.data?.length})', style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),),
+                      ],
+                    ),
                     initiallyExpanded: true,
                     iconColor: Colors.black,
                     textColor: Colors.black,
@@ -523,9 +536,29 @@ class _DeliveryScreenState extends State<DeliveryScreen> implements LoadingView 
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(AppLocalizations.instance.text('TXT_ORDER_SUMMARY'), style: TextStyle(
-                    fontSize: 16,
-                  ),),
+                  Row(
+                    children: [
+                      Container(
+                        height: 22,
+                        width: 22,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: CustomColor.MAIN),
+                        ),
+                        child: Center(
+                          child: Text('3', style: TextStyle(
+                            fontSize: 16,
+                            color: CustomColor.MAIN,
+                          ), textAlign: TextAlign.center,),
+                        ),
+                      ),
+                      SizedBox(width: 10,),
+                      Text(AppLocalizations.instance.text('TXT_ORDER_SUMMARY'), style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),),
+                    ],
+                  ),
                   Divider(height: 20, thickness: 1,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -608,9 +641,13 @@ class _DeliveryScreenState extends State<DeliveryScreen> implements LoadingView 
                         lblColor: Colors.white,
                         radius: 8,
                         function: () {
-                          if (provider.selectedCourier != null && provider.selectedCourierService != null) {
+                          if (provider.selectedCourier != null) {
                             Get.toNamed(PaymentScreen.tag, arguments: PaymentScreen(
                               orderSummary: _data,
+                              addressId: provider.selectedAddress?.id,
+                              product: provider.product,
+                              isCart: provider.isCart,
+                              selectedCourier: provider.selectedCourier,
                             ));
                           } else {
                             CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_CHOOSE_COURIER_INFO')));
@@ -633,35 +670,38 @@ class _DeliveryScreenState extends State<DeliveryScreen> implements LoadingView 
         appBar: AppBar(
           backgroundColor: CustomColor.BG,
           centerTitle: true,
-          title: Text.rich(TextSpan(
+          title: RichText(text: TextSpan(
             children: [
               TextSpan(
                 text: AppLocalizations.instance.text('TXT_DELIVERY'),
                 style: TextStyle(
+                  fontSize: 16,
                   color: CustomColor.BROWN_TXT,
                 ),
               ),
               WidgetSpan(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  child: Icon(Icons.arrow_forward_ios, size: 18,),
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  child: Icon(Icons.arrow_forward_ios, size: 16,),
                 ),
               ),
               TextSpan(
                   text: AppLocalizations.instance.text('TXT_PAYMENT'),
                   style: TextStyle(
+                    fontSize: 16,
                     color: CustomColor.GREY_TXT,
                   )
               ),
               WidgetSpan(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  child: Icon(Icons.arrow_forward_ios, size: 18,),
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  child: Icon(Icons.arrow_forward_ios, size: 16,),
                 ),
               ),
               TextSpan(
                 text: AppLocalizations.instance.text('TXT_FINISH'),
                 style: TextStyle(
+                  fontSize: 16,
                   color: CustomColor.GREY_TXT,
                 ),
               ),

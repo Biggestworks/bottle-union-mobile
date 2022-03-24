@@ -7,6 +7,7 @@ import 'package:eight_barrels/provider/auth/register_provider.dart';
 import 'package:eight_barrels/provider/cart/base_cart_provider.dart';
 import 'package:eight_barrels/provider/cart/cart_list_provider.dart';
 import 'package:eight_barrels/provider/checkout/delivery_provider.dart';
+import 'package:eight_barrels/provider/checkout/order_finish_provider.dart';
 import 'package:eight_barrels/provider/checkout/payment_provider.dart';
 import 'package:eight_barrels/provider/home/banner_detail_provider.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
@@ -21,6 +22,8 @@ import 'package:eight_barrels/provider/profile/change_password_provider.dart';
 import 'package:eight_barrels/screen/auth/forgot_password_screen.dart';
 import 'package:eight_barrels/screen/auth/otp_screen.dart';
 import 'package:eight_barrels/screen/checkout/delivery_screen.dart';
+import 'package:eight_barrels/screen/checkout/midtrans_webview_screen.dart';
+import 'package:eight_barrels/screen/checkout/order_finish_screen.dart';
 import 'package:eight_barrels/screen/checkout/payment_screen.dart';
 import 'package:eight_barrels/screen/home/banner_detail_screen.dart';
 import 'package:eight_barrels/screen/profile/add_address_screen.dart';
@@ -45,6 +48,7 @@ import 'package:eight_barrels/screen/profile/profile_input_screen.dart';
 import 'package:eight_barrels/screen/profile/profile_screen.dart';
 import 'package:eight_barrels/screen/profile/update_profile_screen.dart';
 import 'package:eight_barrels/screen/splash/splash_screen.dart';
+import 'package:eight_barrels/screen/transaction/transaction_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
@@ -88,6 +92,9 @@ class _AppState extends State<App> {
         ChangeNotifierProvider<BaseHomeProvider>(
           create: (context) => BaseHomeProvider(),
         ),
+        // ChangeNotifierProvider<BaseCartProvider>(
+        //   create: (context) => BaseCartProvider(),
+        // ),
       ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
@@ -140,9 +147,6 @@ class _AppState extends State<App> {
                 ),
                 ChangeNotifierProvider<ProductListProvider>(
                   create: (context) => ProductListProvider(),
-                ),
-                ChangeNotifierProvider<BaseCartProvider>(
-                  create: (context) => BaseCartProvider(),
                 ),
                 ChangeNotifierProvider<CartListProvider>(
                   create: (context) => CartListProvider(),
@@ -264,6 +268,21 @@ class _AppState extends State<App> {
               create: (context) => PaymentProvider(),
               child: PaymentScreen(),
             ),
+          ),
+          GetPage(
+            name: OrderFinishScreen.tag,
+            page: () => ChangeNotifierProvider<OrderFinishProvider>(
+              create: (context) => OrderFinishProvider(),
+              child: OrderFinishScreen(),
+            ),
+          ),
+          GetPage(
+            name: TransactionScreen.tag,
+            page: () => TransactionScreen(),
+          ),
+          GetPage(
+            name: MidtransWebviewScreen.tag,
+            page: () => MidtransWebviewScreen(),
           ),
         ],
       ),

@@ -138,6 +138,10 @@
 	"TXT_CHOOSE_PAYMENT_METHOD": "Choose Payment Method",
 	"TXT_PAY": "Pay",
 	"TXT_CHOOSE_COURIER_INFO": "Please select the delivery courier first",
+	"TXT_NO_DISCUSSION": "No discussion yet",
+	"TXT_FINISH_PAYMENT": "Finish Payment",
+	"TXT_FINISH_PAYMENT_INFO": "Finish the payment before",
+	"TXT_BACK": "Back",
 
 
 

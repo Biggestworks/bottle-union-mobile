@@ -53,7 +53,7 @@ class LoginProvider extends ChangeNotifier
       if (_res!.status != null) {
         if (_res.status == true) {
           _view!.onProgressFinish();
-          Get.offAllNamed(BaseHomeScreen.tag);
+          Get.offAllNamed(BaseHomeScreen.tag, arguments: BaseHomeScreen());
         } else {
           _view!.onProgressFinish();
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${_res.message.toString()}')));

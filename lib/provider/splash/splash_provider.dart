@@ -13,7 +13,7 @@ class SplashProvider extends ChangeNotifier {
     var _token = _prefs.getString(KeyHelper.KEY_TOKEN);
 
     if (_token != null) {
-      Future.delayed(Duration(seconds: 2)).then((_) => Get.offAndToNamed(BaseHomeScreen.tag));
+      Future.delayed(Duration(seconds: 2)).then((_) => Get.offAndToNamed(BaseHomeScreen.tag, arguments: BaseHomeScreen()));
     } else {
       Future.delayed(Duration(seconds: 2)).then((_) => Get.offAndToNamed(StartScreen.tag));
     }
