@@ -8,7 +8,6 @@ import 'package:eight_barrels/service/product/product_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:get/route_manager.dart';
-import 'package:intl/intl.dart';
 
 class ProductListProvider extends ChangeNotifier
     with PaginationInterface, ProductCardInterface {

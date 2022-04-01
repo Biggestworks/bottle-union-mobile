@@ -22,6 +22,8 @@ class AddAddressProvider extends ChangeNotifier with MapPickerInterface {
   TextEditingController cityController = new TextEditingController();
   TextEditingController posCodeController = new TextEditingController();
   TextEditingController labelController = new TextEditingController();
+  TextEditingController nameController = new TextEditingController();
+  TextEditingController phoneController = new TextEditingController();
 
   LoadingView? _view;
 
@@ -58,7 +60,8 @@ class AddAddressProvider extends ChangeNotifier with MapPickerInterface {
       posCodeController.text = _addr?.postCode ?? '';
       labelController.text = _addr?.label ?? '';
       _currLocation = LatLng(double.parse(_addr?.latitude ?? '0'), double.parse(_addr?.longitude ?? '0'));
-
+      nameController.text = _addr?.receiver ?? '';
+      phoneController.text = _addr?.phone ?? '';
     } else {
       title = AppLocalizations.instance.text('TXT_ADD_ADDRESS');
     }
@@ -125,6 +128,8 @@ class AddAddressProvider extends ChangeNotifier with MapPickerInterface {
           label: labelController.text,
           latitude: _currLocation!.latitude.toString(),
           longitude: _currLocation!.latitude.toString(),
+          receiver: nameController.text,
+          phone: phoneController.text,
         );
       } else {
         _res = await _service.storeAddress(
@@ -138,6 +143,8 @@ class AddAddressProvider extends ChangeNotifier with MapPickerInterface {
           label: labelController.text,
           latitude: _currLocation!.latitude.toString(),
           longitude: _currLocation!.latitude.toString(),
+          receiver: nameController.text,
+          phone: phoneController.text,
         );
       }
 
@@ -161,7 +168,6 @@ class AddAddressProvider extends ChangeNotifier with MapPickerInterface {
     _currLocation = LatLng(result.geometry!.location.lat, result.geometry!.location.lng);
     List<Placemark> _address = await placemarkFromCoordinates(_currLocation!.latitude, _currLocation!.longitude);
     posCodeController.text = _address[0].postalCode ?? '';
-    print(_address[0].postalCode);
     notifyListeners();
   }
 

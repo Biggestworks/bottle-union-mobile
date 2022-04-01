@@ -35,6 +35,7 @@ class Data {
   String? createdAt;
   String? updatedAt;
   String? deletedAt;
+  User? user;
   List<ReplyDiscussions>? replyDiscussions;
 
   Data(
@@ -45,6 +46,7 @@ class Data {
         this.createdAt,
         this.updatedAt,
         this.deletedAt,
+        this.user,
         this.replyDiscussions});
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -55,6 +57,7 @@ class Data {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     deletedAt = json['deleted_at'];
+    user = json['user'] != null ? new User.fromJson(json['user']) : null;
     if (json['reply_discussions'] != null) {
       replyDiscussions = <ReplyDiscussions>[];
       json['reply_discussions'].forEach((v) {
@@ -72,10 +75,38 @@ class Data {
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['deleted_at'] = this.deletedAt;
+    if (this.user != null) {
+      data['user'] = this.user!.toJson();
+    }
     if (this.replyDiscussions != null) {
       data['reply_discussions'] =
           this.replyDiscussions!.map((v) => v.toJson()).toList();
     }
+    return data;
+  }
+}
+
+class User {
+  int? id;
+  String? fullname;
+  String? email;
+  String? avatar;
+
+  User({this.id, this.fullname, this.email, this.avatar});
+
+  User.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    fullname = json['fullname'];
+    email = json['email'];
+    avatar = json['avatar'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['fullname'] = this.fullname;
+    data['email'] = this.email;
+    data['avatar'] = this.avatar;
     return data;
   }
 }
@@ -88,6 +119,7 @@ class ReplyDiscussions {
   String? createdAt;
   String? updatedAt;
   String? deletedAt;
+  User? user;
 
   ReplyDiscussions(
       {this.id,
@@ -96,7 +128,8 @@ class ReplyDiscussions {
         this.comment,
         this.createdAt,
         this.updatedAt,
-        this.deletedAt});
+        this.deletedAt,
+        this.user});
 
   ReplyDiscussions.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -106,6 +139,7 @@ class ReplyDiscussions {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     deletedAt = json['deleted_at'];
+    user = json['user'] != null ? new User.fromJson(json['user']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -117,6 +151,9 @@ class ReplyDiscussions {
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['deleted_at'] = this.deletedAt;
+    if (this.user != null) {
+      data['user'] = this.user!.toJson();
+    }
     return data;
   }
 }

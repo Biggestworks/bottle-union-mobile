@@ -30,9 +30,9 @@ class DeliveryProvider extends ChangeNotifier {
   int? deliveryCost;
   String? destination;
   courier.Data? selectedCourier;
-  // String? selectedCourier;
-  // courierSelect.Data? selectedCourierService;
   bool? isCart;
+
+  int productQty = 1;
 
   LoadingView? _view;
 
@@ -103,8 +103,8 @@ class DeliveryProvider extends ChangeNotifier {
           _totalWeight += _weight;
         });
       } else {
-        _prices.add(product?.data?.regularPrice ?? 0);
-        _totalWeight = (product?.data?.weight != null ? product?.data?.weight?.toDouble() : 0)!;
+        _prices.add((product?.data?.regularPrice ?? 0) * productQty);
+        _totalWeight = ((product?.data?.weight ?? 0) * productQty).toDouble();
       }
     });
     notifyListeners();
@@ -144,6 +144,17 @@ class DeliveryProvider extends ChangeNotifier {
       await fnGetOrderSummary();
     }
     _view!.onProgressFinish();
+    notifyListeners();
+  }
+
+  Future fnUpdateProductQty(String flag) async {
+    if (flag == 'increase') {
+      productQty++;
+    } else {
+      if (productQty != 1) {
+        productQty--;
+      }
+    }
     notifyListeners();
   }
 

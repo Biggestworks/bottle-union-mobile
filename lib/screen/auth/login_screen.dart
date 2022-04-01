@@ -5,14 +5,11 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/validation.dart';
 import 'package:eight_barrels/provider/auth/login_provider.dart';
-import 'package:eight_barrels/screen/auth/forgot_password_screen.dart';
 import 'package:eight_barrels/screen/auth/otp_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -26,7 +23,7 @@ class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> with TextValidation implements LoadingView {
+class _LoginScreenState extends State<LoginScreen> with TextValidation, LoadingView {
   bool _isLoad = false;
 
   @override

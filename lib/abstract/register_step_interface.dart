@@ -1,5 +1,4 @@
 import 'package:eight_barrels/helper/app_localization.dart';
-import 'package:eight_barrels/helper/validation.dart';
 import 'package:eight_barrels/screen/auth/start_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/auth/auth_service.dart';

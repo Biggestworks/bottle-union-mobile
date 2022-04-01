@@ -1,8 +1,10 @@
 import 'dart:ui';
 
 import 'package:eight_barrels/abstract/loading.dart';
+import 'package:eight_barrels/abstract/product_log.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
+import 'package:eight_barrels/helper/key_helper.dart' as key;
 import 'package:eight_barrels/helper/validation.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/product/product_list_provider.dart';
@@ -26,7 +28,7 @@ class ProductListScreen extends StatefulWidget {
 }
 
 class _ProductListScreenState extends State<ProductListScreen>
-    with LoadingView, TextValidation {
+    with LoadingView, TextValidation, ProductLog {
   bool _isLoad = false;
 
   @override
@@ -65,7 +67,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(AppLocalizations.instance.text('TXT_LBL_FILTER'), style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 16,
                               ),),
                               TextButton(
                                 onPressed: () async {
@@ -94,7 +96,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(AppLocalizations.instance.text('TXT_LBL_BRAND'), style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 16,
                                   ),),
                                   SizedBox(height: 10,),
                                   Flexible(
@@ -151,7 +153,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(AppLocalizations.instance.text('TXT_LBL_CATEGORY'), style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 16,
                                   ),),
                                   SizedBox(height: 10,),
                                   Flexible(
@@ -212,7 +214,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(AppLocalizations.instance.text('TXT_LBL_YEAR'), style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 16,
                                   ),),
                                   SizedBox(height: 10,),
                                   TextFormField(
@@ -254,7 +256,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(AppLocalizations.instance.text('TXT_LBL_PRICE'), style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 16,
                                   ),),
                                   SizedBox(height: 10,),
                                   Row(
@@ -404,6 +406,11 @@ class _ProductListScreenState extends State<ProductListScreen>
                                         context: context,
                                         data: _data,
                                         index: index,
+                                        storeLog: () async => await fnStoreLog(
+                                          productId: [_data.id ?? 0],
+                                          categoryId: null,
+                                          notes: key.KeyHelper.CLICK_PRODUCT_KEY,
+                                        ),
                                       );
                                     default:
                                       return Consumer<BaseHomeProvider>(
@@ -412,6 +419,21 @@ class _ProductListScreenState extends State<ProductListScreen>
                                             context: context,
                                             data: _data,
                                             index: index,
+                                            storeClickLog: () async => await fnStoreLog(
+                                              productId: [_data.id ?? 0],
+                                              categoryId: null,
+                                              notes: key.KeyHelper.CLICK_PRODUCT_KEY,
+                                            ),
+                                            storeCartLog: () async => await fnStoreLog(
+                                              productId: [_data.id ?? 0],
+                                              categoryId: null,
+                                              notes: key.KeyHelper.SAVE_CART_KEY,
+                                            ),
+                                            storeWishlistLog: () async => await fnStoreLog(
+                                              productId: [_data.id ?? 0],
+                                              categoryId: null,
+                                              notes: key.KeyHelper.SAVE_WISHLIST_KEY,
+                                            ),
                                             onUpdateCart: () async => await baseProvider.fnGetCartCount(),
                                           );
                                         },

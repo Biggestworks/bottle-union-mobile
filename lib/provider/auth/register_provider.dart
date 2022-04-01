@@ -7,7 +7,6 @@ import 'package:eight_barrels/helper/validation.dart';
 import 'package:eight_barrels/model/address/ro_city_model.dart';
 import 'package:eight_barrels/model/address/ro_province_model.dart';
 import 'package:eight_barrels/model/auth/region_list_model.dart';
-import 'package:eight_barrels/model/default_model.dart';
 import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/widget/BezierPainter.dart';
 import 'package:eight_barrels/service/address/address_service.dart';

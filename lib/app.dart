@@ -4,11 +4,11 @@ import 'package:eight_barrels/provider/auth/forgot_password_provider.dart';
 import 'package:eight_barrels/provider/auth/login_provider.dart';
 import 'package:eight_barrels/provider/auth/otp_provider.dart';
 import 'package:eight_barrels/provider/auth/register_provider.dart';
-import 'package:eight_barrels/provider/cart/base_cart_provider.dart';
 import 'package:eight_barrels/provider/cart/cart_list_provider.dart';
 import 'package:eight_barrels/provider/checkout/delivery_provider.dart';
 import 'package:eight_barrels/provider/checkout/order_finish_provider.dart';
 import 'package:eight_barrels/provider/checkout/payment_provider.dart';
+import 'package:eight_barrels/provider/discussion/discussion_provider.dart';
 import 'package:eight_barrels/provider/home/banner_detail_provider.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
@@ -19,35 +19,39 @@ import 'package:eight_barrels/provider/product/wishlist_provider.dart';
 import 'package:eight_barrels/provider/profile/add_address_provider.dart';
 import 'package:eight_barrels/provider/profile/address_list_provider.dart';
 import 'package:eight_barrels/provider/profile/change_password_provider.dart';
-import 'package:eight_barrels/screen/auth/forgot_password_screen.dart';
-import 'package:eight_barrels/screen/auth/otp_screen.dart';
-import 'package:eight_barrels/screen/checkout/delivery_screen.dart';
-import 'package:eight_barrels/screen/checkout/midtrans_webview_screen.dart';
-import 'package:eight_barrels/screen/checkout/order_finish_screen.dart';
-import 'package:eight_barrels/screen/checkout/payment_screen.dart';
-import 'package:eight_barrels/screen/home/banner_detail_screen.dart';
-import 'package:eight_barrels/screen/profile/add_address_screen.dart';
-import 'package:eight_barrels/screen/profile/address_list_screen.dart';
-import 'package:eight_barrels/screen/profile/change_password_screen.dart';
 import 'package:eight_barrels/provider/profile/profile_input_provider.dart';
 import 'package:eight_barrels/provider/profile/profile_provider.dart';
 import 'package:eight_barrels/provider/profile/update_profile_provider.dart';
 import 'package:eight_barrels/provider/splash/splash_provider.dart';
+import 'package:eight_barrels/provider/transaction/transaction_detail_provider.dart';
+import 'package:eight_barrels/provider/transaction/transaction_provider.dart';
+import 'package:eight_barrels/screen/auth/forgot_password_screen.dart';
 import 'package:eight_barrels/screen/auth/login_screen.dart';
+import 'package:eight_barrels/screen/auth/otp_screen.dart';
 import 'package:eight_barrels/screen/auth/register_screen.dart';
 import 'package:eight_barrels/screen/auth/start_screen.dart';
 import 'package:eight_barrels/screen/cart/base_cart_screen.dart';
 import 'package:eight_barrels/screen/cart/cart_list_screen.dart';
+import 'package:eight_barrels/screen/checkout/delivery_screen.dart';
+import 'package:eight_barrels/screen/checkout/midtrans_webview_screen.dart';
+import 'package:eight_barrels/screen/checkout/order_finish_screen.dart';
+import 'package:eight_barrels/screen/checkout/payment_screen.dart';
+import 'package:eight_barrels/screen/discussion/discussion_screen.dart';
+import 'package:eight_barrels/screen/home/banner_detail_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/home/home_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/product/product_list_screen.dart';
 import 'package:eight_barrels/screen/product/wishlist_screen.dart';
+import 'package:eight_barrels/screen/profile/add_address_screen.dart';
+import 'package:eight_barrels/screen/profile/address_list_screen.dart';
+import 'package:eight_barrels/screen/profile/change_password_screen.dart';
 import 'package:eight_barrels/screen/profile/profile_input_screen.dart';
 import 'package:eight_barrels/screen/profile/profile_screen.dart';
 import 'package:eight_barrels/screen/profile/update_profile_screen.dart';
 import 'package:eight_barrels/screen/splash/splash_screen.dart';
+import 'package:eight_barrels/screen/transaction/transaction_detail_screen.dart';
 import 'package:eight_barrels/screen/transaction/transaction_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -150,6 +154,9 @@ class _AppState extends State<App> {
                 ),
                 ChangeNotifierProvider<CartListProvider>(
                   create: (context) => CartListProvider(),
+                ),
+                ChangeNotifierProvider<TransactionProvider>(
+                  create: (context) => TransactionProvider(),
                 ),
               ],
               child: BaseHomeScreen(),
@@ -283,6 +290,20 @@ class _AppState extends State<App> {
           GetPage(
             name: MidtransWebviewScreen.tag,
             page: () => MidtransWebviewScreen(),
+          ),
+          GetPage(
+            name: DiscussionScreen.tag,
+            page: () => ChangeNotifierProvider<DiscussionProvider>(
+              create: (context) => DiscussionProvider(),
+              child: DiscussionScreen(),
+            ),
+          ),
+          GetPage(
+            name: TransactionDetailScreen.tag,
+            page: () => ChangeNotifierProvider<TransactionDetailProvider>(
+              create: (context) => TransactionDetailProvider(),
+              child: TransactionDetailScreen(),
+            ),
           ),
         ],
       ),

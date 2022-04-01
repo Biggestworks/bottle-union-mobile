@@ -1,17 +1,19 @@
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
-import 'package:eight_barrels/helper/formatter_helper.dart';
-import 'package:eight_barrels/model/checkout/order_model.dart';
+import 'package:eight_barrels/model/transaction/transaction_detail_model.dart';
 import 'package:eight_barrels/screen/checkout/midtrans_webview_screen.dart';
-import 'package:eight_barrels/screen/checkout/order_finish_screen.dart';
+import 'package:eight_barrels/screen/transaction/transaction_detail_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/checkout/payment_service.dart';
+import 'package:eight_barrels/service/transaction/transcation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
-class OrderFinishProvider extends ChangeNotifier {
+class TransactionDetailProvider extends ChangeNotifier {
+  TransactionService _service = new TransactionService();
   PaymentService _paymentService = new PaymentService();
-  OrderModel? order;
+  String? orderId;
+  TransactionDetailModel transactionDetail = new TransactionDetailModel();
 
   LoadingView? _view;
 
@@ -22,16 +24,21 @@ class OrderFinishProvider extends ChangeNotifier {
   }
 
   fnGetArguments(BuildContext context) {
-    final _args = ModalRoute.of(context)!.settings.arguments as OrderFinishScreen;
-    order = _args.order;
+    final _args = ModalRoute.of(context)!.settings.arguments as TransactionDetailScreen;
+    orderId = _args.orderId!;
     notifyListeners();
   }
 
-  fnGetTotalPrice(int pay, int deliveryCost) => FormatterHelper.moneyFormatter(pay - deliveryCost);
+  Future fnGetTransactionDetail() async {
+    _view!.onProgressStart();
+    transactionDetail = (await _service.getTransactionDetail(orderId: orderId!))!;
+    _view!.onProgressFinish();
+    notifyListeners();
+  }
 
   Future fnFinishPayment(BuildContext context) async {
     _view!.onProgressStart();
-    var _res = await _paymentService.midtransPayment(code: order?.data?[0].order?[0].codeTransaction ?? null);
+    var _res = await _paymentService.midtransPayment(code: transactionDetail.data?.codeTransaction ?? null);
 
     if (_res!.status != null) {
       if (_res.status == true) {

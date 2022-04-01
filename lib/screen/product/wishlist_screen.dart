@@ -1,7 +1,9 @@
 import 'package:eight_barrels/abstract/loading.dart';
+import 'package:eight_barrels/abstract/product_log.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
+import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/product/wishlist_provider.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
@@ -20,7 +22,8 @@ class WishListScreen extends StatefulWidget {
   _WishListScreenState createState() => _WishListScreenState();
 }
 
-class _WishListScreenState extends State<WishListScreen> with LoadingView {
+class _WishListScreenState extends State<WishListScreen>
+    with LoadingView, ProductLog {
   bool _isLoad = false;
 
   @override
@@ -74,7 +77,7 @@ class _WishListScreenState extends State<WishListScreen> with LoadingView {
                                         child: provider.isSelection
                                             ? Checkbox(
                                           value: provider.selectionList[index].status,
-                                          onChanged: (value) => provider.fnOnChangedCkBox(value, index),
+                                          onChanged: (value) => provider.fnOnChangedCkBox(value ?? false, index),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(5),
                                           ),
@@ -143,18 +146,38 @@ class _WishListScreenState extends State<WishListScreen> with LoadingView {
                                                   Row(
                                                     children: [
                                                       IconButton(
-                                                        onPressed: () async => await provider.fnDeleteWishlist(
-                                                          provider.scaffoldKey.currentContext!,
-                                                          _data.id!,
-                                                        ),
+                                                        onPressed: () async {
+                                                          CustomWidget.showConfirmationDialog(
+                                                            context,
+                                                            desc: AppLocalizations.instance.text('TXT_REMOVE_WISHLIST_INFO'),
+                                                            function: () async {
+                                                              await fnStoreLog(
+                                                                productId: [_data.idProduct ?? 0],
+                                                                categoryId: null,
+                                                                notes: KeyHelper.REMOVE_WISHLIST_KEY,
+                                                              );
+                                                              await provider.fnDeleteWishlist(
+                                                                provider.scaffoldKey.currentContext!,
+                                                                _data.id!,
+                                                              );
+                                                            },
+                                                          );
+                                                        },
                                                         icon: Icon(FontAwesomeIcons.trashAlt, size: 20,),
                                                         visualDensity: VisualDensity.compact,
                                                       ),
                                                       SizedBox(width: 10,),
                                                       Expanded(
                                                         child: CustomWidget.roundIconBtn(
-                                                          function: () async => await provider.fnStoreCart(context, _data.idProduct!)
-                                                              .then((_) async => await _baseProvider.fnGetCartCount()),
+                                                          function: () async {
+                                                            await fnStoreLog(
+                                                              productId: [_data.idProduct ?? 0],
+                                                              categoryId: null,
+                                                              notes: KeyHelper.SAVE_CART_KEY,
+                                                            );
+                                                            await provider.fnStoreCart(context, _data.idProduct!)
+                                                                .then((_) async => await _baseProvider.fnGetCartCount());
+                                                          },
                                                           icon: Icons.add,
                                                           label: AppLocalizations.instance.text('TXT_CART_ADD'),
                                                           btnColor: CustomColor.MAIN,
@@ -249,7 +272,28 @@ class _WishListScreenState extends State<WishListScreen> with LoadingView {
           lblColor: Colors.white,
           isBold: true,
           fontSize: 16,
-          function: () async => await _provider.fnDeleteMultiWishlist(_provider.scaffoldKey.currentContext!),
+          function: () async {
+            _provider.fnGetSelectionList();
+            if (_provider.idList.isNotEmpty) {
+              CustomWidget.showConfirmationDialog(
+                context,
+                desc: AppLocalizations.instance.text('TXT_REMOVE_WISHLIST_INFO'),
+                function: () async {
+                  await fnStoreLog(
+                    productId: _provider.idList,
+                    categoryId: null,
+                    notes: KeyHelper.REMOVE_WISHLIST_KEY,
+                  );
+                  await _provider.fnDeleteMultiWishlist(_provider.scaffoldKey.currentContext!);
+                },
+              );
+            } else {
+              CustomWidget.showSnackBar(
+                context: context,
+                content: Text(AppLocalizations.instance.text('TXT_SELECT_ITEM_INFO')),
+              );
+            }
+          },
         ),
       ),
     );
@@ -272,11 +316,10 @@ class _WishListScreenState extends State<WishListScreen> with LoadingView {
       bottomNavigationBar: Consumer<WishListProvider>(
         child: SizedBox(),
         builder: (context, provider, skeleton) {
-          switch (provider.isSelection) {
-            case true:
-              return _submitBtn;
-            default:
-              return SizedBox();
+          if (provider.isSelection && (provider.wishlist.result?.data?.length ?? 0) > 0) {
+            return _submitBtn;
+          } else {
+            return SizedBox();
           }
         },
       ),

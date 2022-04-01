@@ -30,6 +30,8 @@ class AddressListModel {
 class Data {
   int? id;
   int? idUser;
+  String? receiver;
+  String? phone;
   String? address;
   String? detailNote;
   int? provinceCode;
@@ -49,6 +51,8 @@ class Data {
   Data(
       {this.id,
         this.idUser,
+        this.receiver,
+        this.phone,
         this.address,
         this.detailNote,
         this.provinceCode,
@@ -68,6 +72,8 @@ class Data {
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     idUser = json['id_user'];
+    receiver = json['receiver'];
+    phone = json['phone'];
     address = json['address'];
     detailNote = json['detail_note'];
     provinceCode = json['province_code'];
@@ -89,6 +95,8 @@ class Data {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['id_user'] = this.idUser;
+    data['receiver'] = this.receiver;
+    data['phone'] = this.phone;
     data['address'] = this.address;
     data['detail_note'] = this.detailNote;
     data['province_code'] = this.provinceCode;

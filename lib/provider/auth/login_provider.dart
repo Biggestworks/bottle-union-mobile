@@ -3,7 +3,6 @@ import 'package:eight_barrels/abstract/register_step_interface.dart';
 import 'package:eight_barrels/abstract/socmed_auth_interface.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/validation.dart';
-import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/service/auth/auth_service.dart';
 import 'package:flutter/material.dart';

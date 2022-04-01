@@ -1,6 +1,9 @@
 import 'package:eight_barrels/abstract/loading.dart';
+import 'package:eight_barrels/abstract/product_card_interface.dart';
+import 'package:eight_barrels/abstract/product_log.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
+import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/product/product_by_category_provider.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
@@ -18,7 +21,8 @@ class ProductByCategoryScreen extends StatefulWidget {
   _ProductByCategoryScreenState createState() => _ProductByCategoryScreenState();
 }
 
-class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> with LoadingView {
+class _ProductByCategoryScreenState extends State<ProductByCategoryScreen>
+    with LoadingView, ProductCardInterface, ProductLog {
   bool _isLoad = false;
 
   @override
@@ -71,18 +75,38 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> with 
                                   var _data = provider.productList.result!.data![index];
                                   switch (_data.stock) {
                                     case 0:
-                                      return provider.emptyProductCard(
+                                      return emptyProductCard(
                                         context: context,
                                         data: _data,
                                         index: index,
+                                        storeLog: () async => await fnStoreLog(
+                                          productId: [_data.id ?? 0],
+                                          categoryId: null,
+                                          notes: KeyHelper.CLICK_PRODUCT_KEY,
+                                        ),
                                       );
                                     default:
                                       return Consumer<BaseHomeProvider>(
                                         builder: (context, baseProvider, _) {
-                                          return provider.productCard(
+                                          return productCard(
                                             context: context,
                                             data: _data,
                                             index: index,
+                                            storeClickLog: () async => await fnStoreLog(
+                                              productId: [_data.id ?? 0],
+                                              categoryId: null,
+                                              notes: KeyHelper.CLICK_PRODUCT_KEY,
+                                            ),
+                                            storeCartLog: () async => await fnStoreLog(
+                                              productId: [_data.id ?? 0],
+                                              categoryId: null,
+                                              notes: KeyHelper.SAVE_CART_KEY,
+                                            ),
+                                            storeWishlistLog: () async => await fnStoreLog(
+                                              productId: [_data.id ?? 0],
+                                              categoryId: null,
+                                              notes: KeyHelper.SAVE_WISHLIST_KEY,
+                                            ),
                                             onUpdateCart: () async => await baseProvider.fnGetCartCount(),
                                           );
                                         },
@@ -166,4 +190,5 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> with 
       setState(() {});
     }
   }
+
 }

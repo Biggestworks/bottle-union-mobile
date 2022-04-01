@@ -14,10 +14,10 @@ class WishlistService extends GetConnect {
 
     return {
       "Accept": "application/json",
-      "User-Agent": "Persada Apps 1.0",
       "Authorization": "Bearer $_token",
     };
   }
+
   Future<WishlistModel?> storeWishlist({
     required int productId,
   }) async {
@@ -34,7 +34,6 @@ class WishlistService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
-      print(_response.body);
       _model = WishlistModel.fromJson(_response.body);
     } catch (e) {
       print(e);
@@ -78,7 +77,6 @@ class WishlistService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
-      print(_response.body);
       _model = UserWishlistModel.fromJson(_response.body);
     } catch (e) {
       print(e);

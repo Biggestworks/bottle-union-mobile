@@ -27,7 +27,7 @@ class UserPreferences extends GetConnect {
         URLHelper.USER_URL,
         headers: {
           "Accept": "application/json",
-          "User-Agent": "Persada Apps 1.0",
+
           "Authorization": "Bearer $_token",
         }
       );

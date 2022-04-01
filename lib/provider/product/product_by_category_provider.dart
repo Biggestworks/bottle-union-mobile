@@ -1,13 +1,12 @@
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/abstract/pagination_interface.dart';
-import 'package:eight_barrels/abstract/product_card_interface.dart';
 import 'package:eight_barrels/model/product/product_model.dart';
 import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
 import 'package:eight_barrels/service/product/product_service.dart';
 import 'package:flutter/material.dart';
 
 class ProductByCategoryProvider extends ChangeNotifier
-    with PaginationInterface, ProductCardInterface {
+    with PaginationInterface {
   ProductService _productService = new ProductService();
   ProductListModel productList = new ProductListModel();
   final TextEditingController searchController = new TextEditingController();
@@ -82,5 +81,4 @@ class ProductByCategoryProvider extends ChangeNotifier
     isPaginateLoad = true;
     notifyListeners();
   }
-
 }

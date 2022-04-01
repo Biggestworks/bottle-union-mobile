@@ -5,7 +5,6 @@ import 'package:eight_barrels/model/checkout/order_summary_model.dart' as summar
 import 'package:eight_barrels/model/checkout/payment_list_model.dart';
 import 'package:eight_barrels/model/checkout/product_order_model.dart';
 import 'package:eight_barrels/model/product/product_detail_model.dart' as productDetail;
-import 'package:eight_barrels/screen/checkout/delivery_screen.dart';
 import 'package:eight_barrels/screen/checkout/order_finish_screen.dart';
 import 'package:eight_barrels/screen/checkout/payment_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
@@ -21,6 +20,7 @@ class PaymentProvider extends ChangeNotifier {
   summary.Data? orderSummary;
   int? addressId;
   productDetail.ProductDetailModel? product;
+  int? productQty;
   courier.Data? selectedCourier;
   bool? isCart;
   List<ProductOrderModel> productOrder = [];
@@ -38,6 +38,7 @@ class PaymentProvider extends ChangeNotifier {
     orderSummary = _args.orderSummary;
     addressId = _args.addressId;
     product = _args.product;
+    productQty = _args.productQty;
     selectedCourier = _args.selectedCourier;
     isCart = _args.isCart;
     notifyListeners();
@@ -65,7 +66,7 @@ class PaymentProvider extends ChangeNotifier {
       productOrder.clear();
       productOrder.add(ProductOrderModel(
         idProduct: product?.data?.id,
-        qty: 1,
+        qty: productQty,
       ));
     }
 
@@ -73,7 +74,7 @@ class PaymentProvider extends ChangeNotifier {
       addressId: addressId,
       isCart: isCart,
       products: productOrder,
-      paymentMethod: selectedPayment?.name,
+      paymentMethod: selectedPayment?.description,
       courierName: selectedCourier?.courier,
       courierDesc: selectedCourier?.description,
       courierEtd: selectedCourier?.etd,

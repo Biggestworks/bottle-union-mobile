@@ -1,7 +1,9 @@
 import 'package:eight_barrels/abstract/loading.dart';
+import 'package:eight_barrels/abstract/product_log.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
+import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/provider/cart/cart_list_provider.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/screen/checkout/delivery_screen.dart';
@@ -22,7 +24,8 @@ class CartListScreen extends StatefulWidget {
   _CartListScreenState createState() => _CartListScreenState();
 }
 
-class _CartListScreenState extends State<CartListScreen> implements LoadingView {
+class _CartListScreenState extends State<CartListScreen>
+    with LoadingView, ProductLog {
   bool _isLoad = false;
 
   @override
@@ -125,8 +128,15 @@ class _CartListScreenState extends State<CartListScreen> implements LoadingView 
                                                     mainAxisAlignment: MainAxisAlignment.end,
                                                     children: [
                                                       IconButton(
-                                                        onPressed: () async => await provider.fnDeleteCart(_provider.scaffoldKey.currentContext!, _data.id!)
-                                                            .then((_) async => await _baseProvider.fnGetCartCount()),
+                                                        onPressed: () async {
+                                                          await fnStoreLog(
+                                                            productId: [_data.id ?? 0],
+                                                            categoryId: null,
+                                                            notes: KeyHelper.REMOVE_CART_KEY,
+                                                          );
+                                                          await provider.fnDeleteCart(_provider.scaffoldKey.currentContext!, _data.id!)
+                                                              .then((_) async => await _baseProvider.fnGetCartCount());
+                                                        },
                                                         icon: Icon(FontAwesomeIcons.trashAlt, size: 20, color: CustomColor.GREY_TXT,),
                                                         visualDensity: VisualDensity.compact,
                                                       ),

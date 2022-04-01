@@ -16,16 +16,17 @@ class PaymentScreen extends StatefulWidget {
   final summary.Data? orderSummary;
   final int? addressId;
   final ProductDetailModel? product;
+  final int? productQty;
   final courier.Data? selectedCourier;
   final bool? isCart;
 
-  const PaymentScreen({Key? key, this.orderSummary, this.addressId, this.product, this.selectedCourier, this.isCart}) : super(key: key);
+  const PaymentScreen({Key? key, this.orderSummary, this.addressId, this.product, this.productQty, this.selectedCourier, this.isCart}) : super(key: key);
 
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
 }
 
-class _PaymentScreenState extends State<PaymentScreen> implements LoadingView {
+class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
   bool _isLoad = false;
 
   @override

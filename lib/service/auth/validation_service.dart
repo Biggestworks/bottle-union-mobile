@@ -1,6 +1,5 @@
 import 'package:eight_barrels/helper/url_helper.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
-import 'package:eight_barrels/model/auth/auth_model.dart';
 import 'package:eight_barrels/model/auth/validation_model.dart';
 import 'package:eight_barrels/model/default_model.dart';
 import 'package:get/get_connect.dart';

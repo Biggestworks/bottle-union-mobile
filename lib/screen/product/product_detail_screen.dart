@@ -6,11 +6,11 @@ import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/product/product_detail_provider.dart';
 import 'package:eight_barrels/screen/checkout/delivery_screen.dart';
+import 'package:eight_barrels/screen/discussion/discussion_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -25,7 +25,7 @@ class ProductDetailScreen extends StatefulWidget {
   _ProductDetailScreenState createState() => _ProductDetailScreenState();
 }
 
-class _ProductDetailScreenState extends State<ProductDetailScreen> implements LoadingView {
+class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingView {
   bool _isLoad = false;
   
   @override
@@ -70,21 +70,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> implements Lo
         children: [
           Consumer<ProductDetailProvider>(
             builder: (context, provider, _) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Product Discussion (${provider.discussionList.data?.length})', style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),),
-                  IconButton(
-                    icon: Icon(MdiIcons.chatPlus, color: Colors.green, size: 28,),
-                    onPressed: () {},
-                    constraints: BoxConstraints(),
-                    padding: EdgeInsets.zero,
-                  ),
-                ],
-              );
+              return Text('Product Discussion (${provider.discussionList.data?.length})', style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),);
             },
           ),
           SizedBox(height: 20,),
@@ -119,117 +108,129 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> implements Lo
                             title: AppLocalizations.instance.text('TXT_NO_DISCUSSION'),
                           );
                         default:
-                          return ListView.separated(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: 3,
-                            separatorBuilder: (context, index) {
-                              return Divider(color: CustomColor.GREY_ICON, height: 30,);
-                            },
-                            itemBuilder: (context, index) {
-                              return Column(
-                                children: [
-                                  Row(
+                          return Column(
+                            children: [
+                              ListView.separated(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: provider.discussionList.data?.length ?? 0,
+                                separatorBuilder: (context, index) {
+                                  return Divider(color: CustomColor.GREY_ICON, height: 30,);
+                                },
+                                itemBuilder: (context, index) {
+                                  var _data = provider.discussionList.data?[index];
+                                  return Column(
                                     children: [
-                                      Container(
-                                        width: 40.0,
-                                        height: 40.0,
-                                        decoration: new BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(color: Colors.white),
-                                          image: new DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: AssetImage('assets/images/ic_profile.png'),
+                                      Row(
+                                        children: [
+                                          CustomWidget.roundedAvatarImg(
+                                            url: _data?.user?.avatar ?? '',
+                                            size: 40,
                                           ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Flexible(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Flexible(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Text("User ${index+1}", style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                ),),
-                                                Text(" . ${timeago.format(DateTime.now(), locale: 'en_short')} ago",
-                                                  style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 12,
-                                                  ),
+                                                Row(
+                                                  children: [
+                                                    Text(_data?.user?.fullname ?? '-', style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                    ),),
+                                                    Text(" . ${timeago.format(DateTime.parse(_data?.createdAt ?? DateTime.now().toString()), locale: 'en_short')} ago",
+                                                      style: TextStyle(
+                                                        color: Colors.grey,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
+                                                SizedBox(height: 5,),
+                                                Text(_data?.comment ?? '-', style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.black,
+                                                ),),
                                               ],
                                             ),
-                                            SizedBox(height: 5,),
-                                            Text("Ready kak?", style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.black,
-                                            ),),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10,),
-                                  Row(
-                                    children: [
-                                      Container(
-                                        width: 50,
-                                      ),
-                                      Expanded(
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              width: 40.0,
-                                              height: 40.0,
-                                              decoration: new BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                border: Border.all(color: Colors.white),
-                                                image: new DecorationImage(
-                                                  fit: BoxFit.cover,
-                                                  image: AssetImage('assets/images/ic_launcher.png'),
+                                      SizedBox(height: 10,),
+                                      ListView.builder(
+                                        physics: ClampingScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: _data?.replyDiscussions?.length,
+                                        itemBuilder: (context, index) {
+                                          var _reply = _data?.replyDiscussions?[index];
+                                          return Row(
+                                            children: [
+                                              Container(
+                                                height: 60,
+                                                width: 1,
+                                                margin: EdgeInsets.symmetric(horizontal: 20),
+                                                color: Colors.grey,
+                                              ),
+                                              Flexible(
+                                                child: Row(
+                                                  children: [
+                                                    CustomWidget.roundedAvatarImg(
+                                                      url: _reply?.user?.avatar ?? '',
+                                                      size: 40,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Flexible(
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Text(_reply?.user?.fullname ?? '-', style: TextStyle(
+                                                                fontWeight: FontWeight.bold,
+                                                              ),),
+                                                              Text(" . ${timeago.format(DateTime.parse(_reply?.createdAt ?? DateTime.now().toString()), locale: 'en_short')} ago",
+                                                                style: TextStyle(
+                                                                  color: Colors.grey,
+                                                                  fontSize: 12,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(height: 5,),
+                                                          Text(_reply?.comment ?? '-', style: TextStyle(
+                                                            fontSize: 16,
+                                                            color: Colors.black,
+                                                          ),),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Flexible(
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Text("Bottle Union Admin", style: TextStyle(
-                                                        fontWeight: FontWeight.bold,
-                                                      ),),
-                                                      Text(" . ${timeago.format(DateTime.now(), locale: 'en_short')} ago",
-                                                        style: TextStyle(
-                                                          color: Colors.grey,
-                                                          fontSize: 12,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(height: 5,),
-                                                  Text("Ready gan, silahkan di order", style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.black,
-                                                  ),),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                            ],
+                                          );
+                                        },
                                       ),
                                     ],
-                                  ),
-                                ],
-                              );
-                            },
+                                  );
+                                },
+                              ),
+                              SizedBox(height: 10,),
+                              TextButton(
+                                style: TextButton.styleFrom(
+                                  visualDensity: VisualDensity.compact,
+                                ),
+                                onPressed: () => Get.toNamed(DiscussionScreen.tag, arguments: DiscussionScreen(
+                                  product: provider.product.data,
+                                )),
+                                child: Text('See all discussion', style: TextStyle(
+                                  color: CustomColor.MAIN,
+                                ),),
+                              ),
+                            ],
                           );
                       }
                   }
@@ -287,7 +288,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> implements Lo
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(_data.name!, style: TextStyle(
+                                    Text(_data.name ?? '-', style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 24,
                                     ), maxLines: 2, overflow: TextOverflow.ellipsis,),
@@ -405,6 +406,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> implements Lo
     );
 
     Widget _mainContent = SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
       child: Stack(
         children: [
           Container(
@@ -477,7 +479,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> implements Lo
       key: _provider.scaffoldKey,
       backgroundColor: CustomColor.BG,
       appBar: AppBar(
-        // backgroundColor: CustomColor.MAIN,
         flexibleSpace: Image.asset('assets/images/bg_marron.png', fit: BoxFit.cover,),
         elevation: 0,
         centerTitle: true,

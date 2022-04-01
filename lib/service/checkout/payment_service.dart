@@ -14,9 +14,9 @@ class PaymentService extends GetConnect {
     var _token = _prefs.getString(KeyHelper.KEY_TOKEN);
 
     return {
-      "Accept": "application/json",
-      "User-Agent": "Persada Apps 1.0",
+      "Accept": "application/json; charset=UTF-8",
       "Authorization": "Bearer $_token",
+      "Cache-Control": "no-cache",
     };
   }
 
@@ -59,12 +59,15 @@ class PaymentService extends GetConnect {
       "courier_cost": courierCost
     };
 
+    print(paymentMethod);
+
     try {
       Response _response = await post(
         URLHelper.STORE_ORDER_URL,
         _data,
         headers: await _headersAuth(),
       );
+      print(_response.body);
       _model = OrderModel.fromJson(_response.body);
     } catch (e) {
       print(e);

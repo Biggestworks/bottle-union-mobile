@@ -6,6 +6,7 @@ import 'package:eight_barrels/model/address/address_list_model.dart';
 import 'package:eight_barrels/provider/profile/add_address_provider.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,7 @@ class AddAddressScreen extends StatefulWidget {
 }
 
 class _AddAddressScreenState extends State<AddAddressScreen>
-    with TextValidation implements LoadingView {
+    with TextValidation , LoadingView {
   bool _isLoad = false;
 
   @override
@@ -279,7 +280,7 @@ class _AddAddressScreenState extends State<AddAddressScreen>
               SizedBox(height: 5,),
               TextFormField(
                 controller: _provider.labelController,
-                maxLines: null,
+                textInputAction: TextInputAction.next,
                 decoration: InputDecoration(
                   isDense: true,
                   border: OutlineInputBorder(
@@ -289,6 +290,48 @@ class _AddAddressScreenState extends State<AddAddressScreen>
                   filled: true,
                   fillColor: CustomColor.GREY_BG,
                   hintText: 'e.g: Home, Office, etc',
+                ),
+              ),
+              SizedBox(height: 20,),
+              Text(AppLocalizations.instance.text('TXT_LBL_RECEIVER_NAME'), style: TextStyle(
+                fontSize: 16,
+                color: CustomColor.GREY_TXT,
+              ),),
+              SizedBox(height: 5,),
+              TextFormField(
+                controller: _provider.nameController,
+                textInputAction: TextInputAction.next,
+                validator: validateField,
+                decoration: InputDecoration(
+                  isDense: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: CustomColor.GREY_BG,
+                ),
+              ),
+              SizedBox(height: 20,),
+              Text(AppLocalizations.instance.text('TXT_LBL_RECEIVER_PHONE'), style: TextStyle(
+                fontSize: 16,
+                color: CustomColor.GREY_TXT,
+              ),),
+              SizedBox(height: 5,),
+              TextFormField(
+                controller: _provider.phoneController,
+                textInputAction: TextInputAction.next,
+                keyboardType: TextInputType.phone,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                validator: validatePhoneNumber,
+                decoration: InputDecoration(
+                  isDense: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: CustomColor.GREY_BG,
                 ),
               ),
             ],

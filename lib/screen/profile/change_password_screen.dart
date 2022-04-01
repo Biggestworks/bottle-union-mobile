@@ -5,7 +5,6 @@ import 'package:eight_barrels/helper/validation.dart';
 import 'package:eight_barrels/provider/profile/change_password_provider.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
@@ -19,7 +18,7 @@ class ChangePasswordScreen extends StatefulWidget {
 }
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen>
-    with TextValidation implements LoadingView {
+    with TextValidation, LoadingView {
   bool _isLoad = false;
 
   @override

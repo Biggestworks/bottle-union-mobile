@@ -17,7 +17,7 @@ class AddressListScreen extends StatefulWidget {
   _AddressListScreenState createState() => _AddressListScreenState();
 }
 
-class _AddressListScreenState extends State<AddressListScreen> implements LoadingView {
+class _AddressListScreenState extends State<AddressListScreen> with LoadingView {
   bool _isLoad = false;
 
   @override
@@ -160,7 +160,7 @@ class _AddressListScreenState extends State<AddressListScreen> implements Loadin
                                     SizedBox(height: 5,),
                                     Row(
                                       children: [
-                                        Text(_data?.user?.fullname ?? '-'),
+                                        Text(_data?.receiver ?? '-'),
                                         if (_data?.label != null)
                                           Text(' (${_data?.label})', style: TextStyle(
                                             color: CustomColor.MAIN,
@@ -169,7 +169,7 @@ class _AddressListScreenState extends State<AddressListScreen> implements Loadin
                                       ],
                                     ),
                                     SizedBox(height: 5,),
-                                    Text(_data?.user?.phone ?? '-'),
+                                    Text(_data?.phone ?? '-'),
                                     SizedBox(height: 5,),
                                     Text(_data?.address ?? '-', style: TextStyle(
                                       color: CustomColor.GREY_TXT,

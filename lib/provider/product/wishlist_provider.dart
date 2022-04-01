@@ -1,7 +1,6 @@
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/abstract/pagination_interface.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
-import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/product/user_wishlist_model.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/cart/cart_service.dart';
@@ -12,7 +11,6 @@ class WishListProvider extends ChangeNotifier with PaginationInterface {
   WishlistService _service = new WishlistService();
   CartService _cartService = new CartService();
   UserWishlistModel wishlist = new UserWishlistModel();
-  UserPreferences _userPreferences = new UserPreferences();
 
   bool isPaginateLoad = false;
   bool isSelection = false;
@@ -30,6 +28,8 @@ class WishListProvider extends ChangeNotifier with PaginationInterface {
 
   Future fnFetchWishlist() async {
     _view!.onProgressStart();
+
+    super.currentPage = 1;
 
     wishlist = (await _service.getWishlist(
       page: super.currentPage.toString(),
@@ -52,88 +52,69 @@ class WishListProvider extends ChangeNotifier with PaginationInterface {
     notifyListeners();
   }
 
-  fnOnChangedCkBox(bool? value, int index) {
-    selectionList[index].status = value!;
+  fnOnChangedCkBox(bool value, int index) {
+    selectionList[index].status = value;
     notifyListeners();
   }
 
+  fnGetSelectionList() => List.generate(selectionList.length, (index) {
+    if (selectionList[index].status == true) {
+      idList.add(selectionList[index].id);
+    }
+  });
+
   Future fnDeleteMultiWishlist(BuildContext context) async {
-    List.generate(selectionList.length, (index) {
-      if (selectionList[index].status == true) {
-        idList.add(selectionList[index].id);
+    var _res = await _service.deleteWishlist(
+        idList: this.idList
+    );
+
+    if (_res!.status != null) {
+      if (_res.status == true) {
+        idList.clear();
+        notifyListeners();
+        await fnFetchWishlist();
+        await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_WISHLIST_DELETE_SUCCESS')),
+        );
+      } else {
+        await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(_res.message.toString()),
+        );
       }
-    });
-
-    if (idList.isNotEmpty) {
-      CustomWidget.showConfirmationDialog(
-        context,
-        desc: AppLocalizations.instance.text('TXT_REMOVE_WISHLIST_INFO'),
-        function: () async {
-          var _res = await _service.deleteWishlist(
-              idList: this.idList
-          );
-
-          if (_res!.status != null) {
-            if (_res.status == true) {
-              idList.clear();
-              notifyListeners();
-              await fnFetchWishlist();
-              await CustomWidget.showSnackBar(
-                context: context,
-                content: Text(AppLocalizations.instance.text('TXT_WISHLIST_DELETE_SUCCESS')),
-              );
-            } else {
-              await CustomWidget.showSnackBar(
-                context: context,
-                content: Text(_res.message.toString()),
-              );
-            }
-          } else {
-            await CustomWidget.showSnackBar(
-              context: context,
-              content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')),
-            );
-          }
-        },
-      );
     } else {
-      CustomWidget.showSnackBar(
+      await CustomWidget.showSnackBar(
         context: context,
-        content: Text(AppLocalizations.instance.text('TXT_SELECT_ITEM_INFO')),
+        content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')),
       );
     }
   }
 
   Future fnDeleteWishlist(BuildContext context, int id) async {
-    CustomWidget.showConfirmationDialog(
-      context,
-      desc: AppLocalizations.instance.text('TXT_REMOVE_WISHLIST_INFO'),
-      function: () async {
-        var _res = await _service.deleteWishlist(
-            idList: [id]
-        );
-
-        if (_res!.status != null) {
-          if (_res.status == true) {
-            await fnFetchWishlist();
-            await CustomWidget.showSnackBar(
-              context: context,
-              content: Text(AppLocalizations.instance.text('TXT_WISHLIST_DELETE_SUCCESS')),
-            );
-          } else {
-            await CustomWidget.showSnackBar(
-              context: context,
-              content: Text(_res.message.toString()),
-            );
-          }
-        } else {
-          await CustomWidget.showSnackBar(
-            context: context,
-            content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')),
-          );
-        }
-      },
+    var _res = await _service.deleteWishlist(
+        idList: [id]
     );
+
+    if (_res!.status != null) {
+      if (_res.status == true) {
+        await fnFetchWishlist();
+        await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_WISHLIST_DELETE_SUCCESS')),
+        );
+      } else {
+        await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(_res.message.toString()),
+        );
+      }
+    } else {
+      await CustomWidget.showSnackBar(
+        context: context,
+        content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')),
+      );
+    }
   }
 
   Future fnStoreCart(BuildContext context, int productId) async {

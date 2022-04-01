@@ -41,7 +41,7 @@ class Data {
   String? courierName;
   String? courierDesc;
   String? courierEtd;
-  String? courierCost;
+  int? courierCost;
   String? transactionTime;
   String? createdAt;
   String? updatedAt;
@@ -220,7 +220,7 @@ class Order {
   String? codeTransaction;
   int? statusPaid;
   String? voucherCode;
-  String? voucherAmount;
+  double? voucherAmount;
   String? createdAt;
   String? updatedAt;
   String? deletedAt;
@@ -412,6 +412,7 @@ class Shipment {
   String? idOrder;
   int? idAddress;
   String? receiver;
+  String? phone;
   String? createdAt;
   String? updatedAt;
   String? deletedAt;
@@ -422,6 +423,7 @@ class Shipment {
         this.idOrder,
         this.idAddress,
         this.receiver,
+        this.phone,
         this.createdAt,
         this.updatedAt,
         this.deletedAt,
@@ -432,6 +434,7 @@ class Shipment {
     idOrder = json['id_order'];
     idAddress = json['id_address'];
     receiver = json['receiver'];
+    phone = json['phone'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     deletedAt = json['deleted_at'];
@@ -445,6 +448,7 @@ class Shipment {
     data['id_order'] = this.idOrder;
     data['id_address'] = this.idAddress;
     data['receiver'] = this.receiver;
+    data['phone'] = this.phone;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['deleted_at'] = this.deletedAt;
@@ -458,6 +462,8 @@ class Shipment {
 class Address {
   int? id;
   int? idUser;
+  String? receiver;
+  String? phone;
   String? address;
   String? detailNote;
   int? provinceCode;
@@ -476,6 +482,8 @@ class Address {
   Address(
       {this.id,
         this.idUser,
+        this.receiver,
+        this.phone,
         this.address,
         this.detailNote,
         this.provinceCode,
@@ -494,6 +502,8 @@ class Address {
   Address.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     idUser = json['id_user'];
+    receiver = json['receiver'];
+    phone = json['phone'];
     address = json['address'];
     detailNote = json['detail_note'];
     provinceCode = json['province_code'];
@@ -514,6 +524,8 @@ class Address {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['id_user'] = this.idUser;
+    data['receiver'] = this.receiver;
+    data['phone'] = this.phone;
     data['address'] = this.address;
     data['detail_note'] = this.detailNote;
     data['province_code'] = this.provinceCode;

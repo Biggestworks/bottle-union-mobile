@@ -15,7 +15,6 @@ class ProductService extends GetConnect {
 
     return {
       "Accept": "application/json",
-      "User-Agent": "Persada Apps 1.0",
       "Authorization": "Bearer $_token",
     };
   }
@@ -52,6 +51,7 @@ class ProductService extends GetConnect {
         query: _query,
         headers: await _headersAuth(),
       );
+      // print(_response.body);
       _model = ProductListModel.fromJson(_response.body);
     } catch (e) {
       print(e);

@@ -20,7 +20,7 @@ class OtpScreen extends StatefulWidget {
 }
 
 class _OtpScreenState extends State<OtpScreen> 
-    with TextValidation, SingleTickerProviderStateMixin implements LoadingView {
+    with TextValidation, SingleTickerProviderStateMixin, LoadingView {
   bool _isLoad = false;
 
   @override

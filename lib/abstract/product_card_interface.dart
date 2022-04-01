@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
-import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/product/product_model.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
@@ -11,7 +10,6 @@ import 'package:eight_barrels/service/product/wishlist_service.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
-
 
 abstract class ProductCardInterface {
   WishlistService _wishlistService = new WishlistService();
@@ -55,6 +53,9 @@ abstract class ProductCardInterface {
     required BuildContext context,
     required Data data,
     required int index,
+    required Future storeClickLog(),
+    required Future storeCartLog(),
+    required Future storeWishlistLog(),
     required void onUpdateCart(),
   }) {
     return Stack(
@@ -65,10 +66,13 @@ abstract class ProductCardInterface {
             borderRadius: BorderRadiusDirectional.circular(10),
           ),
           child: InkWell(
-            onTap: () => Get.toNamed(
-              ProductDetailScreen.tag,
-              arguments: ProductDetailScreen(id: data.id,),
-            ),
+            onTap: () async {
+              await storeClickLog();
+              Get.toNamed(
+                ProductDetailScreen.tag,
+                arguments: ProductDetailScreen(id: data.id,),
+              );
+            },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -136,12 +140,18 @@ abstract class ProductCardInterface {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   GestureDetector(
-                                    onTap: () async => await fnStoreCart(context, data.id!).then((_) => onUpdateCart()),
+                                    onTap: () async {
+                                      await storeCartLog();
+                                      await fnStoreCart(context, data.id!).then((_) => onUpdateCart());
+                                    },
                                     child: Icon(FontAwesomeIcons.shoppingCart, color: CustomColor.GREY_ICON, size: 18,),
                                   ),
                                   SizedBox(width: 15,),
                                   GestureDetector(
-                                    onTap: () async => await fnStoreWishlist(context, data.id!),
+                                    onTap: () async {
+                                      await storeWishlistLog();
+                                      await fnStoreWishlist(context, data.id!);
+                                    },
                                     child: Icon(FontAwesomeIcons.heart, color: CustomColor.GREY_ICON, size: 18,),
                                   ),
                                 ],
@@ -169,6 +179,7 @@ abstract class ProductCardInterface {
     required BuildContext context,
     required Data data,
     required int index,
+    required Future storeLog(),
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -178,10 +189,13 @@ abstract class ProductCardInterface {
           borderRadius: BorderRadiusDirectional.circular(10),
         ),
         child: InkWell(
-          onTap: () => Get.toNamed(
-            ProductDetailScreen.tag,
-            arguments: ProductDetailScreen(id: data.id,),
-          ),
+          onTap: () async {
+            await storeLog();
+            Get.toNamed(
+              ProductDetailScreen.tag,
+              arguments: ProductDetailScreen(id: data.id,),
+            );
+          },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

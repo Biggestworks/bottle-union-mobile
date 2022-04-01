@@ -87,5 +87,14 @@ class URLHelper {
   static const ORDER_SUMMARY_URL = BASE_URL + '/orders/summary';
   static const STORE_ORDER_URL = BASE_URL + '/orders/checkout';
 
+  ///LOG
+  static const PRODUCT_LOG = BASE_URL + '/log/product';
+
+  ///TRANSACTION
+  static const TRANSACTION_URL = BASE_URL + '/transactions';
+  static transactionDetailUrl(String id) {
+    return BASE_URL + '/transactions/$id';
+  }
+
 
 }

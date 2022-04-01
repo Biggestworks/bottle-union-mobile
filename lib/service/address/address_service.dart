@@ -15,7 +15,6 @@ class AddressService extends GetConnect {
 
     return {
       "Accept": "application/json",
-      "User-Agent": "Persada Apps 1.0",
       "Authorization": "Bearer $_token",
     };
   }
@@ -68,6 +67,8 @@ class AddressService extends GetConnect {
     required String label,
     required String latitude,
     required String longitude,
+    required String receiver,
+    required String phone,
 }) async {
     DefaultModel _model = new DefaultModel();
 
@@ -82,6 +83,8 @@ class AddressService extends GetConnect {
       "label": label,
       "latitude": latitude,
       "longitude": longitude,
+      "receiver": receiver,
+      "phone": phone,
     };
 
     try {
@@ -152,6 +155,8 @@ class AddressService extends GetConnect {
     required String label,
     required String latitude,
     required String longitude,
+    required String receiver,
+    required String phone,
   }) async {
     DefaultModel _model = new DefaultModel();
 
@@ -167,6 +172,8 @@ class AddressService extends GetConnect {
       "label": label,
       "latitude": latitude,
       "longitude": longitude,
+      "receiver": receiver,
+      "phone": phone,
     };
 
     try {
@@ -175,7 +182,6 @@ class AddressService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
-      print(_response.body);
       _model = DefaultModel.fromJson(_response.body);
     } catch (e) {
       print(e);
@@ -197,7 +203,6 @@ class AddressService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
-      print(_response.body);
       _model = DefaultModel.fromJson(_response.body);
     } catch (e) {
       print(e);

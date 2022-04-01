@@ -1,8 +1,4 @@
-import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/auth/auth_service.dart';
-import 'package:flutter/material.dart';
-
-import 'app_localization.dart';
 
 class TextValidation {
   AuthService _service = new AuthService();

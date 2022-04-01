@@ -15,7 +15,6 @@ class CartService extends GetConnect {
 
     return {
       "Accept": "application/json",
-      "User-Agent": "Persada Apps 1.0",
       "Authorization": "Bearer $_token",
     };
   }

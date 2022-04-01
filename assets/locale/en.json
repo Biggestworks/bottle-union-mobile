@@ -24,6 +24,8 @@
 	"TXT_LBL_ADDRESS": "Address",
 	"TXT_LBL_DETAIL_NOTE": "Detail Note",
 	"TXT_LBL_ADDRESS_LABEL": "Label",
+	"TXT_LBL_RECEIVER_NAME": "Receiver Name",
+	"TXT_LBL_RECEIVER_PHONE": "Receiver Phone",
 	"TXT_LBL_REGION": "Region",
 	"TXT_STEP_PERSONAL": "Personal Data",
 	"TXT_STEP_ADDRESS": "Address & Region",
@@ -142,7 +144,18 @@
 	"TXT_FINISH_PAYMENT": "Finish Payment",
 	"TXT_FINISH_PAYMENT_INFO": "Finish the payment before",
 	"TXT_BACK": "Back",
-
+	"TXT_SHIPMENT_INFORMATION": "Shipment Information",
+	"TXT_ORDER_FINISH_INFO": "Thank you for ordering!",
+	"TXT_ORDER_ID_INFO": "Your order with ID",
+	"TXT_ORDER_ID_INFO_2": "has been placed.",
+	"TXT_COURIER": "Courier",
+	"TXT_PAYMENT_DETAIL": "Payment Detail",
+	"TXT_BUY_AGAIN": "Buy Again",
+	"TXT_TRACK_ORDER": "Track Order",
+	"TXT_CHOOSE_DATE": "Choose Date",
+	"TXT_FROM_DATE": "From Date",
+	"TXT_TO_DATE": "To Date",
+	"TXT_NO_TRANSACTION_INFO": "You have no transaction yet",
 
 
 	"app_name": "eRecycle",

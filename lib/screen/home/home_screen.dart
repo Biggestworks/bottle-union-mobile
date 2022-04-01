@@ -1,7 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:eight_barrels/abstract/product_log.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
+import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/helper/push_notification_manager.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
 import 'package:eight_barrels/screen/home/banner_detail_screen.dart';
@@ -25,7 +26,7 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with ProductLog {
 
   @override
   void initState() {
@@ -118,8 +119,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: provider.bannerList.data!.map((i) {
                           int index = provider.bannerList.data!.indexOf(i);
                           return Container(
-                            width: provider.currBanner == index ? 12.0 : 8.0,
-                            height: provider.currBanner == index ? 12.0 : 8.0,
+                            width: provider.currBanner == index ? 10.0 : 6.0,
+                            height: provider.currBanner == index ? 10.0 : 6.0,
                             margin: EdgeInsets.symmetric(horizontal: 4),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
@@ -147,7 +148,6 @@ class _HomeScreenState extends State<HomeScreen> {
           Material(
             elevation: 4,
             child: Container(
-              // color: CustomColor.BROWN_TXT,
               height: 150,
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -192,9 +192,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemBuilder: (context, index) {
                             var _data = provider.categoryList.data![index];
                             return InkWell(
-                              onTap: () => Get.toNamed(ProductByCategoryScreen.tag, arguments: ProductByCategoryScreen(
-                                category: _data.name!,
-                              )),
+                              onTap: () async {
+                                await fnStoreLog(
+                                  productId: null,
+                                  categoryId: _data.id,
+                                  notes: KeyHelper.CLICK_CATEGORY_KEY,
+                                );
+                                Get.toNamed(ProductByCategoryScreen.tag, arguments: ProductByCategoryScreen(
+                                  category: _data.name ?? '',
+                                ));
+                              },
                               child: Padding(
                                 padding: EdgeInsets.only(left: index == 0 ? 50 : 0, right: 10),
                                 child: Column(

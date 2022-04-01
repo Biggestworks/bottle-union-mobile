@@ -5,10 +5,8 @@ import 'package:eight_barrels/helper/validation.dart';
 import 'package:eight_barrels/provider/auth/register_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -23,7 +21,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen>
-    with TextValidation, SingleTickerProviderStateMixin implements LoadingView {
+    with TextValidation, SingleTickerProviderStateMixin, LoadingView {
   bool _isLoad = false;
 
   @override

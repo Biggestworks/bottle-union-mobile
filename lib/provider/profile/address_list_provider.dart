@@ -1,11 +1,9 @@
 import 'package:eight_barrels/abstract/loading.dart';
-import 'package:eight_barrels/abstract/map_picker_interface.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/model/address/address_list_model.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/address/address_service.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class AddressListProvider extends ChangeNotifier {
   AddressService _service = new AddressService();

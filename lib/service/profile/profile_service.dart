@@ -6,9 +6,9 @@ import 'package:eight_barrels/model/auth/user_detail_model.dart';
 import 'package:eight_barrels/model/auth/user_model.dart';
 import 'package:eight_barrels/model/default_model.dart';
 import 'package:get/get_connect.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileService extends GetConnect {
 
@@ -18,7 +18,6 @@ class ProfileService extends GetConnect {
 
     return {
       "Accept": "application/json",
-      "User-Agent": "Persada Apps 1.0",
       "Authorization": "Bearer $_token",
     };
   }
@@ -152,7 +151,7 @@ class ProfileService extends GetConnect {
         _data,
         headers: {
           "Accept": "application/json",
-          "User-Agent": "Persada Apps 1.0",
+
           "Authorization": "Bearer $token",
         },
       );
