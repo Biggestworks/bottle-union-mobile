@@ -204,8 +204,8 @@ class ProductListProvider extends ChangeNotifier
   }
 
   Future fnInitFilter() async {
-    brandList = (await _service.brandList())!;
-    categoryList = (await _service.categoryList())!;
+    brandList = (await _service.getBrandList())!;
+    categoryList = (await _service.getCategoryList())!;
     fnGenerateYearList();
     isFiltered = false;
     notifyListeners();

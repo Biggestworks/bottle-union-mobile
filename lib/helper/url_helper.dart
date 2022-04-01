@@ -22,6 +22,7 @@ class URLHelper {
   static productDetailUrl(String id) {
     return BASE_URL + '/product/show/$id';
   }
+  static const POPULAR_PRODUCT_LIST_URL = BASE_URL + '/product/home';
 
   ///WISHLIST
   static const WISHLIST_URL = BASE_URL + '/wishlist';

@@ -40,7 +40,7 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
 
   Future fnFetchProduct() async {
     _view!.onProgressStart();
-    product = (await _productService.productDetail(id: id))!;
+    product = (await _productService.getProductDetail(id: id))!;
     _view!.onProgressFinish();
     notifyListeners();
   }

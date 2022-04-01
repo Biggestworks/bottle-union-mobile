@@ -54,6 +54,7 @@
 	"TXT_TITLE_SELECT_CATEGORY": "Drink Categories",
 	"TXT_SUB_TITLE_SELECT_CATEGORY": "Find your favorite drink by category",
 	"TXT_TITLE_POPUlAR_PICKED": "Popular Picked",
+	"TXT_SUB_TITLE_POPUlAR_PICKED": "Get your drink by others recommendations",
 	"TXT_AGE_ERROR": "Sorry, your age must be more than 21 years old",
 	"TXT_EMAIL_ERROR": "Sorry, this email has been taken, please user another one",
 	"TXT_PHONE_ERROR": "Sorry, this number has been taken, please user another one",

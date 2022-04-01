@@ -2,6 +2,7 @@ import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/helper/url_helper.dart';
 import 'package:eight_barrels/model/product/brand_model.dart';
 import 'package:eight_barrels/model/product/category_model.dart';
+import 'package:eight_barrels/model/product/popular_product_list_model.dart';
 import 'package:eight_barrels/model/product/product_detail_model.dart';
 import 'package:eight_barrels/model/product/product_model.dart';
 import 'package:get/get_connect.dart';
@@ -51,7 +52,6 @@ class ProductService extends GetConnect {
         query: _query,
         headers: await _headersAuth(),
       );
-      // print(_response.body);
       _model = ProductListModel.fromJson(_response.body);
     } catch (e) {
       print(e);
@@ -60,7 +60,7 @@ class ProductService extends GetConnect {
     return _model;
   }
 
-  Future<BrandListModel?> brandList() async {
+  Future<BrandListModel?> getBrandList() async {
     BrandListModel _model = new BrandListModel();
 
     try {
@@ -76,7 +76,7 @@ class ProductService extends GetConnect {
     return _model;
   }
 
-  Future<CategoryListModel?> categoryList() async {
+  Future<CategoryListModel?> getCategoryList() async {
     CategoryListModel _model = new CategoryListModel();
 
     try {
@@ -92,7 +92,7 @@ class ProductService extends GetConnect {
     return _model;
   }
 
-  Future<ProductDetailModel?> productDetail({
+  Future<ProductDetailModel?> getProductDetail({
     int? id,
   }) async {
     ProductDetailModel _model = new ProductDetailModel();
@@ -103,6 +103,30 @@ class ProductService extends GetConnect {
         headers: await _headersAuth(),
       );
       _model = ProductDetailModel.fromJson(_response.body);
+    } catch (e) {
+      print(e);
+    }
+
+    return _model;
+  }
+
+  Future<PopularProductListModel?> getPopularProductList({
+    String? page,
+  }) async {
+    PopularProductListModel _model = new PopularProductListModel();
+
+    final Map<String, dynamic> _query = {
+      "page": page,
+      "perPage": '6',
+    };
+
+    try {
+      Response _response = await get(
+        URLHelper.POPULAR_PRODUCT_LIST_URL,
+        query: _query,
+        headers: await _headersAuth(),
+      );
+      _model = PopularProductListModel.fromJson(_response.body);
     } catch (e) {
       print(e);
     }
