@@ -139,9 +139,29 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(AppLocalizations.instance.text('TXT_ORDER_SUMMARY'), style: TextStyle(
-                      fontSize: 16,
-                    ),),
+                    Row(
+                      children: [
+                        Container(
+                          height: 20,
+                          width: 20,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: CustomColor.MAIN),
+                          ),
+                          child: Center(
+                            child: Text('2', style: TextStyle(
+                              fontSize: 15,
+                              color: CustomColor.MAIN,
+                            ), textAlign: TextAlign.center,),
+                          ),
+                        ),
+                        SizedBox(width: 10,),
+                        Text(AppLocalizations.instance.text('TXT_ORDER_SUMMARY'), style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),),
+                      ],
+                    ),
                     Divider(height: 20, thickness: 1,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -182,10 +202,34 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                children: [
+                  Container(
+                    height: 20,
+                    width: 20,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: CustomColor.MAIN),
+                    ),
+                    child: Center(
+                      child: Text('1', style: TextStyle(
+                        fontSize: 15,
+                        color: CustomColor.MAIN,
+                      ), textAlign: TextAlign.center,),
+                    ),
+                  ),
+                  SizedBox(width: 10,),
+                  Text(AppLocalizations.instance.text('TXT_PAYMENT_INFORMATION'), style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),),
+                ],
+              ),
+              SizedBox(height: 10,),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(AppLocalizations.instance.text('TXT_PAYMENT_METHOD'), style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 15,
                   ),),
                   Flexible(
                     child: TextButton(

@@ -4,7 +4,9 @@ import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/model/product/popular_product_list_model.dart' as popularProduct;
 import 'package:eight_barrels/model/product/product_model.dart';
+import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
+import 'package:eight_barrels/screen/product/wishlist_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/cart/cart_service.dart';
 import 'package:eight_barrels/service/product/wishlist_service.dart';
@@ -24,7 +26,16 @@ abstract class ProductCardInterface {
 
     if (_res!.status != null) {
       if (_res.status == true && _res.message == 'Save Success') {
-        await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_WISHLIST_ADD')));
+        await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_WISHLIST_ADD')),
+          duration: 4,
+          action: SnackBarAction(
+            label: 'Go to wishlist',
+            textColor: Colors.white,
+            onPressed: () => Get.toNamed(WishListScreen.tag),
+          ),
+        );
       } else if (_res.status == true && _res.message == 'Success remove wishlist') {
         await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_WISHLIST_DELETE_SUCCESS')));
       } else {
@@ -42,7 +53,16 @@ abstract class ProductCardInterface {
 
     if (_res!.status != null) {
       if (_res.status == true) {
-        await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_CART_ADD_INFO')));
+        await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_CART_ADD_INFO')),
+          duration: 4,
+          action: SnackBarAction(
+            label: 'Go to cart',
+            textColor: Colors.white,
+            onPressed: () => Get.offNamedUntil(BaseHomeScreen.tag, (route) => false, arguments: BaseHomeScreen(pageIndex: 2,)),
+          ),
+        );
       } else {
         await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
       }

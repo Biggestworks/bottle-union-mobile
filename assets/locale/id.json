@@ -157,6 +157,13 @@
 	"TXT_FROM_DATE": "Dari Tgl",
 	"TXT_TO_DATE": "Sampai Tgl",
 	"TXT_NO_TRANSACTION_INFO": "Anda belum memiliki transaksi",
+	"TXT_PAYMENT_INFORMATION": "Informasi Pembayaran",
+	"TXT_SORT_BY_DATE": "Urut berdasarkan tanggal",
+	"TXT_LAST_30_DAYS": "30 hari terakhir",
+	"TXT_LAST_90_DAYS": "90 hari terakhir",
+	"TXT_TODAY": "Hari ini",
+	"TXT_ALL_DATE": "Semua Tanggal",
+	"TXT_CART_INFO": "Anda mempunyai %s di dalam keranjang",
 
 
 	"app_name": "eRecycle",

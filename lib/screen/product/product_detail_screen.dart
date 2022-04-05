@@ -71,7 +71,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
           Consumer<ProductDetailProvider>(
             builder: (context, provider, _) {
               return Text('Product Discussion (${provider.discussionList.data?.length})', style: TextStyle(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),);
             },
@@ -113,7 +113,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                               ListView.separated(
                                 physics: NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
-                                itemCount: provider.discussionList.data?.length ?? 0,
+                                itemCount: provider.discussionList.data?.length.clamp(0, 4) ?? 0,
                                 separatorBuilder: (context, index) {
                                   return Divider(color: CustomColor.GREY_ICON, height: 30,);
                                 },

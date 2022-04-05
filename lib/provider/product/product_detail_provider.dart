@@ -4,13 +4,16 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/model/product/discussion_list_model.dart';
 import 'package:eight_barrels/model/product/product_detail_model.dart';
+import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
+import 'package:eight_barrels/screen/product/wishlist_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/cart/cart_service.dart';
 import 'package:eight_barrels/service/discussion/discussion_service.dart';
 import 'package:eight_barrels/service/product/product_service.dart';
 import 'package:eight_barrels/service/product/wishlist_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:html/parser.dart' show parse;
 
 class ProductDetailProvider extends ChangeNotifier with ProductLog {
@@ -73,7 +76,16 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
           notes: KeyHelper.SAVE_WISHLIST_KEY,
         );
         await fnCheckWishlist();
-        await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_WISHLIST_ADD')));
+        await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_WISHLIST_ADD')),
+          duration: 4,
+          action: SnackBarAction(
+            label: 'Go to wishlist',
+            textColor: Colors.white,
+            onPressed: () => Get.toNamed(WishListScreen.tag),
+          ),
+        );
       } else if (_res.status == true && _res.message == 'Success remove wishlist') {
         await fnStoreLog(
           productId: [product.data?.id ?? 0],
@@ -103,7 +115,16 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
           notes: KeyHelper.SAVE_CART_KEY,
         );
         await fnCheckWishlist();
-        await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_CART_ADD_INFO')));
+        await CustomWidget.showSnackBar(
+          context: context, 
+          content: Text(AppLocalizations.instance.text('TXT_CART_ADD_INFO')),
+          duration: 4,
+          action: SnackBarAction(
+            label: 'Go to cart',
+            textColor: Colors.white,
+            onPressed: () => Get.offNamedUntil(BaseHomeScreen.tag, (route) => false, arguments: BaseHomeScreen(pageIndex: 2,)),
+          ),
+        );
       } else {
         await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
       }

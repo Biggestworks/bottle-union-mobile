@@ -1,5 +1,6 @@
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
+import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/model/transaction/transaction_detail_model.dart';
 import 'package:eight_barrels/screen/checkout/midtrans_webview_screen.dart';
 import 'package:eight_barrels/screen/transaction/transaction_detail_screen.dart';
@@ -54,6 +55,10 @@ class TransactionDetailProvider extends ChangeNotifier {
     }
     _view!.onProgressFinish();
     notifyListeners();
+  }
+
+  fnGetSubtotal(int price, int qty) {
+    return FormatterHelper.moneyFormatter((price * qty));
   }
 
 }

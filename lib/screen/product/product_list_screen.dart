@@ -51,7 +51,7 @@ class _ProductListScreenState extends State<ProductListScreen>
         child: ChangeNotifierProvider.value(
           value : Provider.of<ProductListProvider>(context, listen: false),
           child: Container(
-            height: MediaQuery.of(context).size.height * 0.8,
+            height: MediaQuery.of(context).size.height * 0.85,
             child: Scaffold(
               body: SingleChildScrollView(
                 child: Padding(
@@ -345,14 +345,16 @@ class _ProductListScreenState extends State<ProductListScreen>
                 builder: (context, provider, skeleton) {
                   switch (provider.isFiltered) {
                     case true:
-                      return Container(
-                        width: MediaQuery.of(context).size.width,
-                        padding: EdgeInsets.all(10),
-                        child: CustomWidget.roundBtn(
-                          label: 'Submit Filter',
-                          btnColor: CustomColor.MAIN,
-                          lblColor: Colors.white,
-                          function: () async => await provider.fnOnSubmitFilter(),
+                      return SafeArea(
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.all(10),
+                          child: CustomWidget.roundBtn(
+                            label: 'Submit Filter',
+                            btnColor: CustomColor.MAIN,
+                            lblColor: Colors.white,
+                            function: () async => await provider.fnOnSubmitFilter(),
+                          ),
                         ),
                       );
                     default:
@@ -469,7 +471,7 @@ class _ProductListScreenState extends State<ProductListScreen>
             children: [
               Text(AppLocalizations.instance.text('TXT_HEADER_CELLAR'), style: TextStyle(
                 color: CustomColor.BROWN_TXT,
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),),
               CustomWidget.textIconBtn(
@@ -477,7 +479,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                 label: 'Sort/Filter',
                 lblColor: CustomColor.BROWN_LIGHT_TXT,
                 icColor: CustomColor.BROWN_TXT,
-                icSize: 24,
+                icSize: 22,
                 fontSize: 16,
                 function: () async => await _provider.fnInitFilter()
                     .then((_) => _showFilterSheet()),

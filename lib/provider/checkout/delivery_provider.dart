@@ -58,7 +58,7 @@ class DeliveryProvider extends ChangeNotifier {
   Future fnFetchSelectedAddress() async {
     _view!.onProgressStart();
     await fnFetchAddressList();
-    if (addressList.data != null) {
+    if (addressList.data != null && addressList.data?.length != 0) {
       selectedAddress = addressList.data!.firstWhere((item) => item.isChoosed == 1, orElse: null);
       destination = selectedAddress?.cityCode.toString();
     }

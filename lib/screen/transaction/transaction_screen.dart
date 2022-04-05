@@ -56,7 +56,7 @@ class _TransactionScreenState extends State<TransactionScreen>
               padding: EdgeInsets.all(10),
               child: SfDateRangePicker(
                 initialDisplayDate: DateTime.now(),
-                onSelectionChanged: (value) async => await _provider.fnOnSelectDate(value, flag),
+                onSelectionChanged: (value) async => await _provider.fnOnSelectCustomDate(value, flag),
               ),
             ),
           );
@@ -73,51 +73,76 @@ class _TransactionScreenState extends State<TransactionScreen>
           child: Container(
             height: MediaQuery.of(context).size.height * 0.6,
             child: Scaffold(
-              body: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Flexible(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              body: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
                           children: [
-                            Text(AppLocalizations.instance.text('TXT_LBL_FILTER'), style: TextStyle(
+                            Icon(Icons.date_range, color: CustomColor.MAIN,),
+                            SizedBox(width: 10,),
+                            Text(AppLocalizations.instance.text('TXT_SORT_BY_DATE'), style: TextStyle(
                               fontSize: 16,
+                              fontWeight: FontWeight.bold,
                             ),),
-                            TextButton(
-                              onPressed: () async {
-                                Navigator.pop(context);
-                                await _provider.fnOnResetFilter();
-                              },
-                              child: Text('Reset Filter', style: TextStyle(
-                                color: CustomColor.MAIN,
-                                fontSize: 16,
-                              ),),
-                            ),
                           ],
                         ),
-                      ),
-                      SizedBox(height: 10,),
-                      Flexible(
-                        child: Card(
-                          color: CustomColor.GREY_LIGHT_BG,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(AppLocalizations.instance.text('TXT_CHOOSE_DATE'), style: TextStyle(
+                        IconButton(
+                          onPressed: () => Get.back(),
+                          icon: Icon(Icons.close, color: CustomColor.GREY_TXT,),
+                          constraints: BoxConstraints(),
+                          padding: EdgeInsets.zero,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10,),
+                    Consumer<TransactionProvider>(
+                      builder: (context, provider, _) {
+                        return Flexible(
+                          child: ListView.separated(
+                            shrinkWrap: true,
+                            itemCount: provider.dateFilter.length,
+                            separatorBuilder: (context, index) {
+                              return Divider(color: CustomColor.GREY_TXT,);
+                            },
+                            itemBuilder: (context, index) {
+                              var _data = provider.dateFilter[index];
+                              return RadioListTile(
+                                title: Text(_data.title, style: TextStyle(
                                   fontSize: 16,
                                 ),),
-                                SizedBox(height: 10,),
-                                Row(
+                                subtitle: _data.subTitle != ''
+                                    ? Text(_data.subTitle)
+                                    : null,
+                                value: index,
+                                groupValue: provider.selectedDateFilter,
+                                dense: true,
+                                activeColor: CustomColor.MAIN,
+                                onChanged: (value) => provider.fnOnSelectDateFilter(index),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 10,),
+                    Consumer<TransactionProvider>(
+                      child: SizedBox(),
+                      builder: (context, provider, skeleton) {
+                        switch (provider.isCustomDate) {
+                          case true:
+                            return Card(
+                              color: CustomColor.GREY_LIGHT_BG,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -184,13 +209,14 @@ class _TransactionScreenState extends State<TransactionScreen>
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                              ),
+                            );
+                          default:
+                            return skeleton!;
+                        }
+                      },
+                    ),
+                  ],
                 ),
               ),
               bottomNavigationBar: Consumer<TransactionProvider>(
@@ -458,7 +484,7 @@ class _TransactionScreenState extends State<TransactionScreen>
             children: [
               Text(AppLocalizations.instance.text('TXT_HEADER_TRANSACTION'), style: TextStyle(
                 color: CustomColor.BROWN_TXT,
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),),
               CustomWidget.textIconBtn(
@@ -466,7 +492,7 @@ class _TransactionScreenState extends State<TransactionScreen>
                 label: 'Sort',
                 lblColor: CustomColor.BROWN_LIGHT_TXT,
                 icColor: CustomColor.BROWN_TXT,
-                icSize: 24,
+                icSize: 22,
                 fontSize: 16,
                 function: () {
                   _provider.fnInitFilter();

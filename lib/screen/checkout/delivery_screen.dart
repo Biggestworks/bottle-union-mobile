@@ -6,6 +6,7 @@ import 'package:eight_barrels/model/cart/cart_total_model.dart';
 import 'package:eight_barrels/model/product/product_detail_model.dart';
 import 'package:eight_barrels/provider/checkout/delivery_provider.dart';
 import 'package:eight_barrels/screen/checkout/payment_screen.dart';
+import 'package:eight_barrels/screen/profile/add_address_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
@@ -203,22 +204,22 @@ class _DeliveryScreenState extends State<DeliveryScreen>
                 Row(
                   children: [
                     Container(
-                      height: 22,
-                      width: 22,
+                      height: 20,
+                      width: 20,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(color: CustomColor.MAIN),
                       ),
                       child: Center(
                         child: Text('1', style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 15,
                           color: CustomColor.MAIN,
                         ), textAlign: TextAlign.center,),
                       ),
                     ),
                     SizedBox(width: 10,),
                     Text(AppLocalizations.instance.text('TXT_SHIPMENT_INFORMATION'), style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 15,
                       fontWeight: FontWeight.bold,
                     ),),
                   ],
@@ -228,24 +229,56 @@ class _DeliveryScreenState extends State<DeliveryScreen>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(AppLocalizations.instance.text('TXT_DELIVERY_ADDRESS'), style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 15,
                     ),),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        visualDensity: VisualDensity.compact,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      onPressed: () => _showAddressSheet(),
-                      child: Text('Change', style: TextStyle(
-                        color: CustomColor.BROWN_TXT,
-                      ),),
+                    Consumer<DeliveryProvider>(
+                      child: SizedBox(),
+                      builder: (context, provider, skeleton) {
+                        switch (provider.addressList.data) {
+                          case null:
+                            return skeleton!;
+                          default:
+                            switch (provider.addressList.data?.length) {
+                              case 0:
+                                return TextButton(
+                                  style: TextButton.styleFrom(
+                                    visualDensity: VisualDensity.compact,
+                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                  onPressed: () async => await Get.toNamed(AddAddressScreen.tag, arguments: AddAddressScreen())!.then((value) async {
+                                    if (value == true) {
+                                      await provider.fnFetchAddressList()
+                                          .then((_) async => await provider.fnFetchSelectedAddress());
+                                      await CustomWidget.showSnackBar(context: context, content: Text('Success add address'));
+                                    }
+                                  }),
+                                  child: Text(AppLocalizations.instance.text('TXT_ADD_ADDRESS'), style: TextStyle(
+                                    color: CustomColor.BROWN_TXT,
+                                  ),),
+                                );
+                              default:
+                                return TextButton(
+                                  style: TextButton.styleFrom(
+                                    visualDensity: VisualDensity.compact,
+                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                  onPressed: () => _showAddressSheet(),
+                                  child: Text('Change', style: TextStyle(
+                                    color: CustomColor.BROWN_TXT,
+                                  ),),
+                                );
+                            }
+                        }
+                      },
                     ),
                   ],
                 ),
                 Divider(height: 20, thickness: 1,),
                 Consumer<DeliveryProvider>(
-                  child: Container(
-                    child: Text('no address selected'),
+                  child: Center(
+                    child: Text('no address selected', style: TextStyle(
+                      color: CustomColor.GREY_TXT,
+                    ),),
                   ),
                   builder: (context, provider, skeleton) {
                     switch (provider.selectedAddress) {
@@ -290,83 +323,94 @@ class _DeliveryScreenState extends State<DeliveryScreen>
             ),
           ),
           Consumer<DeliveryProvider>(
-            builder: (context, provider, _) {
-              switch (provider.selectedCourier) {
+            child: SizedBox(),
+            builder: (context, provider, skeleton) {
+              switch (provider.addressList.data) {
                 case null:
-                  return AnimatedBuilder(
-                    animation: offsetAnimation,
-                    builder: (context, child) {
-                      return Padding(
-                        padding: EdgeInsets.only(left: offsetAnimation.value + 15.0, right: 15.0 - offsetAnimation.value),
-                        child: Card(
-                          elevation: 2,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: ListTile(
-                            dense: true,
-                            visualDensity: VisualDensity.compact,
-                            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                            title: Text(AppLocalizations.instance.text('TXT_CHOOSE_DELIVERY'), style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 15,
-                            ),),
-                            leading: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Icon(
-                                MdiIcons.truckFast,
-                                color: CustomColor.BROWN_TXT,
-                                size: 26,
+                  return skeleton!;
+                default:
+                  switch (provider.addressList.data?.length) {
+                    case 0:
+                      return skeleton!;
+                    default:
+                      switch (provider.selectedCourier) {
+                        case null:
+                          return AnimatedBuilder(
+                            animation: offsetAnimation,
+                            builder: (context, child) {
+                              return Padding(
+                                padding: EdgeInsets.only(left: offsetAnimation.value + 15.0, right: 15.0 - offsetAnimation.value),
+                                child: Card(
+                                  elevation: 2,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: ListTile(
+                                    dense: true,
+                                    visualDensity: VisualDensity.compact,
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                    title: Text(AppLocalizations.instance.text('TXT_CHOOSE_DELIVERY'), style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 15,
+                                    ),),
+                                    leading: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Icon(
+                                        MdiIcons.truckFast,
+                                        color: CustomColor.BROWN_TXT,
+                                        size: 26,
+                                      ),
+                                    ),
+                                    trailing: Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: CustomColor.GREY_TXT,
+                                      size: 15,
+                                    ),
+                                    onTap: () async => await provider.fnFetchCourierList()
+                                        .then((_) => _showCourierSheet()),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        default:
+                          var _data = provider.selectedCourier;
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Card(
+                              elevation: 2,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: ListTile(
+                                dense: true,
+                                visualDensity: VisualDensity.compact,
+                                contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                title: Text('${_data?.courier ?? '-'} ${_data?.etd ?? '-'} (${FormatterHelper.moneyFormatter(_data?.price ?? 0)})', style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                ),),
+                                subtitle: Text(_data?.description ?? '-'),
+                                leading: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Icon(
+                                    MdiIcons.truckFast,
+                                    color: CustomColor.BROWN_TXT,
+                                    size: 26,
+                                  ),
+                                ),
+                                trailing: Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: CustomColor.GREY_TXT,
+                                  size: 15,
+                                ),
+                                onTap: () async => await provider.fnFetchCourierList()
+                                    .then((_) => _showCourierSheet()),
                               ),
                             ),
-                            trailing: Icon(
-                              Icons.arrow_forward_ios,
-                              color: CustomColor.GREY_TXT,
-                              size: 15,
-                            ),
-                            onTap: () async => await provider.fnFetchCourierList()
-                                .then((_) => _showCourierSheet()),
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                default:
-                  var _data = provider.selectedCourier;
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: ListTile(
-                        dense: true,
-                        visualDensity: VisualDensity.compact,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        title: Text('${_data?.courier ?? '-'} ${_data?.etd ?? '-'} (${FormatterHelper.moneyFormatter(_data?.price ?? 0)})', style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                        ),),
-                        subtitle: Text(_data?.description ?? '-'),
-                        leading: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Icon(
-                            MdiIcons.truckFast,
-                            color: CustomColor.BROWN_TXT,
-                            size: 26,
-                          ),
-                        ),
-                        trailing: Icon(
-                          Icons.arrow_forward_ios,
-                          color: CustomColor.GREY_TXT,
-                          size: 15,
-                        ),
-                        onTap: () async => await provider.fnFetchCourierList()
-                            .then((_) => _showCourierSheet()),
-                      ),
-                    ),
-                  );
+                          );
+                      }
+                  }
               }
             },
           ),
@@ -388,22 +432,22 @@ class _DeliveryScreenState extends State<DeliveryScreen>
                     title: Row(
                       children: [
                         Container(
-                          height: 22,
-                          width: 22,
+                          height: 20,
+                          width: 20,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(color: CustomColor.MAIN),
                           ),
                           child: Center(
                             child: Text('2', style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 15,
                               color: CustomColor.MAIN,
                             ), textAlign: TextAlign.center,),
                           ),
                         ),
                         SizedBox(width: 10,),
                         Text('${AppLocalizations.instance.text('TXT_ORDER_DETAIL')} (1)', style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),),
                       ],
@@ -520,22 +564,22 @@ class _DeliveryScreenState extends State<DeliveryScreen>
                     title: Row(
                       children: [
                         Container(
-                          height: 22,
-                          width: 22,
+                          height: 20,
+                          width: 20,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(color: CustomColor.MAIN),
                           ),
                           child: Center(
                             child: Text('2', style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 15,
                               color: CustomColor.MAIN,
                             ), textAlign: TextAlign.center,),
                           ),
                         ),
                         SizedBox(width: 10,),
                         Text('${AppLocalizations.instance.text('TXT_ORDER_DETAIL')} (${provider.cartList?.data?.length})', style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),),
                       ],
@@ -624,22 +668,22 @@ class _DeliveryScreenState extends State<DeliveryScreen>
                   Row(
                     children: [
                       Container(
-                        height: 22,
-                        width: 22,
+                        height: 20,
+                        width: 20,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(color: CustomColor.MAIN),
                         ),
                         child: Center(
                           child: Text('3', style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 15,
                             color: CustomColor.MAIN,
                           ), textAlign: TextAlign.center,),
                         ),
                       ),
                       SizedBox(width: 10,),
                       Text(AppLocalizations.instance.text('TXT_ORDER_SUMMARY'), style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 15,
                         fontWeight: FontWeight.bold,
                       ),),
                     ],

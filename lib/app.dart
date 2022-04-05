@@ -8,6 +8,7 @@ import 'package:eight_barrels/provider/cart/cart_list_provider.dart';
 import 'package:eight_barrels/provider/checkout/delivery_provider.dart';
 import 'package:eight_barrels/provider/checkout/order_finish_provider.dart';
 import 'package:eight_barrels/provider/checkout/payment_provider.dart';
+import 'package:eight_barrels/provider/discussion/add_discussion_provider.dart';
 import 'package:eight_barrels/provider/discussion/discussion_provider.dart';
 import 'package:eight_barrels/provider/home/banner_detail_provider.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
@@ -36,6 +37,7 @@ import 'package:eight_barrels/screen/checkout/delivery_screen.dart';
 import 'package:eight_barrels/screen/checkout/midtrans_webview_screen.dart';
 import 'package:eight_barrels/screen/checkout/order_finish_screen.dart';
 import 'package:eight_barrels/screen/checkout/payment_screen.dart';
+import 'package:eight_barrels/screen/discussion/add_discussion_screen.dart';
 import 'package:eight_barrels/screen/discussion/discussion_screen.dart';
 import 'package:eight_barrels/screen/home/banner_detail_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
@@ -303,6 +305,13 @@ class _AppState extends State<App> {
             page: () => ChangeNotifierProvider<TransactionDetailProvider>(
               create: (context) => TransactionDetailProvider(),
               child: TransactionDetailScreen(),
+            ),
+          ),
+          GetPage(
+            name: AddDiscussionScreen.tag,
+            page: () => ChangeNotifierProvider<AddDiscussionProvider>(
+              create: (context) => AddDiscussionProvider(),
+              child: AddDiscussionScreen(),
             ),
           ),
         ],

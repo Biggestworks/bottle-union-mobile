@@ -123,7 +123,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                       scrollDirection: Axis.horizontal,
                       itemCount: provider.transactionDetail.data?.product?.length,
                       itemBuilder: (context, index) {
-                        var _data = provider.transactionDetail.data?.product?[index];
+                        var _data = provider.transactionDetail.data?.order?[index];
                         return InkWell(
                           onTap: () {},
                           child: Card(
@@ -139,7 +139,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                                     width: 80,
                                     height: 80,
                                     child: ClipRRect(
-                                      child: CustomWidget.networkImg(context, _data?.image1),
+                                      child: CustomWidget.networkImg(context, _data?.product?.image1),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
@@ -148,15 +148,15 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(_data?.name ?? '-', style: TextStyle(
+                                        Text(_data?.product?.name ?? '-', style: TextStyle(
                                           color: Colors.black,
                                         ), maxLines: 1, overflow: TextOverflow.ellipsis,),
                                         SizedBox(height: 5,),
-                                        Text('1 x ${FormatterHelper.moneyFormatter(_data?.regularPrice ?? 0)}', style: TextStyle(
+                                        Text('${_data?.qty} x ${FormatterHelper.moneyFormatter(_data?.product?.regularPrice ?? 0)}', style: TextStyle(
                                           color: CustomColor.GREY_TXT,
                                         ),),
                                         SizedBox(height: 5,),
-                                        Text('Total: ${FormatterHelper.moneyFormatter(_data?.price)}', style: TextStyle(
+                                        Text('Total: ${provider.fnGetSubtotal(_data?.price ?? 0, _data?.qty ?? 0)}', style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black,
                                         ),),
@@ -356,14 +356,6 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                       border: Border(
                         top: BorderSide(width: 0.5, color: CustomColor.GREY_ICON),
                       ),
-                      // boxShadow: [
-                      //   BoxShadow(
-                      //     color: Colors.grey.withOpacity(0.2),
-                      //     spreadRadius: 5,
-                      //     blurRadius: 25,
-                      //     offset: Offset(0, -25), // changes position of shadow
-                      //   ),
-                      // ],
                     ),
                     child: CustomWidget.roundIconBtn(
                       icon: MdiIcons.shieldCheck,

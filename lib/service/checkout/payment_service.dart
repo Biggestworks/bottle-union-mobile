@@ -67,7 +67,6 @@ class PaymentService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
-      print(_response.body);
       _model = OrderModel.fromJson(_response.body);
     } catch (e) {
       print(e);

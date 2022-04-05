@@ -157,7 +157,13 @@
 	"TXT_FROM_DATE": "From Date",
 	"TXT_TO_DATE": "To Date",
 	"TXT_NO_TRANSACTION_INFO": "You have no transaction yet",
-
+	"TXT_PAYMENT_INFORMATION": "Payment Information",
+	"TXT_SORT_BY_DATE": "Sort by Date",
+	"TXT_LAST_30_DAYS": "Last 30 days",
+	"TXT_LAST_90_DAYS": "Last 90 days",
+	"TXT_TODAY": "Today",
+	"TXT_ALL_DATE": "All date",
+	"TXT_CART_INFO": "You have %s in your cart",
 
 	"app_name": "eRecycle",
 	"version_code": "Version 1.1.3",

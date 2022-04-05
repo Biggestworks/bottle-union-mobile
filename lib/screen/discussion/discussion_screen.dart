@@ -4,8 +4,11 @@ import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/model/product/product_detail_model.dart';
 import 'package:eight_barrels/provider/discussion/discussion_provider.dart';
+import 'package:eight_barrels/screen/discussion/add_discussion_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -34,6 +37,7 @@ class _DiscussionScreenState extends State<DiscussionScreen> with LoadingView {
 
   @override
   Widget build(BuildContext context) {
+    final _provider = Provider.of<DiscussionProvider>(context, listen: false);
 
     Widget _mainContent = Container(
       padding: EdgeInsets.all(15),
@@ -41,14 +45,13 @@ class _DiscussionScreenState extends State<DiscussionScreen> with LoadingView {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Consumer<DiscussionProvider>(
-            child: Container(),
-            builder: (context, provider, skeleton) {
+            builder: (context, provider, _) {
               var _data = provider.product;
               return Row(
                 children: [
                   Container(
                     width: 100,
-                    height: 100,
+                    height: 80,
                     child: ClipRRect(
                       child: CustomWidget.networkImg(context, _data?.image1 ?? ''),
                       borderRadius: BorderRadius.circular(10),
@@ -66,13 +69,17 @@ class _DiscussionScreenState extends State<DiscussionScreen> with LoadingView {
                         fontWeight: FontWeight.bold,
                         color: CustomColor.MAIN_TXT,
                       ),),
+                      SizedBox(height: 5,),
+                      Text('In stock ${_data?.stock ?? '0'} item(s)', style: TextStyle(
+                        color: CustomColor.GREY_TXT,
+                      ),),
                     ],
                   ),
                 ],
               );
             },
           ),
-          Divider(height: 40, thickness: 1.5,),
+          Divider(height: 40, color: CustomColor.GREY_TXT,),
           Consumer<DiscussionProvider>(
               child: CustomWidget.showShimmer(
                 child: ListView.builder(
@@ -132,6 +139,7 @@ class _DiscussionScreenState extends State<DiscussionScreen> with LoadingView {
                                                 children: [
                                                   Text(_data?.user?.fullname ?? '-', style: TextStyle(
                                                     fontWeight: FontWeight.bold,
+                                                    color: CustomColor.GREY_TXT,
                                                   ),),
                                                   Text(" . ${timeago.format(DateTime.parse(_data?.createdAt ?? DateTime.now().toString()), locale: 'en_short')} ago",
                                                     style: TextStyle(
@@ -153,7 +161,7 @@ class _DiscussionScreenState extends State<DiscussionScreen> with LoadingView {
                                     ),
                                     SizedBox(height: 10,),
                                     ListView.builder(
-                                      physics: ClampingScrollPhysics(),
+                                      physics: NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       itemCount: _data?.replyDiscussions?.length,
                                       itemBuilder: (context, index) {
@@ -162,9 +170,9 @@ class _DiscussionScreenState extends State<DiscussionScreen> with LoadingView {
                                           children: [
                                             Container(
                                               height: 60,
-                                              width: 1,
+                                              width: 1.5,
                                               margin: EdgeInsets.symmetric(horizontal: 20),
-                                              color: Colors.grey,
+                                              color: CustomColor.GREY_ICON,
                                             ),
                                             Flexible(
                                               child: Row(
@@ -184,6 +192,7 @@ class _DiscussionScreenState extends State<DiscussionScreen> with LoadingView {
                                                           children: [
                                                             Text(_reply?.user?.fullname ?? '-', style: TextStyle(
                                                               fontWeight: FontWeight.bold,
+                                                              color: CustomColor.GREY_TXT,
                                                             ),),
                                                             Text(" . ${timeago.format(DateTime.parse(_reply?.createdAt ?? DateTime.now().toString()), locale: 'en_short')} ago",
                                                               style: TextStyle(
@@ -224,10 +233,26 @@ class _DiscussionScreenState extends State<DiscussionScreen> with LoadingView {
     return Scaffold(
       backgroundColor: CustomColor.BG,
       appBar: AppBar(
-        flexibleSpace: Image.asset('assets/images/bg_marron.png', fit: BoxFit.cover,),
+        backgroundColor: CustomColor.MAIN,
         elevation: 0,
         centerTitle: true,
         title: Text('Discussion'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              onPressed: () async => await Get.toNamed(AddDiscussionScreen.tag, arguments: AddDiscussionScreen(
+                product: _provider.product,
+              ))!.then((value) async {
+                if (value == true) {
+                  await _provider.fnFetchDiscussionList();
+                }
+              }),
+              icon: Icon(MdiIcons.chatPlus, size: 26,),
+              visualDensity: VisualDensity.compact,
+            ),
+          ),
+        ],
       ),
       body: _mainContent,
     );

@@ -160,12 +160,15 @@ class CustomWidget {
   static showSnackBar({
     required BuildContext context,
     required Widget content,
+    int duration = 1,
+    SnackBarAction? action,
   }) {
     return ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: content,
         behavior: SnackBarBehavior.floating,
-        duration: Duration(seconds: 1),
+        duration: Duration(seconds: duration),
+        action: action ?? null,
       ),
     );
   }

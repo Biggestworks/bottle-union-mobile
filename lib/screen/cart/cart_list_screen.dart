@@ -14,6 +14,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:sprintf/sprintf.dart';
 
 class CartListScreen extends StatefulWidget {
   static String tag = '/cart-list-screen';
@@ -216,10 +217,18 @@ class _CartListScreenState extends State<CartListScreen>
         children: [
           Text(AppLocalizations.instance.text('TXT_HEADER_ORDER'), style: TextStyle(
             color: CustomColor.BROWN_TXT,
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
           ),),
           SizedBox(height: 5,),
+          Consumer<CartListProvider>(
+            builder: (context, provider, _) {
+              return Text(sprintf(AppLocalizations.instance.text('TXT_CART_INFO'), ['${provider.cartList.result?.data?.length} item(s)']), style: TextStyle(
+                color: CustomColor.GREY_TXT,
+              ),);
+            },
+          ),
+          SizedBox(height: 10,),
           _cartListContent,
         ],
       ),

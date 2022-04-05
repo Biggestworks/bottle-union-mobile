@@ -2,10 +2,12 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/abstract/pagination_interface.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/model/product/user_wishlist_model.dart';
+import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/cart/cart_service.dart';
 import 'package:eight_barrels/service/product/wishlist_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 
 class WishListProvider extends ChangeNotifier with PaginationInterface {
   WishlistService _service = new WishlistService();
@@ -124,7 +126,16 @@ class WishListProvider extends ChangeNotifier with PaginationInterface {
 
     if (_res!.status != null) {
       if (_res.status == true) {
-        await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_CART_ADD_INFO')));
+        await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_CART_ADD_INFO')),
+          duration: 4,
+          action: SnackBarAction(
+            label: 'Go to cart',
+            textColor: Colors.white,
+            onPressed: () => Get.offNamedUntil(BaseHomeScreen.tag, (route) => false, arguments: BaseHomeScreen(pageIndex: 2,)),
+          ),
+        );
       } else {
         await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
       }

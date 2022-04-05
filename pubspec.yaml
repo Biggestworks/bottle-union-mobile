@@ -47,6 +47,7 @@ dependencies:
   pin_code_fields: ^7.3.0
   flutter_html: ^2.1.5
   webview_flutter: ^2.0.13
+  sprintf: ^6.0.0
 
 dev_dependencies:
   flutter_test:

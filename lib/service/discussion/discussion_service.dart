@@ -33,14 +33,20 @@ class DiscussionService extends GetConnect {
   }
 
   Future<DefaultModel?> storeDiscussion({
-    required String productId,
+    required int productId,
     required String comment,
   }) async {
     DefaultModel _model = new DefaultModel();
 
+    final Map<String, dynamic> _data = {
+      "id_product": productId,
+      "comment": comment,
+    };
+
     try {
-      Response _response = await get(
+      Response _response = await post(
         URLHelper.STORE_DISCUSSION_URL,
+        _data,
         headers: await _headersAuth(),
       );
       _model = DefaultModel.fromJson(_response.body);

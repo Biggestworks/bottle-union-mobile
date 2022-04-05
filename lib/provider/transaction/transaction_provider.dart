@@ -33,6 +33,32 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
     TabLabel(AppLocalizations.instance.text('TXT_LBL_COMPLAINT'), '', FontAwesomeIcons.exclamationCircle),
   ];
 
+  List<DateFilter> dateFilter = [
+    DateFilter(
+      AppLocalizations.instance.text('TXT_ALL_DATE'),
+      '',
+    ),
+    DateFilter(
+      AppLocalizations.instance.text('TXT_TODAY'),
+      DateFormat('dd MMM yyyy').format(DateTime.now()),
+    ),
+    DateFilter(
+      AppLocalizations.instance.text('TXT_LAST_30_DAYS'),
+      '${DateFormat('dd MMM').format(DateTime.now().subtract(Duration(days: 30)))} - ${DateFormat('dd MMM yyyy').format(DateTime.now())}',
+    ),
+    DateFilter(
+      AppLocalizations.instance.text('TXT_LAST_90_DAYS'),
+      '${DateFormat('dd MMM').format(DateTime.now().subtract(Duration(days: 90)))} - ${DateFormat('dd MMM yyyy').format(DateTime.now())}',
+    ),
+    DateFilter(
+      AppLocalizations.instance.text('TXT_CHOOSE_DATE'),
+      '',
+    ),
+  ];
+
+  int selectedDateFilter = 0;
+  bool isCustomDate = false;
+
   LoadingView? _view;
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -88,7 +114,44 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
     notifyListeners();
   }
 
-  fnOnSelectDate(DateRangePickerSelectionChangedArgs args, String flag) {
+  fnOnSelectDateFilter(int value) {
+    this.selectedDateFilter = value;
+    isFiltered = true;
+
+    if (selectedDateFilter == 0) {
+      isCustomDate = false;
+      fromDateController.clear();
+      toDateController.clear();
+      fromDate = null;
+      toDate = null;
+    } else if (selectedDateFilter == 1) {
+      isCustomDate = false;
+      fromDateController.clear();
+      toDateController.clear();
+      fromDate = DateTime.now();
+      toDate = DateTime.now();
+    } else if (selectedDateFilter == 2) {
+      isCustomDate = false;
+      fromDateController.clear();
+      toDateController.clear();
+      fromDate = DateTime.now().subtract(Duration(days: 30));
+      toDate = DateTime.now();
+    } else if (selectedDateFilter == 3) {
+      isCustomDate = false;
+      fromDateController.clear();
+      toDateController.clear();
+      fromDate = DateTime.now().subtract(Duration(days: 90));
+      toDate = DateTime.now();
+    } else if (selectedDateFilter == 4) {
+      isFiltered = false;
+      isCustomDate = true;
+      fromDateController.clear();
+      toDateController.clear();
+    } else {}
+    notifyListeners();
+  }
+
+  fnOnSelectCustomDate(DateRangePickerSelectionChangedArgs args, String flag) {
     if (flag == 'from') {
       fromDateController.text = DateFormat('dd MMM yyyy').format(args.value);
       fromDate = args.value;
@@ -101,39 +164,57 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
     notifyListeners();
   }
 
-  Future fnOnResetFilter() async {
-    fromDateController.clear();
-    toDateController.clear();
-    fromDate = null;
-    toDate = null;
-    isFiltered = false;
-    await fnFetchTransactionList();
-    notifyListeners();
-  }
-
   fnInitFilter() {
     isFiltered = false;
     notifyListeners();
   }
 
   Future fnOnSubmitFilter(BuildContext context) async {
-    DateTime _from = fromDate ?? DateTime.now();
-    DateTime _to = toDate ?? DateTime.now();
+    DateTime? _from = fromDate;
+    DateTime? _to = toDate;
 
-    if (_from.isBefore(_to)) {
+    if (_from != null || _to != null) {
+      _from = _from ?? DateTime.now();
+      _to = _to ?? DateTime.now();
+      bool _isValid = (_from).isBefore((_to));
+
+      if (_isValid) {
+        Get.back();
+        _view!.onProgressStart();
+        transactionList = (await _service.getTransactionList(
+          startDate: DateFormat('yyyy-MM-dd').format(_from),
+          endDate: DateFormat('yyyy-MM-dd').format(_to),
+          status: status,
+          page: super.currentPage.toString(),
+        ))!;
+        _view!.onProgressFinish();
+      } else {
+        CustomWidget.showSnackBar(context: context, content: Text('Invalid date'));
+      }
+    } else {
       Get.back();
       _view!.onProgressStart();
       transactionList = (await _service.getTransactionList(
-        startDate: DateFormat('yyyy-MM-dd').format(fromDate ?? DateTime.now()),
-        endDate: DateFormat('yyyy-MM-dd').format(toDate ?? DateTime.now()),
+        startDate: null,
+        endDate: null,
         status: status,
         page: super.currentPage.toString(),
       ))!;
       _view!.onProgressFinish();
-    } else {
-      CustomWidget.showSnackBar(context: context, content: Text('Invalid date'));
     }
     notifyListeners();
+  }
+
+  String? fnGetDateFilterSubtitle() {
+    if (selectedDateFilter == 1) {
+      return DateFormat('dd MMM yyyy').format(DateTime.now());
+    } else if (selectedDateFilter == 2) {
+      return '${DateFormat('dd MMM').format(DateTime.now().subtract(Duration(days: 30)))} - ${DateFormat('dd MMM yyyy').format(DateTime.now())}';
+    } else if (selectedDateFilter == 3) {
+      return '${DateFormat('dd MMM').format(DateTime.now().subtract(Duration(days: 30)))} - ${DateFormat('dd MMM yyyy').format(DateTime.now())}';
+    } else {
+      return null;
+    }
   }
 
   @override
@@ -176,4 +257,11 @@ class TabLabel {
   final IconData icon;
 
   TabLabel(this.label, this.param, this.icon);
+}
+
+class DateFilter {
+  final String title;
+  final String subTitle;
+
+  DateFilter(this.title, this.subTitle);
 }

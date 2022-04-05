@@ -46,7 +46,7 @@ class CartListProvider extends ChangeNotifier with PaginationInterface {
     if (_res!.status != null) {
       if (_res.status == true) {
         cartList = (await _service.cartList())!;
-        notifyListeners();
+        await fnGetTotalPay();
         await CustomWidget.showSnackBar(
           context: context,
           content: Text(AppLocalizations.instance.text('TXT_CART_DELETE_SUCCESS')),
