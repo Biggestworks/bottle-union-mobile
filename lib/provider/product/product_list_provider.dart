@@ -256,10 +256,11 @@ class ProductListProvider extends ChangeNotifier
       page: super.currentPage.toString(),
     );
 
-    productList.result!.data!.addAll(_products!.result!.data!);
-
-    if (_products.result!.data!.length == 0) {
-      onPaginationLoadFinish();
+    if (_products?.result != null) {
+      productList.result?.data?.addAll(_products!.result!.data!);
+      if (_products?.result?.data?.length == 0) {
+        onPaginationLoadFinish();
+      }
     }
     notifyListeners();
   }

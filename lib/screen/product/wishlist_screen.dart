@@ -9,6 +9,7 @@ import 'package:eight_barrels/provider/product/wishlist_provider.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
@@ -116,17 +117,29 @@ class _WishListScreenState extends State<WishListScreen>
                                                           child: Column(
                                                             crossAxisAlignment: CrossAxisAlignment.start,
                                                             children: [
-                                                              Text(_data.product!.name ?? '-', style: TextStyle(
+                                                              Text(_data.product?.name ?? '-', style: TextStyle(
                                                                 color: Colors.black,
                                                                 fontSize: 16,
                                                               ), maxLines: 2, overflow: TextOverflow.ellipsis,),
                                                               SizedBox(height: 5,),
                                                               Row(
                                                                 children: [
-                                                                  Icon(FontAwesomeIcons.solidStar, color: Colors.orangeAccent, size: 16,),
-                                                                  SizedBox(width: 5,),
-                                                                  Text(_data.product!.rating.toString(), style: TextStyle(
-                                                                    fontSize: 12,
+                                                                  RatingBar.builder(
+                                                                    initialRating: double.parse(_data.product?.rating ?? '0.0'),
+                                                                    ignoreGestures: true,
+                                                                    direction: Axis.horizontal,
+                                                                    itemCount: 5,
+                                                                    itemPadding: EdgeInsets.zero,
+                                                                    itemBuilder: (context, _) => Icon(
+                                                                      Icons.star,
+                                                                      color: Colors.amber,
+                                                                    ),
+                                                                    itemSize: 15,
+                                                                    onRatingUpdate: (rating) {},
+                                                                  ),
+                                                                  SizedBox(width: 2,),
+                                                                  Text('(${_data.product?.rating ?? '0.0'})', style: TextStyle(
+                                                                    color: CustomColor.GREY_TXT,
                                                                   ),),
                                                                 ],
                                                               ),
@@ -134,7 +147,6 @@ class _WishListScreenState extends State<WishListScreen>
                                                               Text(FormatterHelper.moneyFormatter(_data.product!.regularPrice), style: TextStyle(
                                                                 fontWeight: FontWeight.bold,
                                                                 color: CustomColor.MAIN_TXT,
-                                                                fontSize: 16,
                                                               ),),
                                                             ],
                                                           ),

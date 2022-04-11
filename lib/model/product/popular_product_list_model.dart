@@ -97,7 +97,7 @@ class Data {
   String? image;
   int? regularPrice;
   int? stock;
-  int? rating;
+  String? rating;
   String? flag;
   int? publish;
   String? createdAt;

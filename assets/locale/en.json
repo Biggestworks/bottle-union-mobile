@@ -164,6 +164,7 @@
 	"TXT_TODAY": "Today",
 	"TXT_ALL_DATE": "All date",
 	"TXT_CART_INFO": "You have %s in your cart",
+	"TXT_SEARCH_PRODUCT": "Search product...",
 
 	"app_name": "eRecycle",
 	"version_code": "Version 1.1.3",

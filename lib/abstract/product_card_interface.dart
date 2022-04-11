@@ -11,9 +11,9 @@ import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/cart/cart_service.dart';
 import 'package:eight_barrels/service/product/wishlist_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 abstract class ProductCardInterface {
   WishlistService _wishlistService = new WishlistService();
@@ -131,23 +131,34 @@ abstract class ProductCardInterface {
                       Flexible(
                         child: Row(
                           children: [
-                            Icon(FontAwesomeIcons.solidStar, color: Colors.orangeAccent, size: 16,),
-                            SizedBox(width: 5,),
-                            Text(data.rating != null ? data.rating.toString() : '0', style: TextStyle(
-                              fontSize: 12,
+                            RatingBar.builder(
+                              initialRating: double.parse(data.rating ?? '0.0'),
+                              ignoreGestures: true,
+                              direction: Axis.horizontal,
+                              itemCount: 5,
+                              itemPadding: EdgeInsets.zero,
+                              itemBuilder: (context, _) => Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
+                              itemSize: 15,
+                              onRatingUpdate: (rating) {},
+                            ),
+                            SizedBox(width: 2,),
+                            Text('(${data.rating ?? '0.0'})', style: TextStyle(
+                              color: CustomColor.GREY_TXT,
                             ),),
                           ],
                         ),
                       ),
-                      SizedBox(height: 10,),
+                      SizedBox(height: 5,),
                       Flexible(
                         child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: CustomColor.MAIN_TXT,
-                          fontSize: 16,
                         ),),
                       ),
-                      SizedBox(height: index.isEven ? 20 : 40,),
+                      SizedBox(height: index.isEven ? 25 : 45,),
                       Flexible(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -276,23 +287,34 @@ abstract class ProductCardInterface {
                     Flexible(
                       child: Row(
                         children: [
-                          Icon(FontAwesomeIcons.solidStar, color: Colors.orangeAccent, size: 16,),
-                          SizedBox(width: 5,),
-                          Text(data.rating != null ? data.rating.toString() : '0', style: TextStyle(
-                            fontSize: 12,
+                          RatingBar.builder(
+                            initialRating: double.parse(data.rating ?? '0.0'),
+                            ignoreGestures: true,
+                            direction: Axis.horizontal,
+                            itemCount: 5,
+                            itemPadding: EdgeInsets.zero,
+                            itemBuilder: (context, _) => Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            itemSize: 15,
+                            onRatingUpdate: (rating) {},
+                          ),
+                          SizedBox(width: 2,),
+                          Text('(${data.rating ?? '0.0'})', style: TextStyle(
+                            color: CustomColor.GREY_TXT,
                           ),),
                         ],
                       ),
                     ),
-                    SizedBox(height: 10,),
+                    SizedBox(height: 5,),
                     Flexible(
                       child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: CustomColor.MAIN_TXT,
-                        fontSize: 16,
                       ),),
                     ),
-                    SizedBox(height: index.isEven ? 20 : 40,),
+                    SizedBox(height: index.isEven ? 25 : 45,),
                     Flexible(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -391,23 +413,34 @@ abstract class ProductCardInterface {
                       Flexible(
                         child: Row(
                           children: [
-                            Icon(FontAwesomeIcons.solidStar, color: Colors.orangeAccent, size: 16,),
-                            SizedBox(width: 5,),
-                            Text(data.rating != null ? data.rating.toString() : '0', style: TextStyle(
-                              fontSize: 12,
+                            RatingBar.builder(
+                              initialRating: double.parse(data.rating ?? '0.0'),
+                              ignoreGestures: true,
+                              direction: Axis.horizontal,
+                              itemCount: 5,
+                              itemPadding: EdgeInsets.zero,
+                              itemBuilder: (context, _) => Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
+                              itemSize: 15,
+                              onRatingUpdate: (rating) {},
+                            ),
+                            SizedBox(width: 2,),
+                            Text('(${data.rating ?? '0.0'})', style: TextStyle(
+                              color: CustomColor.GREY_TXT,
                             ),),
                           ],
                         ),
                       ),
-                      SizedBox(height: 10,),
+                      SizedBox(height: 5,),
                       Flexible(
                         child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: CustomColor.MAIN_TXT,
-                          fontSize: 16,
                         ),),
                       ),
-                      SizedBox(height: index.isEven ? 20 : 40,),
+                      SizedBox(height: index.isEven ? 25 : 45,),
                       Flexible(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -537,23 +570,34 @@ abstract class ProductCardInterface {
                     Flexible(
                       child: Row(
                         children: [
-                          Icon(FontAwesomeIcons.solidStar, color: Colors.orangeAccent, size: 16,),
-                          SizedBox(width: 5,),
-                          Text(data.rating != null ? data.rating.toString() : '0', style: TextStyle(
-                            fontSize: 12,
+                          RatingBar.builder(
+                            initialRating: double.parse(data.rating ?? '0.0'),
+                            ignoreGestures: true,
+                            direction: Axis.horizontal,
+                            itemCount: 5,
+                            itemPadding: EdgeInsets.zero,
+                            itemBuilder: (context, _) => Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            itemSize: 15,
+                            onRatingUpdate: (rating) {},
+                          ),
+                          SizedBox(width: 2,),
+                          Text('(${data.rating ?? '0.0'})', style: TextStyle(
+                            color: CustomColor.GREY_TXT,
                           ),),
                         ],
                       ),
                     ),
-                    SizedBox(height: 10,),
+                    SizedBox(height: 5,),
                     Flexible(
                       child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: CustomColor.MAIN_TXT,
-                        fontSize: 16,
                       ),),
                     ),
-                    SizedBox(height: index.isEven ? 20 : 40,),
+                    SizedBox(height: index.isEven ? 25 : 45,),
                     Flexible(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

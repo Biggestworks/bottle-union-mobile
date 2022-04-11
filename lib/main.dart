@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   Firebase.initializeApp();
   await PushNotificationManager().showNotification(message.data);
-  print("Handling a background message: ${message.messageId}");
 }
 
 void main() async {

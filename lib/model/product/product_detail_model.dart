@@ -45,7 +45,7 @@ class Data {
   int? stock;
   int? width;
   int? height;
-  int? rating;
+  String? rating;
   String? createdAt;
   String? updatedAt;
   String? deletedAt;

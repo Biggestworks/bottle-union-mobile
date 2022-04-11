@@ -1,5 +1,7 @@
+import 'dart:async';
+
 import 'package:eight_barrels/helper/app_localization.dart';
-import 'package:eight_barrels/helper/key_helper.dart';
+import 'package:eight_barrels/helper/key_helper.dart' as key;
 import 'package:eight_barrels/provider/auth/forgot_password_provider.dart';
 import 'package:eight_barrels/provider/auth/login_provider.dart';
 import 'package:eight_barrels/provider/auth/otp_provider.dart';
@@ -55,11 +57,14 @@ import 'package:eight_barrels/screen/profile/update_profile_screen.dart';
 import 'package:eight_barrels/screen/splash/splash_screen.dart';
 import 'package:eight_barrels/screen/transaction/transaction_detail_screen.dart';
 import 'package:eight_barrels/screen/transaction/transaction_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uni_links/uni_links.dart';
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
@@ -70,14 +75,77 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   SpecifiedLocalizationDelegate? _localeOverrideDelegate;
+  bool _initialURILinkHandled = false;
+  Uri? _initialURI;
+  Uri? _currentURI;
+  Object? _err;
+
+  StreamSubscription? _subscription;
 
   Future<Locale> _getLocale() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey(KeyHelper.KEY_LOCALE)) {
-      return Locale(prefs.getString(KeyHelper.KEY_LOCALE)!);
+    if (prefs.containsKey(key.KeyHelper.KEY_LOCALE)) {
+      return Locale(prefs.getString(key.KeyHelper.KEY_LOCALE)!);
     } else {
-      await prefs.setString(KeyHelper.KEY_LOCALE, "en");
+      await prefs.setString(key.KeyHelper.KEY_LOCALE, "en");
       return Locale("en");
+    }
+  }
+
+  Future<void> _initURIHandler() async {
+    if (!_initialURILinkHandled) {
+      _initialURILinkHandled = true;
+      print('Invoked _initURIHandler');
+      try {
+        final initialURI = await getInitialUri();
+        if (initialURI != null) {
+          debugPrint("Initial URI received $initialURI");
+          if (!mounted) {
+            return;
+          }
+          setState(() {
+            _initialURI = initialURI;
+          });
+        } else {
+          debugPrint("Null Initial URI received");
+        }
+      } on PlatformException {
+        debugPrint("Failed to receive initial uri");
+      } on FormatException catch (err) {
+        if (!mounted) {
+          return;
+        }
+        debugPrint('Malformed Initial URI received');
+        setState(() => _err = err);
+      }
+    }
+  }
+
+  void _incomingLinkHandler() {
+    if (!kIsWeb) {
+      _subscription = uriLinkStream.listen((Uri? uri) {
+        if (!mounted) {
+          return;
+        }
+        debugPrint('Received URI: $uri');
+        setState(() {
+          _currentURI = uri;
+          _err = null;
+        });
+      }, onError: (Object err) {
+        if (!mounted) {
+          return;
+        }
+        debugPrint('Error occurred: $err');
+        setState(() {
+          _currentURI = null;
+          if (err is FormatException) {
+            _err = err;
+          } else {
+            _err = null;
+          }
+        });
+      });
     }
   }
 
@@ -88,7 +156,15 @@ class _AppState extends State<App> {
         _localeOverrideDelegate = new SpecifiedLocalizationDelegate(myLocale);
       })
     });
+    _initURIHandler();
+    _incomingLinkHandler();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
   }
 
   @override

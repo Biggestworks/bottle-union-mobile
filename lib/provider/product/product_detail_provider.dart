@@ -50,7 +50,7 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
 
   Future fnCheckWishlist() async {
     var _res = await _wishlistService.checkWishlist(
-      productId: product.data!.id!,
+      productId: product.data?.id ?? 0,
     );
 
     if (_res!.status != null) {
@@ -65,7 +65,7 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
 
   Future fnStoreWishlist(BuildContext context) async {
     var _res = await _wishlistService.storeWishlist(
-      productId: product.data!.id!,
+      productId: product.data?.id ?? 0,
     );
 
     if (_res!.status != null) {
@@ -135,7 +135,7 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
 
   Future fnFetchDiscussionList(BuildContext context) async {
     _view!.onProgressStart();
-    discussionList = (await _discussionService.getDiscussionList(productId: product.data!.id!))!;
+    discussionList = (await _discussionService.getDiscussionList(productId: product.data?.id ?? 0))!;
     _view!.onProgressFinish();
     notifyListeners();
   }

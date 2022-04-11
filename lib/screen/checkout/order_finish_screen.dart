@@ -5,6 +5,7 @@ import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/model/checkout/order_model.dart';
 import 'package:eight_barrels/provider/checkout/order_finish_provider.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
+import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -175,7 +176,7 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                       itemBuilder: (context, index) {
                         var _product = _data?.order?[index].product;
                         return InkWell(
-                          onTap: () {},
+                          onTap: () => Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(id: _data?.id,)),
                           child: Card(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
