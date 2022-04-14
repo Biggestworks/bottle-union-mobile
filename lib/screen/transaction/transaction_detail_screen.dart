@@ -78,7 +78,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                       children: [
                         Text('Status'),
                         Flexible(
-                          child: Text(_data?.statusOrder ?? '-', style: TextStyle(
+                          child: Text(provider.fnGetStatus(_data?.order?[0].payment?.statusPayment?.id ?? 0), style: TextStyle(
                             color: Colors.orange,
                           ),),
                         ),
@@ -276,7 +276,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                         children: [
                           Text(AppLocalizations.instance.text('TXT_PAYMENT_METHOD')),
                           Flexible(
-                            child: Text(_data?.detailPayments?.paymentMethod ?? '-'),
+                            child: Text(_data?.order?[0].payment?.paymentType ?? '-'),
                           ),
                         ],
                       ),

@@ -111,11 +111,13 @@ class ProductService extends GetConnect {
   }
 
   Future<PopularProductListModel?> getPopularProductList({
+    String? regionId,
     String? page,
   }) async {
     PopularProductListModel _model = new PopularProductListModel();
 
     final Map<String, dynamic> _query = {
+      "id_region": regionId ?? null,
       "page": page,
       "perPage": '6',
     };

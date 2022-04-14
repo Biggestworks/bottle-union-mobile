@@ -20,7 +20,7 @@ class TransactionService extends GetConnect {
   Future<TransactionListModel?> getTransactionList({
     String? startDate,
     String? endDate,
-    required String? status,
+    required int? status,
     required String? page,
   }) async {
     TransactionListModel _model = new TransactionListModel();

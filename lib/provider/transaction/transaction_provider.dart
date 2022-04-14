@@ -23,14 +23,15 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
   DateTime? toDate;
   bool isFiltered = false;
 
-  String status = 'waiting_for_payment';
+  int status = 1;
   bool isPaginateLoad = false;
   List<TabLabel> tabLabel = [
-    TabLabel(AppLocalizations.instance.text('TXT_LBL_PAYMENT'), 'waiting_for_payment', FontAwesomeIcons.creditCard),
-    TabLabel(AppLocalizations.instance.text('TXT_LBL_PROCESSED'), 'process', FontAwesomeIcons.checkCircle),
-    TabLabel(AppLocalizations.instance.text('TXT_LBL_DELIVERY'), 'on_deliveried', FontAwesomeIcons.truck),
-    TabLabel(AppLocalizations.instance.text('TXT_LBL_COMPLETE'), 'completed', FontAwesomeIcons.solidStar),
-    TabLabel(AppLocalizations.instance.text('TXT_LBL_COMPLAINT'), '', FontAwesomeIcons.exclamationCircle),
+    TabLabel(AppLocalizations.instance.text('TXT_LBL_PAYMENT'), 1, FontAwesomeIcons.creditCard),
+    TabLabel(AppLocalizations.instance.text('TXT_LBL_CONFIRMATION'), 2, FontAwesomeIcons.clock),
+    TabLabel(AppLocalizations.instance.text('TXT_LBL_PROCESSED'), 3, FontAwesomeIcons.checkCircle),
+    TabLabel(AppLocalizations.instance.text('TXT_LBL_DELIVERY'), 4, FontAwesomeIcons.truck),
+    TabLabel(AppLocalizations.instance.text('TXT_LBL_COMPLETE'), 6, FontAwesomeIcons.solidStar),
+    // TabLabel(AppLocalizations.instance.text('TXT_LBL_COMPLAINT'), '', FontAwesomeIcons.exclamationCircle),
   ];
 
   List<DateFilter> dateFilter = [
@@ -68,7 +69,7 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
   }
 
   fnInitStatusOrder() {
-    status = 'waiting_for_payment';
+    status = 1;
     notifyListeners();
   }
 
@@ -88,7 +89,7 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
     notifyListeners();
   }
 
-  Future fnOnTabSelected(String value) async {
+  Future fnOnTabSelected(int value) async {
     this.status = value;
     await fnFetchTransactionList();
     notifyListeners();
@@ -217,6 +218,23 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
     }
   }
 
+  String fnGetStatus(int id) {
+    switch (id) {
+      case 1:
+        return AppLocalizations.instance.text('TXT_LBL_PAYMENT');
+      case 2:
+        return AppLocalizations.instance.text('TXT_LBL_CONFIRMATION');
+      case 3:
+        return AppLocalizations.instance.text('TXT_LBL_PROCESSED');
+      case 4:
+        return AppLocalizations.instance.text('TXT_LBL_DELIVERY');
+      case 6:
+        return AppLocalizations.instance.text('TXT_LBL_COMPLETE');
+      default:
+        return '-';
+    }
+  }
+
   @override
   Future fnShowNextPage() async {
     onPaginationLoadStart();
@@ -253,10 +271,10 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
 
 class TabLabel {
   final String label;
-  final String param;
+  final int id;
   final IconData icon;
 
-  TabLabel(this.label, this.param, this.icon);
+  TabLabel(this.label, this.id, this.icon);
 }
 
 class DateFilter {

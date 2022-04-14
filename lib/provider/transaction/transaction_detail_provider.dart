@@ -61,4 +61,21 @@ class TransactionDetailProvider extends ChangeNotifier {
     return FormatterHelper.moneyFormatter((price * qty));
   }
 
+  String fnGetStatus(int id) {
+    switch (id) {
+      case 1:
+        return AppLocalizations.instance.text('TXT_LBL_PAYMENT');
+      case 2:
+        return AppLocalizations.instance.text('TXT_LBL_CONFIRMATION');
+      case 3:
+        return AppLocalizations.instance.text('TXT_LBL_PROCESSED');
+      case 4:
+        return AppLocalizations.instance.text('TXT_LBL_DELIVERY');
+      case 6:
+        return AppLocalizations.instance.text('TXT_LBL_COMPLETE');
+      default:
+        return '-';
+    }
+  }
+
 }

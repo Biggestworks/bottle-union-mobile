@@ -27,7 +27,6 @@ class UserPreferences extends GetConnect {
         URLHelper.USER_URL,
         headers: {
           "Accept": "application/json",
-
           "Authorization": "Bearer $_token",
         }
       );

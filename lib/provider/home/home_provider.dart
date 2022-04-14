@@ -20,16 +20,10 @@ class HomeProvider extends ChangeNotifier
 
   CategoryListModel categoryList = new CategoryListModel();
   BannerListModel bannerList = new BannerListModel();
-  PopularProductListModel productList = new PopularProductListModel();
+  PopularProductListModel popularProductList = new PopularProductListModel();
+  PopularProductListModel regionProductList = new PopularProductListModel();
 
   bool isPaginateLoad = false;
-
-  HomeProvider() {
-    fnFetchUserInfo();
-    _fnFetchCategoryList();
-    _fnFetchBannerList();
-    _fnFetchPopularProductList();
-  }
 
   Future fnFetchUserInfo() async {
     this.userModel = (await _userPreferences.getUserData())!;
@@ -41,27 +35,36 @@ class HomeProvider extends ChangeNotifier
     notifyListeners();
   }
 
-  Future _fnFetchCategoryList() async {
+  Future fnFetchCategoryList() async {
     categoryList = (await _productService.getCategoryList())!;
     notifyListeners();
   }
 
   Future onRefresh() async {
     super.currentPage = 1;
-    await fnFetchUserInfo();
-    await _fnFetchCategoryList();
-    await _fnFetchBannerList();
-    await _fnFetchPopularProductList();
+    await fnFetchUserInfo()
+        .then((_) async => await fnFetchRegionProductList());
+    await fnFetchCategoryList();
+    await fnFetchBannerList();
+    await fnFetchPopularProductList();
     notifyListeners();
   }
 
-  Future _fnFetchBannerList() async {
+  Future fnFetchBannerList() async {
     bannerList = (await _bannerService.getBannerList())!;
     notifyListeners();
   }
 
-  Future _fnFetchPopularProductList() async {
-    productList = (await _productService.getPopularProductList(
+  Future fnFetchPopularProductList() async {
+    popularProductList = (await _productService.getPopularProductList(
+      page: super.currentPage.toString(),
+    ))!;
+    notifyListeners();
+  }
+
+  Future fnFetchRegionProductList() async {
+    regionProductList = (await _productService.getPopularProductList(
+      regionId: userModel.user?.idRegion?.toString(),
       page: super.currentPage.toString(),
     ))!;
     notifyListeners();
@@ -77,9 +80,9 @@ class HomeProvider extends ChangeNotifier
     );
 
     if (_products?.result != null) {
-      productList.result?.data!.addAll(_products!.result!.data!);
+      popularProductList.result?.data?.addAll(_products!.result!.data!);
 
-      if (_products?.result?.data!.length == 0) {
+      if (_products?.result?.data?.length == 0) {
         onPaginationLoadFinish();
       }
     }

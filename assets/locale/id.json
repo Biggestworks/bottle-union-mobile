@@ -91,6 +91,7 @@
 	"TXT_LBL_CHECKOUT": "Check-out",
 	"TXT_LBL_TRACK_ORDER": "Lacak Pesanan",
 	"TXT_LBL_PAYMENT": "Menunggu Pembayaran",
+	"TXT_LBL_CONFIRMATION": "Konfirmasi",
 	"TXT_LBL_PROCESSED": "Diproses",
 	"TXT_LBL_DELIVERY": "Dikirim",
 	"TXT_LBL_COMPLETE": "Selesai",
@@ -165,6 +166,8 @@
 	"TXT_ALL_DATE": "Semua Tanggal",
 	"TXT_CART_INFO": "Anda mempunyai %s di dalam keranjang",
 	"TXT_SEARCH_PRODUCT": "Cari produk...",
+	"TXT_TITLE_RECOMMENDED_REGION": "Rekomendasi dari wilayah mu",
+	"TXT_SEE_ALL": "Lihat Semua",
 
 	"app_name": "eRecycle",
 	"action_settings": "Settings",

@@ -268,7 +268,7 @@ class _TransactionScreenState extends State<TransactionScreen>
             ),
           );
         }),
-        onTap: (value) => _provider.fnOnTabSelected(provider.tabLabel[value].param),
+        onTap: (value) => _provider.fnOnTabSelected(provider.tabLabel[value].id),
       );
     },
     );
@@ -302,6 +302,7 @@ class _TransactionScreenState extends State<TransactionScreen>
                               physics: BouncingScrollPhysics(),
                               children: [
                                 ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   itemCount: provider.transactionList.result?.data?.length,
                                   itemBuilder: (context, index) {
@@ -344,16 +345,9 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                       ),
                                                     ],
                                                   ),
-                                                  Container(
-                                                    // padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5,),
-                                                    // decoration: BoxDecoration(
-                                                    //   color: Colors.green,
-                                                    //   borderRadius: BorderRadius.circular(5),
-                                                    // ),
-                                                    child: Text(_data?.statusOrder ?? '-', style: TextStyle(
-                                                      color: Colors.green,
-                                                    ),),
-                                                  ),
+                                                  Text(provider.fnGetStatus(_data?.idStatusPayment ?? 0), style: TextStyle(
+                                                    color: Colors.green,
+                                                  ),),
                                                 ],
                                               ),
                                               Divider(height: 30, thickness: 1,),
@@ -404,9 +398,8 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                       ),),
                                                     ],
                                                   ),
-                                                  if (_data?.statusOrder == null)
+                                                  if (_data?.idStatusPayment == 1)
                                                     Container(
-                                                      width: 120,
                                                       height: 30,
                                                       child: CustomWidget.roundBtn(
                                                         label: AppLocalizations.instance.text('TXT_FINISH_PAYMENT'),
@@ -418,9 +411,8 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                         function: () async => await provider.fnFinishPayment(provider.scaffoldKey.currentContext!),
                                                       ),
                                                     )
-                                                  else if (_data?.statusOrder == 'Selesai')
+                                                  else if (_data?.idStatusPayment == 6)
                                                     Container(
-                                                      width: 120,
                                                       height: 30,
                                                       child: CustomWidget.roundBtn(
                                                         label: AppLocalizations.instance.text('TXT_BUY_AGAIN'),
@@ -434,7 +426,6 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                     )
                                                   else
                                                     Container(
-                                                      width: 120,
                                                       height: 30,
                                                       child: CustomWidget.roundBtn(
                                                         label: AppLocalizations.instance.text('TXT_TRACK_ORDER'),

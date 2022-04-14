@@ -91,6 +91,7 @@
 	"TXT_LBL_CHECKOUT": "Check-out",
 	"TXT_LBL_TRACK_ORDER": "Track Order",
 	"TXT_LBL_PAYMENT": "Waiting for payment",
+	"TXT_LBL_CONFIRMATION": "Confirmation",
 	"TXT_LBL_PROCESSED": "Processed",
 	"TXT_LBL_DELIVERY": "On Delivery",
 	"TXT_LBL_COMPLETE": "Complete",
@@ -165,6 +166,8 @@
 	"TXT_ALL_DATE": "All date",
 	"TXT_CART_INFO": "You have %s in your cart",
 	"TXT_SEARCH_PRODUCT": "Search product...",
+	"TXT_TITLE_RECOMMENDED_REGION": "Recommended From Your Region",
+	"TXT_SEE_ALL": "See All",
 
 	"app_name": "eRecycle",
 	"version_code": "Version 1.1.3",

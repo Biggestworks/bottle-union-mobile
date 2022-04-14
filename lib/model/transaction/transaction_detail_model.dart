@@ -111,7 +111,7 @@ class Order {
   String? codeTransaction;
   int? statusPaid;
   String? voucherCode;
-  int? voucherAmount;
+  String? voucherAmount;
   String? createdAt;
   String? updatedAt;
   String? deletedAt;
@@ -306,12 +306,16 @@ class Payment {
   String? idOrder;
   int? idUser;
   int? idShipment;
+  int? idStatusPayment;
   String? statusMessage;
   String? descriptionMessage;
-  String? statusPayment;
+  StatusPayment? statusPayment;
   int? amount;
   String? paymentMethod;
   String? paymentType;
+  String? evidanceOfTransfer;
+  bool? isApproved;
+  String? approvedBy;
   String? expiredAt;
   String? courierName;
   String? courierDesc;
@@ -327,12 +331,16 @@ class Payment {
         this.idOrder,
         this.idUser,
         this.idShipment,
+        this.idStatusPayment,
         this.statusMessage,
         this.descriptionMessage,
         this.statusPayment,
         this.amount,
         this.paymentMethod,
         this.paymentType,
+        this.evidanceOfTransfer,
+        this.isApproved,
+        this.approvedBy,
         this.expiredAt,
         this.courierName,
         this.courierDesc,
@@ -348,12 +356,18 @@ class Payment {
     idOrder = json['id_order'];
     idUser = json['id_user'];
     idShipment = json['id_shipment'];
+    idStatusPayment = json['id_status_payment'];
     statusMessage = json['status_message'];
     descriptionMessage = json['description_message'];
-    statusPayment = json['status_payment'];
+    statusPayment = json['status_payment'] != null
+        ? new StatusPayment.fromJson(json['status_payment'])
+        : null;
     amount = json['amount'];
     paymentMethod = json['payment_method'];
     paymentType = json['payment_type'];
+    evidanceOfTransfer = json['evidance_of_transfer'];
+    isApproved = json['is_approved'];
+    approvedBy = json['approved_by'];
     expiredAt = json['expired_at'];
     courierName = json['courier_name'];
     courierDesc = json['courier_desc'];
@@ -371,12 +385,18 @@ class Payment {
     data['id_order'] = this.idOrder;
     data['id_user'] = this.idUser;
     data['id_shipment'] = this.idShipment;
+    data['id_status_payment'] = this.idStatusPayment;
     data['status_message'] = this.statusMessage;
     data['description_message'] = this.descriptionMessage;
-    data['status_payment'] = this.statusPayment;
+    if (this.statusPayment != null) {
+      data['status_payment'] = this.statusPayment!.toJson();
+    }
     data['amount'] = this.amount;
     data['payment_method'] = this.paymentMethod;
     data['payment_type'] = this.paymentType;
+    data['evidance_of_transfer'] = this.evidanceOfTransfer;
+    data['is_approved'] = this.isApproved;
+    data['approved_by'] = this.approvedBy;
     data['expired_at'] = this.expiredAt;
     data['courier_name'] = this.courierName;
     data['courier_desc'] = this.courierDesc;
@@ -386,6 +406,31 @@ class Payment {
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['deleted_at'] = this.deletedAt;
+    return data;
+  }
+}
+
+class StatusPayment {
+  int? id;
+  String? description;
+  String? createdAt;
+  String? updatedAt;
+
+  StatusPayment({this.id, this.description, this.createdAt, this.updatedAt});
+
+  StatusPayment.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    description = json['description'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['description'] = this.description;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
     return data;
   }
 }

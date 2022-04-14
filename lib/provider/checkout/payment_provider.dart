@@ -74,7 +74,7 @@ class PaymentProvider extends ChangeNotifier {
       addressId: addressId,
       isCart: isCart,
       products: productOrder,
-      paymentMethod: selectedPayment?.description,
+      paymentMethod: selectedPayment?.name,
       courierName: selectedCourier?.courier,
       courierDesc: selectedCourier?.description,
       courierEtd: selectedCourier?.etd,

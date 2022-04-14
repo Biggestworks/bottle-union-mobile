@@ -63,22 +63,6 @@ class ProductListProvider extends ChangeNotifier
     notifyListeners();
   }
 
-  Widget filterChips() {
-    return Container(
-      height: 50,
-      child: ListView.builder(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: filterVal.length,
-        itemBuilder: (context, index) {
-          return Chip(
-            label: Text(filterVal[index].value),
-          );
-        },
-      ),
-    );
-  }
-
   fnOnSelectBrand(int index) {
     selectedBrandIndex = index;
     isBrandSelected = !isBrandSelected;

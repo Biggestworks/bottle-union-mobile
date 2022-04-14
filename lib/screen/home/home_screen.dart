@@ -8,6 +8,7 @@ import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
 import 'package:eight_barrels/screen/home/banner_detail_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
+import 'package:eight_barrels/screen/product/product_by_region_screen.dart';
 import 'package:eight_barrels/screen/product/wishlist_screen.dart';
 import 'package:eight_barrels/screen/profile/profile_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
@@ -33,6 +34,11 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
   @override
   void initState() {
     Future.delayed(Duration.zero).then((value) {
+      Provider.of<HomeProvider>(context, listen: false).fnFetchUserInfo()
+          .then((_) => Provider.of<HomeProvider>(context, listen: false).fnFetchRegionProductList());
+      Provider.of<HomeProvider>(context, listen: false).fnFetchBannerList();
+      Provider.of<HomeProvider>(context, listen: false).fnFetchCategoryList();
+      Provider.of<HomeProvider>(context, listen: false).fnFetchPopularProductList();
       PushNotificationManager().initFCM();
     });
     super.initState();
@@ -243,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
       ),
     );
 
-    Widget _popularContent = Container(
+    Widget _popularProductContent = Container(
       width: MediaQuery.of(context).size.width,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -256,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
               children: [
                 Row(
                   children: [
-                    Icon(FontAwesomeIcons.star, color: CustomColor.MAIN,),
+                    Icon(FontAwesomeIcons.star, color: CustomColor.MAIN, size: 22,),
                     SizedBox(width: 10,),
                     Text(AppLocalizations.instance.text('TXT_TITLE_POPUlAR_PICKED'), style: TextStyle(
                       fontSize: 16,
@@ -277,11 +283,11 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
             child: Consumer<HomeProvider>(
               child: CustomWidget.showShimmerGridList(),
               builder: (context, provider, skeleton) {
-                switch (provider.productList.result) {
+                switch (provider.popularProductList.result) {
                   case null:
                     return skeleton!;
                   default:
-                    switch (provider.productList.result?.data?.length) {
+                    switch (provider.popularProductList.result?.data?.length) {
                       case 0:
                         return CustomWidget.emptyScreen(
                           image: 'assets/images/ic_empty_product.png',
@@ -303,10 +309,10 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
                                   crossAxisCount: 2,
                                   crossAxisSpacing: 2,
                                   mainAxisSpacing: 4,
-                                  itemCount: provider.productList.result!.data!.length,
+                                  itemCount: provider.popularProductList.result?.data?.length,
                                   itemBuilder: (context, index) {
-                                    var _data = provider.productList.result!.data![index];
-                                    switch (_data.stock) {
+                                    var _data = provider.popularProductList.result?.data?[index];
+                                    switch (_data!.stock) {
                                       case 0:
                                         return provider.popularEmptyProductCard(
                                           context: context,
@@ -368,6 +374,149 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
       ),
     );
 
+    Widget _regionalProductContent = Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(AppLocalizations.instance.text('TXT_TITLE_RECOMMENDED_REGION'), style: TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),),
+              Flexible(
+                child: GestureDetector(
+                  onTap: () => Get.toNamed(ProductByRegionScreen.tag, arguments: ProductByRegionScreen(
+                    regionId: _provider.userModel.user?.idRegion,
+                    region: 'Jakarta',
+                  )),
+                  child: Text(AppLocalizations.instance.text('TXT_SEE_ALL'), style: TextStyle(
+                    color: CustomColor.MAIN,
+                    fontWeight: FontWeight.bold,
+                  ),),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 10,),
+        Material(
+          elevation: 4,
+          child: Container(
+            height: 300,
+            padding: EdgeInsets.only(bottom: 10),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [CustomColor.MAIN, CustomColor.MAIN, CustomColor.MAIN_TXT],
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Consumer<HomeProvider>(
+                  child: Container(),
+                  builder: (context, provider, skeleton) {
+                    switch (provider.regionProductList.result) {
+                      case null:
+                        return skeleton!;
+                      default:
+                        switch (provider.regionProductList.result?.data?.length) {
+                          case 0:
+                            return Center(
+                              child: Text(AppLocalizations.instance.text('TXT_NO_PRODUCT'), style: TextStyle(
+                                color: Colors.white,
+                              ),),
+                            );
+                          default:
+                            return CustomScrollView(
+                              scrollDirection: Axis.horizontal,
+                              slivers: [
+                                SliverAppBar(
+                                  expandedHeight: 80,
+                                  floating: false,
+                                  pinned: false,
+                                  snap: false,
+                                  backgroundColor: CustomColor.MAIN,
+                                  flexibleSpace: Center(
+                                    child: Text('Jakarta', style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),),
+                                  ),
+                                ),
+                                SliverToBoxAdapter(
+                                  child: ListView.builder(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    scrollDirection: Axis.horizontal,
+                                    shrinkWrap: true,
+                                    itemCount: provider.regionProductList.result?.data?.length,
+                                    itemBuilder: (context, index) {
+                                      var _data = provider.regionProductList.result?.data?[index];
+                                      switch (_data!.stock) {
+                                        case 0:
+                                          return Padding(
+                                            padding: EdgeInsets.only(right: 10),
+                                            child: provider.regionalEmptyProductCard(
+                                              context: context,
+                                              data: _data,
+                                              index: index,
+                                              storeLog: () async => await fnStoreLog(
+                                                productId: [_data.id ?? 0],
+                                                categoryId: null,
+                                                notes: KeyHelper.CLICK_PRODUCT_KEY,
+                                              ),
+                                            ),
+                                          );
+                                        default:
+                                          return Consumer<BaseHomeProvider>(
+                                              builder: (context, baseProvider, _) {
+                                                return Padding(
+                                                  padding: EdgeInsets.only(right: 10),
+                                                  child: provider.regionalProductCard(
+                                                    context: context,
+                                                    data: _data,
+                                                    index: index,
+                                                    storeClickLog: () async => await fnStoreLog(
+                                                      productId: [_data.id ?? 0],
+                                                      categoryId: null,
+                                                      notes: KeyHelper.CLICK_PRODUCT_KEY,
+                                                    ),
+                                                    storeCartLog: () async => await fnStoreLog(
+                                                      productId: [_data.id ?? 0],
+                                                      categoryId: null,
+                                                      notes: KeyHelper.SAVE_CART_KEY,
+                                                    ),
+                                                    storeWishlistLog: () async => await fnStoreLog(
+                                                      productId: [_data.id ?? 0],
+                                                      categoryId: null,
+                                                      notes: KeyHelper.SAVE_WISHLIST_KEY,
+                                                    ),
+                                                    onUpdateCart: () async => await baseProvider.fnGetCartCount(),
+                                                  ),
+                                                );
+                                              }
+                                          );
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ],
+                            );
+                        }
+                    }
+                  }
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+
     Widget _menuContent = SliverToBoxAdapter(
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 20),
@@ -385,7 +534,9 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
             SizedBox(height: 60,),
             _categoryContent,
             SizedBox(height: 30,),
-            _popularContent,
+            _regionalProductContent,
+            SizedBox(height: 30,),
+            _popularProductContent,
           ],
         ),
       ),
@@ -436,7 +587,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('${AppLocalizations.instance.text('TXT_HALLO_USER')}${provider.userModel.user!.fullname!}', style: TextStyle(
+                            Text('${AppLocalizations.instance.text('TXT_HALLO_USER')}${provider.userModel.user?.fullname ?? '-'}', style: TextStyle(
                               fontSize: 12,
                             ),),
                             Text('Gold Member', style: TextStyle(

@@ -214,140 +214,137 @@ abstract class ProductCardInterface {
     required int index,
     required Future storeLog(),
   }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusDirectional.circular(10),
-        ),
-        child: InkWell(
-          onTap: () async {
-            await storeLog();
-            Get.toNamed(
-              ProductDetailScreen.tag,
-              arguments: ProductDetailScreen(id: data.id,),
-            );
-          },
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
-                children: [
-                  Container(
-                    height: 150,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(10),
-                        topLeft: Radius.circular(10),
-                      ),
-                      child: CachedNetworkImage(
-                        imageUrl: data.image1 ?? '',
-                        width: MediaQuery.of(context).size.width,
-                        alignment: Alignment.center,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => Center(
-                            child: CircularProgressIndicator()),
-                        errorWidget: (context, url, error) =>
-                            Center(child: Icon(Icons.no_photography, size: 50, color: CustomColor.GREY_ICON,),),
-                      ),
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadiusDirectional.circular(10),
+      ),
+      child: InkWell(
+        onTap: () async {
+          await storeLog();
+          Get.toNamed(
+            ProductDetailScreen.tag,
+            arguments: ProductDetailScreen(id: data.id,),
+          );
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                Container(
+                  height: 150,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(10),
+                      topLeft: Radius.circular(10),
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: data.image1 ?? '',
+                      width: MediaQuery.of(context).size.width,
+                      alignment: Alignment.center,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Center(
+                          child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) =>
+                          Center(child: Icon(Icons.no_photography, size: 50, color: CustomColor.GREY_ICON,),),
                     ),
                   ),
-                  Container(
-                    width: double.infinity,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(10),
-                        topLeft: Radius.circular(10),
-                      ),
-                      color: CustomColor.GREY_ICON,
+                ),
+                Container(
+                  width: double.infinity,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(10),
+                      topLeft: Radius.circular(10),
                     ),
-                    child: Center(
-                      child: Text(AppLocalizations.instance.text('TXT_SOLD_OUT'), style: TextStyle(
-                        fontSize: 18,
-                        color: CustomColor.MAIN,
-                        fontWeight: FontWeight.bold,
-                      ),),
+                    color: CustomColor.GREY_ICON,
+                  ),
+                  child: Center(
+                    child: Text(AppLocalizations.instance.text('TXT_SOLD_OUT'), style: TextStyle(
+                      fontSize: 18,
+                      color: CustomColor.MAIN,
+                      fontWeight: FontWeight.bold,
+                    ),),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(data.name ?? '-', style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                  ), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                  SizedBox(height: 5,),
+                  Flexible(
+                    child: Row(
+                      children: [
+                        RatingBar.builder(
+                          initialRating: double.parse(data.rating ?? '0.0'),
+                          ignoreGestures: true,
+                          direction: Axis.horizontal,
+                          itemCount: 5,
+                          itemPadding: EdgeInsets.zero,
+                          itemBuilder: (context, _) => Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          ),
+                          itemSize: 15,
+                          onRatingUpdate: (rating) {},
+                        ),
+                        SizedBox(width: 2,),
+                        Text('(${data.rating ?? '0.0'})', style: TextStyle(
+                          color: CustomColor.GREY_TXT,
+                        ),),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 5,),
+                  Flexible(
+                    child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: CustomColor.MAIN_TXT,
+                    ),),
+                  ),
+                  SizedBox(height: index.isEven ? 25 : 45,),
+                  Flexible(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text('${AppLocalizations.instance.text('TXT_SOLD_OUT')}', style: TextStyle(
+                            color: Colors.red,
+                          ),),
+                        ),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              GestureDetector(
+                                onTap: () {},
+                                child: Icon(FontAwesomeIcons.shoppingCart, color: CustomColor.GREY_ICON, size: 18,),
+                              ),
+                              SizedBox(width: 15,),
+                              GestureDetector(
+                                onTap: () {},
+                                child: Icon(FontAwesomeIcons.heart, color: CustomColor.GREY_ICON, size: 18,),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(data.name ?? '-', style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                    ), maxLines: 2, overflow: TextOverflow.ellipsis,),
-                    SizedBox(height: 5,),
-                    Flexible(
-                      child: Row(
-                        children: [
-                          RatingBar.builder(
-                            initialRating: double.parse(data.rating ?? '0.0'),
-                            ignoreGestures: true,
-                            direction: Axis.horizontal,
-                            itemCount: 5,
-                            itemPadding: EdgeInsets.zero,
-                            itemBuilder: (context, _) => Icon(
-                              Icons.star,
-                              color: Colors.amber,
-                            ),
-                            itemSize: 15,
-                            onRatingUpdate: (rating) {},
-                          ),
-                          SizedBox(width: 2,),
-                          Text('(${data.rating ?? '0.0'})', style: TextStyle(
-                            color: CustomColor.GREY_TXT,
-                          ),),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 5,),
-                    Flexible(
-                      child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: CustomColor.MAIN_TXT,
-                      ),),
-                    ),
-                    SizedBox(height: index.isEven ? 25 : 45,),
-                    Flexible(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text('${AppLocalizations.instance.text('TXT_SOLD_OUT')}', style: TextStyle(
-                              color: Colors.red,
-                            ),),
-                          ),
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: Icon(FontAwesomeIcons.shoppingCart, color: CustomColor.GREY_ICON, size: 18,),
-                                ),
-                                SizedBox(width: 15,),
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: Icon(FontAwesomeIcons.heart, color: CustomColor.GREY_ICON, size: 18,),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -497,10 +494,249 @@ abstract class ProductCardInterface {
     required int index,
     required Future storeLog(),
   }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadiusDirectional.circular(10),
+      ),
+      child: InkWell(
+        onTap: () async {
+          await storeLog();
+          Get.toNamed(
+            ProductDetailScreen.tag,
+            arguments: ProductDetailScreen(id: data.id,),
+          );
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                Container(
+                  height: 150,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(10),
+                      topLeft: Radius.circular(10),
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: data.image ?? '',
+                      width: MediaQuery.of(context).size.width,
+                      alignment: Alignment.center,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Center(
+                          child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) =>
+                          Center(child: Icon(Icons.no_photography, size: 50, color: CustomColor.GREY_ICON,),),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(10),
+                      topLeft: Radius.circular(10),
+                    ),
+                    color: CustomColor.GREY_ICON,
+                  ),
+                  child: Center(
+                    child: Text(AppLocalizations.instance.text('TXT_SOLD_OUT'), style: TextStyle(
+                      fontSize: 18,
+                      color: CustomColor.MAIN,
+                      fontWeight: FontWeight.bold,
+                    ),),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(data.name ?? '-', style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                  ), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                  SizedBox(height: 5,),
+                  Flexible(
+                    child: Row(
+                      children: [
+                        RatingBar.builder(
+                          initialRating: double.parse(data.rating ?? '0.0'),
+                          ignoreGestures: true,
+                          direction: Axis.horizontal,
+                          itemCount: 5,
+                          itemPadding: EdgeInsets.zero,
+                          itemBuilder: (context, _) => Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          ),
+                          itemSize: 15,
+                          onRatingUpdate: (rating) {},
+                        ),
+                        SizedBox(width: 2,),
+                        Text('(${data.rating ?? '0.0'})', style: TextStyle(
+                          color: CustomColor.GREY_TXT,
+                        ),),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 5,),
+                  Flexible(
+                    child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: CustomColor.MAIN_TXT,
+                    ),),
+                  ),
+                  SizedBox(height: index.isEven ? 25 : 45,),
+                  Flexible(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text('${AppLocalizations.instance.text('TXT_SOLD_OUT')}', style: TextStyle(
+                            color: Colors.red,
+                          ),),
+                        ),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              GestureDetector(
+                                onTap: () {},
+                                child: Icon(FontAwesomeIcons.shoppingCart, color: CustomColor.GREY_ICON, size: 18,),
+                              ),
+                              SizedBox(width: 15,),
+                              GestureDetector(
+                                onTap: () {},
+                                child: Icon(FontAwesomeIcons.heart, color: CustomColor.GREY_ICON, size: 18,),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget regionalProductCard({
+    required BuildContext context,
+    required popularProduct.Data data,
+    required int index,
+    required Future storeClickLog(),
+    required Future storeCartLog(),
+    required Future storeWishlistLog(),
+    required void onUpdateCart(),
+  }) {
+    return Container(
+      width: 200,
       child: Card(
-        elevation: 2,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadiusDirectional.circular(10),
+        ),
+        child: InkWell(
+          onTap: () async {
+            await storeClickLog();
+            Get.toNamed(
+              ProductDetailScreen.tag,
+              arguments: ProductDetailScreen(id: data.id,),
+            );
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 150,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(10),
+                    topLeft: Radius.circular(10),
+                  ),
+                  child: CachedNetworkImage(
+                    imageUrl: data.image ?? '',
+                    width: MediaQuery.of(context).size.width,
+                    alignment: Alignment.center,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Center(
+                        child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) =>
+                        Center(child: Icon(Icons.no_photography, size: 50, color: CustomColor.GREY_ICON,),),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(data.name ?? '-', style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                    ), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                    SizedBox(height: 5,),
+                    Flexible(
+                      child: Row(
+                        children: [
+                          RatingBar.builder(
+                            initialRating: double.parse(data.rating ?? '0.0'),
+                            ignoreGestures: true,
+                            direction: Axis.horizontal,
+                            itemCount: 5,
+                            itemPadding: EdgeInsets.zero,
+                            itemBuilder: (context, _) => Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            itemSize: 15,
+                            onRatingUpdate: (rating) {},
+                          ),
+                          SizedBox(width: 2,),
+                          Text('(${data.rating ?? '0.0'})', style: TextStyle(
+                            color: CustomColor.GREY_TXT,
+                          ),),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 5,),
+                    Flexible(
+                      child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: CustomColor.MAIN_TXT,
+                      ),),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget regionalEmptyProductCard({
+    required BuildContext context,
+    required popularProduct.Data data,
+    required int index,
+    required Future storeLog(),
+  }) {
+    return Container(
+      width: 200,
+      child: Card(
+        elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadiusDirectional.circular(10),
         ),
@@ -596,35 +832,6 @@ abstract class ProductCardInterface {
                         fontWeight: FontWeight.bold,
                         color: CustomColor.MAIN_TXT,
                       ),),
-                    ),
-                    SizedBox(height: index.isEven ? 25 : 45,),
-                    Flexible(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text('${AppLocalizations.instance.text('TXT_SOLD_OUT')}', style: TextStyle(
-                              color: Colors.red,
-                            ),),
-                          ),
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: Icon(FontAwesomeIcons.shoppingCart, color: CustomColor.GREY_ICON, size: 18,),
-                                ),
-                                SizedBox(width: 15,),
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: Icon(FontAwesomeIcons.heart, color: CustomColor.GREY_ICON, size: 18,),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
                   ],
                 ),

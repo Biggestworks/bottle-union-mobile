@@ -16,6 +16,7 @@ import 'package:eight_barrels/provider/home/banner_detail_provider.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
 import 'package:eight_barrels/provider/product/product_by_category_provider.dart';
+import 'package:eight_barrels/provider/product/product_by_region_provider.dart';
 import 'package:eight_barrels/provider/product/product_detail_provider.dart';
 import 'package:eight_barrels/provider/product/product_list_provider.dart';
 import 'package:eight_barrels/provider/product/wishlist_provider.dart';
@@ -45,6 +46,7 @@ import 'package:eight_barrels/screen/home/banner_detail_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/home/home_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
+import 'package:eight_barrels/screen/product/product_by_region_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/product/product_list_screen.dart';
 import 'package:eight_barrels/screen/product/wishlist_screen.dart';
@@ -388,6 +390,13 @@ class _AppState extends State<App> {
             page: () => ChangeNotifierProvider<AddDiscussionProvider>(
               create: (context) => AddDiscussionProvider(),
               child: AddDiscussionScreen(),
+            ),
+          ),
+          GetPage(
+            name: ProductByRegionScreen.tag,
+            page: () => ChangeNotifierProvider<ProductByRegionProvider>(
+              create: (context) => ProductByRegionProvider(),
+              child: ProductByRegionScreen(),
             ),
           ),
         ],
