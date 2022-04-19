@@ -96,6 +96,9 @@ class URLHelper {
   static transactionDetailUrl(String id) {
     return BASE_URL + '/transactions/$id';
   }
-
+  static const UPLOAD_PAYMENT_URL = BASE_URL + '/transactions/upload-proof-transfer';
+  static trackOrderUrl(String id) {
+    return BASE_URL + '/transactions/tracking/$id';
+  }
 
 }

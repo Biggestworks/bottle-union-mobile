@@ -6,6 +6,7 @@ import 'package:eight_barrels/model/cart/cart_total_model.dart';
 import 'package:eight_barrels/model/product/product_detail_model.dart';
 import 'package:eight_barrels/provider/checkout/delivery_provider.dart';
 import 'package:eight_barrels/screen/checkout/payment_screen.dart';
+import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/profile/add_address_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
@@ -466,90 +467,93 @@ class _DeliveryScreenState extends State<DeliveryScreen>
                         },
                         itemBuilder: (context, index) {
                           var _data = provider.product?.data;
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
+                          return InkWell(
+                            onTap: () => Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(id: _data?.id,)),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 100,
+                                        height: 100,
+                                        child: ClipRRect(
+                                          child: CustomWidget.networkImg(context, _data?.image1),
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(_data?.name ?? '-', style: TextStyle(
+                                                color: Colors.black,
+                                              ),),
+                                              SizedBox(height: 5,),
+                                              Text('${_data?.weight.toString()} gram', style: TextStyle(
+                                                color: CustomColor.GREY_TXT,
+                                              ),),
+                                              SizedBox(height: 5,),
+                                              Text('${provider.productQty} x ${FormatterHelper.moneyFormatter(_data?.regularPrice ?? 0)}', style: TextStyle(
+                                                color: CustomColor.GREY_TXT,
+                                              ),),
+                                              SizedBox(height: 5,),
+                                              Text('Subtotal: ${provider.fnGetSubtotal(_data?.regularPrice ?? 0, provider.productQty)}', style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: CustomColor.MAIN_TXT,
+                                              ),),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10,),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        border: Border.all(
+                                          color: CustomColor.GREY_ICON,
+                                        ),
+                                      ),
                                       width: 100,
-                                      height: 100,
-                                      child: ClipRRect(
-                                        child: CustomWidget.networkImg(context, _data?.image1),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(_data?.name ?? '-', style: TextStyle(
-                                              color: Colors.black,
-                                            ),),
-                                            SizedBox(height: 5,),
-                                            Text('${_data?.weight.toString()} gram', style: TextStyle(
-                                              color: CustomColor.GREY_TXT,
-                                            ),),
-                                            SizedBox(height: 5,),
-                                            Text('${provider.productQty} x ${FormatterHelper.moneyFormatter(_data?.regularPrice ?? 0)}', style: TextStyle(
-                                              color: CustomColor.GREY_TXT,
-                                            ),),
-                                            SizedBox(height: 5,),
-                                            Text('Subtotal: ${provider.fnGetSubtotal(_data?.regularPrice ?? 0, provider.productQty)}', style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: CustomColor.MAIN_TXT,
-                                            ),),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 10,),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(
-                                        color: CustomColor.GREY_ICON,
-                                      ),
-                                    ),
-                                    width: 100,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Expanded(
-                                          child: IconButton(
-                                            onPressed: () async => await provider.fnUpdateProductQty('decrease'),
-                                            icon: Icon(Icons.remove, size: 18, color: provider.productQty != 1
-                                                ? Colors.green
-                                                : CustomColor.GREY_ICON,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Expanded(
+                                            child: IconButton(
+                                              onPressed: () async => await provider.fnUpdateProductQty('decrease'),
+                                              icon: Icon(Icons.remove, size: 18, color: provider.productQty != 1
+                                                  ? Colors.green
+                                                  : CustomColor.GREY_ICON,
+                                              ),
+                                              padding: EdgeInsets.symmetric(vertical: 2),
+                                              constraints: BoxConstraints(),
                                             ),
-                                            padding: EdgeInsets.symmetric(vertical: 2),
-                                            constraints: BoxConstraints(),
                                           ),
-                                        ),
-                                        Text(provider.productQty.toString(), style: TextStyle(
-                                          fontSize: 12,
-                                        ),),
-                                        Expanded(
-                                          child: IconButton(
-                                            onPressed: () async => await provider.fnUpdateProductQty('increase'),
-                                            icon: Icon(Icons.add, size: 18, color: Colors.green,),
-                                            padding: EdgeInsets.symmetric(vertical: 2),
-                                            constraints: BoxConstraints(),
+                                          Text(provider.productQty.toString(), style: TextStyle(
+                                            fontSize: 12,
+                                          ),),
+                                          Expanded(
+                                            child: IconButton(
+                                              onPressed: () async => await provider.fnUpdateProductQty('increase'),
+                                              icon: Icon(Icons.add, size: 18, color: Colors.green,),
+                                              padding: EdgeInsets.symmetric(vertical: 2),
+                                              constraints: BoxConstraints(),
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           );
                         },
@@ -598,45 +602,48 @@ class _DeliveryScreenState extends State<DeliveryScreen>
                         },
                         itemBuilder: (context, index) {
                           var _data = provider.cartList?.data?[index];
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 100,
-                                  height: 100,
-                                  child: ClipRRect(
-                                    child: CustomWidget.networkImg(context, _data?.product?.image1),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(_data?.product?.name ?? '-', style: TextStyle(
-                                          color: Colors.black,
-                                        ),),
-                                        SizedBox(height: 5,),
-                                        Text('${_data?.product?.weight.toString()} gram', style: TextStyle(
-                                          color: CustomColor.GREY_TXT,
-                                        ),),
-                                        SizedBox(height: 5,),
-                                        Text('${_data?.qty.toString()} x ${FormatterHelper.moneyFormatter(_data?.product?.regularPrice)}', style: TextStyle(
-                                          color: CustomColor.GREY_TXT,
-                                        ),),
-                                        SizedBox(height: 5,),
-                                        Text('Subtotal: ${provider.fnGetSubtotal(_data?.product?.regularPrice ?? 0, _data?.qty ?? 0)}', style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: CustomColor.MAIN_TXT,
-                                        ),),
-                                      ],
+                          return InkWell(
+                            onTap: () => Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(id: _data?.idProduct,)),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 100,
+                                    height: 100,
+                                    child: ClipRRect(
+                                      child: CustomWidget.networkImg(context, _data?.product?.image1),
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
-                                ),
-                              ],
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(_data?.product?.name ?? '-', style: TextStyle(
+                                            color: Colors.black,
+                                          ),),
+                                          SizedBox(height: 5,),
+                                          Text('${_data?.product?.weight.toString()} gram', style: TextStyle(
+                                            color: CustomColor.GREY_TXT,
+                                          ),),
+                                          SizedBox(height: 5,),
+                                          Text('${_data?.qty.toString()} x ${FormatterHelper.moneyFormatter(_data?.product?.regularPrice)}', style: TextStyle(
+                                            color: CustomColor.GREY_TXT,
+                                          ),),
+                                          SizedBox(height: 5,),
+                                          Text('Subtotal: ${provider.fnGetSubtotal(_data?.product?.regularPrice ?? 0, _data?.qty ?? 0)}', style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: CustomColor.MAIN_TXT,
+                                          ),),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         },

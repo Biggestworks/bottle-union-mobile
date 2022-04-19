@@ -93,6 +93,8 @@ class DeliveryProvider extends ChangeNotifier {
 
   Future fnCalculateOrder() async {
     await Future.delayed(Duration.zero).then((value) {
+      _prices.clear();
+      _totalWeight = 0;
       if (cartList != null) {
         List.generate(cartList?.data?.length ?? 0, (index) {
           int _regPrice = cartList?.data?[index].product?.regularPrice ?? 0;
@@ -111,12 +113,10 @@ class DeliveryProvider extends ChangeNotifier {
   }
 
   Future fnGetOrderSummary() async {
-    _view!.onProgressStart();
     orderSummary = (await _deliveryService.getOrderSummary(
       itemPrices: _prices,
       deliveryCost: this.deliveryCost,
     ))!;
-    _view!.onProgressFinish();
     notifyListeners();
   }
 
@@ -150,9 +150,11 @@ class DeliveryProvider extends ChangeNotifier {
   Future fnUpdateProductQty(String flag) async {
     if (flag == 'increase') {
       productQty++;
+      await fnInitOrderSummary();
     } else {
       if (productQty != 1) {
         productQty--;
+        await fnInitOrderSummary();
       }
     }
     notifyListeners();

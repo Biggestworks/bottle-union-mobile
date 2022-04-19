@@ -168,6 +168,12 @@
 	"TXT_SEARCH_PRODUCT": "Cari produk...",
 	"TXT_TITLE_RECOMMENDED_REGION": "Rekomendasi dari wilayah mu",
 	"TXT_SEE_ALL": "Lihat Semua",
+	"TXT_UPLOAD_PAYMENT": "Unggah Bukti Pembayaran",
+	"TXT_UPLOAD_PAYMENT_INFO": "Mohon unggah bukti pembayaran Anda disini setelah sukses melakukan pembayaran.",
+	"TXT_BACK_TO_HOME": "Kembali ke Beranda",
+	"TXT_UPLOAD_PAYMENT_SUCCESS": "Bukti pembayaran Anda telah diterima\ndengan order ID:",
+
+
 
 	"app_name": "eRecycle",
 	"action_settings": "Settings",

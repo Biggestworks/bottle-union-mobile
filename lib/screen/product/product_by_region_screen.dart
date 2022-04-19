@@ -140,72 +140,23 @@ class _ProductByRegionScreenState extends State<ProductByRegionScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 20,),
-          Row(
-            children: [
-              Flexible(
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(50),
-                      borderSide: BorderSide.none,
-                    ),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                    hintText: AppLocalizations.instance.text('TXT_SEARCH_PRODUCT'),
-                    isDense: true,
-                    filled: true,
-                    suffixIcon: Icon(Icons.search, size: 24,),
-                    fillColor: CustomColor.GREY_BG,
-                  ),
-                  cursorColor: CustomColor.MAIN,
-                  onChanged: (value) async => await _provider.fnOnSearchProduct(value),
-                ),
+          TextFormField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(50),
+                borderSide: BorderSide.none,
               ),
-              SizedBox(width: 10,),
-              CustomWidget.textIconBtn(
-                icon: MdiIcons.filterVariant,
-                label: 'Filter',
-                lblColor: CustomColor.BROWN_LIGHT_TXT,
-                icColor: CustomColor.BROWN_TXT,
-                icSize: 22,
-                fontSize: 16,
-                function: () {
-                  // _provider.fnInitFilter();
-                  // _showFilterSheet();
-                },
-              ),
-            ],
+              contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              hintText: AppLocalizations.instance.text('TXT_SEARCH_PRODUCT'),
+              isDense: true,
+              filled: true,
+              suffixIcon: Icon(Icons.search, size: 24,),
+              fillColor: CustomColor.GREY_BG,
+            ),
+            cursorColor: CustomColor.MAIN,
+            onChanged: (value) async => await _provider.fnOnSearchProduct(value),
           ),
-          // SizedBox(height: 10,),
-          // Consumer<ProductByRegionProvider>(
-          //   child: SizedBox(),
-          //   builder: (context, provider, skeleton) {
-          //     switch (provider.filterVal.length) {
-          //       case 0:
-          //         return skeleton!;
-          //       default:
-          //         return Container(
-          //           height: 50,
-          //           child: ListView.builder(
-          //             shrinkWrap: true,
-          //             scrollDirection: Axis.horizontal,
-          //             itemCount: provider.filterVal.length,
-          //             itemBuilder: (context, index) {
-          //               var _data = provider.filterVal[index];
-          //               return Padding(
-          //                 padding: const EdgeInsets.symmetric(horizontal: 5),
-          //                 child: Chip(
-          //                   backgroundColor: CustomColor.BROWN_TXT,
-          //                   label: Text(_data.value, style: TextStyle(
-          //                     color: Colors.white,
-          //                   ),),
-          //                 ),
-          //               );
-          //             },
-          //           ),
-          //         );
-          //     }
-          //   },
-          // ),
+          SizedBox(height: 10,),
           _productListContent,
         ],
       ),

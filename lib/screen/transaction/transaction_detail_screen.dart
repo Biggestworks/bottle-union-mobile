@@ -3,7 +3,9 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/provider/transaction/transaction_detail_provider.dart';
+import 'package:eight_barrels/screen/checkout/upload_payment_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
+import 'package:eight_barrels/screen/transaction/track_order_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -348,8 +350,58 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
             case null:
               return skeleton!;
             default:
-              switch (provider.transactionDetail.data?.statusOrder) {
-                case null:
+              switch (provider.transactionDetail.data?.order?[0].payment?.idStatusPayment) {
+                case 1:
+                  switch (provider.transactionDetail.data?.detailPayments?.paymentMethod) {
+                    case 'transfer_manual':
+                      var _data = provider.transactionDetail.data;
+                      return Container(
+                        padding: EdgeInsets.fromLTRB(15, 5, 15, 10),
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border(
+                            top: BorderSide(width: 0.5, color: CustomColor.GREY_ICON),
+                          ),
+                        ),
+                        child: CustomWidget.roundIconBtn(
+                          icon: MdiIcons.shieldCheck,
+                          label: AppLocalizations.instance.text('TXT_UPLOAD_PAYMENT'),
+                          btnColor: Colors.green,
+                          lblColor: Colors.white,
+                          isBold: true,
+                          radius: 8,
+                          fontSize: 16,
+                          function: () => Get.offAndToNamed(UploadPaymentScreen.tag, arguments: UploadPaymentScreen(
+                            orderId: _data?.order?[0].codeTransaction,
+                            orderDate: DateFormat('dd MMMM yyyy, HH:mm a').format(_data?.orderedAt != null ? DateTime.parse(_data?.orderedAt ?? '') : DateTime.now()),
+                            totalPay: FormatterHelper.moneyFormatter(_data?.totalPay ?? 0),
+                          )),
+                        ),
+                      );
+                    default:
+                      return Container(
+                        padding: EdgeInsets.fromLTRB(15, 5, 15, 10),
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border(
+                            top: BorderSide(width: 0.5, color: CustomColor.GREY_ICON),
+                          ),
+                        ),
+                        child: CustomWidget.roundIconBtn(
+                          icon: MdiIcons.shieldCheck,
+                          label: AppLocalizations.instance.text('TXT_FINISH_PAYMENT'),
+                          btnColor: Colors.green,
+                          lblColor: Colors.white,
+                          isBold: true,
+                          radius: 8,
+                          fontSize: 16,
+                          function: () async => await provider.fnFinishPayment(_provider.scaffoldKey.currentContext!),
+                        ),
+                      );
+                  }
+                default:
                   return Container(
                     padding: EdgeInsets.fromLTRB(15, 5, 15, 10),
                     width: MediaQuery.of(context).size.width,
@@ -359,22 +411,6 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                         top: BorderSide(width: 0.5, color: CustomColor.GREY_ICON),
                       ),
                     ),
-                    child: CustomWidget.roundIconBtn(
-                      icon: MdiIcons.shieldCheck,
-                      label: AppLocalizations.instance.text('TXT_FINISH_PAYMENT'),
-                      btnColor: Colors.green,
-                      lblColor: Colors.white,
-                      isBold: true,
-                      radius: 8,
-                      fontSize: 16,
-                      function: () async => await provider.fnFinishPayment(_provider.scaffoldKey.currentContext!),
-                    ),
-                  );
-                default:
-                  return Container(
-                    color: Colors.white,
-                    padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
-                    width: MediaQuery.of(context).size.width,
                     child: CustomWidget.roundBtn(
                       label: AppLocalizations.instance.text('TXT_TRACK_ORDER'),
                       btnColor: Colors.green,
@@ -382,7 +418,9 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                       isBold: true,
                       radius: 8,
                       fontSize: 16,
-                      function: () {},
+                      function: () => Get.toNamed(TrackOrderScreen.tag, arguments: TrackOrderScreen(
+                        orderId: provider.orderId,
+                      )),
                     ),
                   );
               }

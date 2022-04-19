@@ -314,8 +314,8 @@ class Payment {
   String? paymentMethod;
   String? paymentType;
   String? evidanceOfTransfer;
-  bool? isApproved;
-  String? approvedBy;
+  int? isApproved;
+  int? approvedBy;
   String? expiredAt;
   String? courierName;
   String? courierDesc;

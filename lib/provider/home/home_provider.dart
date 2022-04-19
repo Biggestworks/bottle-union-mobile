@@ -64,7 +64,7 @@ class HomeProvider extends ChangeNotifier
 
   Future fnFetchRegionProductList() async {
     regionProductList = (await _productService.getPopularProductList(
-      regionId: userModel.user?.idRegion?.toString(),
+      regionId: userModel.region?.id?.toString(),
       page: super.currentPage.toString(),
     ))!;
     notifyListeners();

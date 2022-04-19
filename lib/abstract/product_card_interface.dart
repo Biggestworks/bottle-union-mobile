@@ -668,7 +668,7 @@ abstract class ProductCardInterface {
                     imageUrl: data.image ?? '',
                     width: MediaQuery.of(context).size.width,
                     alignment: Alignment.center,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                     placeholder: (context, url) => Center(
                         child: CircularProgressIndicator()),
                     errorWidget: (context, url, error) =>
@@ -676,48 +676,50 @@ abstract class ProductCardInterface {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(data.name ?? '-', style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                    ), maxLines: 2, overflow: TextOverflow.ellipsis,),
-                    SizedBox(height: 5,),
-                    Flexible(
-                      child: Row(
-                        children: [
-                          RatingBar.builder(
-                            initialRating: double.parse(data.rating ?? '0.0'),
-                            ignoreGestures: true,
-                            direction: Axis.horizontal,
-                            itemCount: 5,
-                            itemPadding: EdgeInsets.zero,
-                            itemBuilder: (context, _) => Icon(
-                              Icons.star,
-                              color: Colors.amber,
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(data.name ?? '-', style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                      SizedBox(height: 5,),
+                      Flexible(
+                        child: Row(
+                          children: [
+                            RatingBar.builder(
+                              initialRating: double.parse(data.rating ?? '0.0'),
+                              ignoreGestures: true,
+                              direction: Axis.horizontal,
+                              itemCount: 5,
+                              itemPadding: EdgeInsets.zero,
+                              itemBuilder: (context, _) => Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
+                              itemSize: 15,
+                              onRatingUpdate: (rating) {},
                             ),
-                            itemSize: 15,
-                            onRatingUpdate: (rating) {},
-                          ),
-                          SizedBox(width: 2,),
-                          Text('(${data.rating ?? '0.0'})', style: TextStyle(
-                            color: CustomColor.GREY_TXT,
-                          ),),
-                        ],
+                            SizedBox(width: 2,),
+                            Text('(${data.rating ?? '0.0'})', style: TextStyle(
+                              color: CustomColor.GREY_TXT,
+                            ),),
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 5,),
-                    Flexible(
-                      child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: CustomColor.MAIN_TXT,
-                      ),),
-                    ),
-                  ],
+                      SizedBox(height: 5,),
+                      Flexible(
+                        child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: CustomColor.MAIN_TXT,
+                        ),),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

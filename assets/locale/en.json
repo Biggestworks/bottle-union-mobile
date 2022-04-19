@@ -168,6 +168,12 @@
 	"TXT_SEARCH_PRODUCT": "Search product...",
 	"TXT_TITLE_RECOMMENDED_REGION": "Recommended From Your Region",
 	"TXT_SEE_ALL": "See All",
+	"TXT_UPLOAD_PAYMENT": "Upload Payment",
+	"TXT_UPLOAD_PAYMENT_INFO": "Please upload your proof of payment here after successful payment.",
+	"TXT_BACK_TO_HOME": "Back to Home",
+	"TXT_UPLOAD_PAYMENT_SUCCESS": "Your proof of payment has been received\nwith order ID:",
+
+
 
 	"app_name": "eRecycle",
 	"version_code": "Version 1.1.3",

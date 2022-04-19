@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/key_helper.dart' as key;
+import 'package:eight_barrels/helper/network_connection_helper.dart';
 import 'package:eight_barrels/provider/auth/forgot_password_provider.dart';
 import 'package:eight_barrels/provider/auth/login_provider.dart';
 import 'package:eight_barrels/provider/auth/otp_provider.dart';
@@ -10,6 +12,7 @@ import 'package:eight_barrels/provider/cart/cart_list_provider.dart';
 import 'package:eight_barrels/provider/checkout/delivery_provider.dart';
 import 'package:eight_barrels/provider/checkout/order_finish_provider.dart';
 import 'package:eight_barrels/provider/checkout/payment_provider.dart';
+import 'package:eight_barrels/provider/checkout/upload_payment_provider.dart';
 import 'package:eight_barrels/provider/discussion/add_discussion_provider.dart';
 import 'package:eight_barrels/provider/discussion/discussion_provider.dart';
 import 'package:eight_barrels/provider/home/banner_detail_provider.dart';
@@ -27,6 +30,7 @@ import 'package:eight_barrels/provider/profile/profile_input_provider.dart';
 import 'package:eight_barrels/provider/profile/profile_provider.dart';
 import 'package:eight_barrels/provider/profile/update_profile_provider.dart';
 import 'package:eight_barrels/provider/splash/splash_provider.dart';
+import 'package:eight_barrels/provider/transaction/track_order_provider.dart';
 import 'package:eight_barrels/provider/transaction/transaction_detail_provider.dart';
 import 'package:eight_barrels/provider/transaction/transaction_provider.dart';
 import 'package:eight_barrels/screen/auth/forgot_password_screen.dart';
@@ -40,6 +44,7 @@ import 'package:eight_barrels/screen/checkout/delivery_screen.dart';
 import 'package:eight_barrels/screen/checkout/midtrans_webview_screen.dart';
 import 'package:eight_barrels/screen/checkout/order_finish_screen.dart';
 import 'package:eight_barrels/screen/checkout/payment_screen.dart';
+import 'package:eight_barrels/screen/checkout/upload_payment_screen.dart';
 import 'package:eight_barrels/screen/discussion/add_discussion_screen.dart';
 import 'package:eight_barrels/screen/discussion/discussion_screen.dart';
 import 'package:eight_barrels/screen/home/banner_detail_screen.dart';
@@ -57,6 +62,8 @@ import 'package:eight_barrels/screen/profile/profile_input_screen.dart';
 import 'package:eight_barrels/screen/profile/profile_screen.dart';
 import 'package:eight_barrels/screen/profile/update_profile_screen.dart';
 import 'package:eight_barrels/screen/splash/splash_screen.dart';
+import 'package:eight_barrels/screen/success_screen.dart';
+import 'package:eight_barrels/screen/transaction/track_order_screen.dart';
 import 'package:eight_barrels/screen/transaction/transaction_detail_screen.dart';
 import 'package:eight_barrels/screen/transaction/transaction_screen.dart';
 import 'package:flutter/foundation.dart';
@@ -76,13 +83,15 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  // NetworkConnectionHelper _networkConnectionHelper = new NetworkConnectionHelper();
   SpecifiedLocalizationDelegate? _localeOverrideDelegate;
   bool _initialURILinkHandled = false;
   Uri? _initialURI;
   Uri? _currentURI;
   Object? _err;
 
-  StreamSubscription? _subscription;
+  StreamSubscription? _linkSubs;
+  // StreamSubscription<ConnectivityResult>? _connectivitySubs;
 
   Future<Locale> _getLocale() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -125,7 +134,7 @@ class _AppState extends State<App> {
 
   void _incomingLinkHandler() {
     if (!kIsWeb) {
-      _subscription = uriLinkStream.listen((Uri? uri) {
+      _linkSubs = uriLinkStream.listen((Uri? uri) {
         if (!mounted) {
           return;
         }
@@ -153,6 +162,7 @@ class _AppState extends State<App> {
 
   @override
   void initState() {
+    // _networkConnectionHelper.initConnectivity(subscription: _connectivitySubs, context: context);
     _getLocale().then((Locale myLocale) => {
       setState(() {
         _localeOverrideDelegate = new SpecifiedLocalizationDelegate(myLocale);
@@ -165,7 +175,8 @@ class _AppState extends State<App> {
 
   @override
   void dispose() {
-    _subscription?.cancel();
+    _linkSubs?.cancel();
+    // _connectivitySubs?.cancel();
     super.dispose();
   }
 
@@ -397,6 +408,24 @@ class _AppState extends State<App> {
             page: () => ChangeNotifierProvider<ProductByRegionProvider>(
               create: (context) => ProductByRegionProvider(),
               child: ProductByRegionScreen(),
+            ),
+          ),
+          GetPage(
+            name: UploadPaymentScreen.tag,
+            page: () => ChangeNotifierProvider<UploadPaymentProvider>(
+              create: (context) => UploadPaymentProvider(),
+              child: UploadPaymentScreen(),
+            ),
+          ),
+          GetPage(
+            name: SuccessScreen.tag,
+            page: () => SuccessScreen(),
+          ),
+          GetPage(
+            name: TrackOrderScreen.tag,
+            page: () => ChangeNotifierProvider<TrackOrderProvider>(
+              create: (context) => TrackOrderProvider(),
+              child: TrackOrderScreen(),
             ),
           ),
         ],

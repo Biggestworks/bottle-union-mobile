@@ -96,6 +96,7 @@ class Data {
   int? idStatusPayment;
   String? codeTransaction;
   String? orderedAt;
+  String? paymentMethod;
   String? statusOrder;
   String? product;
   String? productImage;
@@ -107,6 +108,7 @@ class Data {
         this.idStatusPayment,
         this.codeTransaction,
         this.orderedAt,
+        this.paymentMethod,
         this.statusOrder,
         this.product,
         this.productImage,
@@ -118,6 +120,7 @@ class Data {
     idStatusPayment = json['id_status_payment'];
     codeTransaction = json['code_transaction'];
     orderedAt = json['ordered_at'];
+    paymentMethod = json['payment_method'];
     statusOrder = json['status_order'];
     product = json['product'];
     productImage = json['product_image'];
@@ -131,6 +134,7 @@ class Data {
     data['id_status_payment'] = this.idStatusPayment;
     data['code_transaction'] = this.codeTransaction;
     data['ordered_at'] = this.orderedAt;
+    data['payment_method'] = this.paymentMethod;
     data['status_order'] = this.statusOrder;
     data['product'] = this.product;
     data['product_image'] = this.productImage;

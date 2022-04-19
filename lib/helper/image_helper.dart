@@ -50,7 +50,7 @@ class PictureProvider {
                   child: Text("Camera"),
                   onTap: () async {
                     await openCamera(context).then((img) {
-                      image = img!;
+                      image = img;
                       Get.back();
                     });
                   },
@@ -62,7 +62,7 @@ class PictureProvider {
                   child: Text("Gallery"),
                   onTap: () async {
                     await openGallery(context).then((img) {
-                      image = img!;
+                      image = img;
                       Get.back();
                     });
                   },
@@ -73,7 +73,7 @@ class PictureProvider {
         );
       },
     );
-    return image!;
+    return image;
   }
 
   // showPreviewImage(BuildContext context, File image) {

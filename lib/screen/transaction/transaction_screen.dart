@@ -3,6 +3,8 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/provider/transaction/transaction_provider.dart';
+import 'package:eight_barrels/screen/checkout/upload_payment_screen.dart';
+import 'package:eight_barrels/screen/transaction/track_order_screen.dart';
 import 'package:eight_barrels/screen/transaction/transaction_detail_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -399,18 +401,36 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                     ],
                                                   ),
                                                   if (_data?.idStatusPayment == 1)
-                                                    Container(
-                                                      height: 30,
-                                                      child: CustomWidget.roundBtn(
-                                                        label: AppLocalizations.instance.text('TXT_FINISH_PAYMENT'),
-                                                        lblColor: Colors.white,
-                                                        btnColor: Colors.green,
-                                                        fontSize: 12,
-                                                        radius: 8,
-                                                        isBold: true,
-                                                        function: () async => await provider.fnFinishPayment(provider.scaffoldKey.currentContext!),
-                                                      ),
-                                                    )
+                                                    if (_data?.paymentMethod == 'transfer_manual')
+                                                      Container(
+                                                        height: 30,
+                                                        child: CustomWidget.roundBtn(
+                                                          label: AppLocalizations.instance.text('TXT_UPLOAD_PAYMENT'),
+                                                          lblColor: Colors.white,
+                                                          btnColor: Colors.amber,
+                                                          fontSize: 12,
+                                                          radius: 8,
+                                                          isBold: true,
+                                                          function: () => Get.toNamed(UploadPaymentScreen.tag, arguments: UploadPaymentScreen(
+                                                            orderId: _data?.codeTransaction,
+                                                            orderDate: DateFormat('dd MMMM yyyy').format(DateTime.parse(_data?.orderedAt ?? DateTime.now().toString())),
+                                                            totalPay: FormatterHelper.moneyFormatter(_data?.totalPay),
+                                                          )),
+                                                        ),
+                                                      )
+                                                    else
+                                                      Container(
+                                                        height: 30,
+                                                        child: CustomWidget.roundBtn(
+                                                          label: AppLocalizations.instance.text('TXT_FINISH_PAYMENT'),
+                                                          lblColor: Colors.white,
+                                                          btnColor: Colors.green,
+                                                          fontSize: 12,
+                                                          radius: 8,
+                                                          isBold: true,
+                                                          function: () async => await provider.fnFinishPayment(provider.scaffoldKey.currentContext!),
+                                                        ),
+                                                      )
                                                   else if (_data?.idStatusPayment == 6)
                                                     Container(
                                                       height: 30,
@@ -434,7 +454,9 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                         fontSize: 12,
                                                         radius: 8,
                                                         isBold: true,
-                                                        function: () {},
+                                                        function: () => Get.toNamed(TrackOrderScreen.tag, arguments: TrackOrderScreen(
+                                                          orderId: _data?.codeTransaction,
+                                                        )),
                                                       ),
                                                     ),
                                                 ],

@@ -4,6 +4,7 @@ import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/model/checkout/order_model.dart';
 import 'package:eight_barrels/provider/checkout/order_finish_provider.dart';
+import 'package:eight_barrels/screen/checkout/upload_payment_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
@@ -394,18 +395,44 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              child: CustomWidget.roundIconBtn(
-                icon: MdiIcons.shieldCheck,
-                label: AppLocalizations.instance.text('TXT_FINISH_PAYMENT'),
-                btnColor: Colors.green,
-                lblColor: Colors.white,
-                isBold: true,
-                radius: 8,
-                fontSize: 16,
-                function: () async => await _provider.fnFinishPayment(_provider.scaffoldKey.currentContext!),
-              ),
+            Consumer<OrderFinishProvider>(
+              builder: (context, provider, _) {
+                switch (provider.order?.data?[0].paymentMethod) {
+                  case 'transfer_manual':
+                    var _data = provider.order?.data?[0];
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: CustomWidget.roundIconBtn(
+                        icon: MdiIcons.shieldCheck,
+                        label: AppLocalizations.instance.text('TXT_UPLOAD_PAYMENT'),
+                        btnColor: Colors.green,
+                        lblColor: Colors.white,
+                        isBold: true,
+                        radius: 8,
+                        fontSize: 16,
+                        function: () => Get.offAndToNamed(UploadPaymentScreen.tag, arguments: UploadPaymentScreen(
+                          orderId: _data?.order?[0].codeTransaction,
+                          orderDate: DateFormat('dd MMMM yyyy, HH:mm a').format(_data?.transactionTime != null ? DateTime.parse(_data?.transactionTime ?? '') : DateTime.now()),
+                          totalPay: FormatterHelper.moneyFormatter(_data?.amount ?? 0),
+                        )),
+                      ),
+                    );
+                  default:
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: CustomWidget.roundIconBtn(
+                        icon: MdiIcons.shieldCheck,
+                        label: AppLocalizations.instance.text('TXT_FINISH_PAYMENT'),
+                        btnColor: Colors.green,
+                        lblColor: Colors.white,
+                        isBold: true,
+                        radius: 8,
+                        fontSize: 16,
+                        function: () async => await _provider.fnFinishPayment(_provider.scaffoldKey.currentContext!),
+                      ),
+                    );
+                }
+              },
             ),
             Container(
               width: MediaQuery.of(context).size.width,

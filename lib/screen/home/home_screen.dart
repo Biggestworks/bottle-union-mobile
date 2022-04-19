@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:eight_barrels/abstract/product_log.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/key_helper.dart';
+import 'package:eight_barrels/helper/network_connection_helper.dart';
 import 'package:eight_barrels/helper/push_notification_manager.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
@@ -30,10 +34,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with ProductLog {
+  StreamSubscription<ConnectivityResult>? _subscription;
 
   @override
   void initState() {
     Future.delayed(Duration.zero).then((value) {
+      // NetworkConnectionHelper().initConnectivity(subscription: _subscription, context: context);
+
       Provider.of<HomeProvider>(context, listen: false).fnFetchUserInfo()
           .then((_) => Provider.of<HomeProvider>(context, listen: false).fnFetchRegionProductList());
       Provider.of<HomeProvider>(context, listen: false).fnFetchBannerList();
@@ -42,6 +49,12 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
       PushNotificationManager().initFCM();
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -229,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
                                       ),
                                     ),
                                     Flexible(
-                                      child: Text(_data.name!, style: TextStyle(
+                                      child: Text(_data.name ?? '-', style: TextStyle(
                                         fontSize: 16,
                                       ),),
                                     )
@@ -390,8 +403,8 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
               Flexible(
                 child: GestureDetector(
                   onTap: () => Get.toNamed(ProductByRegionScreen.tag, arguments: ProductByRegionScreen(
-                    regionId: _provider.userModel.user?.idRegion,
-                    region: 'Jakarta',
+                    regionId: _provider.userModel.region?.id,
+                    region: _provider.userModel.region?.name,
                   )),
                   child: Text(AppLocalizations.instance.text('TXT_SEE_ALL'), style: TextStyle(
                     color: CustomColor.MAIN,
@@ -406,8 +419,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
         Material(
           elevation: 4,
           child: Container(
-            height: 300,
-            padding: EdgeInsets.only(bottom: 10),
+            height: 280,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.centerLeft,
@@ -442,7 +454,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
                                   snap: false,
                                   backgroundColor: CustomColor.MAIN,
                                   flexibleSpace: Center(
-                                    child: Text('Jakarta', style: TextStyle(
+                                    child: Text(provider.userModel.region?.name ?? '-', style: TextStyle(
                                       fontSize: 20,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
