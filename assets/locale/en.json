@@ -101,7 +101,7 @@
 	"TXT_LBL_REMOVE_WISHLIST": "Remove Wishlist",
 	"TXT_REMOVE_WISHLIST_INFO": "Are you sure you want to remove items from Wishlist?",
 	"TXT_SELECT_ITEM_INFO": "Please select at least one item",
-	"TXT_LANGUAGE_SUCCESS": "You have successfully changed the language. The system will reloading to take full changes",
+	"TXT_LANGUAGE_SUCCESS": "You have successfully changed the language. The system will reload to take full changes",
 	"TXT_CART_ADD_INFO": "Success, added to cart",
 	"TXT_CART_ADD": "Add to Cart",
 	"TXT_REMOVE_CART_INFO": "Are you sure you want to remove items from Cart?",
@@ -177,7 +177,8 @@
 	"TXT_CHANGE": "Change",
 	"TXT_LBL_REGION_PREFERENCE": "Region Preference",
 	"TXT_DESC_REGION_PREFERENCE": "Change your region preference",
-	"TXT_REGION_PREFERENCE_INFO": "Region preferences will be used to change your product recommendations on the homepage",
+	"TXT_REGION_PREFERENCE_INFO": "Region preferences will be used to change your product recommendations on the homepage. Your registered region won't be changed.",
+	"TXT_REGION_PREFERENCE_SUCCESS": "You have successfully changed the region preference. The system will reload to take full changes",
 
 
 

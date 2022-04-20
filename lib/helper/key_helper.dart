@@ -9,6 +9,8 @@ class KeyHelper {
   static const UID = 'uid';
   static const KEY_TOKEN = 'token';
   static const KEY_OTP_TOKEN = 'otp_token';
+  static const KEY_USER_REGION_ID = 'region_id';
+  static const KEY_USER_REGION_NAME = 'region_name';
 
   /// SERVICE STATUS
   static const NEED_ASSIGNMENT_KEY = 'need assignment';

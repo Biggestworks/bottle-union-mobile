@@ -475,6 +475,37 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
       ),
     );
 
+    Widget _bottomMenuDisabledContent = SafeArea(
+      child: Container(
+        padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Consumer<ProductDetailProvider>(
+                builder: (context, provider, _) {
+                  return IconButton(
+                    onPressed: () async => await provider.fnStoreWishlist(provider.scaffoldKey.currentContext!),
+                    icon: Icon(provider.isWishlist
+                        ? FontAwesomeIcons.solidHeart
+                        : FontAwesomeIcons.heart, color: CustomColor.MAIN,),
+                    visualDensity: VisualDensity.compact,
+                  );
+                }
+            ),
+            SizedBox(width: 10,),
+            Expanded(
+              child: CustomWidget.roundBtn(
+                label: AppLocalizations.instance.text('TXT_SOLD_OUT'),
+                btnColor: CustomColor.GREY_TXT,
+                lblColor: Colors.white,
+                function: () {},
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
     return Scaffold(
       key: _provider.scaffoldKey,
       backgroundColor: CustomColor.BG,
@@ -492,7 +523,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
         ],
       ),
       body: _mainContent,
-      bottomNavigationBar: _bottomMenuContent,
+      bottomNavigationBar: Consumer<ProductDetailProvider>(
+        builder: (context, provider, _) {
+          switch (provider.product.data?.stock) {
+            case 0:
+              return _bottomMenuDisabledContent;
+            default:
+              return _bottomMenuContent;
+          }
+        }
+      ),
     );
   }
 

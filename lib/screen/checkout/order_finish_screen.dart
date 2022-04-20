@@ -276,13 +276,13 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(_data?.user?.fullname ?? '-', style: TextStyle(
+                                Text(_data?.order?[0].shipment?.receiver ?? '-', style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),),
                                 SizedBox(height: 4),
-                                Text(_data?.user?.phone ?? '-'),
+                                Text(_data?.order?[0].shipment?.phone ?? '-'),
                                 SizedBox(height: 4),
-                                Text(_data?.order?[0].shipment?.address?.address ?? '-'),
+                                Text(_data?.order?[0].shipment?.address ?? '-'),
                               ],
                             ),
                           ),

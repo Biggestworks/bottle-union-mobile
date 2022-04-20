@@ -28,6 +28,74 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final _provider = Provider.of<ProfileProvider>(context, listen: false);
 
+    _showRegionDialog() {
+      return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext bc) {
+          return ChangeNotifierProvider.value(
+            value: Provider.of<ProfileProvider>(context, listen: false),
+            child: Material(
+              type: MaterialType.transparency,
+              child: Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                  ),
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  padding: EdgeInsets.all(10),
+                  child: Consumer<ProfileProvider>(
+                      child: Container(
+                        child: Text('No Data'),
+                      ),
+                      builder: (context, provider, skeleton) {
+                        switch (provider.regionList.data) {
+                          case null:
+                            return skeleton!;
+                          default:
+                            return GridView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                crossAxisSpacing: 4,
+                                mainAxisSpacing: 4,
+                                childAspectRatio: 2,
+                              ),
+                              itemCount: provider.regionList.data?.length,
+                              itemBuilder: (context, index) {
+                                var _data = provider.regionList.data?[index];
+                                return GestureDetector(
+                                  onTap: () async => await provider.fnOnSelectRegion(_data?.id)
+                                      .then((_) => CustomWidget.showSuccessDialog(
+                                    context,
+                                    desc: AppLocalizations.instance.text('TXT_REGION_PREFERENCE_SUCCESS'),
+                                    function: () => Get.offNamedUntil(SplashScreen.tag, (route) => false),
+                                  )),
+                                  child: Card(
+                                    color: _data?.id == provider.selectedRegionId ? CustomColor.MAIN : Colors.white,
+                                    child: Center(
+                                      child: Text(_data?.name ?? '-', style: TextStyle(
+                                          fontSize: 14,
+                                          color: _data?.id == _provider.selectedRegionId ? Colors.white : Colors.black
+                                      ),),
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                        }
+                      }
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
+
     Widget _headerContent = Container(
       width: MediaQuery.of(context).size.width,
       height: 150,
@@ -203,38 +271,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Divider(
                   thickness: 1,
                 ),
-                ListTile(
-                  dense: true,
-                  title: Row(
-                    children: [
-                      Text(AppLocalizations.instance.text('TXT_LBL_REGION_PREFERENCE'), style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15,
-                      ),),
-                      SizedBox(width: 5,),
-                      GestureDetector(
-                        onTap: () => CustomWidget.showInfoPopup(context, desc: AppLocalizations.instance.text('TXT_REGION_PREFERENCE_INFO')),
-                        child: Icon(FontAwesomeIcons.questionCircle, size: 18, color: CustomColor.GREY_TXT,),
+                Consumer<ProfileProvider>(
+                  builder: (context, provider, _) {
+                    return ListTile(
+                      dense: true,
+                      title: Row(
+                        children: [
+                          Text(AppLocalizations.instance.text('TXT_LBL_REGION_PREFERENCE'), style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                          ),),
+                          SizedBox(width: 5,),
+                          GestureDetector(
+                            onTap: () => CustomWidget.showInfoPopup(context, desc: AppLocalizations.instance.text('TXT_REGION_PREFERENCE_INFO')),
+                            child: Icon(FontAwesomeIcons.questionCircle, size: 18, color: CustomColor.GREY_TXT,),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  subtitle: Text(AppLocalizations.instance.text('TXT_DESC_REGION_PREFERENCE'), style: TextStyle(
-                    fontSize: 14,
-                  ),),
-                  leading: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Icon(
-                      FontAwesomeIcons.mapMarkedAlt,
-                      color: CustomColor.GREY_TXT,
-                      size: 18,
-                    ),
-                  ),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    color: CustomColor.GREY_TXT,
-                    size: 15,
-                  ),
-                  onTap: () => Get.toNamed(WishListScreen.tag),
+                      subtitle: Text(provider.selectedRegion ?? '-', style: TextStyle(
+                        fontSize: 14,
+                      ),),
+                      leading: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Icon(
+                          FontAwesomeIcons.mapMarkedAlt,
+                          color: CustomColor.GREY_TXT,
+                          size: 18,
+                        ),
+                      ),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        color: CustomColor.GREY_TXT,
+                        size: 15,
+                      ),
+                      onTap: () => _showRegionDialog(),
+                    );
+                  }
                 ),
               ],
             ),
@@ -337,6 +409,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
 
     Widget _mainContent = SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
       child: Column(
         children: [
           _headerContent,

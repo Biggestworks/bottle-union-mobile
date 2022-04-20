@@ -1,5 +1,6 @@
 import 'package:eight_barrels/abstract/pagination_interface.dart';
 import 'package:eight_barrels/abstract/product_card_interface.dart';
+import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/auth/user_detail_model.dart';
 import 'package:eight_barrels/model/banner/banner_list_model.dart';
@@ -8,6 +9,7 @@ import 'package:eight_barrels/model/product/popular_product_list_model.dart';
 import 'package:eight_barrels/service/banner/banner_service.dart';
 import 'package:eight_barrels/service/product/product_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class HomeProvider extends ChangeNotifier
     with PaginationInterface, ProductCardInterface{
@@ -23,10 +25,24 @@ class HomeProvider extends ChangeNotifier
   PopularProductListModel popularProductList = new PopularProductListModel();
   PopularProductListModel regionProductList = new PopularProductListModel();
 
+  final _storage = new FlutterSecureStorage();
+
   bool isPaginateLoad = false;
+  int? userRegionId;
+  String? userRegion;
 
   Future fnFetchUserInfo() async {
     this.userModel = (await _userPreferences.getUserData())!;
+    var _regionId = await _storage.read(key: KeyHelper.KEY_USER_REGION_ID) ?? null;
+    var _regionName = await _storage.read(key: KeyHelper.KEY_USER_REGION_NAME) ?? null;
+
+    if (_regionId != null && _regionName != null) {
+      userRegionId = int.parse(_regionId);
+      userRegion = _regionName;
+    } else {
+      userRegionId = userModel.region?.id;
+      userRegion = userModel.region?.name;
+    }
     notifyListeners();
   }
 
@@ -56,6 +72,7 @@ class HomeProvider extends ChangeNotifier
   }
 
   Future fnFetchPopularProductList() async {
+    super.currentPage = 1;
     popularProductList = (await _productService.getPopularProductList(
       page: super.currentPage.toString(),
     ))!;
@@ -63,8 +80,9 @@ class HomeProvider extends ChangeNotifier
   }
 
   Future fnFetchRegionProductList() async {
+    super.currentPage = 1;
     regionProductList = (await _productService.getPopularProductList(
-      regionId: userModel.region?.id?.toString(),
+      regionId: userRegionId.toString(),
       page: super.currentPage.toString(),
     ))!;
     notifyListeners();

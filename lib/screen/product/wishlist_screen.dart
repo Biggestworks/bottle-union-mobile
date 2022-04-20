@@ -103,14 +103,43 @@ class _WishListScreenState extends State<WishListScreen>
                                                   Row(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
-                                                      Container(
-                                                        width: 120,
-                                                        height: 120,
-                                                        child: ClipRRect(
-                                                          child: CustomWidget.networkImg(context, _data.product!.image1),
-                                                          borderRadius: BorderRadius.circular(10),
+                                                      if (_data.product?.stock == 0)
+                                                        Stack(
+                                                          children: [
+                                                            Container(
+                                                              width: 120,
+                                                              height: 120,
+                                                              child: ClipRRect(
+                                                                child: CustomWidget.networkImg(context, _data.product?.image1, fit: BoxFit.cover),
+                                                                borderRadius: BorderRadius.circular(10),
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              width: 120,
+                                                              height: 120,
+                                                              decoration: BoxDecoration(
+                                                                borderRadius: BorderRadius.all(Radius.circular(10),),
+                                                                color: CustomColor.GREY_ICON,
+                                                              ),
+                                                              child: Center(
+                                                                child: Text(AppLocalizations.instance.text('TXT_SOLD_OUT'), style: TextStyle(
+                                                                  fontSize: 18,
+                                                                  color: CustomColor.MAIN,
+                                                                  fontWeight: FontWeight.bold,
+                                                                ),),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        )
+                                                      else
+                                                        Container(
+                                                          width: 120,
+                                                          height: 120,
+                                                          child: ClipRRect(
+                                                            child: CustomWidget.networkImg(context, _data.product?.image1, fit: BoxFit.cover),
+                                                            borderRadius: BorderRadius.circular(10),
+                                                          ),
                                                         ),
-                                                      ),
                                                       Flexible(
                                                         child: Padding(
                                                           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -179,24 +208,35 @@ class _WishListScreenState extends State<WishListScreen>
                                                         visualDensity: VisualDensity.compact,
                                                       ),
                                                       SizedBox(width: 10,),
-                                                      Expanded(
-                                                        child: CustomWidget.roundIconBtn(
-                                                          function: () async {
-                                                            await fnStoreLog(
-                                                              productId: [_data.idProduct ?? 0],
-                                                              categoryId: null,
-                                                              notes: KeyHelper.SAVE_CART_KEY,
-                                                            );
-                                                            await provider.fnStoreCart(context, _data.idProduct!)
-                                                                .then((_) async => await _baseProvider.fnGetCartCount());
-                                                          },
-                                                          icon: Icons.add,
-                                                          label: AppLocalizations.instance.text('TXT_CART_ADD'),
-                                                          btnColor: CustomColor.MAIN,
-                                                          lblColor: Colors.white,
-                                                          radius: 10,
+                                                      if (_data.product?.stock == 0)
+                                                        Expanded(
+                                                          child: CustomWidget.roundBtn(
+                                                            function: () {},
+                                                            label: AppLocalizations.instance.text('TXT_SOLD_OUT'),
+                                                            btnColor: CustomColor.GREY_TXT,
+                                                            lblColor: Colors.white,
+                                                            radius: 10,
+                                                          ),
+                                                        )
+                                                      else
+                                                        Expanded(
+                                                          child: CustomWidget.roundIconBtn(
+                                                            function: () async {
+                                                              await fnStoreLog(
+                                                                productId: [_data.idProduct ?? 0],
+                                                                categoryId: null,
+                                                                notes: KeyHelper.SAVE_CART_KEY,
+                                                              );
+                                                              await provider.fnStoreCart(context, _data.idProduct!)
+                                                                  .then((_) async => await _baseProvider.fnGetCartCount());
+                                                            },
+                                                            icon: Icons.add,
+                                                            label: AppLocalizations.instance.text('TXT_CART_ADD'),
+                                                            btnColor: CustomColor.MAIN,
+                                                            lblColor: Colors.white,
+                                                            radius: 10,
+                                                          ),
                                                         ),
-                                                      ),
                                                     ],
                                                   ),
                                                 ],

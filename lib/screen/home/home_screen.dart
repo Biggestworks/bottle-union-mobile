@@ -401,8 +401,8 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
               Flexible(
                 child: GestureDetector(
                   onTap: () => Get.toNamed(ProductByRegionScreen.tag, arguments: ProductByRegionScreen(
-                    regionId: _provider.userModel.region?.id,
-                    region: _provider.userModel.region?.name,
+                    regionId: _provider.userRegionId,
+                    region: _provider.userRegion,
                   )),
                   child: Text(AppLocalizations.instance.text('TXT_SEE_ALL'), style: TextStyle(
                     color: CustomColor.MAIN,
@@ -452,7 +452,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
                                   snap: false,
                                   backgroundColor: CustomColor.MAIN,
                                   flexibleSpace: Center(
-                                    child: Text(provider.userModel.region?.name ?? '-', style: TextStyle(
+                                    child: Text(provider.userRegion ?? '-', style: TextStyle(
                                       fontSize: 20,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -573,7 +573,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
                 padding: const EdgeInsets.only(right: 15, left: 5),
                 child: GestureDetector(
                   onTap: () async => await Get.toNamed(ProfileScreen.tag)!
-                      .then((_) async => await _provider.fnFetchUserInfo()),
+                      .then((_) async => await _provider.onRefresh()),
                   child: CustomWidget.roundedAvatarImg(url: _provider.userModel.user?.avatar ?? '', size: 30),
                 ),
               ),

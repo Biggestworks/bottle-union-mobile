@@ -36,7 +36,7 @@ class Data {
   String? description;
   int? weight;
   int? publish;
-  bool? isPopular;
+  int? isPopular;
   String? image1;
   String? image2;
   String? image3;
