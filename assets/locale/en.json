@@ -172,6 +172,12 @@
 	"TXT_UPLOAD_PAYMENT_INFO": "Please upload your proof of payment here after successful payment.",
 	"TXT_BACK_TO_HOME": "Back to Home",
 	"TXT_UPLOAD_PAYMENT_SUCCESS": "Your proof of payment has been received\nwith order ID:",
+	"TXT_FINISH_ORDER": "Finish Order",
+	"TXT_FINISH_ORDER_INFO": "Are you sure you want to finish this order? Make sure your order is well received.",
+	"TXT_CHANGE": "Change",
+	"TXT_LBL_REGION_PREFERENCE": "Region Preference",
+	"TXT_DESC_REGION_PREFERENCE": "Change your region preference",
+	"TXT_REGION_PREFERENCE_INFO": "Region preferences will be used to change your product recommendations on the homepage",
 
 
 

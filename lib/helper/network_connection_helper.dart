@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:connectivity/connectivity.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 enum NetworkStatus { Online, Offline }
 

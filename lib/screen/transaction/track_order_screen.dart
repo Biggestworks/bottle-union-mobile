@@ -78,6 +78,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> with LoadingView {
                             children: [
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Text('${_data?.createdAt != null
                                       ? DateFormat('dd MMM yyyy').format(DateTime.parse(_data?.createdAt ?? ''))

@@ -78,4 +78,23 @@ class TransactionDetailProvider extends ChangeNotifier {
     }
   }
 
+  Future fnFinishOrder(BuildContext context) async {
+    _view!.onProgressStart();
+    var _res = await _service.finishOrder(orderId: orderId);
+    if (_res!.status != null) {
+      if (_res.status == true) {
+        _view!.onProgressFinish();
+        await fnGetTransactionDetail();
+      } else {
+        _view!.onProgressFinish();
+        await CustomWidget.showSnackBar(context: context, content: Text(_res.message ?? '-'));
+      }
+    } else {
+      _view!.onProgressFinish();
+      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+    }
+    _view!.onProgressFinish();
+    notifyListeners();
+  }
+
 }

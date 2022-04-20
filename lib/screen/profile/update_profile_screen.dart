@@ -257,7 +257,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                                       await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text('Success'));
                                     }
                                   }),
-                                  child: Text('Change', style: TextStyle(
+                                  child: Text(AppLocalizations.instance.text('TXT_CHANGE'), style: TextStyle(
                                     color: Colors.green,
                                     fontSize: 14,
                                   ),),
@@ -305,7 +305,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                                 SizedBox(width: 10,),
                                 GestureDetector(
                                   onTap: () => _showDobDialog(),
-                                  child: Text('Change', style: TextStyle(
+                                  child: Text(AppLocalizations.instance.text('TXT_CHANGE'), style: TextStyle(
                                     color: Colors.green,
                                     fontSize: 14,
                                   ),),
@@ -340,7 +340,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                                 SizedBox(width: 10,),
                                 GestureDetector(
                                   onTap: () => _showGenderDialog(),
-                                  child: Text('Change', style: TextStyle(
+                                  child: Text(AppLocalizations.instance.text('TXT_CHANGE'), style: TextStyle(
                                     color: Colors.green,
                                     fontSize: 14,
                                   ),),
@@ -394,7 +394,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                                       await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text('Success update profile'));
                                     }
                                   }),
-                                  child: Text('Change', style: TextStyle(
+                                  child: Text(AppLocalizations.instance.text('TXT_CHANGE'), style: TextStyle(
                                     color: Colors.green,
                                     fontSize: 14,
                                   ),),
@@ -437,7 +437,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                                       await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text('Success'));
                                     }
                                   }),
-                                  child: Text('Change', style: TextStyle(
+                                  child: Text(AppLocalizations.instance.text('TXT_CHANGE'), style: TextStyle(
                                     color: Colors.green,
                                     fontSize: 14,
                                   ),),
@@ -472,7 +472,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                                       SizedBox(width: 10,),
                                       GestureDetector(
                                         onTap: () => _showRegionDialog(),
-                                        child: Text('Change', style: TextStyle(
+                                        child: Text(AppLocalizations.instance.text('TXT_CHANGE'), style: TextStyle(
                                           color: Colors.green,
                                           fontSize: 14,
                                         ),),

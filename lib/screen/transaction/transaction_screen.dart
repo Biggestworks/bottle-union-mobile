@@ -433,6 +433,7 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                       )
                                                   else if (_data?.idStatusPayment == 6)
                                                     Container(
+                                                      width: 100,
                                                       height: 30,
                                                       child: CustomWidget.roundBtn(
                                                         label: AppLocalizations.instance.text('TXT_BUY_AGAIN'),

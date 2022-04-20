@@ -1,7 +1,6 @@
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/abstract/pagination_interface.dart';
 import 'package:eight_barrels/model/product/popular_product_list_model.dart';
-import 'package:eight_barrels/model/product/product_model.dart';
 import 'package:eight_barrels/screen/product/product_by_region_screen.dart';
 import 'package:eight_barrels/service/product/product_service.dart';
 import 'package:flutter/material.dart';

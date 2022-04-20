@@ -37,6 +37,7 @@ class AuthService extends GetConnect {
         headers: _headers,
       );
       _model = UserModel.fromJson(_response.body);
+      print(_model.token);
       if (_model.status == true) {
         await _userPreferences?.saveUserToken(_model.token!);
       }

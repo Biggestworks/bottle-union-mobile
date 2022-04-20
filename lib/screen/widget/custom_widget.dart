@@ -516,4 +516,51 @@ class CustomWidget {
     );
   }
 
+  static showInfoPopup(BuildContext context, {String desc = '',}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 20),
+          titlePadding: EdgeInsets.all(10),
+          insetPadding: EdgeInsets.symmetric(horizontal: 20),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10))
+          ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              // Text('Info', style: TextStyle(
+              //   color: CustomColor.MAIN,
+              // ),),
+              GestureDetector(
+                onTap: () => Get.back(),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Icon(Icons.close),
+                ),
+              ),
+            ],
+          ),
+          content: Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.topCenter,
+            children: [
+              Text(desc, textAlign: TextAlign.center,),
+              Positioned(
+                top: -80,
+                child: CircleAvatar(
+                  backgroundColor: CustomColor.MAIN,
+                  radius: 30,
+                  child: Icon(FontAwesomeIcons.info, color: Colors.white,),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
 }

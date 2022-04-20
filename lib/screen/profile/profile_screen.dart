@@ -200,6 +200,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     }
                   ),
                 ),
+                Divider(
+                  thickness: 1,
+                ),
+                ListTile(
+                  dense: true,
+                  title: Row(
+                    children: [
+                      Text(AppLocalizations.instance.text('TXT_LBL_REGION_PREFERENCE'), style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                      ),),
+                      SizedBox(width: 5,),
+                      GestureDetector(
+                        onTap: () => CustomWidget.showInfoPopup(context, desc: AppLocalizations.instance.text('TXT_REGION_PREFERENCE_INFO')),
+                        child: Icon(FontAwesomeIcons.questionCircle, size: 18, color: CustomColor.GREY_TXT,),
+                      ),
+                    ],
+                  ),
+                  subtitle: Text(AppLocalizations.instance.text('TXT_DESC_REGION_PREFERENCE'), style: TextStyle(
+                    fontSize: 14,
+                  ),),
+                  leading: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Icon(
+                      FontAwesomeIcons.mapMarkedAlt,
+                      color: CustomColor.GREY_TXT,
+                      size: 18,
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    color: CustomColor.GREY_TXT,
+                    size: 15,
+                  ),
+                  onTap: () => Get.toNamed(WishListScreen.tag),
+                ),
               ],
             ),
           ),

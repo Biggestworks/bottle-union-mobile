@@ -87,6 +87,7 @@ class URLHelper {
   ///ORDER
   static const ORDER_SUMMARY_URL = BASE_URL + '/orders/summary';
   static const STORE_ORDER_URL = BASE_URL + '/orders/checkout';
+  static const FINISH_ORDER_URL = BASE_URL + '/orders/finish';
 
   ///LOG
   static const PRODUCT_LOG = BASE_URL + '/log/product';

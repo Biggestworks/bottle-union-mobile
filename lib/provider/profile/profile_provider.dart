@@ -5,11 +5,12 @@ import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/auth/user_detail_model.dart';
 import 'package:eight_barrels/screen/auth/start_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/route_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileProvider extends ChangeNotifier {
+  final _storage = new FlutterSecureStorage();
   UserPreferences _userPreferences = new UserPreferences();
   UserDetailModel userModel = new UserDetailModel();
   String fullVersion = 'x.x.x';
@@ -35,8 +36,8 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   Future fnFetchLocale() async {
-    SharedPreferences _prefs = await SharedPreferences.getInstance();
-    locale = _prefs.getString(KeyHelper.KEY_LOCALE)!;
+    final _storage = new FlutterSecureStorage();
+    locale = (await _storage.read(key: KeyHelper.KEY_LOCALE))!;
     if (locale == 'en') {
       language = 'Bahasa Indonesia';
       switchVal = true;
@@ -48,7 +49,6 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   Future fnOnSwitchLanguage(bool value) async {
-    SharedPreferences? _prefs = await SharedPreferences.getInstance();
     this.switchVal = value;
 
     if (switchVal) {
@@ -57,7 +57,7 @@ class ProfileProvider extends ChangeNotifier {
       locale = 'id';
     }
 
-    _prefs.setString(KeyHelper.KEY_LOCALE, locale);
+    _storage.write(key: KeyHelper.KEY_LOCALE, value: locale);
     AppLocalizations.instance.load(Locale(locale));
     notifyListeners();
   }

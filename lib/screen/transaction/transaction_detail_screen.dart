@@ -343,89 +343,116 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
     );
 
     Widget _bottomContent = SafeArea(
-      child: Consumer<TransactionDetailProvider>(
-        child: SizedBox(),
-        builder: (context, provider, skeleton) {
-          switch (provider.transactionDetail.data) {
-            case null:
-              return skeleton!;
-            default:
-              switch (provider.transactionDetail.data?.order?[0].payment?.idStatusPayment) {
-                case 1:
-                  switch (provider.transactionDetail.data?.detailPayments?.paymentMethod) {
-                    case 'transfer_manual':
-                      var _data = provider.transactionDetail.data;
-                      return Container(
-                        padding: EdgeInsets.fromLTRB(15, 5, 15, 10),
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border(
-                            top: BorderSide(width: 0.5, color: CustomColor.GREY_ICON),
+      child: Container(
+        padding: EdgeInsets.fromLTRB(15, 5, 15, 0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            top: BorderSide(width: 0.5, color: CustomColor.GREY_ICON),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Consumer<TransactionDetailProvider>(
+              child: SizedBox(),
+              builder: (context, provider, skeleton) {
+                switch (provider.transactionDetail.data) {
+                  case null:
+                    return skeleton!;
+                  default:
+                    switch (provider.transactionDetail.data?.order?[0].payment?.idStatusPayment) {
+                      case 4:
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: CustomWidget.roundOutlinedBtn(
+                            label: AppLocalizations.instance.text('TXT_FINISH_ORDER'),
+                            btnColor: CustomColor.MAIN,
+                            lblColor: CustomColor.MAIN,
+                            isBold: true,
+                            radius: 8,
+                            fontSize: 16,
+                            function: () => CustomWidget.showConfirmationDialog(
+                              context,
+                              desc: AppLocalizations.instance.text('TXT_FINISH_ORDER_INFO'),
+                              function: () async => await provider.fnFinishOrder(provider.scaffoldKey.currentContext!),
+                            ),
                           ),
-                        ),
-                        child: CustomWidget.roundIconBtn(
-                          icon: MdiIcons.shieldCheck,
-                          label: AppLocalizations.instance.text('TXT_UPLOAD_PAYMENT'),
-                          btnColor: Colors.green,
-                          lblColor: Colors.white,
-                          isBold: true,
-                          radius: 8,
-                          fontSize: 16,
-                          function: () => Get.offAndToNamed(UploadPaymentScreen.tag, arguments: UploadPaymentScreen(
-                            orderId: _data?.order?[0].codeTransaction,
-                            orderDate: DateFormat('dd MMMM yyyy, HH:mm a').format(_data?.orderedAt != null ? DateTime.parse(_data?.orderedAt ?? '') : DateTime.now()),
-                            totalPay: FormatterHelper.moneyFormatter(_data?.totalPay ?? 0),
-                          )),
-                        ),
-                      );
-                    default:
-                      return Container(
-                        padding: EdgeInsets.fromLTRB(15, 5, 15, 10),
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
+                        );
+                      default:
+                        return skeleton!;
+                    }
+                }
+              },
+            ),
+            Consumer<TransactionDetailProvider>(
+              child: SizedBox(),
+              builder: (context, provider, skeleton) {
+                switch (provider.transactionDetail.data) {
+                  case null:
+                    return skeleton!;
+                  default:
+                    switch (provider.transactionDetail.data?.order?[0].payment?.idStatusPayment) {
+                      case 1:
+                        switch (provider.transactionDetail.data?.detailPayments?.paymentMethod) {
+                          case 'transfer_manual':
+                            var _data = provider.transactionDetail.data;
+                            return Container(
+                              color: Colors.white,
+                              width: MediaQuery.of(context).size.width,
+                              child: CustomWidget.roundIconBtn(
+                                icon: MdiIcons.shieldCheck,
+                                label: AppLocalizations.instance.text('TXT_UPLOAD_PAYMENT'),
+                                btnColor: CustomColor.MAIN,
+                                lblColor: Colors.white,
+                                isBold: true,
+                                radius: 8,
+                                fontSize: 16,
+                                function: () => Get.offAndToNamed(UploadPaymentScreen.tag, arguments: UploadPaymentScreen(
+                                  orderId: _data?.order?[0].codeTransaction,
+                                  orderDate: DateFormat('dd MMMM yyyy, HH:mm a').format(_data?.orderedAt != null ? DateTime.parse(_data?.orderedAt ?? '') : DateTime.now()),
+                                  totalPay: FormatterHelper.moneyFormatter(_data?.totalPay ?? 0),
+                                )),
+                              ),
+                            );
+                          default:
+                            return Container(
+                              color: Colors.white,
+                              width: MediaQuery.of(context).size.width,
+                              child: CustomWidget.roundIconBtn(
+                                icon: MdiIcons.shieldCheck,
+                                label: AppLocalizations.instance.text('TXT_FINISH_PAYMENT'),
+                                btnColor: CustomColor.MAIN,
+                                lblColor: Colors.white,
+                                isBold: true,
+                                radius: 8,
+                                fontSize: 16,
+                                function: () async => await provider.fnFinishPayment(_provider.scaffoldKey.currentContext!),
+                              ),
+                            );
+                        }
+                      default:
+                        return Container(
                           color: Colors.white,
-                          border: Border(
-                            top: BorderSide(width: 0.5, color: CustomColor.GREY_ICON),
+                          width: MediaQuery.of(context).size.width,
+                          child: CustomWidget.roundBtn(
+                            label: AppLocalizations.instance.text('TXT_TRACK_ORDER'),
+                            btnColor: CustomColor.MAIN,
+                            lblColor: Colors.white,
+                            isBold: true,
+                            radius: 8,
+                            fontSize: 16,
+                            function: () => Get.toNamed(TrackOrderScreen.tag, arguments: TrackOrderScreen(
+                              orderId: provider.orderId,
+                            )),
                           ),
-                        ),
-                        child: CustomWidget.roundIconBtn(
-                          icon: MdiIcons.shieldCheck,
-                          label: AppLocalizations.instance.text('TXT_FINISH_PAYMENT'),
-                          btnColor: Colors.green,
-                          lblColor: Colors.white,
-                          isBold: true,
-                          radius: 8,
-                          fontSize: 16,
-                          function: () async => await provider.fnFinishPayment(_provider.scaffoldKey.currentContext!),
-                        ),
-                      );
-                  }
-                default:
-                  return Container(
-                    padding: EdgeInsets.fromLTRB(15, 5, 15, 10),
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border(
-                        top: BorderSide(width: 0.5, color: CustomColor.GREY_ICON),
-                      ),
-                    ),
-                    child: CustomWidget.roundBtn(
-                      label: AppLocalizations.instance.text('TXT_TRACK_ORDER'),
-                      btnColor: Colors.green,
-                      lblColor: Colors.white,
-                      isBold: true,
-                      radius: 8,
-                      fontSize: 16,
-                      function: () => Get.toNamed(TrackOrderScreen.tag, arguments: TrackOrderScreen(
-                        orderId: provider.orderId,
-                      )),
-                    ),
-                  );
-              }
-          }
-        },
+                        );
+                    }
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
     

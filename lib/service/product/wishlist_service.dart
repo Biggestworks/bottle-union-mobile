@@ -1,16 +1,15 @@
-import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/helper/url_helper.dart';
+import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/default_model.dart';
 import 'package:eight_barrels/model/product/user_wishlist_model.dart';
 import 'package:eight_barrels/model/product/wishlist_model.dart';
 import 'package:get/get_connect.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class WishlistService extends GetConnect {
+  UserPreferences _userPreferences = new UserPreferences();
 
   Future<Map<String, String>?> _headersAuth() async {
-    final SharedPreferences _prefs = await SharedPreferences.getInstance();
-    var _token = _prefs.getString(KeyHelper.KEY_TOKEN);
+    var _token = await _userPreferences.getUserToken();
 
     return {
       "Accept": "application/json",

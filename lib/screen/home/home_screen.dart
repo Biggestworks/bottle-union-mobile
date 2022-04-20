@@ -6,7 +6,6 @@ import 'package:eight_barrels/abstract/product_log.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/key_helper.dart';
-import 'package:eight_barrels/helper/network_connection_helper.dart';
 import 'package:eight_barrels/helper/push_notification_manager.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
@@ -21,7 +20,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -448,7 +446,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
                               scrollDirection: Axis.horizontal,
                               slivers: [
                                 SliverAppBar(
-                                  expandedHeight: 80,
+                                  expandedHeight: 100,
                                   floating: false,
                                   pinned: false,
                                   snap: false,

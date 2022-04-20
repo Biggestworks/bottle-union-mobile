@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:connectivity/connectivity.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/key_helper.dart' as key;
-import 'package:eight_barrels/helper/network_connection_helper.dart';
 import 'package:eight_barrels/provider/auth/forgot_password_provider.dart';
 import 'package:eight_barrels/provider/auth/login_provider.dart';
 import 'package:eight_barrels/provider/auth/otp_provider.dart';
@@ -70,9 +68,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uni_links/uni_links.dart';
 
 class App extends StatefulWidget {
@@ -94,11 +92,13 @@ class _AppState extends State<App> {
   // StreamSubscription<ConnectivityResult>? _connectivitySubs;
 
   Future<Locale> _getLocale() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey(key.KeyHelper.KEY_LOCALE)) {
-      return Locale(prefs.getString(key.KeyHelper.KEY_LOCALE)!);
+    final _storage = new FlutterSecureStorage();
+    bool _isExist = await _storage.containsKey(key: key.KeyHelper.KEY_LOCALE);
+    if (_isExist) {
+      String? _locale = await _storage.read(key: key.KeyHelper.KEY_LOCALE);
+      return Locale(_locale!);
     } else {
-      await prefs.setString(key.KeyHelper.KEY_LOCALE, "en");
+      await _storage.write(key: key.KeyHelper.KEY_LOCALE, value: "en");
       return Locale("en");
     }
   }

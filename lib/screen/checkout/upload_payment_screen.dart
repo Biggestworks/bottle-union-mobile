@@ -3,13 +3,10 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/provider/checkout/upload_payment_provider.dart';
-import 'package:eight_barrels/screen/success_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/route_manager.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class UploadPaymentScreen extends StatefulWidget {

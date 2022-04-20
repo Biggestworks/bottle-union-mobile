@@ -110,6 +110,7 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation, LoadingV
                           style: TextStyle(
                             color: Colors.white,
                           ),
+                          cursorColor: Colors.white,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(vertical: 15),
                             isDense: true,
@@ -137,6 +138,7 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation, LoadingV
                           style: TextStyle(
                             color: Colors.white,
                           ),
+                          cursorColor: Colors.white,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(vertical: 15),
                             isDense: true,

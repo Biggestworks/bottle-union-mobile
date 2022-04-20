@@ -82,7 +82,7 @@
 	"TXT_LBL_MIN_PRICE": "Harga Min.",
 	"TXT_LBL_MAX_PRICE": "Harga Max.",
 	"TXT_PRODUCT_DETAIL": "Rincian Produk",
-	"TXT_LBL_WISHLIST": "My Wishlist",
+	"TXT_LBL_WISHLIST": "Wishlist Saya",
 	"TXT_DESC_WISHLIST": "Atur Wishlist Anda",
 	"TXT_SELECT": "Pilih",
 	"TXT_WISHLIST_ADD": "Berhasil, menambahkan ke wishlist",
@@ -172,6 +172,12 @@
 	"TXT_UPLOAD_PAYMENT_INFO": "Mohon unggah bukti pembayaran Anda disini setelah sukses melakukan pembayaran.",
 	"TXT_BACK_TO_HOME": "Kembali ke Beranda",
 	"TXT_UPLOAD_PAYMENT_SUCCESS": "Bukti pembayaran Anda telah diterima\ndengan order ID:",
+	"TXT_FINISH_ORDER": "Selesaikan Pesanan",
+	"TXT_FINISH_ORDER_INFO": "Anda yakin ingin menyelesaikan pesanan ini? Pastikan pesanan Anda diterima dengan baik.",
+	"TXT_CHANGE": "Ubah",
+	"TXT_LBL_REGION_PREFERENCE": "Preferensi Wilayah",
+	"TXT_DESC_REGION_PREFERENCE": "Ubah preferensi wilayah Anda",
+	"TXT_REGION_PREFERENCE_INFO": "Preferensi wilayah akan digunakan untuk mengubah rekomendasi produk-produk Anda di beranda.",
 
 
 

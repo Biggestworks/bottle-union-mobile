@@ -1,21 +1,21 @@
 import 'dart:io';
 
-import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/helper/url_helper.dart';
+import 'package:eight_barrels/helper/user_preferences.dart';
+import 'package:eight_barrels/model/default_model.dart';
 import 'package:eight_barrels/model/transaction/track_order_model.dart';
 import 'package:eight_barrels/model/transaction/transaction_detail_model.dart';
 import 'package:eight_barrels/model/transaction/transaction_list_dart.dart';
 import 'package:eight_barrels/model/transaction/upload_payment_model.dart';
 import 'package:get/get_connect.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart';
 
 class TransactionService extends GetConnect {
+  UserPreferences _userPreferences = new UserPreferences();
 
   Future<Map<String, String>?> _headersAuth() async {
-    final SharedPreferences _prefs = await SharedPreferences.getInstance();
-    var _token = _prefs.getString(KeyHelper.KEY_TOKEN);
+    var _token = await _userPreferences.getUserToken();
 
     return {
       "Accept": "application/json",
@@ -113,6 +113,27 @@ class TransactionService extends GetConnect {
         headers: await _headersAuth(),
       );
       _model = TrackOrderModel.fromJson(_response.body);
+    } catch (e) {
+      print(e);
+    }
+
+    return _model;
+  }
+
+  Future<DefaultModel?> finishOrder({required String? orderId}) async {
+    DefaultModel _model = new DefaultModel();
+
+    final Map<String, dynamic> _data = {
+      "code_transaction": orderId,
+    };
+
+    try {
+      Response _response = await post(
+        URLHelper.FINISH_ORDER_URL,
+        _data,
+        headers: await _headersAuth(),
+      );
+      _model = DefaultModel.fromJson(_response.body);
     } catch (e) {
       print(e);
     }

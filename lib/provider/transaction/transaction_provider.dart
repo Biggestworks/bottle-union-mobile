@@ -3,7 +3,9 @@ import 'package:eight_barrels/abstract/pagination_interface.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/model/transaction/transaction_list_dart.dart';
 import 'package:eight_barrels/screen/checkout/midtrans_webview_screen.dart';
+import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
+import 'package:eight_barrels/service/cart/cart_service.dart';
 import 'package:eight_barrels/service/checkout/payment_service.dart';
 import 'package:eight_barrels/service/transaction/transcation_service.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,7 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 class TransactionProvider extends ChangeNotifier with PaginationInterface {
   TransactionService _service = new TransactionService();
   PaymentService _paymentService = new PaymentService();
+  CartService _cartService = new CartService();
   TransactionListModel transactionList = new TransactionListModel();
   TextEditingController fromDateController = new TextEditingController();
   TextEditingController toDateController = new TextEditingController();
@@ -232,6 +235,31 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
         return AppLocalizations.instance.text('TXT_LBL_COMPLETE');
       default:
         return '-';
+    }
+  }
+
+  Future fnStoreCart(BuildContext context, int productId) async {
+    var _res = await _cartService.storeCart(
+      productId: productId,
+    );
+
+    if (_res!.status != null) {
+      if (_res.status == true) {
+        await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_CART_ADD_INFO')),
+          duration: 4,
+          action: SnackBarAction(
+            label: 'Go to cart',
+            textColor: Colors.white,
+            onPressed: () => Get.offNamedUntil(BaseHomeScreen.tag, (route) => false, arguments: BaseHomeScreen(pageIndex: 2,)),
+          ),
+        );
+      } else {
+        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
+      }
+    } else {
+      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
   }
 
