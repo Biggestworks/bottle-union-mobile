@@ -94,6 +94,7 @@ class Result {
 class Data {
   int? id;
   int? idStatusPayment;
+  String? vaNumber;
   String? codeTransaction;
   String? orderedAt;
   String? paymentMethod;
@@ -106,6 +107,7 @@ class Data {
   Data(
       {this.id,
         this.idStatusPayment,
+        this.vaNumber,
         this.codeTransaction,
         this.orderedAt,
         this.paymentMethod,
@@ -118,6 +120,7 @@ class Data {
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     idStatusPayment = json['id_status_payment'];
+    vaNumber = json['va_number'];
     codeTransaction = json['code_transaction'];
     orderedAt = json['ordered_at'];
     paymentMethod = json['payment_method'];
@@ -132,6 +135,7 @@ class Data {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['id_status_payment'] = this.idStatusPayment;
+    data['va_number'] = this.vaNumber;
     data['code_transaction'] = this.codeTransaction;
     data['ordered_at'] = this.orderedAt;
     data['payment_method'] = this.paymentMethod;

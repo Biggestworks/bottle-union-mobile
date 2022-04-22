@@ -2,6 +2,7 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
+import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/transaction/transaction_provider.dart';
 import 'package:eight_barrels/screen/checkout/upload_payment_screen.dart';
 import 'package:eight_barrels/screen/transaction/track_order_screen.dart';
@@ -41,6 +42,7 @@ class _TransactionScreenState extends State<TransactionScreen>
   @override
   Widget build(BuildContext context) {
     final _provider = Provider.of<TransactionProvider>(context, listen: false);
+    final _baseProvider = Provider.of<BaseHomeProvider>(context, listen: false);
 
     _showDatePickerDialog(String flag) {
       return showDialog(
@@ -250,29 +252,29 @@ class _TransactionScreenState extends State<TransactionScreen>
     }
 
     Widget _tabBar = Consumer<TransactionProvider>(
-    builder: (context, provider, _) {
-      return TabBar(
-        indicatorSize: TabBarIndicatorSize.tab,
-        isScrollable: true,
-        indicatorColor: CustomColor.MAIN,
-        indicatorWeight: 2,
-        labelColor: CustomColor.BROWN_TXT,
-        unselectedLabelColor: CustomColor.BROWN_LIGHT_TXT,
-        tabs: List<Tab>.generate(provider.tabLabel.length, (index) {
-          var _data = provider.tabLabel[index];
-          return Tab(
-            child: Row(
-              children: [
-                Icon(_data.icon, size: 20,),
-                SizedBox(width: 10,),
-                Text(_data.label),
-              ],
-            ),
-          );
-        }),
-        onTap: (value) => _provider.fnOnTabSelected(provider.tabLabel[value].id),
-      );
-    },
+      builder: (context, provider, _) {
+        return TabBar(
+          indicatorSize: TabBarIndicatorSize.tab,
+          isScrollable: true,
+          indicatorColor: CustomColor.MAIN,
+          indicatorWeight: 2,
+          labelColor: CustomColor.BROWN_TXT,
+          unselectedLabelColor: CustomColor.BROWN_LIGHT_TXT,
+          tabs: List<Tab>.generate(provider.tabLabel.length, (index) {
+            var _data = provider.tabLabel[index];
+            return Tab(
+              child: Row(
+                children: [
+                  Icon(_data.icon, size: 20,),
+                  SizedBox(width: 10,),
+                  Text(_data.label),
+                ],
+              ),
+            );
+          }),
+          onTap: (value) => _provider.fnOnTabSelected(provider.tabLabel[value].id),
+        );
+      },
     );
 
     Widget _transactionListContent = Flexible(
@@ -290,7 +292,7 @@ class _TransactionScreenState extends State<TransactionScreen>
                     switch (provider.transactionList.result?.data?.length) {
                       case 0:
                         return CustomWidget.emptyScreen(
-                          image: 'assets/images/ic_empty.png',
+                          image: 'assets/images/ic_empty_2.png',
                           size: 150,
                           title: AppLocalizations.instance.text('TXT_NO_TRANSACTION_INFO'),
                         );
@@ -334,7 +336,7 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                       Column(
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
-                                                          Text('Order Date', style: TextStyle(
+                                                          Text(AppLocalizations.instance.text('TXT_ORDER_DATE'), style: TextStyle(
                                                             color: CustomColor.GREY_TXT,
                                                             fontWeight: FontWeight.bold,
                                                             fontSize: 12,
@@ -400,14 +402,15 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                       ),),
                                                     ],
                                                   ),
-                                                  if (_data?.idStatusPayment == 1)
+                                                  if (_data?.idStatusPayment == 1 && _data?.vaNumber == null)
                                                     if (_data?.paymentMethod == 'transfer_manual')
                                                       Container(
                                                         height: 30,
-                                                        child: CustomWidget.roundBtn(
+                                                        child: CustomWidget.roundIconBtn(
+                                                          icon: MdiIcons.shieldCheck,
                                                           label: AppLocalizations.instance.text('TXT_UPLOAD_PAYMENT'),
                                                           lblColor: Colors.white,
-                                                          btnColor: Colors.amber,
+                                                          btnColor: Colors.green,
                                                           fontSize: 12,
                                                           radius: 8,
                                                           isBold: true,
@@ -421,7 +424,8 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                     else
                                                       Container(
                                                         height: 30,
-                                                        child: CustomWidget.roundBtn(
+                                                        child: CustomWidget.roundIconBtn(
+                                                          icon: MdiIcons.shieldCheck,
                                                           label: AppLocalizations.instance.text('TXT_FINISH_PAYMENT'),
                                                           lblColor: Colors.white,
                                                           btnColor: Colors.green,
@@ -442,7 +446,8 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                         fontSize: 12,
                                                         radius: 8,
                                                         isBold: true,
-                                                        function: () {},
+                                                        function: () async => await provider.fnStoreCart(context, index)
+                                                            .then((_) async => await _baseProvider.fnGetCartCount()),
                                                       ),
                                                     )
                                                   else
@@ -492,7 +497,7 @@ class _TransactionScreenState extends State<TransactionScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          padding: const EdgeInsets.all(10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

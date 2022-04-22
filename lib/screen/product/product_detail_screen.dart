@@ -9,6 +9,8 @@ import 'package:eight_barrels/screen/checkout/delivery_screen.dart';
 import 'package:eight_barrels/screen/discussion/discussion_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
@@ -57,7 +59,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
             borderRadius: BorderRadius.circular(20),
           ),
           child: ClipRRect(
-            child: CustomWidget.networkImg(context, url, fit: BoxFit.fitHeight),
+            child: CustomWidget.networkImg(context, url, fit: BoxFit.cover),
             borderRadius: BorderRadius.circular(20),
           ),
         ),
@@ -264,9 +266,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                           autoPlay: true,
                           enlargeCenterPage: true,
                           enableInfiniteScroll: true,
-                          onPageChanged: (index, reason) {
-                            // _provider.onBannerChanged(index);
-                          },
                         ),
                         items: [
                           _imageContainer(_data.image1),
@@ -277,42 +276,39 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Text(_data.name ?? '-', style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                          SizedBox(height: 4,),
+                          Text(_data.categories?.name ?? '-', style: TextStyle(
+                            color: CustomColor.GREY_TXT,
+                            fontSize: 16,
+                          ),),
+                          SizedBox(height: 4,),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Flexible(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(_data.name ?? '-', style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 24,
-                                    ), maxLines: 2, overflow: TextOverflow.ellipsis,),
-                                    Text(_data.categories?.name ?? '-', style: TextStyle(
-                                      color: CustomColor.GREY_TXT,
-                                      fontSize: 16,
-                                    ),),
-                                  ],
+                              RatingBar.builder(
+                                initialRating: double.parse(_data.rating ?? '0.0'),
+                                ignoreGestures: true,
+                                direction: Axis.horizontal,
+                                itemCount: 5,
+                                itemPadding: EdgeInsets.zero,
+                                itemBuilder: (context, _) => Icon(
+                                  Icons.star,
+                                  color: Colors.orange,
                                 ),
+                                itemSize: 16,
+                                onRatingUpdate: (rating) {},
                               ),
-                              Row(
-                                children: [
-                                  Icon(FontAwesomeIcons.solidStar, color: Colors.orangeAccent, size: 18,),
-                                  SizedBox(width: 5,),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4),
-                                    child: Text(_data.rating != null
-                                        ? _data.rating.toString()
-                                        : '0', style: TextStyle(
-                                      fontSize: 18,
-                                    ),),
-                                  ),
-                                ],
-                              ),
+                              SizedBox(width: 2,),
+                              Text('(${_data.rating ?? '0.0'})', style: TextStyle(
+                                color: CustomColor.GREY_TXT,
+                              ),),
                             ],
                           ),
                           SizedBox(height: 20,),
@@ -323,23 +319,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                               Text(FormatterHelper.moneyFormatter(_data.regularPrice ?? 0), style: TextStyle(
                                 color: CustomColor.MAIN,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 20,
+                                fontSize: 18,
                               ),),
                               _data.stock != 0
                                   ? Text('In stock ${_data.stock ?? '0'} item(s)', style: TextStyle(
                                 color: CustomColor.GREY_TXT,
-                                fontSize: 14,
                               ),)
                                   : Text('Sold Out', style: TextStyle(
-                                color: Colors.red,
+                                color: CustomColor.MAIN_TXT,
                                 fontSize: 16,
                               ),),
                             ],
                           ),
                           Divider(
-                            color: CustomColor.MAIN,
-                            thickness: 1.5,
-                            height: 25,
+                            thickness: 1,
+                            height: 20,
                           ),
                           Text('Brand', style: TextStyle(
                             color: CustomColor.GREY_TXT,
@@ -347,7 +341,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                           SizedBox(height: 5,),
                           Text(_data.brand?.name ?? '-', style: TextStyle(
                             color: Colors.black,
-                            fontSize: 16,
+                            fontSize: 15,
                           ),),
                           SizedBox(height: 10,),
                           Text('Year', style: TextStyle(
@@ -356,7 +350,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                           SizedBox(height: 5,),
                           Text(_data.year ?? '-', style: TextStyle(
                             color: Colors.black,
-                            fontSize: 16,
+                            fontSize: 15,
                           ),),
                           SizedBox(height: 10,),
                           Text('Manufacture Country', style: TextStyle(
@@ -365,7 +359,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                           SizedBox(height: 5,),
                           Text(_data.manufactureCountry ?? '-', style: TextStyle(
                             color: Colors.black,
-                            fontSize: 16,
+                            fontSize: 15,
                           ),),
                           SizedBox(height: 10,),
                           Text('Description', style: TextStyle(
@@ -387,7 +381,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                             ),
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 16,
+                              fontSize: 15,
                             ),
                           ),
                           Divider(
@@ -445,7 +439,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                   );
                 }
             ),
-            SizedBox(width: 10,),
+            SizedBox(width: 5,),
             Expanded(
               child: CustomWidget.roundOutlinedBtn(
                 label: AppLocalizations.instance.text('TXT_CART_ADD'),
@@ -458,7 +452,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                 },
               ),
             ),
-            SizedBox(width: 10,),
+            SizedBox(width: 5,),
             Expanded(
               child: CustomWidget.roundBtn(
                 label: AppLocalizations.instance.text('TXT_LBL_BUY_NOW'),
@@ -516,7 +510,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
         title: Text(AppLocalizations.instance.text('TXT_PRODUCT_DETAIL'),),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              await FlutterShare.share(
+                  title: 'Bottle Union',
+                  text: 'Bottle Union Product',
+                  linkUrl: 'https://bottleunion.com/product_id=51',
+              );
+            },
             icon: Icon(Icons.share),
             padding: EdgeInsets.only(right: 10,),
           ),

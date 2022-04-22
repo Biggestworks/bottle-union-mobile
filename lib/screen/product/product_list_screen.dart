@@ -462,14 +462,14 @@ class _ProductListScreenState extends State<ProductListScreen>
     );
 
     Widget _mainContent = Container(
-      padding: EdgeInsets.fromLTRB(15, 10, 15, 0),
+      padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(AppLocalizations.instance.text('TXT_HEADER_CELLAR'), style: TextStyle(
+              Text(AppLocalizations.instance.text('TXT_HEADER_CATALOG'), style: TextStyle(
                 color: CustomColor.BROWN_TXT,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,

@@ -28,23 +28,28 @@ class _StartScreenState extends State<StartScreen>
   Widget build(BuildContext context) {
 
     Widget _mainContent = Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Hero(
-            tag: 'logo',
-            child: Image.asset('assets/images/ic_logo_bu_white.png', scale: 1.5,),
-          ),
-          SizedBox(height: 20,),
-          Text(AppLocalizations.instance.text('TXT_MSG_START'), style: TextStyle(
-            color: Colors.white,
-          ), textAlign: TextAlign.center,),
-        ],
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Hero(
+              tag: 'logo',
+              child: SizedBox(
+                height: 80,
+                child: Image.asset('assets/images/ic_logo_bu_white.png'),
+              ),
+            ),
+            SizedBox(height: 20,),
+            Text(AppLocalizations.instance.text('TXT_MSG_START'), style: TextStyle(
+              color: Colors.white,
+            ), textAlign: TextAlign.center,),
+          ],
+        ),
       ),
     );
 
-    void showRegisterSheet() {
+    _showRegisterSheet() {
       return CustomWidget.showSheet(
         context: context,
         isScroll: true,
@@ -128,8 +133,9 @@ class _StartScreenState extends State<StartScreen>
       );
     }
 
-    Widget authBtns = Padding(
-      padding: const EdgeInsets.all(20),
+    Widget _authBtns = SafeArea(
+      child: Padding(
+      padding: const EdgeInsets.all(10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -151,11 +157,12 @@ class _StartScreenState extends State<StartScreen>
               lblColor: CustomColor.MAIN,
               isBold: true,
               fontSize: 16,
-              function: () => showRegisterSheet(),
+              function: () => _showRegisterSheet(),
             ),
           ),
         ],
       ),
+    ),
     );
 
     return CustomWidget.loadingHud(
@@ -163,7 +170,7 @@ class _StartScreenState extends State<StartScreen>
       child: Scaffold(
         backgroundColor: CustomColor.MAIN,
         body: _mainContent,
-        floatingActionButton: authBtns,
+        floatingActionButton: _authBtns,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );

@@ -81,8 +81,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
-                    android:scheme="bottleunionapp"
-                    android:host="bottleunion.com" />
+                    android:scheme="https"
+                    android:host="bottleunion.com"
+                    android:pathPrefix="/link" />
             </intent-filter>
         </activity>
        <meta-data android:name="com.google.android.geo.API_KEY"

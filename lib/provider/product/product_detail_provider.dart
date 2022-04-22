@@ -104,7 +104,7 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
 
   Future fnStoreCart(BuildContext context) async {
     var _res = await _cartService.storeCart(
-      productId: product.data!.id!,
+      productIds: [product.data?.id ?? 0],
     );
 
     if (_res!.status != null) {

@@ -11,6 +11,7 @@ class KeyHelper {
   static const KEY_OTP_TOKEN = 'otp_token';
   static const KEY_USER_REGION_ID = 'region_id';
   static const KEY_USER_REGION_NAME = 'region_name';
+  static const KEY_IS_FIRST_TIME = 'is_first_time';
 
   /// SERVICE STATUS
   static const NEED_ASSIGNMENT_KEY = 'need assignment';

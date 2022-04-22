@@ -42,13 +42,13 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
   Widget build(BuildContext context) {
     final _provider = Provider.of<OrderFinishProvider>(context, listen: false);
 
-    Widget _paymentInfoContent = Container(
-      color: Colors.white,
-      child: Consumer<OrderFinishProvider>(
-        child: Container(),
-        builder: (context, provider, skeleton) {
-          var _data = provider.order?.data?[0];
-          return Column(
+    Widget _paymentInfoContent = Consumer<OrderFinishProvider>(
+      child: Container(),
+      builder: (context, provider, skeleton) {
+        var _data = provider.order?.data?[0];
+        return Container(
+          color: Colors.white,
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
@@ -56,7 +56,7 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                 child: Row(
                   children: [
                     Icon(FontAwesomeIcons.solidCheckCircle, color: Colors.green, size: 60,),
-                    SizedBox(width: 20,),
+                    SizedBox(width: 10,),
                     Flexible(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +89,9 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                     ),
                     TextSpan(text: ' '),
                     TextSpan(
-                      text: DateFormat('dd MMMM yyyy, HH:mm a').format(_data?.transactionTime != null ? DateTime.parse(_data?.transactionTime ?? '').add(Duration(days: 1)) : DateTime.now().add(Duration(days: 1))),
+                      text: _data?.expiredAt != null
+                          ? DateFormat('dd MMMM yyyy, HH:mm a').format(DateTime.parse(_data?.expiredAt ?? ''))
+                          : '-',
                       style: TextStyle(
                         color: Colors.amberAccent,
                       ),
@@ -122,13 +124,40 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                         ),
                       ],
                     ),
+                    if (_data?.vaNumber != null)
+                      Column(
+                        children: [
+                          Divider(height: 20, thickness: 1,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(AppLocalizations.instance.text('TXT_VA_NUMBER')),
+                              Row(
+                                children: [
+                                  IconButton(
+                                    onPressed: () => Clipboard.setData(ClipboardData(text: _data?.vaNumber ?? '-'))
+                                        .then((_) => CustomWidget.showSnackBar(context: context, content: Text('VA number successfully copied to clipboard'))),
+                                    icon: Icon(Icons.copy, size: 20,),
+                                    constraints: BoxConstraints(),
+                                    padding: EdgeInsets.zero,
+                                  ),
+                                  SizedBox(width: 10,),
+                                  Text(_data?.vaNumber ?? '-', style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     Divider(height: 20, thickness: 1,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Status'),
                         Text(_data?.statusPayment ?? '-', style: TextStyle(
-                          color: Colors.orange,
+                          color: Colors.deepOrange,
                         ),),
                       ],
                     ),
@@ -136,7 +165,7 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Order Date'),
+                        Text(AppLocalizations.instance.text('TXT_ORDER_DATE')),
                         Text(DateFormat('dd MMMM yyyy, HH:mm a').format(_data?.transactionTime != null ? DateTime.parse(_data?.transactionTime ?? '') : DateTime.now())),
                       ],
                     ),
@@ -144,24 +173,24 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                 ),
               ),
             ],
-          );
-        }
-      ),
+          ),
+        );
+      }
     );
 
-    Widget _orderDetailContent = Container(
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.all(15.0),
-      color: Colors.white,
-      child: Consumer<OrderFinishProvider>(
-        child: Container(),
-        builder: (context, provider, skeleton) {
-          switch (provider.order) {
-            case null:
-              return skeleton!;
-            default:
-              var _data = provider.order?.data?[0];
-              return Column(
+    Widget _orderDetailContent = Consumer<OrderFinishProvider>(
+      child: Container(),
+      builder: (context, provider, skeleton) {
+        switch (provider.order) {
+          case null:
+            return skeleton!;
+          default:
+            var _data = provider.order?.data?[0];
+            return Container(
+              color: Colors.white,
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(AppLocalizations.instance.text('TXT_PRODUCT_DETAIL'), style: TextStyle(
@@ -224,19 +253,19 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                     ),
                   ),
                 ],
-              );
-          }
-        },
-      ),
+              ),
+            );
+        }
+      },
     );
 
-    Widget _shipmentDetailContent = Container(
-      padding: const EdgeInsets.all(15.0),
-      color: Colors.white,
-      child: Consumer<OrderFinishProvider>(
-        builder: (context, provider, _) {
-          var _data = provider.order?.data?[0];
-          return Column(
+    Widget _shipmentDetailContent = Consumer<OrderFinishProvider>(
+      builder: (context, provider, _) {
+        var _data = provider.order?.data?[0];
+        return Container(
+          padding: const EdgeInsets.all(15.0),
+          color: Colors.white,
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(AppLocalizations.instance.text('TXT_SHIPMENT_INFORMATION'), style: TextStyle(
@@ -293,18 +322,18 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                 ),
               ),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
 
-    Widget _paymentDetailContent = Container(
-      padding: const EdgeInsets.all(15.0),
-      color: Colors.white,
-      child: Consumer<OrderFinishProvider>(
-        builder: (context, provider, _) {
-          var _data = provider.order?.data?[0];
-          return Column(
+    Widget _paymentDetailContent = Consumer<OrderFinishProvider>(
+      builder: (context, provider, _) {
+        var _data = provider.order?.data?[0];
+        return Container(
+          padding: const EdgeInsets.all(15.0),
+          color: Colors.white,
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(AppLocalizations.instance.text('TXT_PAYMENT_DETAIL'), style: TextStyle(
@@ -369,9 +398,9 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                 ),
               ),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
 
     Widget _mainContent = SingleChildScrollView(
@@ -384,53 +413,64 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
           _shipmentDetailContent,
           SizedBox(height: 5,),
           _paymentDetailContent,
-          SizedBox(height: 10,),
         ],
       ),
     );
 
     Widget _bottomGroupBtn = SafeArea(
-      child: Padding(
+      child: Container(
         padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            top: BorderSide(width: 0.5, color: CustomColor.GREY_ICON),
+          ),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Consumer<OrderFinishProvider>(
-              builder: (context, provider, _) {
-                switch (provider.order?.data?[0].paymentMethod) {
-                  case 'transfer_manual':
-                    var _data = provider.order?.data?[0];
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: CustomWidget.roundIconBtn(
-                        icon: MdiIcons.shieldCheck,
-                        label: AppLocalizations.instance.text('TXT_UPLOAD_PAYMENT'),
-                        btnColor: Colors.green,
-                        lblColor: Colors.white,
-                        isBold: true,
-                        radius: 8,
-                        fontSize: 16,
-                        function: () => Get.offAndToNamed(UploadPaymentScreen.tag, arguments: UploadPaymentScreen(
-                          orderId: _data?.order?[0].codeTransaction,
-                          orderDate: DateFormat('dd MMMM yyyy, HH:mm a').format(_data?.transactionTime != null ? DateTime.parse(_data?.transactionTime ?? '') : DateTime.now()),
-                          totalPay: FormatterHelper.moneyFormatter(_data?.amount ?? 0),
-                        )),
-                      ),
-                    );
+              child: SizedBox(),
+              builder: (context, provider, skeleton) {
+                switch (provider.order?.data?[0].vaNumber) {
+                  case null:
+                    switch (provider.order?.data?[0].paymentMethod) {
+                      case 'transfer_manual':
+                        var _data = provider.order?.data?[0];
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: CustomWidget.roundIconBtn(
+                            icon: MdiIcons.shieldCheck,
+                            label: AppLocalizations.instance.text('TXT_UPLOAD_PAYMENT'),
+                            btnColor: Colors.green,
+                            lblColor: Colors.white,
+                            isBold: true,
+                            radius: 8,
+                            fontSize: 16,
+                            function: () => Get.offAndToNamed(UploadPaymentScreen.tag, arguments: UploadPaymentScreen(
+                              orderId: _data?.order?[0].codeTransaction,
+                              orderDate: DateFormat('dd MMMM yyyy, HH:mm a').format(_data?.transactionTime != null ? DateTime.parse(_data?.transactionTime ?? '') : DateTime.now()),
+                              totalPay: FormatterHelper.moneyFormatter(_data?.amount ?? 0),
+                            )),
+                          ),
+                        );
+                      default:
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: CustomWidget.roundIconBtn(
+                            icon: MdiIcons.shieldCheck,
+                            label: AppLocalizations.instance.text('TXT_FINISH_PAYMENT'),
+                            btnColor: Colors.green,
+                            lblColor: Colors.white,
+                            isBold: true,
+                            radius: 8,
+                            fontSize: 16,
+                            function: () async => await _provider.fnFinishPayment(_provider.scaffoldKey.currentContext!),
+                          ),
+                        );
+                    }
                   default:
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: CustomWidget.roundIconBtn(
-                        icon: MdiIcons.shieldCheck,
-                        label: AppLocalizations.instance.text('TXT_FINISH_PAYMENT'),
-                        btnColor: Colors.green,
-                        lblColor: Colors.white,
-                        isBold: true,
-                        radius: 8,
-                        fontSize: 16,
-                        function: () async => await _provider.fnFinishPayment(_provider.scaffoldKey.currentContext!),
-                      ),
-                    );
+                    return skeleton!;
                 }
               },
             ),

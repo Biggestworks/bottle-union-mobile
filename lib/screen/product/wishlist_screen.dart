@@ -68,9 +68,9 @@ class _WishListScreenState extends State<WishListScreen>
                               ListView.builder(
                                 physics: NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
-                                itemCount: provider.wishlist.result!.data!.length,
+                                itemCount: provider.wishlist.result?.data?.length,
                                 itemBuilder: (context, index) {
-                                  var _data = provider.wishlist.result!.data![index];
+                                  var _data = provider.wishlist.result?.data?[index];
                                   return Row(
                                     children: [
                                       AnimatedSwitcher(
@@ -83,6 +83,7 @@ class _WishListScreenState extends State<WishListScreen>
                                             borderRadius: BorderRadius.circular(5),
                                           ),
                                           visualDensity: VisualDensity.compact,
+                                          activeColor: Colors.green,
                                         )
                                             : SizedBox(),
                                       ),
@@ -90,40 +91,39 @@ class _WishListScreenState extends State<WishListScreen>
                                         child: InkWell(
                                           onTap: () async => await Get.toNamed(
                                             ProductDetailScreen.tag,
-                                            arguments: ProductDetailScreen(id: _data.idProduct,),
+                                            arguments: ProductDetailScreen(id: _data?.idProduct,),
                                           )!.then((_) => provider.fnFetchWishlist()),
                                           child: Card(
                                             shape: RoundedRectangleBorder(
                                               borderRadius: BorderRadius.circular(10),
                                             ),
                                             child: Padding(
-                                              padding: const EdgeInsets.all(10),
+                                              padding: const EdgeInsets.fromLTRB(10, 10, 10, 2),
                                               child: Column(
                                                 children: [
                                                   Row(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
-                                                      if (_data.product?.stock == 0)
+                                                      if (_data?.product?.stock == 0)
                                                         Stack(
                                                           children: [
                                                             Container(
-                                                              width: 120,
-                                                              height: 120,
+                                                              width: 80,
+                                                              height: 80,
                                                               child: ClipRRect(
-                                                                child: CustomWidget.networkImg(context, _data.product?.image1, fit: BoxFit.cover),
+                                                                child: CustomWidget.networkImg(context, _data?.product?.image1, fit: BoxFit.cover),
                                                                 borderRadius: BorderRadius.circular(10),
                                                               ),
                                                             ),
                                                             Container(
-                                                              width: 120,
-                                                              height: 120,
+                                                              width: 80,
+                                                              height: 80,
                                                               decoration: BoxDecoration(
                                                                 borderRadius: BorderRadius.all(Radius.circular(10),),
                                                                 color: CustomColor.GREY_ICON,
                                                               ),
                                                               child: Center(
                                                                 child: Text(AppLocalizations.instance.text('TXT_SOLD_OUT'), style: TextStyle(
-                                                                  fontSize: 18,
                                                                   color: CustomColor.MAIN,
                                                                   fontWeight: FontWeight.bold,
                                                                 ),),
@@ -133,10 +133,10 @@ class _WishListScreenState extends State<WishListScreen>
                                                         )
                                                       else
                                                         Container(
-                                                          width: 120,
-                                                          height: 120,
+                                                          width: 80,
+                                                          height: 80,
                                                           child: ClipRRect(
-                                                            child: CustomWidget.networkImg(context, _data.product?.image1, fit: BoxFit.cover),
+                                                            child: CustomWidget.networkImg(context, _data?.product?.image1, fit: BoxFit.cover),
                                                             borderRadius: BorderRadius.circular(10),
                                                           ),
                                                         ),
@@ -146,7 +146,7 @@ class _WishListScreenState extends State<WishListScreen>
                                                           child: Column(
                                                             crossAxisAlignment: CrossAxisAlignment.start,
                                                             children: [
-                                                              Text(_data.product?.name ?? '-', style: TextStyle(
+                                                              Text(_data?.product?.name ?? '-', style: TextStyle(
                                                                 color: Colors.black,
                                                                 fontSize: 16,
                                                               ), maxLines: 2, overflow: TextOverflow.ellipsis,),
@@ -154,7 +154,7 @@ class _WishListScreenState extends State<WishListScreen>
                                                               Row(
                                                                 children: [
                                                                   RatingBar.builder(
-                                                                    initialRating: double.parse(_data.product?.rating ?? '0.0'),
+                                                                    initialRating: double.parse(_data?.product?.rating ?? '0.0'),
                                                                     ignoreGestures: true,
                                                                     direction: Axis.horizontal,
                                                                     itemCount: 5,
@@ -167,13 +167,13 @@ class _WishListScreenState extends State<WishListScreen>
                                                                     onRatingUpdate: (rating) {},
                                                                   ),
                                                                   SizedBox(width: 2,),
-                                                                  Text('(${_data.product?.rating ?? '0.0'})', style: TextStyle(
+                                                                  Text('(${_data?.product?.rating ?? '0.0'})', style: TextStyle(
                                                                     color: CustomColor.GREY_TXT,
                                                                   ),),
                                                                 ],
                                                               ),
                                                               SizedBox(height: 5,),
-                                                              Text(FormatterHelper.moneyFormatter(_data.product!.regularPrice), style: TextStyle(
+                                                              Text(FormatterHelper.moneyFormatter(_data?.product?.regularPrice), style: TextStyle(
                                                                 fontWeight: FontWeight.bold,
                                                                 color: CustomColor.MAIN_TXT,
                                                               ),),
@@ -193,13 +193,13 @@ class _WishListScreenState extends State<WishListScreen>
                                                             desc: AppLocalizations.instance.text('TXT_REMOVE_WISHLIST_INFO'),
                                                             function: () async {
                                                               await fnStoreLog(
-                                                                productId: [_data.idProduct ?? 0],
+                                                                productId: [_data?.idProduct ?? 0],
                                                                 categoryId: null,
                                                                 notes: KeyHelper.REMOVE_WISHLIST_KEY,
                                                               );
                                                               await provider.fnDeleteWishlist(
                                                                 provider.scaffoldKey.currentContext!,
-                                                                _data.id!,
+                                                                _data?.id ?? 0,
                                                               );
                                                             },
                                                           );
@@ -208,7 +208,7 @@ class _WishListScreenState extends State<WishListScreen>
                                                         visualDensity: VisualDensity.compact,
                                                       ),
                                                       SizedBox(width: 10,),
-                                                      if (_data.product?.stock == 0)
+                                                      if (_data?.product?.stock == 0)
                                                         Expanded(
                                                           child: CustomWidget.roundBtn(
                                                             function: () {},
@@ -223,11 +223,11 @@ class _WishListScreenState extends State<WishListScreen>
                                                           child: CustomWidget.roundIconBtn(
                                                             function: () async {
                                                               await fnStoreLog(
-                                                                productId: [_data.idProduct ?? 0],
+                                                                productId: [_data?.idProduct ?? 0],
                                                                 categoryId: null,
                                                                 notes: KeyHelper.SAVE_CART_KEY,
                                                               );
-                                                              await provider.fnStoreCart(context, _data.idProduct!)
+                                                              await provider.fnStoreCart(context, _data?.idProduct ?? 0)
                                                                   .then((_) async => await _baseProvider.fnGetCartCount());
                                                             },
                                                             icon: Icons.add,

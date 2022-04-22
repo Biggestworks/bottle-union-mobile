@@ -99,7 +99,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Widget _headerContent = Container(
       width: MediaQuery.of(context).size.width,
       height: 150,
-      // color: CustomColor.MAIN,
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage('assets/images/bg_marron.png',),
@@ -403,7 +402,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ],
           ),
-          SizedBox(height: 100,),
         ],
       ),
     );
@@ -413,8 +411,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         children: [
           _headerContent,
-          SizedBox(height: 20,),
-          _menuContent
+          SizedBox(height: 10,),
+          _menuContent,
+          SizedBox(height: 10,),
         ],
       ),
     );

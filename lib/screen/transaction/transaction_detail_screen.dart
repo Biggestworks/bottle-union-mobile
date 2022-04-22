@@ -5,6 +5,7 @@ import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/provider/transaction/transaction_detail_provider.dart';
 import 'package:eight_barrels/screen/checkout/upload_payment_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
+import 'package:eight_barrels/screen/review/review_input_screen.dart';
 import 'package:eight_barrels/screen/transaction/track_order_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
@@ -41,65 +42,118 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
   Widget build(BuildContext context) {
     final _provider = Provider.of<TransactionDetailProvider>(context, listen: false);
 
-    Widget _orderInfoContent = Container(
-      color: Colors.white,
-      child: Consumer<TransactionDetailProvider>(
-          child: Container(),
-          builder: (context, provider, skeleton) {
-            var _data = provider.transactionDetail.data;
-            return Container(
-              color: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    Widget _orderInfoContent = Consumer<TransactionDetailProvider>(
+        child: Container(),
+        builder: (context, provider, skeleton) {
+          var _data = provider.transactionDetail.data;
+          return Container(
+            color: Colors.white,
+            child: Column(
+              children: [
+                if (_data?.order?[0].payment?.idStatusPayment == 1)
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: EdgeInsets.all(10),
+                    color: CustomColor.MAIN,
+                    child: Text.rich(TextSpan(
                       children: [
-                        Text('Order ID'),
-                        Row(
+                        TextSpan(
+                          text: AppLocalizations.instance.text('TXT_FINISH_PAYMENT_INFO'),
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        TextSpan(text: ' '),
+                        TextSpan(
+                          text: _data?.order?[0].payment?.expiredAt != null
+                              ? DateFormat('dd MMMM yyyy, HH:mm a').format(DateTime.parse(_data?.order?[0].payment?.expiredAt ?? ''))
+                              : '-',
+                          style: TextStyle(
+                            color: Colors.amberAccent,
+                          ),
+                        ),
+                      ],
+                    ), textAlign: TextAlign.center,),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Order ID'),
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () => Clipboard.setData(ClipboardData(text: _data?.codeTransaction ?? '-'))
+                                    .then((_) => CustomWidget.showSnackBar(context: context, content: Text('Order ID successfully copied to clipboard'))),
+                                icon: Icon(Icons.copy, size: 20,),
+                                constraints: BoxConstraints(),
+                                padding: EdgeInsets.zero,
+                              ),
+                              SizedBox(width: 10,),
+                              Text(_data?.codeTransaction ?? '-', style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),),
+                            ],
+                          ),
+                        ],
+                      ),
+                      if (_data?.order?[0].payment?.vaNumber != null)
+                        Column(
                           children: [
-                            IconButton(
-                              onPressed: () => Clipboard.setData(ClipboardData(text: _data?.codeTransaction ?? '-'))
-                                  .then((_) => CustomWidget.showSnackBar(context: context, content: Text('Order ID successfully copied to clipboard'))),
-                              icon: Icon(Icons.copy, size: 20,),
-                              constraints: BoxConstraints(),
-                              padding: EdgeInsets.zero,
+                            Divider(height: 20, thickness: 1,),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(AppLocalizations.instance.text('TXT_VA_NUMBER')),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () => Clipboard.setData(ClipboardData(text: _data?.order?[0].payment?.vaNumber ?? '-'))
+                                          .then((_) => CustomWidget.showSnackBar(context: context, content: Text('VA number successfully copied to clipboard'))),
+                                      icon: Icon(Icons.copy, size: 20,),
+                                      constraints: BoxConstraints(),
+                                      padding: EdgeInsets.zero,
+                                    ),
+                                    SizedBox(width: 10,),
+                                    Text(_data?.order?[0].payment?.vaNumber ?? '-', style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),),
+                                  ],
+                                ),
+                              ],
                             ),
-                            SizedBox(width: 10,),
-                            Text(_data?.codeTransaction ?? '-', style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),),
                           ],
                         ),
-                      ],
-                    ),
-                    Divider(height: 20, thickness: 1,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Status'),
-                        Flexible(
-                          child: Text(provider.fnGetStatus(_data?.order?[0].payment?.statusPayment?.id ?? 0), style: TextStyle(
-                            color: Colors.orange,
-                          ),),
-                        ),
-                      ],
-                    ),
-                    Divider(height: 20, thickness: 1,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Order Date'),
-                        Flexible(child: Text(DateFormat('dd MMMM yyyy, HH:mm a').format(DateTime.parse(_data?.orderedAt ?? DateTime.now().toString())))),
-                      ],
-                    ),
-                  ],
+                      Divider(height: 20, thickness: 1,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Status'),
+                          Flexible(
+                            child: Text(provider.fnGetStatus(_data?.order?[0].payment?.statusPayment?.id ?? 0), style: TextStyle(
+                              color: Colors.deepOrange,
+                            ),),
+                          ),
+                        ],
+                      ),
+                      Divider(height: 20, thickness: 1,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(AppLocalizations.instance.text('TXT_ORDER_DATE')),
+                          Flexible(child: Text(DateFormat('dd MMMM yyyy, HH:mm a').format(DateTime.parse(_data?.orderedAt ?? DateTime.now().toString())))),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          }
-      ),
+              ],
+            ),
+          );
+        }
     );
 
     Widget _orderDetailContent = Container(
@@ -131,6 +185,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                         return InkWell(
                           onTap: () => Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(id: _data?.idProduct,)),
                           child: Card(
+                            elevation: 2,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -379,6 +434,19 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                             ),
                           ),
                         );
+                      case 6:
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: CustomWidget.roundOutlinedBtn(
+                            label: AppLocalizations.instance.text('TXT_REVIEW'),
+                            btnColor: CustomColor.MAIN,
+                            lblColor: CustomColor.MAIN,
+                            isBold: true,
+                            radius: 8,
+                            fontSize: 16,
+                            function: () => Get.toNamed(ReviewInputScreen.tag),
+                          ),
+                        );
                       default:
                         return skeleton!;
                     }
@@ -394,62 +462,68 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                   default:
                     switch (provider.transactionDetail.data?.order?[0].payment?.idStatusPayment) {
                       case 1:
-                        switch (provider.transactionDetail.data?.detailPayments?.paymentMethod) {
-                          case 'transfer_manual':
-                            var _data = provider.transactionDetail.data;
-                            return Container(
-                              color: Colors.white,
-                              width: MediaQuery.of(context).size.width,
-                              child: CustomWidget.roundIconBtn(
-                                icon: MdiIcons.shieldCheck,
-                                label: AppLocalizations.instance.text('TXT_UPLOAD_PAYMENT'),
-                                btnColor: CustomColor.MAIN,
-                                lblColor: Colors.white,
-                                isBold: true,
-                                radius: 8,
-                                fontSize: 16,
-                                function: () => Get.offAndToNamed(UploadPaymentScreen.tag, arguments: UploadPaymentScreen(
-                                  orderId: _data?.order?[0].codeTransaction,
-                                  orderDate: DateFormat('dd MMMM yyyy, HH:mm a').format(_data?.orderedAt != null ? DateTime.parse(_data?.orderedAt ?? '') : DateTime.now()),
-                                  totalPay: FormatterHelper.moneyFormatter(_data?.totalPay ?? 0),
-                                )),
-                              ),
-                            );
+                        switch (provider.transactionDetail.data?.order?[0].payment?.vaNumber) {
+                          case null:
+                            switch (provider.transactionDetail.data?.detailPayments?.paymentMethod) {
+                              case 'transfer_manual':
+                                var _data = provider.transactionDetail.data;
+                                return Container(
+                                  color: Colors.white,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: CustomWidget.roundIconBtn(
+                                    icon: MdiIcons.shieldCheck,
+                                    label: AppLocalizations.instance.text('TXT_UPLOAD_PAYMENT'),
+                                    btnColor: Colors.green,
+                                    lblColor: Colors.white,
+                                    isBold: true,
+                                    radius: 8,
+                                    fontSize: 16,
+                                    function: () => Get.offAndToNamed(UploadPaymentScreen.tag, arguments: UploadPaymentScreen(
+                                      orderId: _data?.order?[0].codeTransaction,
+                                      orderDate: DateFormat('dd MMMM yyyy, HH:mm a').format(_data?.orderedAt != null ? DateTime.parse(_data?.orderedAt ?? '') : DateTime.now()),
+                                      totalPay: FormatterHelper.moneyFormatter(_data?.totalPay ?? 0),
+                                    )),
+                                  ),
+                                );
+                              default:
+                                return Container(
+                                  color: Colors.white,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: CustomWidget.roundIconBtn(
+                                    icon: MdiIcons.shieldCheck,
+                                    label: AppLocalizations.instance.text('TXT_FINISH_PAYMENT'),
+                                    btnColor: Colors.green,
+                                    lblColor: Colors.white,
+                                    isBold: true,
+                                    radius: 8,
+                                    fontSize: 16,
+                                    function: () async => await provider.fnFinishPayment(_provider.scaffoldKey.currentContext!),
+                                  ),
+                                );
+                            }
                           default:
-                            return Container(
-                              color: Colors.white,
-                              width: MediaQuery.of(context).size.width,
-                              child: CustomWidget.roundIconBtn(
-                                icon: MdiIcons.shieldCheck,
-                                label: AppLocalizations.instance.text('TXT_FINISH_PAYMENT'),
-                                btnColor: CustomColor.MAIN,
-                                lblColor: Colors.white,
-                                isBold: true,
-                                radius: 8,
-                                fontSize: 16,
-                                function: () async => await provider.fnFinishPayment(_provider.scaffoldKey.currentContext!),
-                              ),
-                            );
+                            return skeleton!;
                         }
                       default:
-                        return Container(
-                          color: Colors.white,
-                          width: MediaQuery.of(context).size.width,
-                          child: CustomWidget.roundBtn(
-                            label: AppLocalizations.instance.text('TXT_TRACK_ORDER'),
-                            btnColor: CustomColor.MAIN,
-                            lblColor: Colors.white,
-                            isBold: true,
-                            radius: 8,
-                            fontSize: 16,
-                            function: () => Get.toNamed(TrackOrderScreen.tag, arguments: TrackOrderScreen(
-                              orderId: provider.orderId,
-                            )),
-                          ),
-                        );
+                        return skeleton!;
                     }
                 }
               },
+            ),
+            Container(
+              color: Colors.white,
+              width: MediaQuery.of(context).size.width,
+              child: CustomWidget.roundBtn(
+                label: AppLocalizations.instance.text('TXT_TRACK_ORDER'),
+                btnColor: CustomColor.MAIN,
+                lblColor: Colors.white,
+                isBold: true,
+                radius: 8,
+                fontSize: 16,
+                function: () => Get.toNamed(TrackOrderScreen.tag, arguments: TrackOrderScreen(
+                  orderId: _provider.orderId,
+                )),
+              ),
             ),
           ],
         ),

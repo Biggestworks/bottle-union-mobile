@@ -23,6 +23,7 @@ class URLHelper {
     return BASE_URL + '/product/show/$id';
   }
   static const POPULAR_PRODUCT_LIST_URL = BASE_URL + '/product/home';
+  static const PRODUCT_BY_REGION_LIST_URL = BASE_URL + '/product/recommend-from-region';
 
   ///WISHLIST
   static const WISHLIST_URL = BASE_URL + '/wishlist';
@@ -101,5 +102,9 @@ class URLHelper {
   static trackOrderUrl(String id) {
     return BASE_URL + '/transactions/tracking/$id';
   }
+
+  ///PRODUCT REVIEW
+  static const REVIEW_URL = BASE_URL + '/reviews';
+  static const STORE_REVIEW_URL = BASE_URL + '/reviews/store';
 
 }

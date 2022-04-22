@@ -48,7 +48,7 @@
             <string>bottleunion.com</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>bottleunionapp</string>
+                <string>https</string>
             </array>
         </dict>
     </array>

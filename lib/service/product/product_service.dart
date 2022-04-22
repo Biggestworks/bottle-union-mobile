@@ -135,4 +135,30 @@ class ProductService extends GetConnect {
     return _model;
   }
 
+  Future<PopularProductListModel?> getProductByRegionList({
+    String? regionId,
+    String? page,
+  }) async {
+    PopularProductListModel _model = new PopularProductListModel();
+
+    final Map<String, dynamic> _query = {
+      "id_region": regionId ?? null,
+      "page": page,
+      "perPage": '6',
+    };
+
+    try {
+      Response _response = await get(
+        URLHelper.PRODUCT_BY_REGION_LIST_URL,
+        query: _query,
+        headers: await _headersAuth(),
+      );
+      _model = PopularProductListModel.fromJson(_response.body);
+    } catch (e) {
+      print(e);
+    }
+
+    return _model;
+  }
+
 }

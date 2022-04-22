@@ -46,7 +46,6 @@ class ProfileService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
-      print(_response.body);
       _model = UserModel.fromJson(_response.body);
     } catch (e) {
       print(e);
@@ -123,7 +122,6 @@ class ProfileService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
-      print(_response.body);
       _model = DefaultModel.fromJson(_response.body);
     } catch (e) {
       print(e);
@@ -148,13 +146,8 @@ class ProfileService extends GetConnect {
       Response _response = await post(
         URLHelper.RESET_PASSWORD_URL,
         _data,
-        headers: {
-          "Accept": "application/json",
-
-          "Authorization": "Bearer $token",
-        },
+        headers: await _headersAuth(),
       );
-      print(_response.body);
       _model = DefaultModel.fromJson(_response.body);
     } catch (e) {
       print(e);

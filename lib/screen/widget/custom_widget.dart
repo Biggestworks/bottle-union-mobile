@@ -30,7 +30,7 @@ class CustomWidget {
         color: lblColor,
         fontWeight: isBold ? FontWeight.bold : null,
         fontSize: fontSize,
-      ),),
+      ), textAlign: TextAlign.center,),
     );
   }
 
@@ -57,7 +57,7 @@ class CustomWidget {
         color: lblColor,
         fontWeight: isBold ? FontWeight.bold : null,
         fontSize: fontSize,
-      ),),
+      ), textAlign: TextAlign.center,),
     );
   }
 
@@ -86,7 +86,7 @@ class CustomWidget {
         color: lblColor,
         fontWeight: isBold ? FontWeight.bold : null,
         fontSize: fontSize,
-      ),),
+      ), textAlign: TextAlign.center,),
     );
   }
 
@@ -111,7 +111,7 @@ class CustomWidget {
         color: lblColor,
         fontWeight: isBold ? FontWeight.bold : null,
         fontSize: fontSize,
-      ),),
+      ), textAlign: TextAlign.center,),
     );
   }
 
@@ -466,7 +466,7 @@ class CustomWidget {
     );
   }
 
-  static Widget emptyScreen({required String image, String title = 'Title', double size = 220}) {
+  static Widget emptyScreen({required String image, String title = 'Title', double size = 220, Widget? action}) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(bottom: 50),
@@ -480,7 +480,14 @@ class CustomWidget {
             ),
             Text(title, style: TextStyle(
               color: CustomColor.GREY_TXT,
-            ),)
+            ),),
+            if (action != null)
+              Column(
+                children: [
+                  SizedBox(height: 10,),
+                  action,
+                ],
+              )
           ],
         ),
       ),

@@ -42,13 +42,11 @@ class CartService extends GetConnect {
     return _model;
   }
 
-  Future<CartModel?> storeCart({
-    required int productId,
-  }) async {
+  Future<CartModel?> storeCart({required List<int> productIds}) async {
     CartModel _model = new CartModel();
 
     final Map<String, dynamic> _data = {
-      "id_product": productId,
+      "id_product": productIds,
     };
 
     try {

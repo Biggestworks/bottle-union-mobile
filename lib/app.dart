@@ -27,6 +27,7 @@ import 'package:eight_barrels/provider/profile/change_password_provider.dart';
 import 'package:eight_barrels/provider/profile/profile_input_provider.dart';
 import 'package:eight_barrels/provider/profile/profile_provider.dart';
 import 'package:eight_barrels/provider/profile/update_profile_provider.dart';
+import 'package:eight_barrels/provider/review/review_input_provider.dart';
 import 'package:eight_barrels/provider/splash/splash_provider.dart';
 import 'package:eight_barrels/provider/transaction/track_order_provider.dart';
 import 'package:eight_barrels/provider/transaction/transaction_detail_provider.dart';
@@ -59,6 +60,8 @@ import 'package:eight_barrels/screen/profile/change_password_screen.dart';
 import 'package:eight_barrels/screen/profile/profile_input_screen.dart';
 import 'package:eight_barrels/screen/profile/profile_screen.dart';
 import 'package:eight_barrels/screen/profile/update_profile_screen.dart';
+import 'package:eight_barrels/screen/review/review_input_screen.dart';
+import 'package:eight_barrels/screen/splash/onboarding_screen.dart';
 import 'package:eight_barrels/screen/splash/splash_screen.dart';
 import 'package:eight_barrels/screen/success_screen.dart';
 import 'package:eight_barrels/screen/transaction/track_order_screen.dart';
@@ -71,6 +74,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:uni_links/uni_links.dart';
 
 class App extends StatefulWidget {
@@ -83,12 +87,6 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   // NetworkConnectionHelper _networkConnectionHelper = new NetworkConnectionHelper();
   SpecifiedLocalizationDelegate? _localeOverrideDelegate;
-  bool _initialURILinkHandled = false;
-  Uri? _initialURI;
-  Uri? _currentURI;
-  Object? _err;
-
-  StreamSubscription? _linkSubs;
   // StreamSubscription<ConnectivityResult>? _connectivitySubs;
 
   Future<Locale> _getLocale() async {
@@ -103,63 +101,6 @@ class _AppState extends State<App> {
     }
   }
 
-  Future<void> _initURIHandler() async {
-    if (!_initialURILinkHandled) {
-      _initialURILinkHandled = true;
-      print('Invoked _initURIHandler');
-      try {
-        final initialURI = await getInitialUri();
-        if (initialURI != null) {
-          debugPrint("Initial URI received $initialURI");
-          if (!mounted) {
-            return;
-          }
-          setState(() {
-            _initialURI = initialURI;
-          });
-        } else {
-          debugPrint("Null Initial URI received");
-        }
-      } on PlatformException {
-        debugPrint("Failed to receive initial uri");
-      } on FormatException catch (err) {
-        if (!mounted) {
-          return;
-        }
-        debugPrint('Malformed Initial URI received');
-        setState(() => _err = err);
-      }
-    }
-  }
-
-  void _incomingLinkHandler() {
-    if (!kIsWeb) {
-      _linkSubs = uriLinkStream.listen((Uri? uri) {
-        if (!mounted) {
-          return;
-        }
-        debugPrint('Received URI: $uri');
-        setState(() {
-          _currentURI = uri;
-          _err = null;
-        });
-      }, onError: (Object err) {
-        if (!mounted) {
-          return;
-        }
-        debugPrint('Error occurred: $err');
-        setState(() {
-          _currentURI = null;
-          if (err is FormatException) {
-            _err = err;
-          } else {
-            _err = null;
-          }
-        });
-      });
-    }
-  }
-
   @override
   void initState() {
     // _networkConnectionHelper.initConnectivity(subscription: _connectivitySubs, context: context);
@@ -168,16 +109,7 @@ class _AppState extends State<App> {
         _localeOverrideDelegate = new SpecifiedLocalizationDelegate(myLocale);
       })
     });
-    _initURIHandler();
-    _incomingLinkHandler();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _linkSubs?.cancel();
-    // _connectivitySubs?.cancel();
-    super.dispose();
   }
 
   @override
@@ -187,9 +119,6 @@ class _AppState extends State<App> {
         ChangeNotifierProvider<BaseHomeProvider>(
           create: (context) => BaseHomeProvider(),
         ),
-        // ChangeNotifierProvider<BaseCartProvider>(
-        //   create: (context) => BaseCartProvider(),
-        // ),
       ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
@@ -250,7 +179,15 @@ class _AppState extends State<App> {
                   create: (context) => TransactionProvider(),
                 ),
               ],
-              child: BaseHomeScreen(),
+              child: ShowCaseWidget(
+                onFinish: () async {
+                  final _storage = new FlutterSecureStorage();
+                  await _storage.write(key: key.KeyHelper.KEY_IS_FIRST_TIME, value: 'false');
+                },
+                builder: Builder(
+                  builder: (context) =>  BaseHomeScreen(),
+                ),
+              ),
             ),
           ),
           GetPage(
@@ -426,6 +363,17 @@ class _AppState extends State<App> {
             page: () => ChangeNotifierProvider<TrackOrderProvider>(
               create: (context) => TrackOrderProvider(),
               child: TrackOrderScreen(),
+            ),
+          ),
+          GetPage(
+            name: OnBoardingScreen.tag,
+            page: () => OnBoardingScreen(),
+          ),
+          GetPage(
+            name: ReviewInputScreen.tag,
+            page: () => ChangeNotifierProvider<ReviewInputProvider>(
+              create: (context) => ReviewInputProvider(),
+              child: ReviewInputScreen(),
             ),
           ),
         ],

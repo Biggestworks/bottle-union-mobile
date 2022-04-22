@@ -59,8 +59,18 @@ class _CartListScreenState extends State<CartListScreen>
                     switch (provider.cartList.result!.data!.length) {
                       case 0:
                         return CustomWidget.emptyScreen(
-                          image: 'assets/images/ic_empty_product.png',
-                          title: AppLocalizations.instance.text('TXT_NO_PRODUCT'),
+                          image: 'assets/images/ic_empty_2.png',
+                          size: 200,
+                          title: AppLocalizations.instance.text('TXT_NO_CART'),
+                          action: SizedBox(
+                            width: 150,
+                            child: CustomWidget.roundBtn(
+                              label: AppLocalizations.instance.text('TXT_SHOP_NOW'),
+                              lblColor: Colors.white,
+                              btnColor: CustomColor.MAIN,
+                              function: () => _baseProvider.fnOnNavBarSelected(1),
+                            ),
+                          ),
                         );
                       default:
                         return NotificationListener<ScrollNotification>(
@@ -85,7 +95,7 @@ class _CartListScreenState extends State<CartListScreen>
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
+                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                         child: Row(
                                           children: [
                                             Checkbox(
@@ -95,10 +105,11 @@ class _CartListScreenState extends State<CartListScreen>
                                                 borderRadius: BorderRadius.circular(5),
                                               ),
                                               visualDensity: VisualDensity.compact,
+                                              activeColor: Colors.green,
                                             ),
                                             Container(
-                                              width: 100,
-                                              height: 100,
+                                              width: 80,
+                                              height: 80,
                                               child: ClipRRect(
                                                 child: CustomWidget.networkImg(context, _data.product!.image1),
                                                 borderRadius: BorderRadius.circular(10),
@@ -211,7 +222,7 @@ class _CartListScreenState extends State<CartListScreen>
     );
 
     Widget _mainContent = Container(
-      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      padding: EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -252,7 +263,7 @@ class _CartListScreenState extends State<CartListScreen>
                       return Card(
                         color: CustomColor.MAIN,
                         child: Padding(
-                          padding: const EdgeInsets.all(15.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -266,7 +277,7 @@ class _CartListScreenState extends State<CartListScreen>
                                   SizedBox(height: 5,),
                                   Text(FormatterHelper.moneyFormatter(provider.totalPay), style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),),
                                 ],

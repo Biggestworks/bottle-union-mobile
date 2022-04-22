@@ -307,6 +307,7 @@ class Payment {
   int? idUser;
   int? idShipment;
   int? idStatusPayment;
+  String? vaNumber;
   String? statusMessage;
   String? descriptionMessage;
   StatusPayment? statusPayment;
@@ -332,6 +333,7 @@ class Payment {
         this.idUser,
         this.idShipment,
         this.idStatusPayment,
+        this.vaNumber,
         this.statusMessage,
         this.descriptionMessage,
         this.statusPayment,
@@ -357,6 +359,7 @@ class Payment {
     idUser = json['id_user'];
     idShipment = json['id_shipment'];
     idStatusPayment = json['id_status_payment'];
+    vaNumber = json['va_number'];
     statusMessage = json['status_message'];
     descriptionMessage = json['description_message'];
     statusPayment = json['status_payment'] != null
@@ -386,6 +389,7 @@ class Payment {
     data['id_user'] = this.idUser;
     data['id_shipment'] = this.idShipment;
     data['id_status_payment'] = this.idStatusPayment;
+    data['va_number'] = this.vaNumber;
     data['status_message'] = this.statusMessage;
     data['description_message'] = this.descriptionMessage;
     if (this.statusPayment != null) {

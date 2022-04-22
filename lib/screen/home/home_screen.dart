@@ -5,22 +5,26 @@ import 'package:connectivity/connectivity.dart';
 import 'package:eight_barrels/abstract/product_log.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
-import 'package:eight_barrels/helper/key_helper.dart';
+import 'package:eight_barrels/helper/key_helper.dart' as key;
 import 'package:eight_barrels/helper/push_notification_manager.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
 import 'package:eight_barrels/screen/home/banner_detail_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_region_screen.dart';
+import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/product/wishlist_screen.dart';
 import 'package:eight_barrels/screen/profile/profile_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/screen/widget/sliver_title.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:uni_links/uni_links.dart';
 
 class HomeScreen extends StatefulWidget {
   static String tag = '/home-screen';
@@ -33,24 +37,93 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with ProductLog {
   StreamSubscription<ConnectivityResult>? _subscription;
+  bool _initialURILinkHandled = false;
+  Uri? _initialURI;
+  Uri? _currentURI;
+  Object? _err;
+
+  StreamSubscription? _linkSubs;
+
+  Future<void> _initURIHandler() async {
+    if (!_initialURILinkHandled) {
+      _initialURILinkHandled = true;
+      print('Invoked _initURIHandler');
+      try {
+        final initialURI = await getInitialUri();
+        if (initialURI != null) {
+          debugPrint("Initial URI received $initialURI");
+          if (!mounted) {
+            return;
+          }
+          setState(() {
+            _initialURI = initialURI;
+          });
+        } else {
+          debugPrint("Null Initial URI received");
+        }
+      } on PlatformException {
+        debugPrint("Failed to receive initial uri");
+      } on FormatException catch (err) {
+        if (!mounted) {
+          return;
+        }
+        debugPrint('Malformed Initial URI received');
+        setState(() => _err = err);
+      }
+    }
+  }
+
+  void _incomingLinkHandler() {
+    if (!kIsWeb) {
+      _linkSubs = uriLinkStream.listen((Uri? uri) {
+        if (!mounted) {
+          return;
+        }
+        debugPrint('Received URI: $uri');
+        // debugPrint('Received URI: ${uri?.queryParameters['uid']}');
+        setState(() {
+          _currentURI = uri;
+          _err = null;
+          if (uri?.queryParameters['product_id'] != null) {
+            Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(id: int.parse(uri?.queryParameters['product_id'] ?? '')));
+          }
+        });
+      }, onError: (Object err) {
+        if (!mounted) {
+          return;
+        }
+        debugPrint('Error occurred: $err');
+        setState(() {
+          _currentURI = null;
+          if (err is FormatException) {
+            _err = err;
+          } else {
+            _err = null;
+          }
+        });
+      });
+    }
+  }
 
   @override
   void initState() {
     Future.delayed(Duration.zero).then((value) {
       // NetworkConnectionHelper().initConnectivity(subscription: _subscription, context: context);
-
       Provider.of<HomeProvider>(context, listen: false).fnFetchUserInfo()
           .then((_) => Provider.of<HomeProvider>(context, listen: false).fnFetchRegionProductList());
       Provider.of<HomeProvider>(context, listen: false).fnFetchBannerList();
       Provider.of<HomeProvider>(context, listen: false).fnFetchCategoryList();
       Provider.of<HomeProvider>(context, listen: false).fnFetchPopularProductList();
       PushNotificationManager().initFCM();
+      _initURIHandler();
+      _incomingLinkHandler();
     });
     super.initState();
   }
 
   @override
   void dispose() {
+    _linkSubs?.cancel();
     _subscription?.cancel();
     super.dispose();
   }
@@ -63,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -180,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -215,7 +288,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
                                 await fnStoreLog(
                                   productId: null,
                                   categoryId: _data.id,
-                                  notes: KeyHelper.CLICK_CATEGORY_KEY,
+                                  notes: key.KeyHelper.CLICK_CATEGORY_KEY,
                                 );
                                 Get.toNamed(ProductByCategoryScreen.tag, arguments: ProductByCategoryScreen(
                                   category: _data.name ?? '',
@@ -267,7 +340,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -332,7 +405,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
                                           storeLog: () async => await fnStoreLog(
                                             productId: [_data.id ?? 0],
                                             categoryId: null,
-                                            notes: KeyHelper.CLICK_PRODUCT_KEY,
+                                            notes: key.KeyHelper.CLICK_PRODUCT_KEY,
                                           ),
                                         );
                                       default:
@@ -345,17 +418,17 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
                                               storeClickLog: () async => await fnStoreLog(
                                                 productId: [_data.id ?? 0],
                                                 categoryId: null,
-                                                notes: KeyHelper.CLICK_PRODUCT_KEY,
+                                                notes: key.KeyHelper.CLICK_PRODUCT_KEY,
                                               ),
                                               storeCartLog: () async => await fnStoreLog(
                                                 productId: [_data.id ?? 0],
                                                 categoryId: null,
-                                                notes: KeyHelper.SAVE_CART_KEY,
+                                                notes: key.KeyHelper.SAVE_CART_KEY,
                                               ),
                                               storeWishlistLog: () async => await fnStoreLog(
                                                 productId: [_data.id ?? 0],
                                                 categoryId: null,
-                                                notes: KeyHelper.SAVE_WISHLIST_KEY,
+                                                notes: key.KeyHelper.SAVE_WISHLIST_KEY,
                                               ),
                                               onUpdateCart: () async => await baseProvider.fnGetCartCount(),
                                             );
@@ -389,7 +462,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -453,7 +526,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
                                   backgroundColor: CustomColor.MAIN,
                                   flexibleSpace: Center(
                                     child: Text(provider.userRegion ?? '-', style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 18,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                     ),),
@@ -478,7 +551,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
                                               storeLog: () async => await fnStoreLog(
                                                 productId: [_data.id ?? 0],
                                                 categoryId: null,
-                                                notes: KeyHelper.CLICK_PRODUCT_KEY,
+                                                notes: key.KeyHelper.CLICK_PRODUCT_KEY,
                                               ),
                                             ),
                                           );
@@ -494,17 +567,17 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
                                                     storeClickLog: () async => await fnStoreLog(
                                                       productId: [_data.id ?? 0],
                                                       categoryId: null,
-                                                      notes: KeyHelper.CLICK_PRODUCT_KEY,
+                                                      notes: key.KeyHelper.CLICK_PRODUCT_KEY,
                                                     ),
                                                     storeCartLog: () async => await fnStoreLog(
                                                       productId: [_data.id ?? 0],
                                                       categoryId: null,
-                                                      notes: KeyHelper.SAVE_CART_KEY,
+                                                      notes: key.KeyHelper.SAVE_CART_KEY,
                                                     ),
                                                     storeWishlistLog: () async => await fnStoreLog(
                                                       productId: [_data.id ?? 0],
                                                       categoryId: null,
-                                                      notes: KeyHelper.SAVE_WISHLIST_KEY,
+                                                      notes: key.KeyHelper.SAVE_WISHLIST_KEY,
                                                     ),
                                                     onUpdateCart: () async => await baseProvider.fnGetCartCount(),
                                                   ),
