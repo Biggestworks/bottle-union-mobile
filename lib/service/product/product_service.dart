@@ -47,7 +47,7 @@ class ProductService extends GetConnect {
 
     try {
       Response _response = await get(
-        URLHelper.PRODUCT_LIST_URL,
+        URLHelper.productListUrl,
         query: _query,
         headers: await _headersAuth(),
       );
@@ -64,7 +64,7 @@ class ProductService extends GetConnect {
 
     try {
       Response _response = await get(
-        URLHelper.BRAND_LIST_URL,
+        URLHelper.brandListUrl,
         headers: await _headersAuth(),
       );
       _model = BrandListModel.fromJson(_response.body);
@@ -80,7 +80,7 @@ class ProductService extends GetConnect {
 
     try {
       Response _response = await get(
-        URLHelper.CATEGORY_LIST_URL,
+        URLHelper.categoryListUrl,
         headers: await _headersAuth(),
       );
       _model = CategoryListModel.fromJson(_response.body);
@@ -123,7 +123,7 @@ class ProductService extends GetConnect {
 
     try {
       Response _response = await get(
-        URLHelper.POPULAR_PRODUCT_LIST_URL,
+        URLHelper.popularProductListUrl,
         query: _query,
         headers: await _headersAuth(),
       );
@@ -149,7 +149,7 @@ class ProductService extends GetConnect {
 
     try {
       Response _response = await get(
-        URLHelper.PRODUCT_BY_REGION_LIST_URL,
+        URLHelper.productByRegionUrl,
         query: _query,
         headers: await _headersAuth(),
       );

@@ -12,6 +12,7 @@ import 'package:eight_barrels/screen/widget/BezierPainter.dart';
 import 'package:eight_barrels/service/address/address_service.dart';
 import 'package:eight_barrels/service/auth/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/route_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -265,7 +266,7 @@ class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextVa
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => PlacePicker(
-          apiKey: KeyHelper.API_KEY,
+          apiKey: dotenv.get('MAP_API_KEY', fallback: 'API_URL not found'),
           enableMapTypeButton: true,
           usePlaceDetailSearch: true,
           onPlacePicked: (result) async {

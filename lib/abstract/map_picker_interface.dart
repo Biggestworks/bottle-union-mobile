@@ -1,4 +1,4 @@
-import 'package:eight_barrels/helper/key_helper.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/route_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_place_picker/google_maps_place_picker.dart';
@@ -24,7 +24,7 @@ abstract class MapPickerInterface {
 
       if (_serviceEnabled && _permissionGranted != PermissionStatus.denied) {
         Get.to(() => PlacePicker(
-          apiKey: KeyHelper.API_KEY,
+          apiKey: dotenv.get('MAP_API_KEY', fallback: 'API_URL not found'),
           enableMapTypeButton: true,
           usePlaceDetailSearch: true,
           onPlacePicked: (result) => onPlacePicked(result),

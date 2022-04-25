@@ -33,7 +33,7 @@ class UserPreferences extends GetConnect {
     try {
       var _token = await _storage.read(key: KeyHelper.KEY_TOKEN);
       Response _response = await get(
-        URLHelper.USER_URL,
+        URLHelper.userUrl,
         headers: {
           "Accept": "application/json",
           "Authorization": "Bearer $_token",

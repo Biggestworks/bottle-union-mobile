@@ -77,7 +77,7 @@ class ReviewService extends GetConnect {
       });
 
       Response _response = await post(
-        URLHelper.STORE_REVIEW_URL,
+        URLHelper.storeReviewUrl,
         _data,
         headers: await _headersAuth(),
       );
@@ -94,7 +94,7 @@ class ReviewService extends GetConnect {
 
     try {
       Response _response = await get(
-        URLHelper.REVIEW_URL,
+        URLHelper.reviewUrl,
         headers: await _headersAuth(),
       );
       _model = ReviewListModel.fromJson(_response.body);

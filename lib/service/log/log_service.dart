@@ -29,7 +29,7 @@ class LogService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.PRODUCT_LOG,
+        URLHelper.productLogUrl,
         _data,
         headers: await _headersAuth(),
       );

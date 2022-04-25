@@ -55,6 +55,7 @@ dependencies:
   introduction_screen: ^3.0.2
   showcaseview: ^1.1.5
   flutter_share: ^2.0.0
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +73,8 @@ flutter:
     - assets/images/
     - assets/locale/en.json
     - assets/locale/id.json
+    - .env.development
+    - .env.production
   fonts:
     - family: Futura
       fonts:

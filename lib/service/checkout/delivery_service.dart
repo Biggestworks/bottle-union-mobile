@@ -31,7 +31,7 @@ class DeliveryService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.ORDER_SUMMARY_URL,
+        URLHelper.orderSummaryUrl,
         _data,
         headers: await _headersAuth(),
       );
@@ -56,7 +56,7 @@ class DeliveryService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.CHOOSE_COURIER_URL,
+        URLHelper.chooseCourierUrl,
         _data,
         headers: await _headersAuth(),
       );

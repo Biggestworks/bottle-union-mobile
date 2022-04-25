@@ -29,7 +29,7 @@ class WishlistService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.WISHLIST_URL,
+        URLHelper.wishlistUrl,
         _data,
         headers: await _headersAuth(),
       );
@@ -51,7 +51,7 @@ class WishlistService extends GetConnect {
 
     try {
       Response _response = await get(
-        URLHelper.WISHLIST_URL,
+        URLHelper.wishlistUrl,
         query: _query,
         headers: await _headersAuth(),
       );
@@ -72,7 +72,7 @@ class WishlistService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.DELETE_WISHLIST_URL,
+        URLHelper.deleteWishlistUrl,
         _data,
         headers: await _headersAuth(),
       );
@@ -95,7 +95,7 @@ class WishlistService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.CHECK_WISHLIST_URL,
+        URLHelper.checkWishlistUrl,
         _data,
         headers: await _headersAuth(),
       );

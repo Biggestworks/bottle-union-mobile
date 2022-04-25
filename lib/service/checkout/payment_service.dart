@@ -24,7 +24,7 @@ class PaymentService extends GetConnect {
 
     try {
       Response _response = await get(
-        URLHelper.PAYMENT_METHOD_URL,
+        URLHelper.paymentMethodUrl,
         headers: await _headersAuth(),
       );
       _model = PaymentListModel.fromJson(_response.body);
@@ -60,7 +60,7 @@ class PaymentService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.STORE_ORDER_URL,
+        URLHelper.storeOrderUrl,
         _data,
         headers: await _headersAuth(),
       );
@@ -83,7 +83,7 @@ class PaymentService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.MIDTRANS_PAYMENT_URL,
+        URLHelper.midtransPaymentUrl,
         _data,
         headers: await _headersAuth(),
       );

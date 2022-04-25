@@ -41,7 +41,7 @@ class TransactionService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.TRANSACTION_URL,
+        URLHelper.transactionUrl,
         _data,
         headers: await _headersAuth(),
       );
@@ -92,7 +92,7 @@ class TransactionService extends GetConnect {
       });
 
       Response _response = await post(
-        URLHelper.UPLOAD_PAYMENT_URL,
+        URLHelper.uploadPaymentUrl,
         _data,
         headers: await _headersAuth(),
       );
@@ -129,7 +129,7 @@ class TransactionService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.FINISH_ORDER_URL,
+        URLHelper.finishOrderUrl,
         _data,
         headers: await _headersAuth(),
       );

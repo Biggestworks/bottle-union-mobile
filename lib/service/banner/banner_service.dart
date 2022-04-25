@@ -13,7 +13,7 @@ class BannerService extends GetConnect {
 
     try {
       Response _response = await get(
-        URLHelper.BANNER_URL,
+        URLHelper.bannerUrl,
         headers: _headers,
       );
       _model = BannerListModel.fromJson(_response.body);

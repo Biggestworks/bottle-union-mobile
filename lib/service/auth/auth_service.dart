@@ -32,7 +32,7 @@ class AuthService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.LOGIN_URL,
+        URLHelper.loginUrl,
         _data,
         headers: _headers,
       );
@@ -88,7 +88,7 @@ class AuthService extends GetConnect {
 
     try {
       Response _response = await post(
-          URLHelper.REGISTER_URL,
+          URLHelper.registerUrl,
           _data,
           headers: _headers,
       );
@@ -106,7 +106,7 @@ class AuthService extends GetConnect {
 
     try {
       Response _response = await get(
-        URLHelper.REGION_URL,
+        URLHelper.regionUrl,
         headers: _headers,
       );
       _model = RegionListModel.fromJson(_response.body);
@@ -129,7 +129,7 @@ class AuthService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.VALIDATE_AGE_URL,
+        URLHelper.validateAgeUrl,
         _data,
         headers: _headers,
       );
@@ -154,7 +154,7 @@ class AuthService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.VALIDATE_EMAIL_PHONE_URL,
+        URLHelper.validateEmailPhoneUrl,
         _data,
         headers: _headers,
       );
@@ -188,7 +188,7 @@ class AuthService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.REGISTER_SOCMED_URL,
+        URLHelper.registerSocmedUrl,
         _data,
         headers: _headers,
       );
@@ -225,7 +225,7 @@ class AuthService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.LOGIN_SOCMED_URL,
+        URLHelper.loginSocmedUrl,
         _data,
         headers: _headers,
       );

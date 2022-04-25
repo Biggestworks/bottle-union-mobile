@@ -30,7 +30,7 @@ class CartService extends GetConnect {
 
     try {
       Response _response = await get(
-        URLHelper.CART_URL,
+        URLHelper.cartUrl,
         query: _query,
         headers: await _headersAuth(),
       );
@@ -51,7 +51,7 @@ class CartService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.CART_URL,
+        URLHelper.cartUrl,
         _data,
         headers: await _headersAuth(),
       );
@@ -72,7 +72,7 @@ class CartService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.DELETE_CART_URL,
+        URLHelper.deleteCartUrl,
         _data,
         headers: await _headersAuth(),
       );
@@ -97,7 +97,7 @@ class CartService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.UPDATE_CART_QTY_URL,
+        URLHelper.updateCartQtyUrl,
         _data,
         headers: await _headersAuth(),
       );
@@ -114,7 +114,7 @@ class CartService extends GetConnect {
 
     try {
       Response _response = await get(
-        URLHelper.TOTAL_CART_URL,
+        URLHelper.totalCartUrl,
         headers: await _headersAuth(),
       );
       _model = CartTotalModel.fromJson(_response.body);
@@ -138,7 +138,7 @@ class CartService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.SELECT_CART_URL,
+        URLHelper.selectCartUrl,
         _data,
         headers: await _headersAuth(),
       );

@@ -21,7 +21,7 @@ class ValidationService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.SEND_OTP_URL,
+        URLHelper.sendOtpUrl,
         _data,
         headers: _headers,
       );
@@ -43,7 +43,7 @@ class ValidationService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.VALIDATE_OTP_URL,
+        URLHelper.validateOtpUrl,
         _data,
         headers: _headers,
       );

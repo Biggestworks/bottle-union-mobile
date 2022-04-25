@@ -1,9 +1,6 @@
 class KeyHelper {
+  ///FCM
   static const KEY_FCM_TOKEN = 'fcm_token';
-  static const API_KEY = "AIzaSyCuLLX57qWxuKkqQaoG1L3uXdF2xRXQMVs";
-  static const FCM_SERVER_KEY = "key=AAAAlgLT4EA:APA91bFc1krVvQZMKvdM9oVks0ddPPly3wdRdyyIQL6rfsIVR0OzveUelpv-keZrBoCcITA4Mad8s7VZe8jIVwdc5Heo6D7Y_3eiRmemC_EmbW5pnyGeAxWtQy5uZIlXXW0XNXAlxi1z";
-
-  static const USER_FLAG_KEY = 'user_flag';
 
   /// USER DATA
   static const UID = 'uid';

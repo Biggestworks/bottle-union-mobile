@@ -28,7 +28,7 @@ class AddressService extends GetConnect {
 
     try {
       Response _response = await get(
-        URLHelper.RO_PROVINCE_URL,
+        URLHelper.roProvinceUrl,
         headers: _headers,
       );
       _model = RoProvinceModel.fromJson(_response.body);
@@ -88,7 +88,7 @@ class AddressService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.STORE_ADDRESS_URL,
+        URLHelper.storeAddressUrl,
         _data,
         headers: await _headersAuth(),
       );
@@ -109,7 +109,7 @@ class AddressService extends GetConnect {
 
     try {
       Response _response = await get(
-        URLHelper.ADDRESS_URL,
+        URLHelper.addressUrl,
         query: _query,
         headers: await _headersAuth(),
       );
@@ -130,7 +130,7 @@ class AddressService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.DELETE_ADDRESS_URL,
+        URLHelper.deleteAddressUrl,
         _data,
         headers: await _headersAuth(),
       );
@@ -177,7 +177,7 @@ class AddressService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.UPDATE_ADDRESS_URL,
+        URLHelper.updateAddressUrl,
         _data,
         headers: await _headersAuth(),
       );
@@ -198,7 +198,7 @@ class AddressService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.SELECT_ADDRESS_URL,
+        URLHelper.selectAddressUrl,
         _data,
         headers: await _headersAuth(),
       );

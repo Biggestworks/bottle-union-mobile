@@ -45,7 +45,7 @@ class DiscussionService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.STORE_DISCUSSION_URL,
+        URLHelper.storeDiscussionUrl,
         _data,
         headers: await _headersAuth(),
       );
@@ -57,23 +57,23 @@ class DiscussionService extends GetConnect {
     return _model;
   }
 
-  Future<DefaultModel?> deleteDiscussion({
-    required String productId,
-    required String comment,
-  }) async {
-    DefaultModel _model = new DefaultModel();
-
-    try {
-      Response _response = await get(
-        URLHelper.STORE_DISCUSSION_URL,
-        headers: await _headersAuth(),
-      );
-      _model = DefaultModel.fromJson(_response.body);
-    } catch (e) {
-      print(e);
-    }
-
-    return _model;
-  }
+  // Future<DefaultModel?> deleteDiscussion({
+  //   required String productId,
+  //   required String comment,
+  // }) async {
+  //   DefaultModel _model = new DefaultModel();
+  //
+  //   try {
+  //     Response _response = await get(
+  //       URLHelper.storeDiscussionUrl,
+  //       headers: await _headersAuth(),
+  //     );
+  //     _model = DefaultModel.fromJson(_response.body);
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  //
+  //   return _model;
+  // }
 
 }

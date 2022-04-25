@@ -42,7 +42,7 @@ class ProfileService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.UPDATE_PROFILE_URL,
+        URLHelper.updateProfileUrl,
         _data,
         headers: await _headersAuth(),
       );
@@ -59,7 +59,7 @@ class ProfileService extends GetConnect {
 
     try {
       Response _response = await get(
-        URLHelper.USER_URL,
+        URLHelper.userUrl,
         headers: await _headersAuth(),
       );
       _model = UserDetailModel.fromJson(_response.body);
@@ -91,7 +91,7 @@ class ProfileService extends GetConnect {
       });
 
       Response _response = await post(
-        URLHelper.UPDATE_AVATAR_URL,
+        URLHelper.updateAvatarUrl,
         _data,
         headers: await _headersAuth(),
       );
@@ -118,7 +118,7 @@ class ProfileService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.NEW_PASSWORD_URL,
+        URLHelper.newPasswordUrl,
         _data,
         headers: await _headersAuth(),
       );
@@ -144,7 +144,7 @@ class ProfileService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.RESET_PASSWORD_URL,
+        URLHelper.resetPasswordUrl,
         _data,
         headers: await _headersAuth(),
       );

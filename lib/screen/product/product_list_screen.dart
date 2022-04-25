@@ -68,6 +68,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                             children: [
                               Text(AppLocalizations.instance.text('TXT_LBL_FILTER'), style: TextStyle(
                                 fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),),
                               TextButton(
                                 onPressed: () async {
@@ -77,6 +78,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 child: Text('Reset Filter', style: TextStyle(
                                   color: CustomColor.MAIN,
                                   fontSize: 16,
+                                  fontWeight: FontWeight.bold,
                                 ),),
                               ),
                             ],
@@ -97,6 +99,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 children: [
                                   Text(AppLocalizations.instance.text('TXT_LBL_BRAND'), style: TextStyle(
                                     fontSize: 16,
+                                    fontWeight: FontWeight.bold,
                                   ),),
                                   SizedBox(height: 10,),
                                   Flexible(
@@ -154,6 +157,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 children: [
                                   Text(AppLocalizations.instance.text('TXT_LBL_CATEGORY'), style: TextStyle(
                                     fontSize: 16,
+                                    fontWeight: FontWeight.bold,
                                   ),),
                                   SizedBox(height: 10,),
                                   Flexible(
@@ -196,10 +200,6 @@ class _ProductListScreenState extends State<ProductListScreen>
                             ),
                           ),
                         ),
-                        // SizedBox(height: 10,),
-                        // Text(AppLocalizations.instance.text('TXT_LBL_COUNTRY'), style: TextStyle(
-                        //   fontSize: 20,
-                        // ),),
                         SizedBox(height: 10,),
                         Flexible(
                           child: Card(
@@ -215,6 +215,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 children: [
                                   Text(AppLocalizations.instance.text('TXT_LBL_YEAR'), style: TextStyle(
                                     fontSize: 16,
+                                    fontWeight: FontWeight.bold,
                                   ),),
                                   SizedBox(height: 10,),
                                   TextFormField(
@@ -257,6 +258,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 children: [
                                   Text(AppLocalizations.instance.text('TXT_LBL_PRICE'), style: TextStyle(
                                     fontSize: 16,
+                                    fontWeight: FontWeight.bold,
                                   ),),
                                   SizedBox(height: 10,),
                                   Row(
