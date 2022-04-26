@@ -76,7 +76,7 @@ class ProfileProvider extends ChangeNotifier {
     await _userPreferences.removeFcmToken();
     await _storage.delete(key: KeyHelper.KEY_USER_REGION_ID);
     await _storage.delete(key: KeyHelper.KEY_USER_REGION_NAME);
-    Get.offAndToNamed(StartScreen.tag);
+    Get.offNamedUntil(StartScreen.tag, (route) => false);
   }
 
   Future _fnFetchRegionList() async {

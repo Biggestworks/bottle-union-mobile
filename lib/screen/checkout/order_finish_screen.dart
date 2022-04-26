@@ -504,6 +504,7 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
           appBar: AppBar(
             backgroundColor: CustomColor.BG,
             centerTitle: true,
+            titleSpacing: 0,
             title: RichText(text: TextSpan(
                 children: [
                   TextSpan(
@@ -537,6 +538,7 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                     style: TextStyle(
                       fontSize: 16,
                       color: CustomColor.BROWN_TXT,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ]

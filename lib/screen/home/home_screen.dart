@@ -249,13 +249,13 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
 
     Widget _categoryContent = Container(
       width: MediaQuery.of(context).size.width,
-      height: 250,
+      height: 220,
       child: Stack(
         children: [
           Material(
             elevation: 4,
             child: Container(
-              height: 150,
+              height: 130,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/bg_brown.png',),
@@ -319,8 +319,8 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
                                         ),
                                         elevation: 0,
                                         child: Container(
-                                          width: 120,
-                                          height: 140,
+                                          width: 100,
+                                          height: 120,
                                           child: ClipRRect(
                                             child: CustomWidget.networkImg(context, _data.image),
                                             borderRadius: BorderRadius.circular(20),
@@ -328,9 +328,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
                                         ),
                                       ),
                                       Flexible(
-                                        child: Text(_data.name ?? '-', style: TextStyle(
-                                          fontSize: 16,
-                                        ),),
+                                        child: Text(_data.name ?? '-'),
                                       )
                                     ],
                                   ),
@@ -657,11 +655,11 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
         child: Column(
           children: [
             _bannerContent,
-            SizedBox(height: 60,),
+            SizedBox(height: 40,),
             _categoryContent,
-            SizedBox(height: 30,),
+            SizedBox(height: 20,),
             _regionalProductContent,
-            SizedBox(height: 30,),
+            SizedBox(height: 20,),
             _popularProductContent,
           ],
         ),
@@ -714,7 +712,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('${AppLocalizations.instance.text('TXT_HALLO_USER')}${provider.userModel.user?.fullname ?? '-'}', style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 10,
                             ),),
                             Text('Gold Member', style: TextStyle(
                               fontSize: 10,

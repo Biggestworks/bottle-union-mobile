@@ -200,7 +200,6 @@ class _DeliveryScreenState extends State<DeliveryScreen>
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
@@ -762,7 +761,7 @@ class _DeliveryScreenState extends State<DeliveryScreen>
                         SizedBox(height: 5,),
                         Text(FormatterHelper.moneyFormatter(_data?.totalPay ?? 0), style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),),
                       ],
@@ -808,6 +807,7 @@ class _DeliveryScreenState extends State<DeliveryScreen>
         appBar: AppBar(
           backgroundColor: CustomColor.BG,
           centerTitle: true,
+          titleSpacing: 0,
           title: RichText(text: TextSpan(
             children: [
               TextSpan(
@@ -815,6 +815,7 @@ class _DeliveryScreenState extends State<DeliveryScreen>
                 style: TextStyle(
                   fontSize: 16,
                   color: CustomColor.BROWN_TXT,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               WidgetSpan(
@@ -844,7 +845,7 @@ class _DeliveryScreenState extends State<DeliveryScreen>
                 ),
               ),
             ]
-          )),
+          ),),
           iconTheme: IconThemeData(
             color: Colors.black,
           ),
