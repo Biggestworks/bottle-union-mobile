@@ -59,6 +59,7 @@ import 'package:eight_barrels/screen/product/wishlist_screen.dart';
 import 'package:eight_barrels/screen/profile/add_address_screen.dart';
 import 'package:eight_barrels/screen/profile/address_list_screen.dart';
 import 'package:eight_barrels/screen/profile/change_password_screen.dart';
+import 'package:eight_barrels/screen/profile/contact_us_screen.dart';
 import 'package:eight_barrels/screen/profile/profile_input_screen.dart';
 import 'package:eight_barrels/screen/profile/profile_screen.dart';
 import 'package:eight_barrels/screen/profile/update_profile_screen.dart';
@@ -430,6 +431,10 @@ class _AppState extends State<App> {
               create: (context) => ReviewInputProvider(),
               child: ReviewInputScreen(),
             ),
+          ),
+          GetPage(
+            name: ContactUsScreen.tag,
+            page: () => ContactUsScreen(),
           ),
         ],
       ),

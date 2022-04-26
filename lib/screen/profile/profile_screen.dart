@@ -4,6 +4,7 @@ import 'package:eight_barrels/provider/profile/profile_provider.dart';
 import 'package:eight_barrels/screen/product/wishlist_screen.dart';
 import 'package:eight_barrels/screen/profile/address_list_screen.dart';
 import 'package:eight_barrels/screen/profile/change_password_screen.dart';
+import 'package:eight_barrels/screen/profile/contact_us_screen.dart';
 import 'package:eight_barrels/screen/profile/update_profile_screen.dart';
 import 'package:eight_barrels/screen/splash/splash_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
@@ -339,7 +340,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     size: 15,
                   ),
                   onTap: () {
-                    // Get.toNamed(ContactUsScreen.tag);
+                    Get.toNamed(ContactUsScreen.tag);
                     // ReusableWidget.showSnackBar('Under Construction', context);
                   },
                 ),
@@ -367,7 +368,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     size: 15,
                   ),
                   onTap: () {
-                    // ReusableWidget.showSnackBar('Under Construction', context);
+                    CustomWidget.showSnackBar(context: context, content: Text('Under Construction'));
                   },
                 ),
               ],
