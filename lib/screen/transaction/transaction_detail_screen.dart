@@ -134,7 +134,9 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                           Text('Status'),
                           Flexible(
                             child: Text(provider.fnGetStatus(_data?.order?[0].payment?.statusPayment?.id ?? 0), style: TextStyle(
-                              color: Colors.deepOrange,
+                              color: provider.fnGetStatus(_data?.order?[0].payment?.statusPayment?.id ?? 0) == AppLocalizations.instance.text('TXT_LBL_CANCELLED')
+                                  ? Colors.red
+                                  : Colors.orange,
                             ),),
                           ),
                         ],

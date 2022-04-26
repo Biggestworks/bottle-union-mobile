@@ -350,7 +350,9 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                     ],
                                                   ),
                                                   Text(provider.fnGetStatus(_data?.idStatusPayment ?? 0), style: TextStyle(
-                                                    color: Colors.green,
+                                                    color: provider.fnGetStatus(_data?.idStatusPayment ?? 0) == AppLocalizations.instance.text('TXT_LBL_CANCELLED')
+                                                        ? Colors.red
+                                                        : Colors.green,
                                                   ),),
                                                 ],
                                               ),
