@@ -1,20 +1,32 @@
 import 'package:eight_barrels/helper/url_helper.dart';
+import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/banner/banner_list_model.dart';
 import 'package:get/get_connect.dart';
 
 class BannerService extends GetConnect {
-  var _headers = {
-    "Accept": "application/json",
-    "Content-Type": "application/json",
-  };
+  UserPreferences _userPreferences = new UserPreferences();
 
-  Future<BannerListModel?> getBannerList() async {
+  Future<Map<String, String>?> _headersAuth() async {
+    var _token = await _userPreferences.getUserToken();
+
+    return {
+      "Accept": "application/json",
+      "Authorization": "Bearer $_token",
+    };
+  }
+
+  Future<BannerListModel?> getBannerList({String? regionId}) async {
     BannerListModel _model = new BannerListModel();
+
+    final Map<String, dynamic> _query = {
+      "id_region": regionId ?? null,
+    };
 
     try {
       Response _response = await get(
         URLHelper.bannerUrl,
-        headers: _headers,
+        query: _query,
+        headers: await _headersAuth(),
       );
       _model = BannerListModel.fromJson(_response.body);
     } catch (e) {

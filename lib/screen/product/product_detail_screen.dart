@@ -56,17 +56,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
         child: Card(
           elevation: 4,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(10),
           ),
           child: ClipRRect(
             child: CustomWidget.networkImg(context, url, fit: BoxFit.cover),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(10),
           ),
         ),
       );
     }
 
     Widget _discussionContent = Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -275,122 +276,136 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(_data.name ?? '-', style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                          ), maxLines: 2, overflow: TextOverflow.ellipsis,),
-                          SizedBox(height: 4,),
-                          Text(_data.categories?.name ?? '-', style: TextStyle(
-                            color: CustomColor.GREY_TXT,
-                            fontSize: 16,
-                          ),),
-                          SizedBox(height: 4,),
-                          Row(
+                    SizedBox(height: 15,),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10,),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              RatingBar.builder(
-                                initialRating: double.parse(_data.rating ?? '0.0'),
-                                ignoreGestures: true,
-                                direction: Axis.horizontal,
-                                itemCount: 5,
-                                itemPadding: EdgeInsets.zero,
-                                itemBuilder: (context, _) => Icon(
-                                  Icons.star,
-                                  color: Colors.orange,
-                                ),
-                                itemSize: 16,
-                                onRatingUpdate: (rating) {},
-                              ),
-                              SizedBox(width: 2,),
-                              Text('(${_data.rating ?? '0.0'})', style: TextStyle(
+                              Text(_data.name ?? '-', style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                              ), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                              SizedBox(height: 4,),
+                              Text(_data.categories?.name ?? '-', style: TextStyle(
                                 color: CustomColor.GREY_TXT,
-                              ),),
-                            ],
-                          ),
-                          SizedBox(height: 20,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(FormatterHelper.moneyFormatter(_data.regularPrice ?? 0), style: TextStyle(
-                                color: CustomColor.MAIN,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),),
-                              _data.stock != 0
-                                  ? Text('In stock ${_data.stock ?? '0'} item(s)', style: TextStyle(
-                                color: CustomColor.GREY_TXT,
-                              ),)
-                                  : Text('Sold Out', style: TextStyle(
-                                color: CustomColor.MAIN_TXT,
                                 fontSize: 16,
                               ),),
+                              SizedBox(height: 4,),
+                              Row(
+                                children: [
+                                  RatingBar.builder(
+                                    initialRating: double.parse(_data.rating ?? '0.0'),
+                                    ignoreGestures: true,
+                                    direction: Axis.horizontal,
+                                    itemCount: 5,
+                                    itemPadding: EdgeInsets.zero,
+                                    itemBuilder: (context, _) => Icon(
+                                      Icons.star,
+                                      color: Colors.orange,
+                                    ),
+                                    itemSize: 16,
+                                    onRatingUpdate: (rating) {},
+                                  ),
+                                  SizedBox(width: 2,),
+                                  Text('(${_data.rating ?? '0.0'})', style: TextStyle(
+                                    color: CustomColor.GREY_TXT,
+                                  ),),
+                                ],
+                              ),
+                              SizedBox(height: 20,),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(FormatterHelper.moneyFormatter(_data.regularPrice ?? 0), style: TextStyle(
+                                    color: CustomColor.MAIN,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),),
+                                  _data.stock != 0
+                                      ? Text('In stock ${_data.stock ?? '0'} item(s)', style: TextStyle(
+                                    color: CustomColor.GREY_TXT,
+                                  ),)
+                                      : Text('Sold Out', style: TextStyle(
+                                    color: CustomColor.MAIN_TXT,
+                                    fontSize: 16,
+                                  ),),
+                                ],
+                              ),
                             ],
                           ),
-                          Divider(
-                            thickness: 1,
-                            height: 20,
+                        ),
+                        Divider(
+                          thickness: 1,
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10,),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Brand', style: TextStyle(
+                                color: CustomColor.GREY_TXT,
+                              ),),
+                              SizedBox(height: 5,),
+                              Text(_data.brand?.name ?? '-', style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15,
+                              ),),
+                              SizedBox(height: 10,),
+                              Text('Year', style: TextStyle(
+                                color: CustomColor.GREY_TXT,
+                              ),),
+                              SizedBox(height: 5,),
+                              Text(_data.year ?? '-', style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15,
+                              ),),
+                              SizedBox(height: 10,),
+                              Text('Manufacture Country', style: TextStyle(
+                                color: CustomColor.GREY_TXT,
+                              ),),
+                              SizedBox(height: 5,),
+                              Text(_data.manufactureCountry ?? '-', style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15,
+                              ),),
+                              SizedBox(height: 10,),
+                              Text('Description', style: TextStyle(
+                                color: CustomColor.GREY_TXT,
+                              ),),
+                              SizedBox(height: 5,),
+                              ReadMoreText(provider.fnConvertHtmlString(_data.description ?? '-'),
+                                trimLines: 3,
+                                trimMode: TrimMode.Line,
+                                trimCollapsedText: 'Show more',
+                                trimExpandedText: 'Show less',
+                                lessStyle: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.pink,
+                                ),
+                                moreStyle: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.pink,
+                                ),
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ],
                           ),
-                          Text('Brand', style: TextStyle(
-                            color: CustomColor.GREY_TXT,
-                          ),),
-                          SizedBox(height: 5,),
-                          Text(_data.brand?.name ?? '-', style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                          ),),
-                          SizedBox(height: 10,),
-                          Text('Year', style: TextStyle(
-                            color: CustomColor.GREY_TXT,
-                          ),),
-                          SizedBox(height: 5,),
-                          Text(_data.year ?? '-', style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                          ),),
-                          SizedBox(height: 10,),
-                          Text('Manufacture Country', style: TextStyle(
-                            color: CustomColor.GREY_TXT,
-                          ),),
-                          SizedBox(height: 5,),
-                          Text(_data.manufactureCountry ?? '-', style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                          ),),
-                          SizedBox(height: 10,),
-                          Text('Description', style: TextStyle(
-                            color: CustomColor.GREY_TXT,
-                          ),),
-                          SizedBox(height: 5,),
-                          ReadMoreText(provider.fnConvertHtmlString(_data.description ?? '-'),
-                            trimLines: 3,
-                            trimMode: TrimMode.Line,
-                            trimCollapsedText: 'Show more',
-                            trimExpandedText: 'Show less',
-                            lessStyle: TextStyle(
-                              fontSize: 14,
-                              color: Colors.pink,
-                            ),
-                            moreStyle: TextStyle(
-                              fontSize: 14,
-                              color: Colors.pink,
-                            ),
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 15,
-                            ),
-                          ),
-                          Divider(
-                            thickness: 1,
-                            height: 50,
-                          ),
-                          _discussionContent
-                        ],
-                      ),
+                        ),
+                        Divider(
+                          thickness: 1,
+                          height: 50,
+                        ),
+                        _discussionContent
+                      ],
                     ),
                   ],
                 );
@@ -424,7 +439,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
 
     Widget _bottomMenuContent = SafeArea(
       child: Container(
-        padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+        padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(width: 0.5, color: CustomColor.GREY_ICON),
+          ),
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -471,7 +491,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
 
     Widget _bottomMenuDisabledContent = SafeArea(
       child: Container(
-        padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+        padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(width: 0.5, color: CustomColor.GREY_ICON),
+          ),
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

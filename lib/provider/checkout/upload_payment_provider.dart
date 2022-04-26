@@ -4,7 +4,7 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/image_helper.dart';
 import 'package:eight_barrels/screen/checkout/upload_payment_screen.dart';
-import 'package:eight_barrels/screen/success_screen.dart';
+import 'package:eight_barrels/screen/misc/success_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/transaction/transcation_service.dart';
 import 'package:flutter/material.dart';

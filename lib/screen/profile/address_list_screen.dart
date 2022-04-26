@@ -96,7 +96,7 @@ class _AddressListScreenState extends State<AddressListScreen> with LoadingView 
     }
 
     Widget _mainContent = Padding(
-      padding: EdgeInsets.all(15),
+      padding: EdgeInsets.all(10),
       child: Column(
         children: [
           TextFormField(
@@ -246,6 +246,7 @@ class _AddressListScreenState extends State<AddressListScreen> with LoadingView 
 
     return Scaffold(
       key: _provider.scaffoldKey,
+      backgroundColor: CustomColor.BG,
       appBar: AppBar(
         backgroundColor: CustomColor.MAIN,
         centerTitle: true,

@@ -342,6 +342,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.5"
+  flutter_jailbreak_detection:
+    dependency: "direct main"
+    description:
+      name: flutter_jailbreak_detection
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.8.0"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:

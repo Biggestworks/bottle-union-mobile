@@ -206,7 +206,7 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                       itemBuilder: (context, index) {
                         var _product = _data?.order?[index].product;
                         return InkWell(
-                          onTap: () => Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(id: _data?.id,)),
+                          onTap: () => Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(id: _product?.id,)),
                           child: Card(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),

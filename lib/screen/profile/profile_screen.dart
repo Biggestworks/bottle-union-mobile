@@ -374,28 +374,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           SizedBox(height: 5,),
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadiusDirectional.circular(10),
+            ),
+            elevation: 4,
+            child: ListTile(
+              dense: true,
+              title: Text(AppLocalizations.instance.text('TXT_SIGN_OUT'), style: TextStyle(
+                color: CustomColor.MAIN,
+                fontSize: 15,
+              ),),
+              leading: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Icon(
+                  FontAwesomeIcons.signOutAlt,
+                  color: CustomColor.MAIN,
+                  size: 18,
+                ),
+              ),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                color: CustomColor.GREY_TXT,
+                size: 15,
+              ),
+              onTap: () {
+                CustomWidget.showConfirmationDialog(
+                  context,
+                  desc: AppLocalizations.instance.text('TXT_LOGOUT_INFO'),
+                  function: () async => await _provider.fnLogout(),
+                );
+              },
+            ),
+          ),
+          SizedBox(height: 10,),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                child: CustomWidget.roundIconBtn(
-                  icon: FontAwesomeIcons.signOutAlt,
-                  label: AppLocalizations.instance.text('TXT_SIGN_OUT'),
-                  btnColor: CustomColor.MAIN,
-                  lblColor: Colors.white,
-                  fontSize: 16,
-                  function: () => CustomWidget.showConfirmationDialog(
-                    context,
-                    desc: AppLocalizations.instance.text('TXT_LOGOUT_INFO'),
-                    function: () async => await _provider.fnLogout(),
-                  ),
-                ),
-              ),
-              SizedBox(height: 10,),
               Consumer<ProfileProvider>(
                   builder: (context, provider, _) {
-                    return Text("Version ${provider.fullVersion}", style: TextStyle(
+                    return Text("App Version ${provider.fullVersion}", style: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),);
                   }
@@ -413,7 +431,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _headerContent,
           SizedBox(height: 10,),
           _menuContent,
-          SizedBox(height: 10,),
+          SizedBox(height: 20,),
         ],
       ),
     );

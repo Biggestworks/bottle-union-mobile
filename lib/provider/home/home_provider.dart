@@ -58,16 +58,19 @@ class HomeProvider extends ChangeNotifier
 
   Future onRefresh() async {
     super.currentPage = 1;
-    await fnFetchUserInfo()
-        .then((_) async => await fnFetchRegionProductList());
+    await fnFetchUserInfo().then((_) async {
+      await fnFetchRegionProductList();
+      await fnFetchBannerList();
+    });
     await fnFetchCategoryList();
-    await fnFetchBannerList();
     await fnFetchPopularProductList();
     notifyListeners();
   }
 
   Future fnFetchBannerList() async {
-    bannerList = (await _bannerService.getBannerList())!;
+    bannerList = (await _bannerService.getBannerList(
+      regionId: userRegionId.toString()
+    ))!;
     notifyListeners();
   }
 

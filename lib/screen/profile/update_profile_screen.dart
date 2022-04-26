@@ -53,7 +53,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
               height: 300,
               padding: EdgeInsets.all(10),
               child: SfDateRangePicker(
-                initialDisplayDate: DateTime.parse('${_provider.userModel.user!.dateOfBirth} 00:00:00'),
+                initialDisplayDate: _provider.userModel.user?.dateOfBirth != null
+                    ? DateTime.parse('${_provider.userModel.user?.dateOfBirth} 00:00:00')
+                    : DateTime.now(),
                 onSelectionChanged: (value) async => await _provider.fnOnSelectDate(value, _provider.scaffoldKey.currentContext!),
               ),
             ),

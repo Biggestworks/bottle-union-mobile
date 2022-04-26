@@ -678,7 +678,7 @@ class _RegisterScreenState extends State<RegisterScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+            padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
             child: Text(AppLocalizations.instance.text('TXT_SIGN_UP'), style: TextStyle(
               fontSize: 24,
               color: Colors.white,
@@ -701,7 +701,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                     return SlideTransition(
                       position: provider.offsetAnimation!,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: provider.stepIndex == 0
                             ? _formPersonal
                             : provider.stepIndex == 1
@@ -720,7 +720,7 @@ class _RegisterScreenState extends State<RegisterScreen>
         builder: (context, provider, _) {
           return SafeArea(
             child: Container(
-              padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+              padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
               width: MediaQuery.of(context).size.width,
               child: CustomWidget.roundBtn(
                 label: provider.stepIndex != 2

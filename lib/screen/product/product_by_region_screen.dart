@@ -134,7 +134,7 @@ class _ProductByRegionScreenState extends State<ProductByRegionScreen>
     );
 
     Widget _mainContent = Container(
-      padding: EdgeInsets.symmetric(horizontal: 15),
+      padding: EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

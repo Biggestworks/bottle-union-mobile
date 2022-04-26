@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation, LoadingV
     Widget _mainContent = Center(
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation, LoadingV
     Widget _mainContentSocmed = Center(
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -324,7 +324,7 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation, LoadingV
 
     Widget _submitBtn = SafeArea(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+        padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,

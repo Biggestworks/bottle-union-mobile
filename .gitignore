@@ -9,6 +9,7 @@
 .history
 .svn/
 *.jks
+*.keystore
 .env.development
 .env.production
 

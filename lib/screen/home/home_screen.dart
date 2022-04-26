@@ -35,14 +35,15 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with ProductLog {
+class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerProviderStateMixin {
   StreamSubscription<ConnectivityResult>? _subscription;
   bool _initialURILinkHandled = false;
-  Uri? _initialURI;
-  Uri? _currentURI;
-  Object? _err;
+  // Uri? _initialURI;
+  // Uri? _currentURI;
+  // Object? _err;
 
   StreamSubscription? _linkSubs;
+  TabController? _tabController;
 
   Future<void> _initURIHandler() async {
     if (!_initialURILinkHandled) {
@@ -55,9 +56,9 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
           if (!mounted) {
             return;
           }
-          setState(() {
-            _initialURI = initialURI;
-          });
+          // setState(() {
+          //   _initialURI = initialURI;
+          // });
         } else {
           debugPrint("Null Initial URI received");
         }
@@ -68,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
           return;
         }
         debugPrint('Malformed Initial URI received');
-        setState(() => _err = err);
+        // setState(() => _err = err);
       }
     }
   }
@@ -82,8 +83,8 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
         debugPrint('Received URI: $uri');
         // debugPrint('Received URI: ${uri?.queryParameters['uid']}');
         setState(() {
-          _currentURI = uri;
-          _err = null;
+          // _currentURI = uri;
+          // _err = null;
           if (uri?.queryParameters['product_id'] != null) {
             Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(id: int.parse(uri?.queryParameters['product_id'] ?? '')));
           }
@@ -93,14 +94,14 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
           return;
         }
         debugPrint('Error occurred: $err');
-        setState(() {
-          _currentURI = null;
-          if (err is FormatException) {
-            _err = err;
-          } else {
-            _err = null;
-          }
-        });
+        // setState(() {
+        //   _currentURI = null;
+        //   if (err is FormatException) {
+        //     _err = err;
+        //   } else {
+        //     _err = null;
+        //   }
+        // });
       });
     }
   }
@@ -109,14 +110,16 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
   void initState() {
     Future.delayed(Duration.zero).then((value) {
       // NetworkConnectionHelper().initConnectivity(subscription: _subscription, context: context);
-      Provider.of<HomeProvider>(context, listen: false).fnFetchUserInfo()
-          .then((_) => Provider.of<HomeProvider>(context, listen: false).fnFetchRegionProductList());
-      Provider.of<HomeProvider>(context, listen: false).fnFetchBannerList();
+      Provider.of<HomeProvider>(context, listen: false).fnFetchUserInfo().then((_) {
+        Provider.of<HomeProvider>(context, listen: false).fnFetchRegionProductList();
+        Provider.of<HomeProvider>(context, listen: false).fnFetchBannerList();
+      });
       Provider.of<HomeProvider>(context, listen: false).fnFetchCategoryList();
       Provider.of<HomeProvider>(context, listen: false).fnFetchPopularProductList();
       PushNotificationManager().initFCM();
       _initURIHandler();
       _incomingLinkHandler();
+      _tabController = new TabController(length: 4, vsync: this);
     });
     super.initState();
   }
@@ -164,68 +167,80 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
               case null:
                 return skeleton!;
               default:
-                return Column(
-                  children: [
-                    CarouselSlider(
-                      options: CarouselOptions(
-                        height: 200.0,
-                        autoPlay: true,
-                        enlargeCenterPage: false,
-                        enableInfiniteScroll: false,
-                        viewportFraction: 1,
-                        onPageChanged: (index, reason) {
-                          _provider.onBannerChanged(index);
-                        },
+                switch (provider.bannerList.data?.length) {
+                  case 0:
+                    return Container(
+                      height: 100,
+                      child: Center(
+                        child: Text(AppLocalizations.instance.text('TXT_NO_BANNER_INFO'), style: TextStyle(
+                          color: CustomColor.GREY_TXT,
+                        ),),
                       ),
-                      items: provider.bannerList.data!.map((i) {
-                        return Builder(
-                          builder: (BuildContext context) {
-                            return Container(
-                              margin: EdgeInsets.symmetric(horizontal: 4),
-                              width: MediaQuery.of(context).size.width,
-                              child: GestureDetector(
-                                onTap: () => Get.toNamed(BannerDetailScreen.tag, arguments: BannerDetailScreen(
-                                  banner: i,
-                                )),
-                                child: Card(
-                                  elevation: 4,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
+                    );
+                  default:
+                    return Column(
+                      children: [
+                        CarouselSlider(
+                          options: CarouselOptions(
+                            height: 200.0,
+                            autoPlay: true,
+                            enlargeCenterPage: false,
+                            enableInfiniteScroll: false,
+                            viewportFraction: 1,
+                            onPageChanged: (index, reason) {
+                              _provider.onBannerChanged(index);
+                            },
+                          ),
+                          items: provider.bannerList.data?.map((i) {
+                            return Builder(
+                              builder: (BuildContext context) {
+                                return Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 4),
+                                  width: MediaQuery.of(context).size.width,
+                                  child: GestureDetector(
+                                    onTap: () => Get.toNamed(BannerDetailScreen.tag, arguments: BannerDetailScreen(
+                                      banner: i,
+                                    )),
+                                    child: Card(
+                                      elevation: 4,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: ClipRRect(
+                                        child: CustomWidget.networkImg(context, i.banner?[0].image,),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                    ),
                                   ),
-                                  child: ClipRRect(
-                                    child: CustomWidget.networkImg(context, i.image,),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                              ),
+                                );
+                              },
                             );
-                          },
-                        );
-                      }).toList(),
-                    ),
-                    SizedBox(height: 10,),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20,),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: provider.bannerList.data!.map((i) {
-                          int index = provider.bannerList.data!.indexOf(i);
-                          return Container(
-                            width: provider.currBanner == index ? 10.0 : 6.0,
-                            height: provider.currBanner == index ? 10.0 : 6.0,
-                            margin: EdgeInsets.symmetric(horizontal: 4),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: provider.currBanner == index
-                                  ? CustomColor.MAIN
-                                  : CustomColor.GREY_TXT,
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ],
-                );
+                          }).toList(),
+                        ),
+                        SizedBox(height: 10,),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20,),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: provider.bannerList.data!.map((i) {
+                              int index = provider.bannerList.data!.indexOf(i);
+                              return Container(
+                                width: provider.currBanner == index ? 10.0 : 6.0,
+                                height: provider.currBanner == index ? 10.0 : 6.0,
+                                margin: EdgeInsets.symmetric(horizontal: 4),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: provider.currBanner == index
+                                      ? CustomColor.MAIN
+                                      : CustomColor.GREY_TXT,
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ],
+                    );
+                }
             }
           },
         ),
@@ -271,188 +286,63 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
               ),
               Flexible(
                 child: Consumer<HomeProvider>(
-                  child: Container(),
-                  builder: (context, provider, skeleton) {
-                    switch (provider.categoryList.data) {
-                      case null:
-                        return skeleton!;
-                      default:
-                        return ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          itemCount: provider.categoryList.data!.length,
-                          itemBuilder: (context, index) {
-                            var _data = provider.categoryList.data![index];
-                            return InkWell(
-                              onTap: () async {
-                                await fnStoreLog(
-                                  productId: null,
-                                  categoryId: _data.id,
-                                  notes: key.KeyHelper.CLICK_CATEGORY_KEY,
-                                );
-                                Get.toNamed(ProductByCategoryScreen.tag, arguments: ProductByCategoryScreen(
-                                  category: _data.name ?? '',
-                                ));
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.only(left: index == 0 ? 50 : 0, right: 10),
-                                child: Column(
-                                  children: [
-                                    Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      elevation: 0,
-                                      child: Container(
-                                        width: 120,
-                                        height: 140,
-                                        child: ClipRRect(
-                                          child: CustomWidget.networkImg(context, _data.image),
+                    child: Container(),
+                    builder: (context, provider, skeleton) {
+                      switch (provider.categoryList.data) {
+                        case null:
+                          return skeleton!;
+                        default:
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            shrinkWrap: true,
+                            itemCount: provider.categoryList.data!.length,
+                            itemBuilder: (context, index) {
+                              var _data = provider.categoryList.data![index];
+                              return InkWell(
+                                onTap: () async {
+                                  await fnStoreLog(
+                                    productId: null,
+                                    categoryId: _data.id,
+                                    notes: key.KeyHelper.CLICK_CATEGORY_KEY,
+                                  );
+                                  Get.toNamed(ProductByCategoryScreen.tag, arguments: ProductByCategoryScreen(
+                                    category: _data.name ?? '',
+                                  ));
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: index == 0 ? 50 : 0, right: 10),
+                                  child: Column(
+                                    children: [
+                                      Card(
+                                        shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(20),
                                         ),
+                                        elevation: 0,
+                                        child: Container(
+                                          width: 120,
+                                          height: 140,
+                                          child: ClipRRect(
+                                            child: CustomWidget.networkImg(context, _data.image),
+                                            borderRadius: BorderRadius.circular(20),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    Flexible(
-                                      child: Text(_data.name ?? '-', style: TextStyle(
-                                        fontSize: 16,
-                                      ),),
-                                    )
-                                  ],
+                                      Flexible(
+                                        child: Text(_data.name ?? '-', style: TextStyle(
+                                          fontSize: 16,
+                                        ),),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        );
+                              );
+                            },
+                          );
+                      }
                     }
-                  }
                 ),
               ),
             ],
-          ),
-        ],
-      ),
-    );
-
-    Widget _popularProductContent = Container(
-      width: MediaQuery.of(context).size.width,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(FontAwesomeIcons.star, color: CustomColor.MAIN, size: 22,),
-                    SizedBox(width: 10,),
-                    Text(AppLocalizations.instance.text('TXT_TITLE_POPUlAR_PICKED'), style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),),
-                  ],
-                ),
-                SizedBox(height: 5,),
-                Text(AppLocalizations.instance.text('TXT_SUB_TITLE_POPUlAR_PICKED'), style: TextStyle(
-                  color: CustomColor.GREY_TXT,
-                ),),
-              ],
-            ),
-          ),
-          SizedBox(height: 10,),
-          Flexible(
-            child: Consumer<HomeProvider>(
-              child: CustomWidget.showShimmerGridList(),
-              builder: (context, provider, skeleton) {
-                switch (provider.popularProductList.result) {
-                  case null:
-                    return skeleton!;
-                  default:
-                    switch (provider.popularProductList.result?.data?.length) {
-                      case 0:
-                        return CustomWidget.emptyScreen(
-                          image: 'assets/images/ic_empty_product.png',
-                          title: AppLocalizations.instance.text('TXT_NO_PRODUCT'),
-                        );
-                      default:
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: MediaQuery.removePadding(
-                            context: context,
-                            removeTop: true,
-                            child: ListView(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              children: [
-                                MasonryGridView.count(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 2,
-                                  mainAxisSpacing: 4,
-                                  itemCount: provider.popularProductList.result?.data?.length,
-                                  itemBuilder: (context, index) {
-                                    var _data = provider.popularProductList.result?.data?[index];
-                                    switch (_data!.stock) {
-                                      case 0:
-                                        return provider.popularEmptyProductCard(
-                                          context: context,
-                                          data: _data,
-                                          index: index,
-                                          storeLog: () async => await fnStoreLog(
-                                            productId: [_data.id ?? 0],
-                                            categoryId: null,
-                                            notes: key.KeyHelper.CLICK_PRODUCT_KEY,
-                                          ),
-                                        );
-                                      default:
-                                        return Consumer<BaseHomeProvider>(
-                                          builder: (context, baseProvider, _) {
-                                            return provider.popularProductCard(
-                                              context: context,
-                                              data: _data,
-                                              index: index,
-                                              storeClickLog: () async => await fnStoreLog(
-                                                productId: [_data.id ?? 0],
-                                                categoryId: null,
-                                                notes: key.KeyHelper.CLICK_PRODUCT_KEY,
-                                              ),
-                                              storeCartLog: () async => await fnStoreLog(
-                                                productId: [_data.id ?? 0],
-                                                categoryId: null,
-                                                notes: key.KeyHelper.SAVE_CART_KEY,
-                                              ),
-                                              storeWishlistLog: () async => await fnStoreLog(
-                                                productId: [_data.id ?? 0],
-                                                categoryId: null,
-                                                notes: key.KeyHelper.SAVE_WISHLIST_KEY,
-                                              ),
-                                              onUpdateCart: () async => await baseProvider.fnGetCartCount(),
-                                            );
-                                          },
-                                        );
-                                    }
-                                  },
-                                ),
-                                Container(
-                                  height: provider.isPaginateLoad ? 50 : 0,
-                                  child: Center(
-                                    child: provider.isPaginateLoad
-                                        ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(CustomColor.MAIN),)
-                                        : SizedBox(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                    }
-                }
-              }
-            ),
           ),
         ],
       ),
@@ -600,6 +490,159 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
       ],
     );
 
+    Widget _popularProductContent = Container(
+      padding: EdgeInsets.only(top: 20),
+      color: CustomColor.BG,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(FontAwesomeIcons.star, color: CustomColor.MAIN, size: 22,),
+                    SizedBox(width: 10,),
+                    Text(AppLocalizations.instance.text('TXT_TITLE_POPUlAR_PICKED'), style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),),
+                  ],
+                ),
+                SizedBox(height: 5,),
+                Text(AppLocalizations.instance.text('TXT_SUB_TITLE_POPUlAR_PICKED'), style: TextStyle(
+                  color: CustomColor.GREY_TXT,
+                ),),
+              ],
+            ),
+          ),
+          SizedBox(height: 10,),
+          Flexible(
+            child: Consumer<HomeProvider>(
+                child: CustomWidget.showShimmerGridList(),
+                builder: (context, provider, skeleton) {
+                  switch (provider.popularProductList.result) {
+                    case null:
+                      return skeleton!;
+                    default:
+                      switch (provider.popularProductList.result?.data?.length) {
+                        case 0:
+                          return CustomWidget.emptyScreen(
+                            image: 'assets/images/ic_empty_product.png',
+                            title: AppLocalizations.instance.text('TXT_NO_PRODUCT'),
+                          );
+                        default:
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: MediaQuery.removePadding(
+                              context: context,
+                              removeTop: true,
+                              child: ListView(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                children: [
+                                  MasonryGridView.count(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 2,
+                                    mainAxisSpacing: 4,
+                                    itemCount: provider.popularProductList.result?.data?.length,
+                                    itemBuilder: (context, index) {
+                                      var _data = provider.popularProductList.result?.data?[index];
+                                      switch (_data!.stock) {
+                                        case 0:
+                                          return provider.popularEmptyProductCard(
+                                            context: context,
+                                            data: _data,
+                                            index: index,
+                                            storeLog: () async => await fnStoreLog(
+                                              productId: [_data.id ?? 0],
+                                              categoryId: null,
+                                              notes: key.KeyHelper.CLICK_PRODUCT_KEY,
+                                            ),
+                                          );
+                                        default:
+                                          return Consumer<BaseHomeProvider>(
+                                            builder: (context, baseProvider, _) {
+                                              return provider.popularProductCard(
+                                                context: context,
+                                                data: _data,
+                                                index: index,
+                                                storeClickLog: () async => await fnStoreLog(
+                                                  productId: [_data.id ?? 0],
+                                                  categoryId: null,
+                                                  notes: key.KeyHelper.CLICK_PRODUCT_KEY,
+                                                ),
+                                                storeCartLog: () async => await fnStoreLog(
+                                                  productId: [_data.id ?? 0],
+                                                  categoryId: null,
+                                                  notes: key.KeyHelper.SAVE_CART_KEY,
+                                                ),
+                                                storeWishlistLog: () async => await fnStoreLog(
+                                                  productId: [_data.id ?? 0],
+                                                  categoryId: null,
+                                                  notes: key.KeyHelper.SAVE_WISHLIST_KEY,
+                                                ),
+                                                onUpdateCart: () async => await baseProvider.fnGetCartCount(),
+                                              );
+                                            },
+                                          );
+                                      }
+                                    },
+                                  ),
+                                  Container(
+                                    height: provider.isPaginateLoad ? 50 : 0,
+                                    child: Center(
+                                      child: provider.isPaginateLoad
+                                          ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(CustomColor.MAIN),)
+                                          : SizedBox(),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                      }
+                  }
+                }
+            ),
+          ),
+        ],
+      ),
+    );
+
+    Widget _productTabs = SliverAppBar(
+      floating: false,
+      pinned: true,
+      snap: false,
+      collapsedHeight: 60,
+      backgroundColor: CustomColor.BG,
+      flexibleSpace: TabBar(
+        controller: _tabController,
+        labelColor: Colors.black,
+        isScrollable: true,
+        tabs: [
+          Tab(
+            text: 'Paling Populer',
+          ),
+          Tab(
+            text: 'Paling Populer',
+          ),
+          Tab(
+            text: 'Paling Populer',
+          ),
+          Tab(
+            text: 'Paling Populer',
+          ),
+        ],
+      ),
+    );
+
     Widget _menuContent = SliverToBoxAdapter(
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 20),
@@ -688,6 +731,8 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog {
             ),
           ),
           _menuContent,
+          // _productTabs,
+          // _popularProductContent,
         ],
       ),
     );

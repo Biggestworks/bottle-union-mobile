@@ -51,7 +51,7 @@ class _BannerDetailScreenState extends State<BannerDetailScreen> {
                       backgroundColor: Colors.transparent,
                       leading: SizedBox(),
                       flexibleSpace: FlexibleSpaceBar(
-                        background: CustomWidget.networkImg(context, provider.banner!.image,),
+                        background: CustomWidget.networkImg(context, provider.banner?.banner?[0].image,),
                         collapseMode: CollapseMode.parallax,
                       ),
                     ),
@@ -63,20 +63,19 @@ class _BannerDetailScreenState extends State<BannerDetailScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(DateFormat('EEEE, dd MMMM yyyy')
-                              .format(DateTime.parse(provider.banner!.createdAt ?? '')),
+                              .format(DateTime.parse(provider.banner?.createdAt ?? '')),
                             style: TextStyle(
-                              fontSize: 12,
                               color: CustomColor.MAIN,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           SizedBox(height: 10,),
-                          Text(provider.banner!.title ?? '-', style: TextStyle(
+                          Text(provider.banner?.banner?[0].title ?? '-', style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),),
                           Html(
-                            data: provider.banner!.description ?? '-',
+                            data: provider.banner?.banner?[0].description ?? '-',
                             style: {"body": Style(padding: EdgeInsets.zero, margin: EdgeInsets.zero)},
                           ),
                         ],

@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/key_helper.dart' as key;
+import 'package:eight_barrels/helper/network_connection_helper.dart';
 import 'package:eight_barrels/provider/auth/forgot_password_provider.dart';
 import 'package:eight_barrels/provider/auth/login_provider.dart';
 import 'package:eight_barrels/provider/auth/otp_provider.dart';
@@ -63,7 +65,7 @@ import 'package:eight_barrels/screen/profile/update_profile_screen.dart';
 import 'package:eight_barrels/screen/review/review_input_screen.dart';
 import 'package:eight_barrels/screen/splash/onboarding_screen.dart';
 import 'package:eight_barrels/screen/splash/splash_screen.dart';
-import 'package:eight_barrels/screen/success_screen.dart';
+import 'package:eight_barrels/screen/misc/success_screen.dart';
 import 'package:eight_barrels/screen/transaction/track_order_screen.dart';
 import 'package:eight_barrels/screen/transaction/transaction_detail_screen.dart';
 import 'package:eight_barrels/screen/transaction/transaction_screen.dart';
@@ -85,9 +87,12 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  // NetworkConnectionHelper _networkConnectionHelper = new NetworkConnectionHelper();
+  NetworkConnectionHelper _networkConnectionHelper = new NetworkConnectionHelper();
   SpecifiedLocalizationDelegate? _localeOverrideDelegate;
-  // StreamSubscription<ConnectivityResult>? _connectivitySubs;
+  StreamSubscription<ConnectivityResult>? _connectivitySubs;
+  bool _initialURILinkHandled = false;
+
+  StreamSubscription? _linkSubs;
 
   Future<Locale> _getLocale() async {
     final _storage = new FlutterSecureStorage();
@@ -101,6 +106,47 @@ class _AppState extends State<App> {
     }
   }
 
+  Future _initURIHandler() async {
+    if (!_initialURILinkHandled) {
+      _initialURILinkHandled = true;
+      print('Invoked _initURIHandler');
+      try {
+        final initialURI = await getInitialUri();
+        if (initialURI != null) {
+          debugPrint("Initial URI received $initialURI");
+          if (!mounted) {
+            return;
+          }
+        } else {
+          debugPrint("Null Initial URI received");
+        }
+      } on PlatformException {
+        debugPrint("Failed to receive initial uri");
+      } on FormatException catch (err) {
+        if (!mounted) {
+          return;
+        }
+        debugPrint('Malformed Initial URI received');
+      }
+    }
+  }
+
+  void _incomingLinkHandler() {
+    if (!kIsWeb) {
+      _linkSubs = uriLinkStream.listen((Uri? uri) {
+        if (!mounted) {
+          return;
+        }
+        debugPrint('Received URI: $uri');
+      }, onError: (Object err) {
+        if (!mounted) {
+          return;
+        }
+        debugPrint('Error occurred: $err');
+      });
+    }
+  }
+
   @override
   void initState() {
     // _networkConnectionHelper.initConnectivity(subscription: _connectivitySubs, context: context);
@@ -109,7 +155,16 @@ class _AppState extends State<App> {
         _localeOverrideDelegate = new SpecifiedLocalizationDelegate(myLocale);
       })
     });
+    _initURIHandler();
+    _incomingLinkHandler();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubs?.cancel();
+    _linkSubs?.cancel();
+    super.dispose();
   }
 
   @override

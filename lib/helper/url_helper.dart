@@ -2,25 +2,23 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class URLHelper {
-  /// BASE URL
-  static final baseUrl = dotenv.get('BASE_URL', fallback: 'API_URL not found');
+  ///BASE URL
+  static final baseUrl = dotenv.get('BASE_URL', fallback: 'BASE_URL not found');
 
-  /// AUTH
+  ///AUTH
   static final loginUrl = baseUrl + '/auth/login';
   static final registerUrl = baseUrl + '/auth/register';
   static final regionUrl = baseUrl + '/region';
   static final validateAgeUrl = baseUrl + '/auth/validate/age';
   static final validateEmailPhoneUrl = baseUrl + '/auth/validate/email-phone';
-  static final loginSocmedUrl = baseUrl + '/auth/login/socmed';
-  static final registerSocmedUrl = baseUrl + '/auth/register/socmed';
+  static final loginSocMedUrl = baseUrl + '/auth/login/socmed';
+  static final registerSocMedUrl = baseUrl + '/auth/register/socmed';
 
   ///PRODUCT
   static final productListUrl = baseUrl + '/product/publish';
   static final brandListUrl = baseUrl + '/brand/publish';
   static final categoryListUrl = baseUrl + '/category-product/publish';
-  static productDetailUrl(String id) {
-    return baseUrl + '/product/show/$id';
-  }
+  static productDetailUrl(String id) => baseUrl + '/product/show/$id';
   static final popularProductListUrl = baseUrl + '/product/home';
   static final productByRegionUrl = baseUrl + '/product/recommend-from-region';
 
@@ -52,9 +50,7 @@ class URLHelper {
 
   ///RAJAONGKIR
   static final roProvinceUrl = baseUrl + '/ro/province';
-  static roCityUrl(String id) {
-    return baseUrl + '/ro/province/$id';
-  }
+  static roCityUrl(String id) => baseUrl + '/ro/province/$id';
 
   ///ADDRESS
   static final addressUrl = baseUrl + '/address';
@@ -64,17 +60,11 @@ class URLHelper {
   static final selectAddressUrl = baseUrl + '/address/selected';
 
   ///DISCUSSION
-  static discussionUrl(String id) {
-    return baseUrl + '/discussion/$id';
-  }
+  static discussionUrl(String id) => baseUrl + '/discussion/$id';
   static final storeDiscussionUrl = baseUrl + '/discussion/store';
-  static deleteDiscussionUrl(String id) {
-    return baseUrl + '/discussion/delete/$id';
-  }
+  static deleteDiscussionUrl(String id) => baseUrl + '/discussion/delete/$id';
   static final storeDiscussionReplyUrl = baseUrl + '/discussion/reply/store';
-  static deleteDiscussionReplyUrl(String id) {
-    return baseUrl + '/discussion/reply/delete/$id';
-  }
+  static deleteDiscussionReplyUrl(String id) => baseUrl + '/discussion/reply/delete/$id';
 
   ///DELIVERY
   static final courierUrl = baseUrl + '/courier';
@@ -94,13 +84,9 @@ class URLHelper {
 
   ///TRANSACTION
   static final transactionUrl = baseUrl + '/transactions';
-  static transactionDetailUrl(String id) {
-    return baseUrl + '/transactions/$id';
-  }
+  static transactionDetailUrl(String id) => baseUrl + '/transactions/$id';
   static final uploadPaymentUrl = baseUrl + '/transactions/upload-proof-transfer';
-  static trackOrderUrl(String id) {
-    return baseUrl + '/transactions/tracking/$id';
-  }
+  static trackOrderUrl(String id) => baseUrl + '/transactions/tracking/$id';
 
   ///PRODUCT REVIEW
   static final reviewUrl = baseUrl + '/reviews';

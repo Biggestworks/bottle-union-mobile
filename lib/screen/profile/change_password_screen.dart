@@ -36,7 +36,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
 
     Widget _mainContent = SingleChildScrollView(
       child: Container(
-        padding: EdgeInsets.all(15),
+        padding: EdgeInsets.all(10),
         child: Form(
           key: _provider.formKey,
           child: Column(
@@ -204,6 +204,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
       isLoad: _isLoad,
       child: Scaffold(
         key: _provider.scaffoldKey,
+        backgroundColor: CustomColor.BG,
         appBar: AppBar(
           backgroundColor: CustomColor.MAIN,
           centerTitle: true,

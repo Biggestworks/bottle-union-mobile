@@ -10,22 +10,7 @@ class KeyHelper {
   static const KEY_USER_REGION_NAME = 'region_name';
   static const KEY_IS_FIRST_TIME = 'is_first_time';
 
-  /// SERVICE STATUS
-  static const NEED_ASSIGNMENT_KEY = 'need assignment';
-  static const CHECKING_KEY = 'checking';
-  static const SPAREPART_INQUIRY_KEY = 'sparepart inquiry';
-  static const PROPOSAL_KEY = 'proposal';
-  static const ORDERING_SPAREPART_KEY = 'ordering sparepart';
-  static const REPAIRING_KEY = 'repairing';
-  static const QC_KEY = 'qc';
-  static const DONE_REPAIRING_KEY = 'done repairing';
-  static const WAITING_FOR_DELIVERY_KEY = 'waiting for checkout';
-  static const DELIVERING_KEY = 'delivering';
-  static const RECEIVED_BY_CUSTOMER_KEY = 'received by customer';
-  static const COMPLETE_KEY = 'complete';
-  static const CANCELED_KEY = 'canceled';
-
-  /// STEP TITLE
+  /// REGISTER STEP TITLE
   static const PERSONAL_DATA_KEY = 'Personal Data';
   static const ADDRESS_KEY = 'Address & Region';
   static const PASSWORD_KEY = 'Password';

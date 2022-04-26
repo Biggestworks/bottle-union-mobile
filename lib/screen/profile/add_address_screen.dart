@@ -62,7 +62,7 @@ class _AddAddressScreenState extends State<AddAddressScreen>
                   validator: validateField,
                   maxLines: null,
                   decoration: InputDecoration(
-                    suffixIcon: Icon(FontAwesomeIcons.mapMarkedAlt, size: 24, color: Colors.black,),
+                    suffixIcon: Icon(FontAwesomeIcons.mapMarkedAlt, size: 20, color: CustomColor.MAIN,),
                     isDense: true,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -358,6 +358,7 @@ class _AddAddressScreenState extends State<AddAddressScreen>
     return CustomWidget.loadingHud(
       isLoad: _isLoad,
       child: Scaffold(
+        backgroundColor: CustomColor.BG,
         appBar: AppBar(
           backgroundColor: CustomColor.MAIN,
           title: Consumer<AddAddressProvider>(

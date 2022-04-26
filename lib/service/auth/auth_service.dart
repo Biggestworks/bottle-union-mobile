@@ -188,7 +188,7 @@ class AuthService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.registerSocmedUrl,
+        URLHelper.registerSocMedUrl,
         _data,
         headers: _headers,
       );
@@ -225,7 +225,7 @@ class AuthService extends GetConnect {
 
     try {
       Response _response = await post(
-        URLHelper.loginSocmedUrl,
+        URLHelper.loginSocMedUrl,
         _data,
         headers: _headers,
       );
