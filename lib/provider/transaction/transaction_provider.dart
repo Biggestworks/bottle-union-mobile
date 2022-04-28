@@ -65,9 +65,7 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
   bool isCustomDate = false;
 
   LoadingView? _view;
-
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
+  
   fnGetView(LoadingView view) {
     this._view = view;
   }

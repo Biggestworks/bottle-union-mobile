@@ -4,6 +4,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/key_helper.dart' as key;
 import 'package:eight_barrels/helper/network_connection_helper.dart';
+import 'package:eight_barrels/helper/push_notification_manager.dart';
 import 'package:eight_barrels/provider/auth/forgot_password_provider.dart';
 import 'package:eight_barrels/provider/auth/login_provider.dart';
 import 'package:eight_barrels/provider/auth/otp_provider.dart';
@@ -79,6 +80,8 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:uni_links/uni_links.dart';
+
+import 'home/notification_screen.dart';
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
@@ -177,6 +180,7 @@ class _AppState extends State<App> {
         ),
       ],
       child: GetMaterialApp(
+        // navigatorKey: PushNotificationManager.navigatorKey,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           fontFamily: 'Futura',
@@ -435,6 +439,10 @@ class _AppState extends State<App> {
           GetPage(
             name: ContactUsScreen.tag,
             page: () => ContactUsScreen(),
+          ),
+          GetPage(
+            name: NotificationScreen.tag,
+            page: () => NotificationScreen(),
           ),
         ],
       ),

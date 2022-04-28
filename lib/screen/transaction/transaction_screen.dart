@@ -28,13 +28,15 @@ class TransactionScreen extends StatefulWidget {
 class _TransactionScreenState extends State<TransactionScreen> 
     with SingleTickerProviderStateMixin, LoadingView {
   bool _isLoad = false;
-  
+  GlobalKey<ScaffoldState>? _scaffoldKey;
+
   @override
   void initState() {
     Future.delayed(Duration.zero).then((value) async {
       Provider.of<TransactionProvider>(context, listen: false).fnGetView(this);
       Provider.of<TransactionProvider>(context, listen: false).fnInitStatusOrder();
       Provider.of<TransactionProvider>(context, listen: false).fnFetchTransactionList();
+      _scaffoldKey = new GlobalKey<ScaffoldState>();
     });
     super.initState();
   }
@@ -236,7 +238,7 @@ class _TransactionScreenState extends State<TransactionScreen>
                               label: 'Submit Filter',
                               btnColor: CustomColor.MAIN,
                               lblColor: Colors.white,
-                              function: () async => await provider.fnOnSubmitFilter(provider.scaffoldKey.currentContext!),
+                              function: () async => await provider.fnOnSubmitFilter(_scaffoldKey!.currentContext!),
                             ),
                           ),
                         );
@@ -434,7 +436,7 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                           fontSize: 12,
                                                           radius: 8,
                                                           isBold: true,
-                                                          function: () async => await provider.fnFinishPayment(provider.scaffoldKey.currentContext!),
+                                                          function: () async => await provider.fnFinishPayment(_scaffoldKey!.currentContext!),
                                                         ),
                                                       )
                                                   else if (_data?.idStatusPayment == 6)
@@ -532,16 +534,11 @@ class _TransactionScreenState extends State<TransactionScreen>
     return DefaultTabController(
       length: _provider.tabLabel.length,
       child: Scaffold(
-        key: _provider.scaffoldKey,
+        key: _scaffoldKey,
         backgroundColor: CustomColor.BG,
         appBar: AppBar(
           backgroundColor: CustomColor.BG,
           elevation: 0,
-          // centerTitle: true,
-          // title: SizedBox(
-          //   width: 150,
-          //   child: Image.asset('assets/images/ic_logo_bu_white.png',),
-          // ),
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 20,),

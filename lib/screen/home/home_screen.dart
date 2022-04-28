@@ -10,6 +10,7 @@ import 'package:eight_barrels/helper/push_notification_manager.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
 import 'package:eight_barrels/screen/home/banner_detail_screen.dart';
+import 'package:eight_barrels/screen/home/notification_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_region_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
@@ -43,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
   // Object? _err;
 
   StreamSubscription? _linkSubs;
-  TabController? _tabController;
+  // TabController? _tabController;
 
   Future<void> _initURIHandler() async {
     if (!_initialURILinkHandled) {
@@ -119,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
       PushNotificationManager().initFCM();
       _initURIHandler();
       _incomingLinkHandler();
-      _tabController = new TabController(length: 4, vsync: this);
+      // _tabController = new TabController(length: 4, vsync: this);
     });
     super.initState();
   }
@@ -614,32 +615,32 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
       ),
     );
 
-    Widget _productTabs = SliverAppBar(
-      floating: false,
-      pinned: true,
-      snap: false,
-      collapsedHeight: 60,
-      backgroundColor: CustomColor.BG,
-      flexibleSpace: TabBar(
-        controller: _tabController,
-        labelColor: Colors.black,
-        isScrollable: true,
-        tabs: [
-          Tab(
-            text: 'Paling Populer',
-          ),
-          Tab(
-            text: 'Paling Populer',
-          ),
-          Tab(
-            text: 'Paling Populer',
-          ),
-          Tab(
-            text: 'Paling Populer',
-          ),
-        ],
-      ),
-    );
+    // Widget _productTabs = SliverAppBar(
+    //   floating: false,
+    //   pinned: true,
+    //   snap: false,
+    //   collapsedHeight: 60,
+    //   backgroundColor: CustomColor.BG,
+    //   flexibleSpace: TabBar(
+    //     controller: _tabController,
+    //     labelColor: Colors.black,
+    //     isScrollable: true,
+    //     tabs: [
+    //       Tab(
+    //         text: 'Paling Populer',
+    //       ),
+    //       Tab(
+    //         text: 'Paling Populer',
+    //       ),
+    //       Tab(
+    //         text: 'Paling Populer',
+    //       ),
+    //       Tab(
+    //         text: 'Paling Populer',
+    //       ),
+    //     ],
+    //   ),
+    // );
 
     Widget _menuContent = SliverToBoxAdapter(
       child: Container(
@@ -679,7 +680,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
                 visualDensity: VisualDensity.compact,
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () => Get.toNamed(NotificationScreen.tag),
                 icon: Icon(FontAwesomeIcons.bell, size: 22,),
                 visualDensity: VisualDensity.compact,
               ),

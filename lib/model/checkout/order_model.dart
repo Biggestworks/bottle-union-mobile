@@ -53,8 +53,9 @@ class Data {
   String? updatedAt;
   String? deletedAt;
   User? user;
-  Null xendit;
+  Shipment? shipment;
   List<Order>? order;
+  EnabledPayment? enabledPayment;
 
   Data(
       {this.id,
@@ -82,8 +83,9 @@ class Data {
         this.updatedAt,
         this.deletedAt,
         this.user,
-        this.xendit,
-        this.order});
+        this.shipment,
+        this.order,
+        this.enabledPayment});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -111,13 +113,18 @@ class Data {
     updatedAt = json['updated_at'];
     deletedAt = json['deleted_at'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
-    xendit = json['xendit'];
+    shipment = json['shipment'] != null
+        ? new Shipment.fromJson(json['shipment'])
+        : null;
     if (json['order'] != null) {
       order = <Order>[];
       json['order'].forEach((v) {
         order!.add(new Order.fromJson(v));
       });
     }
+    enabledPayment = json['enabled_payment'] != null
+        ? new EnabledPayment.fromJson(json['enabled_payment'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -149,9 +156,14 @@ class Data {
     if (this.user != null) {
       data['user'] = this.user!.toJson();
     }
-    data['xendit'] = this.xendit;
+    if (this.shipment != null) {
+      data['shipment'] = this.shipment!.toJson();
+    }
     if (this.order != null) {
       data['order'] = this.order!.map((v) => v.toJson()).toList();
+    }
+    if (this.enabledPayment != null) {
+      data['enabled_payment'] = this.enabledPayment!.toJson();
     }
     return data;
   }
@@ -235,6 +247,71 @@ class User {
     data['is_verified'] = this.isVerified;
     data['is_active'] = this.isActive;
     data['fcm_token'] = this.fcmToken;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    data['deleted_at'] = this.deletedAt;
+    return data;
+  }
+}
+
+class Shipment {
+  int? id;
+  String? idOrder;
+  String? receiver;
+  String? address;
+  String? phone;
+  String? provinceName;
+  String? cityName;
+  String? postalCode;
+  String? latitude;
+  String? longitude;
+  String? createdAt;
+  String? updatedAt;
+  String? deletedAt;
+
+  Shipment(
+      {this.id,
+        this.idOrder,
+        this.receiver,
+        this.address,
+        this.phone,
+        this.provinceName,
+        this.cityName,
+        this.postalCode,
+        this.latitude,
+        this.longitude,
+        this.createdAt,
+        this.updatedAt,
+        this.deletedAt});
+
+  Shipment.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    idOrder = json['id_order'];
+    receiver = json['receiver'];
+    address = json['address'];
+    phone = json['phone'];
+    provinceName = json['province_name'];
+    cityName = json['city_name'];
+    postalCode = json['postal_code'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    deletedAt = json['deleted_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['id_order'] = this.idOrder;
+    data['receiver'] = this.receiver;
+    data['address'] = this.address;
+    data['phone'] = this.phone;
+    data['province_name'] = this.provinceName;
+    data['city_name'] = this.cityName;
+    data['postal_code'] = this.postalCode;
+    data['latitude'] = this.latitude;
+    data['longitude'] = this.longitude;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['deleted_at'] = this.deletedAt;
@@ -443,59 +520,43 @@ class Product {
   }
 }
 
-class Shipment {
+class EnabledPayment {
   int? id;
-  String? idOrder;
-  String? receiver;
-  String? address;
-  String? phone;
-  String? provinceName;
-  String? cityName;
-  String? postalCode;
+  String? name;
+  String? description;
+  String? image;
+  int? isActive;
   String? createdAt;
   String? updatedAt;
-  String? deletedAt;
 
-  Shipment(
+  EnabledPayment(
       {this.id,
-        this.idOrder,
-        this.receiver,
-        this.address,
-        this.phone,
-        this.provinceName,
-        this.cityName,
-        this.postalCode,
+        this.name,
+        this.description,
+        this.image,
+        this.isActive,
         this.createdAt,
-        this.updatedAt,
-        this.deletedAt});
+        this.updatedAt});
 
-  Shipment.fromJson(Map<String, dynamic> json) {
+  EnabledPayment.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    idOrder = json['id_order'];
-    receiver = json['receiver'];
-    address = json['address'];
-    phone = json['phone'];
-    provinceName = json['province_name'];
-    cityName = json['city_name'];
-    postalCode = json['postal_code'];
+    name = json['name'];
+    description = json['description'];
+    image = json['image'];
+    isActive = json['is_active'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    deletedAt = json['deleted_at'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['id_order'] = this.idOrder;
-    data['receiver'] = this.receiver;
-    data['address'] = this.address;
-    data['phone'] = this.phone;
-    data['province_name'] = this.provinceName;
-    data['city_name'] = this.cityName;
-    data['postal_code'] = this.postalCode;
+    data['name'] = this.name;
+    data['description'] = this.description;
+    data['image'] = this.image;
+    data['is_active'] = this.isActive;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
-    data['deleted_at'] = this.deletedAt;
     return data;
   }
 }

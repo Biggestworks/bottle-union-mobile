@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:eight_barrels/helper/user_preferences.dart';
+import 'package:eight_barrels/provider/transaction/transaction_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:provider/provider.dart';
 
 class PushNotificationManager {
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -81,6 +83,8 @@ class PushNotificationManager {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       await showNotification(message.data);
       print('Message data: ${message.data}');
+
+      // await Provider.of<TransactionProvider>(navigatorKey.currentContext!, listen: false).fnFetchTransactionList();
 
       if (message.notification != null) {
         print('Message also contained a notification: ${message.notification}');

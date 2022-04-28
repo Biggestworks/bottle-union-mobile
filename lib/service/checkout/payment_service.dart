@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:eight_barrels/helper/url_helper.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/checkout/midtrans_payment_model.dart';
@@ -5,6 +7,7 @@ import 'package:eight_barrels/model/checkout/order_model.dart';
 import 'package:eight_barrels/model/checkout/payment_list_model.dart';
 import 'package:eight_barrels/model/checkout/product_order_model.dart';
 import 'package:get/get_connect.dart';
+import 'package:http/http.dart' as http;
 
 class PaymentService extends GetConnect {
   UserPreferences _userPreferences = new UserPreferences();
@@ -13,9 +16,9 @@ class PaymentService extends GetConnect {
     var _token = await _userPreferences.getUserToken();
 
     return {
-      "Accept": "application/json; charset=UTF-8",
+      "Accept": "application/json",
+      "Content-Type": "application/json",
       "Authorization": "Bearer $_token",
-      "Cache-Control": "no-cache",
     };
   }
 
@@ -38,7 +41,7 @@ class PaymentService extends GetConnect {
   Future<OrderModel?> storeOrder({
     required int? addressId,
     required bool? isCart,
-    List<ProductOrderModel>? products,
+    required List<ProductOrderModel>? products,
     required String? paymentMethod,
     required String? courierName,
     required String? courierDesc,
@@ -59,12 +62,19 @@ class PaymentService extends GetConnect {
     };
 
     try {
-      Response _response = await post(
-        URLHelper.storeOrderUrl,
-        _data,
+      http.Response _response = await http.post(
+        Uri.parse(URLHelper.storeOrderUrl),
+        body: json.encode(_data),
         headers: await _headersAuth(),
       );
-      _model = OrderModel.fromJson(_response.body);
+      ///GET CONNECT BUG
+      // Response _response = await post(
+      //   URLHelper.storeOrderUrl,
+      //   _data,
+      //   headers: await _headersAuth(),
+      // );
+      print(_response.body);
+      _model = OrderModel.fromJson(json.decode(_response.body));
     } catch (e) {
       print(e);
     }
@@ -87,7 +97,6 @@ class PaymentService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
-      print(_response.body);
       _model = MidtransPaymentModel.fromJson(_response.body);
     } catch (e) {
       print(e);

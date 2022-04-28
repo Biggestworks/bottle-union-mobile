@@ -439,7 +439,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
 
     Widget _bottomMenuContent = SafeArea(
       child: Container(
-        padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
+        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
         decoration: BoxDecoration(
           border: Border(
             top: BorderSide(width: 0.5, color: CustomColor.GREY_ICON),
@@ -491,7 +491,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
 
     Widget _bottomMenuDisabledContent = SafeArea(
       child: Container(
-        padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
+        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
         decoration: BoxDecoration(
           border: Border(
             top: BorderSide(width: 0.5, color: CustomColor.GREY_ICON),

@@ -305,13 +305,13 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(_data?.order?[0].shipment?.receiver ?? '-', style: TextStyle(
+                                Text(_data?.shipment?.receiver ?? '-', style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),),
                                 SizedBox(height: 4),
-                                Text(_data?.order?[0].shipment?.phone ?? '-'),
+                                Text(_data?.shipment?.phone ?? '-'),
                                 SizedBox(height: 4),
-                                Text(_data?.order?[0].shipment?.address ?? '-'),
+                                Text(_data?.shipment?.address ?? '-'),
                               ],
                             ),
                           ),
@@ -483,7 +483,7 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                 isBold: true,
                 radius: 8,
                 fontSize: 16,
-                function: () => Get.offNamedUntil(BaseHomeScreen.tag, (route) => false, arguments: BaseHomeScreen(pageIndex: 3)),
+                function: () async => await Get.offNamedUntil(BaseHomeScreen.tag, (route) => route.isFirst, arguments: BaseHomeScreen(pageIndex: 3)),
               ),
             ),
           ],
@@ -495,7 +495,7 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
       isLoad: _isLoad,
       child: WillPopScope(
         onWillPop: () async {
-          Get.offNamedUntil(BaseHomeScreen.tag, (route) => false, arguments: BaseHomeScreen(pageIndex: 3));
+          await Get.offNamedUntil(BaseHomeScreen.tag, (route) => route.isFirst, arguments: BaseHomeScreen(pageIndex: 3));
           return false;
         },
         child: Scaffold(
