@@ -73,173 +73,182 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
         children: [
           Consumer<ProductDetailProvider>(
             builder: (context, provider, _) {
-              return Text('Product Discussion (${provider.discussionList.data?.length})', style: TextStyle(
+              return Text('Product Discussion (0)', style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),);
+              // return Text('Product Discussion (${provider.discussionList.data?.length})', style: TextStyle(
+              //   fontSize: 16,
+              //   fontWeight: FontWeight.bold,
+              // ),);
             },
           ),
           SizedBox(height: 20,),
-          Consumer<ProductDetailProvider>(
-            child: CustomWidget.showShimmer(
-              child: ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: 4,
-                itemBuilder: (context, index) {
-                  return Container(
-                    color: Colors.white,
-                    height: 50,
-                  );
-                },
-              ),
-            ),
-            builder: (context, provider, skeleton) {
-              switch (_isLoad) {
-                case true:
-                  return skeleton!;
-                default:
-                  switch (provider.discussionList.data) {
-                    case null:
-                      return skeleton!;
-                    default:
-                      switch (provider.discussionList.data?.length) {
-                        case 0:
-                          return CustomWidget.emptyScreen(
-                            image: 'assets/images/ic_empty.png',
-                            size: 150,
-                            title: AppLocalizations.instance.text('TXT_NO_DISCUSSION'),
-                          );
-                        default:
-                          return Column(
-                            children: [
-                              ListView.separated(
-                                physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: provider.discussionList.data?.length.clamp(0, 4) ?? 0,
-                                separatorBuilder: (context, index) {
-                                  return Divider(color: CustomColor.GREY_ICON, height: 30,);
-                                },
-                                itemBuilder: (context, index) {
-                                  var _data = provider.discussionList.data?[index];
-                                  return Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          CustomWidget.roundedAvatarImg(
-                                            url: _data?.user?.avatar ?? '',
-                                            size: 40,
-                                          ),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Flexible(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Text(_data?.user?.fullname ?? '-', style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                    ),),
-                                                    Text(" . ${timeago.format(DateTime.parse(_data?.createdAt ?? DateTime.now().toString()), locale: 'en_short')} ago",
-                                                      style: TextStyle(
-                                                        color: Colors.grey,
-                                                        fontSize: 12,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(height: 5,),
-                                                Text(_data?.comment ?? '-', style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.black,
-                                                ),),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 10,),
-                                      ListView.builder(
-                                        physics: ClampingScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemCount: _data?.replyDiscussions?.length,
-                                        itemBuilder: (context, index) {
-                                          var _reply = _data?.replyDiscussions?[index];
-                                          return Row(
-                                            children: [
-                                              Container(
-                                                height: 60,
-                                                width: 1,
-                                                margin: EdgeInsets.symmetric(horizontal: 20),
-                                                color: Colors.grey,
-                                              ),
-                                              Flexible(
-                                                child: Row(
-                                                  children: [
-                                                    CustomWidget.roundedAvatarImg(
-                                                      url: _reply?.user?.avatar ?? '',
-                                                      size: 40,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Flexible(
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          Row(
-                                                            children: [
-                                                              Text(_reply?.user?.fullname ?? '-', style: TextStyle(
-                                                                fontWeight: FontWeight.bold,
-                                                              ),),
-                                                              Text(" . ${timeago.format(DateTime.parse(_reply?.createdAt ?? DateTime.now().toString()), locale: 'en_short')} ago",
-                                                                style: TextStyle(
-                                                                  color: Colors.grey,
-                                                                  fontSize: 12,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          SizedBox(height: 5,),
-                                                          Text(_reply?.comment ?? '-', style: TextStyle(
-                                                            fontSize: 16,
-                                                            color: Colors.black,
-                                                          ),),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ),
-                              SizedBox(height: 10,),
-                              TextButton(
-                                style: TextButton.styleFrom(
-                                  visualDensity: VisualDensity.compact,
-                                ),
-                                onPressed: () => Get.toNamed(DiscussionScreen.tag, arguments: DiscussionScreen(
-                                  product: provider.product.data,
-                                )),
-                                child: Text('See all discussion', style: TextStyle(
-                                  color: CustomColor.MAIN,
-                                ),),
-                              ),
-                            ],
-                          );
-                      }
-                  }
-              }
-            }
+          CustomWidget.emptyScreen(
+            image: 'assets/images/ic_empty.png',
+            size: 150,
+            title: AppLocalizations.instance.text('TXT_NO_DISCUSSION'),
           ),
+          // Consumer<ProductDetailProvider>(
+          //   child: CustomWidget.showShimmer(
+          //     child: ListView.builder(
+          //       physics: NeverScrollableScrollPhysics(),
+          //       shrinkWrap: true,
+          //       itemCount: 4,
+          //       itemBuilder: (context, index) {
+          //         return Container(
+          //           color: Colors.white,
+          //           height: 50,
+          //         );
+          //       },
+          //     ),
+          //   ),
+          //   builder: (context, provider, skeleton) {
+          //     switch (_isLoad) {
+          //       case true:
+          //         return skeleton!;
+          //       default:
+          //         switch (provider.discussionList.data) {
+          //           case null:
+          //             return skeleton!;
+          //           default:
+          //             switch (provider.discussionList.data?.length) {
+          //               case 0:
+          //                 return CustomWidget.emptyScreen(
+          //                   image: 'assets/images/ic_empty.png',
+          //                   size: 150,
+          //                   title: AppLocalizations.instance.text('TXT_NO_DISCUSSION'),
+          //                 );
+          //               default:
+          //                 return Column(
+          //                   children: [
+          //                     ListView.separated(
+          //                       physics: NeverScrollableScrollPhysics(),
+          //                       shrinkWrap: true,
+          //                       itemCount: provider.discussionList.data?.length.clamp(0, 4) ?? 0,
+          //                       separatorBuilder: (context, index) {
+          //                         return Divider(color: CustomColor.GREY_ICON, height: 30,);
+          //                       },
+          //                       itemBuilder: (context, index) {
+          //                         var _data = provider.discussionList.data?[index];
+          //                         return Column(
+          //                           children: [
+          //                             Row(
+          //                               children: [
+          //                                 CustomWidget.roundedAvatarImg(
+          //                                   url: _data?.user?.avatar ?? '',
+          //                                   size: 40,
+          //                                 ),
+          //                                 SizedBox(
+          //                                   width: 10,
+          //                                 ),
+          //                                 Flexible(
+          //                                   child: Column(
+          //                                     crossAxisAlignment: CrossAxisAlignment.start,
+          //                                     children: [
+          //                                       Row(
+          //                                         children: [
+          //                                           Text(_data?.user?.fullname ?? '-', style: TextStyle(
+          //                                             fontWeight: FontWeight.bold,
+          //                                           ),),
+          //                                           Text(" . ${timeago.format(DateTime.parse(_data?.createdAt ?? DateTime.now().toString()), locale: 'en_short')} ago",
+          //                                             style: TextStyle(
+          //                                               color: Colors.grey,
+          //                                               fontSize: 12,
+          //                                             ),
+          //                                           ),
+          //                                         ],
+          //                                       ),
+          //                                       SizedBox(height: 5,),
+          //                                       Text(_data?.comment ?? '-', style: TextStyle(
+          //                                         fontSize: 16,
+          //                                         color: Colors.black,
+          //                                       ),),
+          //                                     ],
+          //                                   ),
+          //                                 ),
+          //                               ],
+          //                             ),
+          //                             SizedBox(height: 10,),
+          //                             ListView.builder(
+          //                               physics: ClampingScrollPhysics(),
+          //                               shrinkWrap: true,
+          //                               itemCount: _data?.replyDiscussions?.length,
+          //                               itemBuilder: (context, index) {
+          //                                 var _reply = _data?.replyDiscussions?[index];
+          //                                 return Row(
+          //                                   children: [
+          //                                     Container(
+          //                                       height: 60,
+          //                                       width: 1,
+          //                                       margin: EdgeInsets.symmetric(horizontal: 20),
+          //                                       color: Colors.grey,
+          //                                     ),
+          //                                     Flexible(
+          //                                       child: Row(
+          //                                         children: [
+          //                                           CustomWidget.roundedAvatarImg(
+          //                                             url: _reply?.user?.avatar ?? '',
+          //                                             size: 40,
+          //                                           ),
+          //                                           SizedBox(
+          //                                             width: 10,
+          //                                           ),
+          //                                           Flexible(
+          //                                             child: Column(
+          //                                               crossAxisAlignment: CrossAxisAlignment.start,
+          //                                               children: [
+          //                                                 Row(
+          //                                                   children: [
+          //                                                     Text(_reply?.user?.fullname ?? '-', style: TextStyle(
+          //                                                       fontWeight: FontWeight.bold,
+          //                                                     ),),
+          //                                                     Text(" . ${timeago.format(DateTime.parse(_reply?.createdAt ?? DateTime.now().toString()), locale: 'en_short')} ago",
+          //                                                       style: TextStyle(
+          //                                                         color: Colors.grey,
+          //                                                         fontSize: 12,
+          //                                                       ),
+          //                                                     ),
+          //                                                   ],
+          //                                                 ),
+          //                                                 SizedBox(height: 5,),
+          //                                                 Text(_reply?.comment ?? '-', style: TextStyle(
+          //                                                   fontSize: 16,
+          //                                                   color: Colors.black,
+          //                                                 ),),
+          //                                               ],
+          //                                             ),
+          //                                           ),
+          //                                         ],
+          //                                       ),
+          //                                     ),
+          //                                   ],
+          //                                 );
+          //                               },
+          //                             ),
+          //                           ],
+          //                         );
+          //                       },
+          //                     ),
+          //                     SizedBox(height: 10,),
+          //                     TextButton(
+          //                       style: TextButton.styleFrom(
+          //                         visualDensity: VisualDensity.compact,
+          //                       ),
+          //                       onPressed: () => Get.toNamed(DiscussionScreen.tag, arguments: DiscussionScreen(
+          //                         product: provider.product.data,
+          //                       )),
+          //                       child: Text('See all discussion', style: TextStyle(
+          //                         color: CustomColor.MAIN,
+          //                       ),),
+          //                     ),
+          //                   ],
+          //                 );
+          //             }
+          //         }
+          //     }
+          //   }
+          // ),
         ],
       ),
     );
