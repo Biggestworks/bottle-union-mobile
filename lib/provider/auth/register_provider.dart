@@ -100,7 +100,7 @@ class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextVa
     if (_res!.status != null) {
       if (_res.status == true && _res.data != null) {
         _view!.onProgressFinish();
-        await Get.offAllNamed(LoginScreen.tag, arguments: LoginScreen(isRegister: true,));
+        // await Get.offAllNamed(LoginScreen.tag, arguments: LoginScreen(isRegister: true,));
       } else {
         _view!.onProgressFinish();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${_res.message.toString()}')));

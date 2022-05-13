@@ -38,7 +38,6 @@ void main() async {
   // await dotenv.load(fileName: ".env.production");
   await dotenv.load(fileName: ".env.development");
   await Firebase.initializeApp();
-  await PushNotificationManager().saveFcmToken();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await _checkAppSecurity();
 }

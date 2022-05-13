@@ -39,9 +39,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerProviderStateMixin {
   StreamSubscription<ConnectivityResult>? _subscription;
   bool _initialURILinkHandled = false;
-  // Uri? _initialURI;
-  // Uri? _currentURI;
-  // Object? _err;
 
   StreamSubscription? _linkSubs;
   // TabController? _tabController;
@@ -57,9 +54,6 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
           if (!mounted) {
             return;
           }
-          // setState(() {
-          //   _initialURI = initialURI;
-          // });
         } else {
           debugPrint("Null Initial URI received");
         }
@@ -70,7 +64,6 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
           return;
         }
         debugPrint('Malformed Initial URI received');
-        // setState(() => _err = err);
       }
     }
   }
@@ -82,10 +75,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
           return;
         }
         debugPrint('Received URI: $uri');
-        // debugPrint('Received URI: ${uri?.queryParameters['uid']}');
         setState(() {
-          // _currentURI = uri;
-          // _err = null;
           if (uri?.queryParameters['product_id'] != null) {
             Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(id: int.parse(uri?.queryParameters['product_id'] ?? '')));
           }
@@ -95,14 +85,6 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
           return;
         }
         debugPrint('Error occurred: $err');
-        // setState(() {
-        //   _currentURI = null;
-        //   if (err is FormatException) {
-        //     _err = err;
-        //   } else {
-        //     _err = null;
-        //   }
-        // });
       });
     }
   }
@@ -117,6 +99,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
       });
       Provider.of<HomeProvider>(context, listen: false).fnFetchCategoryList();
       Provider.of<HomeProvider>(context, listen: false).fnFetchPopularProductList();
+      Provider.of<HomeProvider>(context, listen: false).fnSaveFcmToken();
       PushNotificationManager().initFCM();
       _initURIHandler();
       _incomingLinkHandler();

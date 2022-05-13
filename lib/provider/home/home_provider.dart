@@ -1,6 +1,7 @@
 import 'package:eight_barrels/abstract/pagination_interface.dart';
 import 'package:eight_barrels/abstract/product_card_interface.dart';
 import 'package:eight_barrels/helper/key_helper.dart';
+import 'package:eight_barrels/helper/push_notification_manager.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/auth/user_detail_model.dart';
 import 'package:eight_barrels/model/banner/banner_list_model.dart';
@@ -26,6 +27,7 @@ class HomeProvider extends ChangeNotifier
   PopularProductListModel regionProductList = new PopularProductListModel();
 
   final _storage = new FlutterSecureStorage();
+  PushNotificationManager _pushNotificationManager = new PushNotificationManager();
 
   bool isPaginateLoad = false;
   int? userRegionId;
@@ -89,6 +91,12 @@ class HomeProvider extends ChangeNotifier
       page: super.currentPage.toString(),
     ))!;
     notifyListeners();
+  }
+
+  Future fnSaveFcmToken() async {
+    String _token = await _storage.read(key: KeyHelper.KEY_FCM_TOKEN) ?? '';
+    if (_token.isEmpty)
+      await _pushNotificationManager.saveFcmToken();
   }
 
   @override

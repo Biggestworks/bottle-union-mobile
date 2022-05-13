@@ -57,6 +57,7 @@ class UserPreferences extends GetConnect {
 
   Future saveFcmToken(String token) async {
     try {
+      print('save: $token');
       await _storage.write(key: KeyHelper.KEY_FCM_TOKEN, value: token);
     } catch (e) {
       print(e);
@@ -68,6 +69,7 @@ class UserPreferences extends GetConnect {
 
     try {
       token = await _storage.read(key: KeyHelper.KEY_FCM_TOKEN);
+      print('get: ${token ?? '-'}');
     } catch (e) {
       print(e);
     }

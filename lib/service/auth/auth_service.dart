@@ -10,7 +10,7 @@ import 'package:get/get_connect.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService extends GetConnect {
-  UserPreferences? _userPreferences = new UserPreferences();
+  UserPreferences _userPreferences = new UserPreferences();
 
   var _headers = {
     "Accept": "application/json",
@@ -22,7 +22,7 @@ class AuthService extends GetConnect {
     required String password}) async {
     UserModel _model = new UserModel();
 
-    var _fcmToken = await _userPreferences!.getFcmToken();
+    var _fcmToken = await _userPreferences.getFcmToken();
 
     final Map<String, dynamic> _data = {
       "username": username,
@@ -37,9 +37,8 @@ class AuthService extends GetConnect {
         headers: _headers,
       );
       _model = UserModel.fromJson(_response.body);
-      print(_model.token);
       if (_model.status == true) {
-        await _userPreferences?.saveUserToken(_model.token!);
+        await _userPreferences.saveUserToken(_model.token!);
       }
     } catch (e) {
       print(e);
@@ -211,7 +210,7 @@ class AuthService extends GetConnect {
   }) async {
     UserModel _model = new UserModel();
 
-    var _fcmToken = await _userPreferences!.getFcmToken();
+    var _fcmToken = await _userPreferences.getFcmToken();
 
     final Map<String, dynamic> _data = {
       "fullname": fullName,
@@ -232,7 +231,7 @@ class AuthService extends GetConnect {
       print(_response.body);
       _model = UserModel.fromJson(_response.body);
       if (_model.status == true) {
-        await _userPreferences?.saveUserToken(_model.token!);
+        await _userPreferences.saveUserToken(_model.token!);
       }
     } catch (e) {
       print(e);

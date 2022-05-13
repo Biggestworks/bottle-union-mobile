@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:eight_barrels/abstract/socmed_auth_interface.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
+import 'package:eight_barrels/helper/push_notification_manager.dart';
 import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/auth/register_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
@@ -24,6 +25,13 @@ class StartScreen extends StatefulWidget {
 class _StartScreenState extends State<StartScreen>
     with SocmedAuthInterface {
   bool _isLoad = false;
+
+  @override
+  void initState() {
+    Future.delayed(Duration.zero)
+        .then((_) async => await PushNotificationManager().saveFcmToken());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

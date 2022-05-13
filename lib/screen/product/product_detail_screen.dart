@@ -458,81 +458,136 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Consumer<ProductDetailProvider>(
-                builder: (context, provider, _) {
-                  return IconButton(
-                    onPressed: () async => await provider.fnStoreWishlist(provider.scaffoldKey.currentContext!),
-                    icon: Icon(provider.isWishlist
-                        ? FontAwesomeIcons.solidHeart
-                        : FontAwesomeIcons.heart, color: CustomColor.MAIN,),
-                    visualDensity: VisualDensity.compact,
-                  );
+              child: CustomWidget.showShimmer(
+                child: Container(
+                  color: Colors.white,
+                  height: 40,
+                  width: 40,
+                ),
+              ),
+              builder: (context, provider, skeleton) {
+                switch (_isLoad) {
+                  case true:
+                    return skeleton!;
+                  default:
+                    switch (provider.isWishlist) {
+                      case true:
+                        return IconButton(
+                          onPressed: () async => await provider.fnStoreWishlist(provider.scaffoldKey.currentContext!),
+                          icon: Icon(FontAwesomeIcons.solidHeart, color: CustomColor.MAIN,),
+                          visualDensity: VisualDensity.compact,
+                        );
+                      default:
+                        return IconButton(
+                          onPressed: () async => await provider.fnStoreWishlist(provider.scaffoldKey.currentContext!),
+                          icon: Icon(FontAwesomeIcons.heart, color: CustomColor.MAIN,),
+                          visualDensity: VisualDensity.compact,
+                        );
+                    }
                 }
+              },
             ),
             SizedBox(width: 5,),
-            Expanded(
-              child: CustomWidget.roundOutlinedBtn(
-                label: AppLocalizations.instance.text('TXT_CART_ADD'),
-                lblColor: CustomColor.MAIN,
-                btnColor: CustomColor.MAIN,
-                function: () async {
-                  await _provider.fnStoreCart(_provider.scaffoldKey.currentContext!)
-                      .then((_) async => await _baseProvider.fnGetCartCount());
-                  setState(() {});
-                },
+            Consumer<ProductDetailProvider>(
+              child: Flexible(
+                child: CustomWidget.showShimmer(
+                  child: Container(
+                    color: Colors.white,
+                    height: 40,
+                    width: MediaQuery.of(context).size.width,
+                  ),
+                ),
               ),
-            ),
-            SizedBox(width: 5,),
-            Expanded(
-              child: CustomWidget.roundBtn(
-                label: AppLocalizations.instance.text('TXT_LBL_BUY_NOW'),
-                btnColor: CustomColor.MAIN,
-                lblColor: Colors.white,
-                function: () => Get.toNamed(DeliveryScreen.tag, arguments: DeliveryScreen(
-                  product: _provider.product,
-                  isCart: false,
-                )),
-              ),
+              builder: (context, provider, skeleton) {
+                switch (_isLoad) {
+                  case true:
+                    return skeleton!;
+                  default:
+                    switch (provider.product.data?.stock) {
+                      case 0:
+                        return Expanded(
+                          child: CustomWidget.roundBtn(
+                            label: AppLocalizations.instance.text('TXT_SOLD_OUT'),
+                            btnColor: CustomColor.GREY_TXT,
+                            lblColor: Colors.white,
+                            function: () {},
+                          ),
+                        );
+                      default:
+                        return Flexible(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: CustomWidget.roundOutlinedBtn(
+                                  label: AppLocalizations.instance.text('TXT_CART_ADD'),
+                                  lblColor: CustomColor.MAIN,
+                                  btnColor: CustomColor.MAIN,
+                                  function: () async {
+                                    await _provider.fnStoreCart(_provider.scaffoldKey.currentContext!)
+                                        .then((_) async => await _baseProvider.fnGetCartCount());
+                                    setState(() {});
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: 5,),
+                              Expanded(
+                                child: CustomWidget.roundBtn(
+                                  label: AppLocalizations.instance.text('TXT_LBL_BUY_NOW'),
+                                  btnColor: CustomColor.MAIN,
+                                  lblColor: Colors.white,
+                                  function: () => Get.toNamed(DeliveryScreen.tag, arguments: DeliveryScreen(
+                                    product: _provider.product,
+                                    isCart: false,
+                                  )),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                    }
+                }
+              },
             ),
           ],
         ),
       ),
     );
 
-    Widget _bottomMenuDisabledContent = SafeArea(
-      child: Container(
-        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(width: 0.5, color: CustomColor.GREY_ICON),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Consumer<ProductDetailProvider>(
-                builder: (context, provider, _) {
-                  return IconButton(
-                    onPressed: () async => await provider.fnStoreWishlist(provider.scaffoldKey.currentContext!),
-                    icon: Icon(provider.isWishlist
-                        ? FontAwesomeIcons.solidHeart
-                        : FontAwesomeIcons.heart, color: CustomColor.MAIN,),
-                    visualDensity: VisualDensity.compact,
-                  );
-                }
-            ),
-            SizedBox(width: 10,),
-            Expanded(
-              child: CustomWidget.roundBtn(
-                label: AppLocalizations.instance.text('TXT_SOLD_OUT'),
-                btnColor: CustomColor.GREY_TXT,
-                lblColor: Colors.white,
-                function: () {},
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    // Widget _bottomMenuDisabledContent = SafeArea(
+    //   child: Container(
+    //     padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+    //     decoration: BoxDecoration(
+    //       border: Border(
+    //         top: BorderSide(width: 0.5, color: CustomColor.GREY_ICON),
+    //       ),
+    //     ),
+    //     child: Row(
+    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //       children: [
+    //         Consumer<ProductDetailProvider>(
+    //             builder: (context, provider, _) {
+    //               return IconButton(
+    //                 onPressed: () async => await provider.fnStoreWishlist(provider.scaffoldKey.currentContext!),
+    //                 icon: Icon(provider.isWishlist
+    //                     ? FontAwesomeIcons.solidHeart
+    //                     : FontAwesomeIcons.heart, color: CustomColor.MAIN,),
+    //                 visualDensity: VisualDensity.compact,
+    //               );
+    //             }
+    //         ),
+    //         SizedBox(width: 10,),
+    //         Expanded(
+    //           child: CustomWidget.roundBtn(
+    //             label: AppLocalizations.instance.text('TXT_SOLD_OUT'),
+    //             btnColor: CustomColor.GREY_TXT,
+    //             lblColor: Colors.white,
+    //             function: () {},
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
 
     return Scaffold(
       key: _provider.scaffoldKey,
@@ -557,16 +612,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
         ],
       ),
       body: _mainContent,
-      bottomNavigationBar: Consumer<ProductDetailProvider>(
-        builder: (context, provider, _) {
-          switch (provider.product.data?.stock) {
-            case 0:
-              return _bottomMenuDisabledContent;
-            default:
-              return _bottomMenuContent;
-          }
-        }
-      ),
+      bottomNavigationBar: _bottomMenuContent,
     );
   }
 
