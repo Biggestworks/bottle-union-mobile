@@ -10,6 +10,8 @@ import 'package:eight_barrels/screen/transaction/track_order_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -41,6 +43,153 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
   @override
   Widget build(BuildContext context) {
     final _provider = Provider.of<TransactionDetailProvider>(context, listen: false);
+
+    _showRatingSheet() {
+      return CustomWidget.showSheet(
+        context: context,
+        isScroll: true,
+        isRounded: true,
+        child: ChangeNotifierProvider.value(
+          value: Provider.of<TransactionDetailProvider>(context, listen: false),
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.95,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            padding: EdgeInsets.all(10),
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                elevation: 0,
+                backgroundColor: Colors.white,
+                centerTitle: false,
+                iconTheme: IconThemeData(
+                  color: Colors.black,
+                ),
+                title: Text(AppLocalizations.instance.text('TXT_REVIEW'), style: TextStyle(
+                  color: Colors.black,
+                ),),
+              ),
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 30),
+                      child: RatingBar.builder(
+                        initialRating: _provider.starRating,
+                        minRating: 1,
+                        direction: Axis.horizontal,
+                        itemCount: 5,
+                        itemPadding: EdgeInsets.symmetric(horizontal: 10),
+                        glow: true,
+                        itemBuilder: (context, _) => Icon(
+                          FontAwesomeIcons.solidStar,
+                          color: CustomColor.MAIN,
+                        ),
+                        onRatingUpdate: _provider.fnOnChangeRating,
+                      ),
+                    ),
+                    Consumer<TransactionDetailProvider>(
+                      builder: (context, provider, _) {
+                        return provider.fnGetRatingInfo(context);
+                      }
+                    ),
+                    SizedBox(height: 30,),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(AppLocalizations.instance.text('TXT_REVIEW_PHOTO'), style: TextStyle(
+                          color: CustomColor.GREY_TXT,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),),
+                        SizedBox(height: 10,),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: CustomColor.GREY_BG, width: 2)
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.camera_alt),
+                              SizedBox(width: 10,),
+                              Text(AppLocalizations.instance.text('TXT_ADD_PHOTO'), style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 30,),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(AppLocalizations.instance.text('TXT_REVIEW_COMMENT'), style: TextStyle(
+                          color: CustomColor.GREY_TXT,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),),
+                        SizedBox(height: 10,),
+                        TextFormField(
+                          controller: _provider.commentController,
+                          autofocus: false,
+                          maxLines: 6,
+                          maxLength: 200,
+                          cursorColor: CustomColor.MAIN,
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            hintText: AppLocalizations.instance.text("TXT_REVIEW_COMMENT_INFO"),
+                            hintStyle: TextStyle(
+                              color: Colors.grey,
+                            ),
+                            contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide(color: CustomColor.GREY_BG, width: 2),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide(color: CustomColor.GREY_BG, width: 2),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide(color: CustomColor.GREY_BG, width: 2),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              bottomNavigationBar: SafeArea(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  // padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: CustomWidget.roundBtn(
+                    label: AppLocalizations.instance.text('TXT_SAVE_REVIEW'),
+                    btnColor: CustomColor.MAIN,
+                    lblColor: Colors.white,
+                    isBold: true,
+                    radius: 10,
+                    fontSize: 16,
+                    function: () {},
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
 
     Widget _orderInfoContent = Consumer<TransactionDetailProvider>(
         child: Container(),
@@ -437,18 +586,18 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                           ),
                         );
                       case 6:
-                        // return Container(
-                        //   width: MediaQuery.of(context).size.width,
-                        //   child: CustomWidget.roundOutlinedBtn(
-                        //     label: AppLocalizations.instance.text('TXT_REVIEW'),
-                        //     btnColor: CustomColor.MAIN,
-                        //     lblColor: CustomColor.MAIN,
-                        //     isBold: true,
-                        //     radius: 8,
-                        //     fontSize: 16,
-                        //     function: () => Get.toNamed(ReviewInputScreen.tag),
-                        //   ),
-                        // );
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: CustomWidget.roundOutlinedBtn(
+                            label: AppLocalizations.instance.text('TXT_REVIEW'),
+                            btnColor: CustomColor.MAIN,
+                            lblColor: CustomColor.MAIN,
+                            isBold: true,
+                            radius: 8,
+                            fontSize: 16,
+                            function: () => _showRatingSheet(),
+                          ),
+                        );
                       default:
                         return skeleton!;
                     }

@@ -2,6 +2,7 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/abstract/product_log.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/key_helper.dart';
+import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/product/discussion_list_model.dart';
 import 'package:eight_barrels/model/product/product_detail_model.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
@@ -24,8 +25,12 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
   ProductDetailModel product = new ProductDetailModel();
   DiscussionListModel discussionList = new DiscussionListModel();
 
+  UserPreferences _userPreferences = new UserPreferences();
+
   bool isWishlist = false;
   int? id;
+  bool isRegionSelected = false;
+  int? selectedRegionId;
 
   LoadingView? _view;
 
@@ -142,6 +147,17 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
 
   fnConvertHtmlString(String text) {
     return parse(text).documentElement?.text;
+  }
+
+  Future fnGetSelectedRegionProduct() async {
+    var _data = await _userPreferences.getUserData();
+    selectedRegionId = _data?.region?.id;
+    notifyListeners();
+  }
+
+  fnOnSelectRegionProduct(int value) {
+    this.selectedRegionId = value;
+    notifyListeners();
   }
 
 }

@@ -141,13 +141,22 @@ class _CartListScreenState extends State<CartListScreen>
                                                     children: [
                                                       IconButton(
                                                         onPressed: () async {
-                                                          await fnStoreLog(
-                                                            productId: [_data.id ?? 0],
-                                                            categoryId: null,
-                                                            notes: KeyHelper.REMOVE_CART_KEY,
+                                                          CustomWidget.showCartConfirmationDialog(
+                                                            context,
+                                                            desc: 'Are you sure you want to delete this item from cart?',
+                                                            fnDeleteCart: () async {
+                                                              await fnStoreLog(
+                                                                productId: [_data.id ?? 0],
+                                                                categoryId: null,
+                                                                notes: KeyHelper.REMOVE_CART_KEY,
+                                                              );
+                                                              await provider.fnDeleteCart(_provider.scaffoldKey.currentContext!, _data.id!)
+                                                                  .then((_) async => await _baseProvider.fnGetCartCount());
+                                                            },
+                                                            fnStoreWishlist: () async {
+
+                                                            },
                                                           );
-                                                          await provider.fnDeleteCart(_provider.scaffoldKey.currentContext!, _data.id!)
-                                                              .then((_) async => await _baseProvider.fnGetCartCount());
                                                         },
                                                         icon: Icon(FontAwesomeIcons.trashAlt, size: 20, color: CustomColor.GREY_TXT,),
                                                         visualDensity: VisualDensity.compact,

@@ -570,4 +570,89 @@ class CustomWidget {
     );
   }
 
+  static showCartConfirmationDialog(
+      BuildContext context, {
+        String desc = '',
+        required void fnDeleteCart(),
+        required void fnStoreWishlist(),
+      }) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          insetPadding: EdgeInsets.symmetric(horizontal: 10),
+          contentPadding: EdgeInsets.fromLTRB(20, 20, 20, 5),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10))
+          ),
+          content: new Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Flexible(
+                child: Text(desc, style: TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.black,
+                ),),
+              ),
+              SizedBox(height: 20,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),),
+                        side: BorderSide(
+                          color: CustomColor.MAIN,
+                        ),
+                      ),
+                      onPressed: () => fnStoreWishlist(),
+                      child: Text('Go to Wishlist', style: TextStyle(
+                        color: CustomColor.MAIN,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ), textAlign: TextAlign.center,),
+                    ),
+                  ),
+                  SizedBox(width: 10,),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),),
+                        primary: CustomColor.MAIN,
+                      ),
+                      onPressed: () => fnDeleteCart(),
+                      child: Text('Delete', style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ), textAlign: TextAlign.center,),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          // actions: [
+          //   TextButton(
+          //     child: Text(AppLocalizations.instance.text('TXT_CANCEL'), style: TextStyle(color: Colors.redAccent,),
+          //     ),
+          //     onPressed: () => Get.back(),
+          //   ),
+          //   TextButton(
+          //     child: Text(AppLocalizations.instance.text('TXT_YES'), style: TextStyle(color: Colors.green),
+          //     ),
+          //     onPressed: () {
+          //       Get.back();
+          //       function();
+          //     },
+          //   ),
+          // ],
+        );
+      },
+    );
+  }
+
 }

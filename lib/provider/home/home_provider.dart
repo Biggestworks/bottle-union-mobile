@@ -3,10 +3,12 @@ import 'package:eight_barrels/abstract/product_card_interface.dart';
 import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/helper/push_notification_manager.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
+import 'package:eight_barrels/model/address/address_list_model.dart' as address;
 import 'package:eight_barrels/model/auth/user_detail_model.dart';
 import 'package:eight_barrels/model/banner/banner_list_model.dart';
 import 'package:eight_barrels/model/product/category_model.dart';
 import 'package:eight_barrels/model/product/popular_product_list_model.dart';
+import 'package:eight_barrels/service/address/address_service.dart';
 import 'package:eight_barrels/service/banner/banner_service.dart';
 import 'package:eight_barrels/service/product/product_service.dart';
 import 'package:flutter/material.dart';
@@ -20,11 +22,14 @@ class HomeProvider extends ChangeNotifier
 
   BannerService _bannerService = new BannerService();
   ProductService _productService = new ProductService();
+  AddressService _addressService = new AddressService();
 
   CategoryListModel categoryList = new CategoryListModel();
   BannerListModel bannerList = new BannerListModel();
   PopularProductListModel popularProductList = new PopularProductListModel();
   PopularProductListModel regionProductList = new PopularProductListModel();
+  address.AddressListModel addressList = new address.AddressListModel();
+  address.Data? selectedAddress;
 
   final _storage = new FlutterSecureStorage();
   PushNotificationManager _pushNotificationManager = new PushNotificationManager();
@@ -97,6 +102,14 @@ class HomeProvider extends ChangeNotifier
     String _token = await _storage.read(key: KeyHelper.KEY_FCM_TOKEN) ?? '';
     if (_token.isEmpty)
       await _pushNotificationManager.saveFcmToken();
+  }
+
+  Future fnFetchAddressList() async {
+    addressList = (await _addressService.getAddress())!;
+    if (addressList.data != null && addressList.data?.length != 0) {
+      selectedAddress = addressList.data!.firstWhere((item) => item.isChoosed == 1, orElse: null);
+    }
+    notifyListeners();
   }
 
   @override

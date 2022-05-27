@@ -24,6 +24,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_links/uni_links.dart';
 
@@ -100,6 +101,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
       Provider.of<HomeProvider>(context, listen: false).fnFetchCategoryList();
       Provider.of<HomeProvider>(context, listen: false).fnFetchPopularProductList();
       Provider.of<HomeProvider>(context, listen: false).fnSaveFcmToken();
+      Provider.of<HomeProvider>(context, listen: false).fnFetchAddressList();
       PushNotificationManager().initFCM();
       _initURIHandler();
       _incomingLinkHandler();
@@ -118,6 +120,139 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
   @override
   Widget build(BuildContext context) {
     final _provider = Provider.of<HomeProvider>(context, listen: false);
+
+    Widget _memberCardContent = Container(
+      width: MediaQuery.of(context).size.width,
+      height: 150,
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(MdiIcons.starCircle, color: Colors.orangeAccent, size: 32,),
+                      SizedBox(width: 5,),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Status', style: TextStyle(
+                            color: CustomColor.BROWN_TXT,
+                            // fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),),
+                          SizedBox(height: 4,),
+                          Text('Gold Member', style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text('Bottle Points', style: TextStyle(
+                        color: CustomColor.BROWN_TXT,
+                        // fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),),
+                      SizedBox(height: 4,),
+                      Text('1,250 pts', style: TextStyle(
+                        color: CustomColor.GREY_TXT,
+                        fontWeight: FontWeight.bold,
+                      ),),
+                    ],
+                  ),
+                ],
+              ),
+              Divider(
+                color: CustomColor.GREY_ICON,
+                thickness: 1,
+              ),
+              Flexible(
+                child: Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          children: [
+                            Text(AppLocalizations.instance.text('TXT_DELIVERY_TO'), style: TextStyle(
+                              // fontWeight: FontWeight.bold,
+                              color: CustomColor.BROWN_TXT,
+                            ),),
+                            SizedBox(width: 4,),
+                            Icon(Icons.keyboard_arrow_down, size: 16,)
+                          ],
+                        ),
+                        SizedBox(height: 2,),
+                        Consumer<HomeProvider>(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(AppLocalizations.instance.text('TXT_NO_ADDRESS_INFO'), style: TextStyle(
+                                  color: CustomColor.GREY_TXT,
+                                  fontSize: 12,
+                                ),),
+                                Flexible(
+                                  child: Text(AppLocalizations.instance.text('TXT_ADD_NOW'), style: TextStyle(
+                                    color: CustomColor.BROWN_TXT,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),),
+                                ),
+                              ],
+                            ),
+                            builder: (context, provider, skeleton) {
+                              switch (provider.selectedAddress) {
+                                case null:
+                                  return skeleton!;
+                                default:
+                                  var _data = provider.selectedAddress;
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(_data?.receiver ?? '-', style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),),
+                                      SizedBox(height: 2,),
+                                      Text(_data?.address ?? '-', style: TextStyle(
+                                        color: CustomColor.GREY_TXT,
+                                        fontSize: 12,
+                                      ), maxLines: 1, overflow: TextOverflow.ellipsis,),
+                                    ],
+                                  );
+                              }
+                            }
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
 
     Widget _bannerContent = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,7 +321,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
                                       banner: i,
                                     )),
                                     child: Card(
-                                      elevation: 4,
+                                      elevation: 2,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
                                       ),
@@ -626,27 +761,33 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
     // );
 
     Widget _menuContent = SliverToBoxAdapter(
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 20),
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(30),
-            topLeft: Radius.circular(30),
+      child: Stack(
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 50),
+            padding: EdgeInsets.only(top: 90, bottom: 20),
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(30),
+                topLeft: Radius.circular(30),
+              ),
+              color: CustomColor.BG,
+            ),
+            child: Column(
+              children: [
+                _bannerContent,
+                SizedBox(height: 40,),
+                _categoryContent,
+                SizedBox(height: 20,),
+                _regionalProductContent,
+                SizedBox(height: 20,),
+                _popularProductContent,
+              ],
+            ),
           ),
-          color: CustomColor.BG,
-        ),
-        child: Column(
-          children: [
-            _bannerContent,
-            SizedBox(height: 40,),
-            _categoryContent,
-            SizedBox(height: 20,),
-            _regionalProductContent,
-            SizedBox(height: 20,),
-            _popularProductContent,
-          ],
-        ),
+          _memberCardContent,
+        ],
       ),
     );
 
@@ -676,7 +817,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
                 ),
               ),
             ],
-            expandedHeight: 150,
+            expandedHeight: 80,
             floating: false,
             pinned: true,
             snap: false,

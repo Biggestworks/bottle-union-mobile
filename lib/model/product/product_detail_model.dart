@@ -49,6 +49,7 @@ class Data {
   String? createdAt;
   String? updatedAt;
   String? deletedAt;
+  List<ProductRegion>? productRegion;
   Categories? categories;
   Brand? brand;
 
@@ -79,6 +80,7 @@ class Data {
         this.createdAt,
         this.updatedAt,
         this.deletedAt,
+        this.productRegion,
         this.categories,
         this.brand});
 
@@ -109,6 +111,12 @@ class Data {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     deletedAt = json['deleted_at'];
+    if (json['product_region'] != null) {
+      productRegion = <ProductRegion>[];
+      json['product_region'].forEach((v) {
+        productRegion!.add(new ProductRegion.fromJson(v));
+      });
+    }
     categories = json['categories'] != null
         ? new Categories.fromJson(json['categories'])
         : null;
@@ -143,12 +151,63 @@ class Data {
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['deleted_at'] = this.deletedAt;
+    if (this.productRegion != null) {
+      data['product_region'] =
+          this.productRegion!.map((v) => v.toJson()).toList();
+    }
     if (this.categories != null) {
       data['categories'] = this.categories!.toJson();
     }
     if (this.brand != null) {
       data['brand'] = this.brand!.toJson();
     }
+    return data;
+  }
+}
+
+class ProductRegion {
+  int? idProduct;
+  int? idRegion;
+  int? stock;
+  Region? region;
+
+  ProductRegion({this.idProduct, this.idRegion, this.stock, this.region});
+
+  ProductRegion.fromJson(Map<String, dynamic> json) {
+    idProduct = json['id_product'];
+    idRegion = json['id_region'];
+    stock = json['stock'];
+    region =
+    json['region'] != null ? new Region.fromJson(json['region']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id_product'] = this.idProduct;
+    data['id_region'] = this.idRegion;
+    data['stock'] = this.stock;
+    if (this.region != null) {
+      data['region'] = this.region!.toJson();
+    }
+    return data;
+  }
+}
+
+class Region {
+  int? id;
+  String? name;
+
+  Region({this.id, this.name});
+
+  Region.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
     return data;
   }
 }

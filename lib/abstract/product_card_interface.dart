@@ -158,16 +158,16 @@ abstract class ProductCardInterface {
                           color: CustomColor.MAIN_TXT,
                         ),),
                       ),
-                      SizedBox(height: index.isEven ? 25 : 45,),
+                      SizedBox(height: index.isEven ? 15 : 35,),
                       Flexible(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(
-                              child: Text('Stock: ${data.stock ?? '0'}', style: TextStyle(
-                                color: CustomColor.GREY_TXT,
-                              ),),
-                            ),
+                            // Expanded(
+                            //   child: Text('Stock: ${data.stock ?? '0'}', style: TextStyle(
+                            //     color: CustomColor.GREY_TXT,
+                            //   ),),
+                            // ),
                             Expanded(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
@@ -177,7 +177,7 @@ abstract class ProductCardInterface {
                                       await storeCartLog();
                                       await fnStoreCart(context, data.id!).then((_) => onUpdateCart());
                                     },
-                                    child: Icon(FontAwesomeIcons.shoppingCart, color: CustomColor.GREY_ICON, size: 18,),
+                                    child: Icon(FontAwesomeIcons.cartShopping, color: CustomColor.GREY_ICON, size: 18,),
                                   ),
                                   SizedBox(width: 15,),
                                   GestureDetector(
@@ -200,10 +200,6 @@ abstract class ProductCardInterface {
             ),
           ),
         ),
-        // Positioned(
-        //   right: 0,
-        //   child: Image.asset('assets/images/ic_new.png', ),
-        // ),
       ],
     );
   }
@@ -312,23 +308,23 @@ abstract class ProductCardInterface {
                       color: CustomColor.MAIN_TXT,
                     ),),
                   ),
-                  SizedBox(height: index.isEven ? 25 : 45,),
+                  SizedBox(height: index.isEven ? 15 : 35,),
                   Flexible(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(
-                          child: Text('${AppLocalizations.instance.text('TXT_SOLD_OUT')}', style: TextStyle(
-                            color: Colors.red,
-                          ),),
-                        ),
+                        // Expanded(
+                        //   child: Text('${AppLocalizations.instance.text('TXT_SOLD_OUT')}', style: TextStyle(
+                        //     color: Colors.red,
+                        //   ),),
+                        // ),
                         Expanded(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               GestureDetector(
                                 onTap: () {},
-                                child: Icon(FontAwesomeIcons.shoppingCart, color: CustomColor.GREY_ICON, size: 18,),
+                                child: Icon(FontAwesomeIcons.cartShopping, color: CustomColor.GREY_ICON, size: 18,),
                               ),
                               SizedBox(width: 15,),
                               GestureDetector(
@@ -456,7 +452,7 @@ abstract class ProductCardInterface {
                                       await storeCartLog();
                                       await fnStoreCart(context, data.id!).then((_) => onUpdateCart());
                                     },
-                                    child: Icon(FontAwesomeIcons.shoppingCart, color: CustomColor.GREY_ICON, size: 18,),
+                                    child: Icon(FontAwesomeIcons.cartShopping, color: CustomColor.GREY_ICON, size: 18,),
                                   ),
                                   SizedBox(width: 15,),
                                   GestureDetector(
@@ -608,7 +604,7 @@ abstract class ProductCardInterface {
                             children: [
                               GestureDetector(
                                 onTap: () {},
-                                child: Icon(FontAwesomeIcons.shoppingCart, color: CustomColor.GREY_ICON, size: 18,),
+                                child: Icon(FontAwesomeIcons.cartShopping, color: CustomColor.GREY_ICON, size: 18,),
                               ),
                               SizedBox(width: 15,),
                               GestureDetector(

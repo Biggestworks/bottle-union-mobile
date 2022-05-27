@@ -21,8 +21,8 @@ class ReviewService extends GetConnect {
   }
 
   Future<DefaultModel?> storeReview({
-    int? productId,
-    int? rating,
+    required int productId,
+    required int rating,
     String? comment,
     File? image1,
     File? image2,

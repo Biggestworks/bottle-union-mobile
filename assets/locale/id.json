@@ -191,7 +191,23 @@
 	"TXT_SHOP_NOW": "Belanja Sekarang",
 	"TXT_SHOW_INTRO_INFO": "Selamat datang di Bottle Union App, mari kita tur singkat",
 	"TXT_NO_BANNER_INFO": "Oops, belum ada info & promo untuk Kamu",
-
+	"TXT_STAR_REVIEW_1": "Tidak disarankan",
+	"TXT_STAR_REVIEW_2": "Kurang",
+	"TXT_STAR_REVIEW_3": "Biasa-biasa saja",
+	"TXT_STAR_REVIEW_4": "Rasanya enak",
+	"TXT_STAR_REVIEW_5": "Luar Biasa!",
+	"TXT_REVIEW_COMMENT_INFO": "Bagaimana menurutmu tentang produk ini?",
+	"TXT_REVIEW_PHOTO_INFO": "Tambah foto untuk ulasan produk ini (Max 3)",
+	"TXT_SAVE_REVIEW": "Simpan Ulasan",
+	"TXT_ADD_PHOTO": "Tambah Foto",
+	"TXT_SELECT_PRODUCT_REGION": "Pilih Wilayah Produk:",
+	"TXT_PRODUCT_DISCUSSION": "Diskusi Produk",
+	"TXT_ALL_DISCUSSION": "Lihat semua diskusi",
+	"TXT_DELIVERY_TO": "Dikirim ke",
+	"TXT_NO_ADDRESS_INFO": "Kamu belum mempunyai alamat pengiriman",
+	"TXT_ADD_NOW": "Tambah sekarang",
+	"TXT_NO_PRODUCT_REGION": "Produk tidak tersedia di wilayah manapun",
+	"TXT_SELECT_PRODUCT_REGION_INFO": "Pastikan memilih wilayah yang tersedia & terdekat dari wilayah Anda (dapat mempengaruhi biaya pengiriman).",
 
 
 
