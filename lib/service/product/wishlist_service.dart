@@ -19,11 +19,13 @@ class WishlistService extends GetConnect {
 
   Future<WishlistModel?> storeWishlist({
     required int productId,
+    required int regionId,
   }) async {
     WishlistModel _model = new WishlistModel();
 
     final Map<String, dynamic> _data = {
       "id_product": productId,
+      "id_region": regionId,
       "flag": 'wishlist',
     };
 

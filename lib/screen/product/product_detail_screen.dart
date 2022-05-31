@@ -51,117 +51,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
     final _provider = Provider.of<ProductDetailProvider>(context, listen: false);
     final _baseProvider = Provider.of<BaseHomeProvider>(context, listen: false);
 
-    Widget _bottomMenuContent = SafeArea(
-      child: Container(
-        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(width: 2, color: CustomColor.GREY_BG),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Consumer<ProductDetailProvider>(
-              child: CustomWidget.showShimmer(
-                child: Container(
-                  color: Colors.white,
-                  height: 40,
-                  width: 40,
-                ),
-              ),
-              builder: (context, provider, skeleton) {
-                switch (_isLoad) {
-                  case true:
-                    return skeleton!;
-                  default:
-                    switch (provider.isWishlist) {
-                      case true:
-                        return IconButton(
-                          onPressed: () async => await provider.fnStoreWishlist(provider.scaffoldKey.currentContext!),
-                          icon: Icon(FontAwesomeIcons.solidHeart, color: CustomColor.MAIN,),
-                          visualDensity: VisualDensity.compact,
-                        );
-                      default:
-                        return IconButton(
-                          onPressed: () async => await provider.fnStoreWishlist(provider.scaffoldKey.currentContext!),
-                          icon: Icon(FontAwesomeIcons.heart, color: CustomColor.MAIN,),
-                          visualDensity: VisualDensity.compact,
-                        );
-                    }
-                }
-              },
-            ),
-            SizedBox(width: 5,),
-            Consumer<ProductDetailProvider>(
-              child: Flexible(
-                child: CustomWidget.showShimmer(
-                  child: Container(
-                    color: Colors.white,
-                    height: 40,
-                    width: MediaQuery.of(context).size.width,
-                  ),
-                ),
-              ),
-              builder: (context, provider, skeleton) {
-                switch (_isLoad) {
-                  case true:
-                    return skeleton!;
-                  default:
-                    switch (provider.product.data?.stock) {
-                      case 0:
-                        return Expanded(
-                          child: CustomWidget.roundBtn(
-                            label: AppLocalizations.instance.text('TXT_SOLD_OUT'),
-                            btnColor: CustomColor.GREY_TXT,
-                            lblColor: Colors.white,
-                            function: () {},
-                          ),
-                        );
-                      default:
-                        return Flexible(
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: CustomWidget.roundOutlinedBtn(
-                                  label: AppLocalizations.instance.text('TXT_CART_ADD'),
-                                  lblColor: CustomColor.MAIN,
-                                  btnColor: CustomColor.MAIN,
-                                  isBold: true,
-                                  radius: 5,
-                                  function: () async {
-                                    await _provider.fnStoreCart(_provider.scaffoldKey.currentContext!)
-                                        .then((_) async => await _baseProvider.fnGetCartCount());
-                                    setState(() {});
-                                  },
-                                ),
-                              ),
-                              SizedBox(width: 5,),
-                              Expanded(
-                                child: CustomWidget.roundBtn(
-                                  label: AppLocalizations.instance.text('TXT_LBL_BUY_NOW'),
-                                  btnColor: CustomColor.MAIN,
-                                  lblColor: Colors.white,
-                                  isBold: true,
-                                  radius: 5,
-                                  function: () => Get.toNamed(DeliveryScreen.tag, arguments: DeliveryScreen(
-                                    product: _provider.product,
-                                    isCart: false,
-                                  )),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                    }
-                }
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-
     _showProductRegionSheet(Data? data) {
       return CustomWidget.showSheet(
         context: context,
@@ -170,7 +59,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
         child: ChangeNotifierProvider.value(
           value: Provider.of<ProductDetailProvider>(context, listen: false),
           child: Container(
-            height: MediaQuery.of(context).size.height * 0.7,
+            height: MediaQuery.of(context).size.height * 0.95,
             decoration: BoxDecoration(
               color: CustomColor.BG,
               borderRadius: BorderRadius.only(
@@ -185,9 +74,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                 backgroundColor: CustomColor.BG,
                 elevation: 0,
                 centerTitle: false,
-                title: Text(AppLocalizations.instance.text('TXT_SELECT_PRODUCT_REGION'), style: TextStyle(
+                title: Text(AppLocalizations.instance.text('TXT_PRODUCT_REGION'), style: TextStyle(
                   color: Colors.black,
-                  fontSize: 16,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),),
                 leading: GestureDetector(
@@ -235,12 +124,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                                   return Text(AppLocalizations.instance.text('TXT_NO_PRODUCT_REGION'));
                                 default:
                                   return GridView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
                                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 2,
-                                      childAspectRatio: 5,
-                                      mainAxisSpacing: 10,
+                                      childAspectRatio: 4.5,
+                                      mainAxisSpacing: 20,
+                                      crossAxisSpacing: 10,
                                     ),
                                     itemCount: data?.productRegion?.length,
                                     itemBuilder: (context, index) {
@@ -248,10 +137,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                                       switch (_productRegion?.stock) {
                                         case 0:
                                           return Container(
-                                            margin: EdgeInsets.only(right: 10, left: index == 0 ? 10 : 0),
                                             decoration: BoxDecoration(
                                                 color: CustomColor.GREY_ICON,
-                                                borderRadius: BorderRadius.circular(20),
+                                                borderRadius: BorderRadius.circular(15),
                                                 border: Border.all(color: CustomColor.GREY_BG)
                                             ),
                                             child: Center(
@@ -264,12 +152,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                                           return GestureDetector(
                                             onTap: () async => await provider.fnOnSelectRegionProduct(_productRegion?.idRegion ?? 1),
                                             child: Container(
-                                              margin: EdgeInsets.only(right: 10, left: index == 0 ? 10 : 0),
                                               decoration: BoxDecoration(
                                                 color: provider.selectedRegionId == _productRegion?.idRegion
                                                     ? CustomColor.MAIN
                                                     : Colors.transparent,
-                                                borderRadius: BorderRadius.circular(20),
+                                                borderRadius: BorderRadius.circular(15),
                                                 border: Border.all(color: CustomColor.GREY_BG, width: 2),
                                               ),
                                               child: Row(
@@ -301,12 +188,238 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                   ],
                 ),
               ),
-              bottomNavigationBar: _bottomMenuContent,
+              bottomNavigationBar: SafeArea(
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      top: BorderSide(width: 2, color: CustomColor.GREY_BG),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Consumer<ProductDetailProvider>(
+                        child: CustomWidget.showShimmer(
+                          child: Container(
+                            color: Colors.white,
+                            height: 40,
+                            width: 40,
+                          ),
+                        ),
+                        builder: (context, provider, skeleton) {
+                          switch (_isLoad) {
+                            case true:
+                              return skeleton!;
+                            default:
+                              return IconButton(
+                                onPressed: () async {
+                                  Get.back();
+                                  if (provider.selectedRegionId != null) {
+                                    await provider.fnStoreWishlist(provider.scaffoldKey.currentContext!);
+                                  } else {
+                                    await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_NO_PRODUCT_REGION_SELECTED')));
+                                  }
+                                },
+                                icon: Icon(provider.isWishlist
+                                    ? FontAwesomeIcons.solidHeart
+                                    : FontAwesomeIcons.heart, color: CustomColor.MAIN,),
+                                visualDensity: VisualDensity.compact,
+                              );
+                          }
+                        },
+                      ),
+                      SizedBox(width: 5,),
+                      Consumer<ProductDetailProvider>(
+                        child: Flexible(
+                          child: CustomWidget.showShimmer(
+                            child: Container(
+                              color: Colors.white,
+                              height: 40,
+                              width: MediaQuery.of(context).size.width,
+                            ),
+                          ),
+                        ),
+                        builder: (context, provider, skeleton) {
+                          switch (_isLoad) {
+                            case true:
+                              return skeleton!;
+                            default:
+                              return Flexible(
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: CustomWidget.roundOutlinedBtn(
+                                        label: AppLocalizations.instance.text('TXT_CART_ADD'),
+                                        lblColor: CustomColor.MAIN,
+                                        btnColor: CustomColor.MAIN,
+                                        isBold: true,
+                                        radius: 5,
+                                        function: () async {
+                                          Get.back();
+                                          if (provider.selectedRegionId != null) {
+                                            await _provider.fnStoreCart(_provider.scaffoldKey.currentContext!)
+                                                .then((_) async => await _baseProvider.fnGetCartCount());
+                                            setState(() {});
+                                          } else {
+                                            await CustomWidget.showSnackBar(context: context, content: Text('Please select product region'));
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(width: 5,),
+                                    Expanded(
+                                      child: CustomWidget.roundBtn(
+                                        label: AppLocalizations.instance.text('TXT_LBL_BUY_NOW'),
+                                        btnColor: CustomColor.MAIN,
+                                        lblColor: Colors.white,
+                                        isBold: true,
+                                        radius: 5,
+                                        function: () async {
+                                          Get.back();
+                                          if (provider.selectedRegionId != null) {
+                                            Get.toNamed(DeliveryScreen.tag, arguments: DeliveryScreen(
+                                              product: _provider.product,
+                                              isCart: false,
+                                              selectedRegionId: provider.selectedRegionId,
+                                            ));
+                                          } else {
+                                            await CustomWidget.showSnackBar(context: context, content: Text('Please select product region'));
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
         ),
       );
     }
+
+    Widget _bottomMenuContent = SafeArea(
+      child: Container(
+        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(width: 2, color: CustomColor.GREY_BG),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Consumer<ProductDetailProvider>(
+              child: CustomWidget.showShimmer(
+                child: Container(
+                  color: Colors.white,
+                  height: 40,
+                  width: 40,
+                ),
+              ),
+              builder: (context, provider, skeleton) {
+                switch (_isLoad) {
+                  case true:
+                    return skeleton!;
+                  default:
+                    switch (provider.product.data) {
+                      case null:
+                        return skeleton!;
+                      default:
+                        return IconButton(
+                          onPressed: () async => _showProductRegionSheet(_provider.product.data),
+                          icon: Icon(provider.isWishlist
+                              ? FontAwesomeIcons.solidHeart
+                              : FontAwesomeIcons.heart, color: CustomColor.MAIN,),
+                          visualDensity: VisualDensity.compact,
+                        );
+                    }
+                }
+              },
+            ),
+            SizedBox(width: 5,),
+            Consumer<ProductDetailProvider>(
+              child: Flexible(
+                child: CustomWidget.showShimmer(
+                  child: Container(
+                    color: Colors.white,
+                    height: 40,
+                    width: MediaQuery.of(context).size.width,
+                  ),
+                ),
+              ),
+              builder: (context, provider, skeleton) {
+                switch (_isLoad) {
+                  case true:
+                    return skeleton!;
+                  default:
+                    switch (provider.product.data) {
+                      case null:
+                        return skeleton!;
+                      default:
+                        return Flexible(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: CustomWidget.roundOutlinedBtn(
+                                  label: AppLocalizations.instance.text('TXT_CART_ADD'),
+                                  lblColor: CustomColor.MAIN,
+                                  btnColor: CustomColor.MAIN,
+                                  isBold: true,
+                                  radius: 5,
+                                  function: () => _showProductRegionSheet(_provider.product.data),
+                                ),
+                              ),
+                              SizedBox(width: 5,),
+                              Expanded(
+                                child: CustomWidget.roundBtn(
+                                  label: AppLocalizations.instance.text('TXT_LBL_BUY_NOW'),
+                                  btnColor: CustomColor.MAIN,
+                                  lblColor: Colors.white,
+                                  isBold: true,
+                                  radius: 5,
+                                  function: () => _showProductRegionSheet(_provider.product.data),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                    }
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+
+    Widget _bottomMenuDisabledContent = SafeArea(
+      child: Container(
+        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(width: 0.5, color: CustomColor.GREY_ICON),
+          ),
+        ),
+        child: Expanded(
+          child: CustomWidget.roundBtn(
+            label: AppLocalizations.instance.text('TXT_SOLD_OUT'),
+            btnColor: CustomColor.GREY_TXT,
+            lblColor: Colors.white,
+            isBold: true,
+            radius: 5,
+            function: () {},
+          ),
+        ),
+      ),
+    );
 
     Widget _imageContainer(String? url) {
       return Container(
@@ -400,6 +513,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                               RatingBar.builder(
                                 initialRating: double.parse(_data.rating ?? '0.0'),
                                 ignoreGestures: true,
+                                allowHalfRating: true,
                                 direction: Axis.horizontal,
                                 itemCount: 5,
                                 itemPadding: EdgeInsets.zero,
@@ -445,7 +559,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
               default:
                 var _data = _provider.product.data!;
                 return GestureDetector(
-                  onTap: () => _showProductRegionSheet(_data),
+                  onTap: () {
+                    if (_data.productRegion?.length != 0)
+                      _showProductRegionSheet(_data);
+                  },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -482,26 +599,28 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                               switch (_productRegion?.stock) {
                                 case 0:
                                   return Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                                    padding: EdgeInsets.symmetric(horizontal: 15),
                                     margin: EdgeInsets.only(right: 10, left: index == 0 ? 10 : 0),
                                     decoration: BoxDecoration(
                                         color: CustomColor.GREY_ICON,
-                                        borderRadius: BorderRadius.circular(20),
+                                        borderRadius: BorderRadius.circular(15),
                                         border: Border.all(color: CustomColor.GREY_BG)
                                     ),
-                                    child: Text('${_productRegion?.region?.name ?? '-'} (${AppLocalizations.instance.text('TXT_SOLD_OUT')})', style: TextStyle(
-                                      color: CustomColor.GREY_TXT,
-                                    ),),
+                                    child: Center(
+                                      child: Text('${_productRegion?.region?.name ?? '-'} (${AppLocalizations.instance.text('TXT_SOLD_OUT')})', style: TextStyle(
+                                        color: CustomColor.GREY_TXT,
+                                      ),),
+                                    ),
                                   );
                                 default:
                                   return Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                                    padding: EdgeInsets.symmetric(horizontal: 15),
                                     margin: EdgeInsets.only(right: 10, left: index == 0 ? 10 : 0),
                                     decoration: BoxDecoration(
                                       color: provider.selectedRegionId == _productRegion?.idRegion
                                           ? CustomColor.MAIN
                                           : Colors.transparent,
-                                      borderRadius: BorderRadius.circular(20),
+                                      borderRadius: BorderRadius.circular(15),
                                       border: Border.all(color: CustomColor.GREY_BG, width: 2),
                                     ),
                                     child: Row(
@@ -884,7 +1003,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
         ],
       ),
       body: _mainContent,
-      bottomNavigationBar: _bottomMenuContent,
+      bottomNavigationBar: Consumer<ProductDetailProvider>(
+        builder: (context, provider, _) {
+          switch (provider.product.data?.productRegion?.length) {
+            case 0:
+              return _bottomMenuDisabledContent;
+            default:
+              return _bottomMenuContent;
+          }
+        }
+      ),
     );
   }
 

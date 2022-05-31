@@ -95,8 +95,9 @@ class _CartListScreenState extends State<CartListScreen>
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 2),
                                         child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Checkbox(
                                               value: _data.isSelected == 1 ? true : false,
@@ -105,36 +106,53 @@ class _CartListScreenState extends State<CartListScreen>
                                                 borderRadius: BorderRadius.circular(5),
                                               ),
                                               visualDensity: VisualDensity.compact,
-                                              activeColor: Colors.green,
-                                            ),
-                                            Container(
-                                              width: 80,
-                                              height: 80,
-                                              child: ClipRRect(
-                                                child: CustomWidget.networkImg(context, _data.product!.image1),
-                                                borderRadius: BorderRadius.circular(10),
-                                              ),
+                                              activeColor: CustomColor.MAIN,
                                             ),
                                             Expanded(
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets.all(10.0),
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text(_data.product!.name ?? '-', style: TextStyle(
-                                                          color: Colors.black,
-                                                        ),),
-                                                        SizedBox(height: 5,),
-                                                        Text(FormatterHelper.moneyFormatter(_data.product!.regularPrice), style: TextStyle(
-                                                          fontWeight: FontWeight.bold,
-                                                          color: CustomColor.MAIN_TXT,
-                                                        ),),
-                                                      ],
-                                                    ),
+                                                  Row(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Container(
+                                                        width: 80,
+                                                        height: 80,
+                                                        child: ClipRRect(
+                                                          child: CustomWidget.networkImg(context, _data.product?.image1),
+                                                          borderRadius: BorderRadius.circular(10),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Text(_data.product?.name ?? '-', style: TextStyle(
+                                                              color: Colors.black,
+                                                            ),),
+                                                            SizedBox(height: 5,),
+                                                            Text(FormatterHelper.moneyFormatter(_data.product?.regularPrice), style: TextStyle(
+                                                              fontWeight: FontWeight.bold,
+                                                              color: CustomColor.MAIN_TXT,
+                                                            ),),
+                                                            SizedBox(height: 5,),
+                                                            Row(
+                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                              crossAxisAlignment: CrossAxisAlignment.end,
+                                                              children: [
+                                                                Icon(MdiIcons.storeCheck, size: 20, color: CustomColor.MAIN,),
+                                                                SizedBox(width: 5,),
+                                                                Text('${_data.region?.name ?? '-'}', style: TextStyle(
+                                                                  color: CustomColor.GREY_TXT,
+                                                                ), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                   Row(
                                                     mainAxisAlignment: MainAxisAlignment.end,

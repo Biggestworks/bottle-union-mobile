@@ -119,9 +119,10 @@ class WishListProvider extends ChangeNotifier with PaginationInterface {
     }
   }
 
-  Future fnStoreCart(BuildContext context, int productId) async {
+  Future fnStoreCart(BuildContext context, int? productId, int? regionId) async {
     var _res = await _cartService.storeCart(
-      productIds: [productId],
+      productIds: [productId ?? 0],
+      regionIds: [regionId ?? 0],
     );
 
     if (_res!.status != null) {

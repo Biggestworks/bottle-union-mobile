@@ -95,36 +95,43 @@ class Data {
   int? id;
   int? idUser;
   int? idProduct;
+  int? idRegion;
   int? qty;
   int? isSelected;
   int? price;
   String? statusPaid;
   String? createdAt;
   String? updatedAt;
+  Region? region;
   Product? product;
 
   Data(
       {this.id,
         this.idUser,
         this.idProduct,
+        this.idRegion,
         this.qty,
         this.isSelected,
         this.price,
         this.statusPaid,
         this.createdAt,
         this.updatedAt,
+        this.region,
         this.product});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     idUser = json['id_user'];
     idProduct = json['id_product'];
+    idRegion = json['id_region'];
     qty = json['qty'];
     isSelected = json['is_selected'];
     price = json['price'];
     statusPaid = json['status_paid'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    region =
+    json['region'] != null ? new Region.fromJson(json['region']) : null;
     product =
     json['product'] != null ? new Product.fromJson(json['product']) : null;
   }
@@ -134,15 +141,56 @@ class Data {
     data['id'] = this.id;
     data['id_user'] = this.idUser;
     data['id_product'] = this.idProduct;
+    data['id_region'] = this.idRegion;
     data['qty'] = this.qty;
     data['is_selected'] = this.isSelected;
     data['price'] = this.price;
     data['status_paid'] = this.statusPaid;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    if (this.region != null) {
+      data['region'] = this.region!.toJson();
+    }
     if (this.product != null) {
       data['product'] = this.product!.toJson();
     }
+    return data;
+  }
+}
+
+class Region {
+  int? id;
+  int? idProvince;
+  String? name;
+  String? createdAt;
+  String? updatedAt;
+  String? deletedAt;
+
+  Region(
+      {this.id,
+        this.idProvince,
+        this.name,
+        this.createdAt,
+        this.updatedAt,
+        this.deletedAt});
+
+  Region.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    idProvince = json['id_province'];
+    name = json['name'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    deletedAt = json['deleted_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['id_province'] = this.idProvince;
+    data['name'] = this.name;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    data['deleted_at'] = this.deletedAt;
     return data;
   }
 }

@@ -18,8 +18,9 @@ class DeliveryScreen extends StatefulWidget {
   static String tag = '/checkout-screen';
   final CartTotalModel? cartList;
   final ProductDetailModel? product;
+  final int? selectedRegionId;
   final bool? isCart;
-  const DeliveryScreen({Key? key, this.cartList, this.product, this.isCart}) : super(key: key);
+  const DeliveryScreen({Key? key, this.cartList, this.product, this.selectedRegionId, this.isCart}) : super(key: key);
 
   @override
   _DeliveryScreenState createState() => _DeliveryScreenState();
@@ -492,6 +493,18 @@ class _DeliveryScreenState extends State<DeliveryScreen>
                                                 color: Colors.black,
                                               ),),
                                               SizedBox(height: 5,),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.end,
+                                                children: [
+                                                  Icon(MdiIcons.storeCheck, size: 20, color: CustomColor.MAIN,),
+                                                  SizedBox(width: 5,),
+                                                  Text('${_data?.productRegion?.firstWhere((i) => i.idRegion == provider.selectedRegionId).region?.name ?? '-'}', style: TextStyle(
+                                                    color: CustomColor.GREY_TXT,
+                                                  ), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                                ],
+                                              ),
+                                              SizedBox(height: 5,),
                                               Text('${_data?.weight.toString()} gram', style: TextStyle(
                                                 color: CustomColor.GREY_TXT,
                                               ),),
@@ -624,6 +637,18 @@ class _DeliveryScreenState extends State<DeliveryScreen>
                                           Text(_data?.product?.name ?? '-', style: TextStyle(
                                             color: Colors.black,
                                           ),),
+                                          SizedBox(height: 5,),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            children: [
+                                              Icon(MdiIcons.storeCheck, size: 20, color: CustomColor.MAIN,),
+                                              SizedBox(width: 5,),
+                                              Text('${_data?.region?.name ?? '-'}', style: TextStyle(
+                                                color: CustomColor.GREY_TXT,
+                                              ), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                            ],
+                                          ),
                                           SizedBox(height: 5,),
                                           Text('${_data?.product?.weight.toString()} gram', style: TextStyle(
                                             color: CustomColor.GREY_TXT,

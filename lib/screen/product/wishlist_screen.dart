@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
 class WishListScreen extends StatefulWidget {
@@ -146,10 +147,44 @@ class _WishListScreenState extends State<WishListScreen>
                                                           child: Column(
                                                             crossAxisAlignment: CrossAxisAlignment.start,
                                                             children: [
+                                                              // Text.rich(TextSpan(
+                                                              //   children: [
+                                                              //     TextSpan(
+                                                              //       text: _data?.product?.name ?? '-',
+                                                              //       style: TextStyle(
+                                                              //         fontSize: 16,
+                                                              //       ),
+                                                              //     ),
+                                                              //     WidgetSpan(child: Text(' - ')),
+                                                              //     TextSpan(
+                                                              //       text: _data?.region?.name ?? '-',
+                                                              //       style: TextStyle(
+                                                              //         fontSize: 16,
+                                                              //         color: CustomColor.MAIN,
+                                                              //       ),
+                                                              //     ),
+                                                              //   ]
+                                                              // )),
                                                               Text(_data?.product?.name ?? '-', style: TextStyle(
                                                                 color: Colors.black,
-                                                                fontSize: 16,
                                                               ), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                                              SizedBox(height: 5,),
+                                                              Text(FormatterHelper.moneyFormatter(_data?.product?.regularPrice), style: TextStyle(
+                                                                fontWeight: FontWeight.bold,
+                                                                color: CustomColor.MAIN_TXT,
+                                                              ),),
+                                                              SizedBox(height: 5,),
+                                                              Row(
+                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                crossAxisAlignment: CrossAxisAlignment.end,
+                                                                children: [
+                                                                  Icon(MdiIcons.storeCheck, size: 20, color: CustomColor.MAIN,),
+                                                                  SizedBox(width: 5,),
+                                                                  Text('${_data?.region?.name ?? '-'}', style: TextStyle(
+                                                                    color: CustomColor.GREY_TXT,
+                                                                  ), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                                                ],
+                                                              ),
                                                               SizedBox(height: 5,),
                                                               Row(
                                                                 children: [
@@ -172,11 +207,6 @@ class _WishListScreenState extends State<WishListScreen>
                                                                   ),),
                                                                 ],
                                                               ),
-                                                              SizedBox(height: 5,),
-                                                              Text(FormatterHelper.moneyFormatter(_data?.product?.regularPrice), style: TextStyle(
-                                                                fontWeight: FontWeight.bold,
-                                                                color: CustomColor.MAIN_TXT,
-                                                              ),),
                                                             ],
                                                           ),
                                                         ),
@@ -227,7 +257,7 @@ class _WishListScreenState extends State<WishListScreen>
                                                                 categoryId: null,
                                                                 notes: KeyHelper.SAVE_CART_KEY,
                                                               );
-                                                              await provider.fnStoreCart(context, _data?.idProduct ?? 0)
+                                                              await provider.fnStoreCart(context, _data?.idProduct, _data?.idRegion)
                                                                   .then((_) async => await _baseProvider.fnGetCartCount());
                                                             },
                                                             icon: Icons.add,

@@ -45,6 +45,12 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
             type: BottomNavigationBarType.fixed,
             elevation: 0,
             currentIndex: provider.pageIndex,
+            selectedItemColor: Colors.white,
+            unselectedItemColor: Colors.white,
+            showUnselectedLabels: false,
+            iconSize: 18,
+            selectedFontSize: 12,
+            onTap: provider.fnOnNavBarSelected,
             items: [
               BottomNavigationBarItem(
                 icon: Padding(
@@ -72,7 +78,7 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
                         ),),
                         badgeColor: CustomColor.BROWN_TXT,
                         padding: EdgeInsets.all(6),
-                        child: Icon(FontAwesomeIcons.shoppingCart),
+                        child: Icon(FontAwesomeIcons.cartShopping),
                       );
                     },
                   ),
@@ -82,17 +88,11 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
               BottomNavigationBarItem(
                 icon: Padding(
                   padding: const EdgeInsets.only(bottom: 2),
-                  child: Icon(FontAwesomeIcons.history),
+                  child: Icon(FontAwesomeIcons.receipt),
                 ),
                 label: AppLocalizations.instance.text('TXT_NAV_TRANSACTION'),
               ),
             ],
-            selectedItemColor: Colors.white,
-            unselectedItemColor: Colors.white,
-            showUnselectedLabels: false,
-            iconSize: 16,
-            selectedFontSize: 12,
-            onTap: provider.fnOnNavBarSelected,
           ),
         );
       },
@@ -113,6 +113,12 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
               type: BottomNavigationBarType.fixed,
               elevation: 0,
               currentIndex: provider.pageIndex,
+              selectedItemColor: Colors.white,
+              unselectedItemColor: Colors.white,
+              showUnselectedLabels: false,
+              iconSize: 18,
+              selectedFontSize: 12,
+              onTap: provider.fnOnNavBarSelected,
               items: [
                 BottomNavigationBarItem(
                   icon: Showcase.withWidget(
@@ -213,7 +219,7 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
                             ),),
                             badgeColor: CustomColor.BROWN_TXT,
                             padding: EdgeInsets.all(6),
-                            child: Icon(FontAwesomeIcons.shoppingCart),
+                            child: Icon(FontAwesomeIcons.cartShopping),
                           );
                         },
                       ),
@@ -247,18 +253,12 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 2),
-                      child: Icon(FontAwesomeIcons.history),
+                      child: Icon(FontAwesomeIcons.receipt),
                     ),
                   ),
                   label: AppLocalizations.instance.text('TXT_NAV_TRANSACTION'),
                 ),
               ],
-              selectedItemColor: Colors.white,
-              unselectedItemColor: Colors.white,
-              showUnselectedLabels: false,
-              iconSize: 16,
-              selectedFontSize: 12,
-              onTap: provider.fnOnNavBarSelected,
             ),
           ),
         );
@@ -266,6 +266,7 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
     );
 
     return Scaffold(
+      extendBody: true,
       body: Consumer<BaseHomeProvider>(
         builder: (context, provider, _) => provider.screenList(),
       ),

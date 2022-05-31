@@ -450,8 +450,9 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                         fontSize: 12,
                                                         radius: 8,
                                                         isBold: true,
-                                                        function: () async => await provider.fnStoreCart(context, index)
-                                                            .then((_) async => await _baseProvider.fnGetCartCount()),
+                                                        function: () {},
+                                                        // function: () async => await provider.fnStoreCart(context, index)
+                                                        //     .then((_) async => await _baseProvider.fnGetCartCount()),
                                                       ),
                                                     )
                                                   else

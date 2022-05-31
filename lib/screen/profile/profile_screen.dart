@@ -135,7 +135,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
 
     Widget _menuContent = Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: EdgeInsets.all(5),
       child: Column(
         children: [
           Card(
@@ -430,7 +430,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         children: [
           _headerContent,
-          SizedBox(height: 10,),
           _menuContent,
           SizedBox(height: 20,),
         ],

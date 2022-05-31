@@ -71,6 +71,7 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
   Future fnStoreWishlist(BuildContext context) async {
     var _res = await _wishlistService.storeWishlist(
       productId: product.data?.id ?? 0,
+      regionId: selectedRegionId ?? 1,
     );
 
     if (_res!.status != null) {
@@ -110,6 +111,7 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
   Future fnStoreCart(BuildContext context) async {
     var _res = await _cartService.storeCart(
       productIds: [product.data?.id ?? 0],
+      regionIds: [selectedRegionId ?? 0],
     );
 
     if (_res!.status != null) {
@@ -121,7 +123,7 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
         );
         await fnCheckWishlist();
         await CustomWidget.showSnackBar(
-          context: context, 
+          context: context,
           content: Text(AppLocalizations.instance.text('TXT_CART_ADD_INFO')),
           duration: 4,
           action: SnackBarAction(

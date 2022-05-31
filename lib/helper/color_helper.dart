@@ -19,4 +19,5 @@ class CustomColor {
    static const Color STAR_3 = Color(0xFFFBF6E7);
    static const Color STAR_1 = Color(0xFFFAE3E2);
    static const Color BROWN_LIGHT_2 = Color(0xFFF1D9C4);
+   static const Color BROWN_LIGHT_3 = Color(0xFFEFE7D9);
 }

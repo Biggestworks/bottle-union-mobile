@@ -31,6 +31,7 @@ class DeliveryProvider extends ChangeNotifier {
   String? destination;
   courier.Data? selectedCourier;
   bool? isCart;
+  int? selectedRegionId;
 
   int productQty = 1;
 
@@ -45,6 +46,7 @@ class DeliveryProvider extends ChangeNotifier {
     product = _args.product;
     cartList = _args.cartList;
     isCart = _args.isCart;
+    selectedRegionId = _args.selectedRegionId;
     notifyListeners();
   }
 

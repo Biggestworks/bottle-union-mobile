@@ -239,35 +239,35 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
     }
   }
 
-  Future fnStoreCart(BuildContext context, int index) async {
-    List<int> _idList = [];
-    var _detail = await _service.getTransactionDetail(orderId: transactionList.result?.data?[index].codeTransaction ?? '');
-    List.generate(_detail?.data?.product?.length ?? 0,
-            (index) => _idList.add(_detail?.data?.product?[index].id ?? 0));
-
-    var _res = await _cartService.storeCart(
-      productIds: _idList,
-    );
-
-    if (_res!.status != null) {
-      if (_res.status == true) {
-        await CustomWidget.showSnackBar(
-          context: context,
-          content: Text(AppLocalizations.instance.text('TXT_CART_ADD_INFO')),
-          duration: 4,
-          action: SnackBarAction(
-            label: 'Go to cart',
-            textColor: Colors.white,
-            onPressed: () => Get.offNamedUntil(BaseHomeScreen.tag, (route) => false, arguments: BaseHomeScreen(pageIndex: 2,)),
-          ),
-        );
-      } else {
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
-      }
-    } else {
-      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
-    }
-  }
+  // Future fnStoreCart(BuildContext context, int index) async {
+  //   List<int> _idList = [];
+  //   var _detail = await _service.getTransactionDetail(orderId: transactionList.result?.data?[index].codeTransaction ?? '');
+  //   List.generate(_detail?.data?.product?.length ?? 0,
+  //           (index) => _idList.add(_detail?.data?.product?[index].id ?? 0));
+  //
+  //   var _res = await _cartService.storeCart(
+  //     productIds: _idList,
+  //   );
+  //
+  //   if (_res!.status != null) {
+  //     if (_res.status == true) {
+  //       await CustomWidget.showSnackBar(
+  //         context: context,
+  //         content: Text(AppLocalizations.instance.text('TXT_CART_ADD_INFO')),
+  //         duration: 4,
+  //         action: SnackBarAction(
+  //           label: 'Go to cart',
+  //           textColor: Colors.white,
+  //           onPressed: () => Get.offNamedUntil(BaseHomeScreen.tag, (route) => false, arguments: BaseHomeScreen(pageIndex: 2,)),
+  //         ),
+  //       );
+  //     } else {
+  //       await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
+  //     }
+  //   } else {
+  //     await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+  //   }
+  // }
 
   @override
   Future fnShowNextPage() async {
