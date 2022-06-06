@@ -95,7 +95,7 @@ class _AddDiscussionScreenState extends State<AddDiscussionScreen>
             Container(
               width: MediaQuery.of(context).size.width,
               child: CustomWidget.roundBtn(
-                label: AppLocalizations.instance.text('TXT_KIRIM'),
+                label: AppLocalizations.instance.text('TXT_SEND'),
                 btnColor: CustomColor.MAIN,
                 lblColor: Colors.white,
                 isBold: true,

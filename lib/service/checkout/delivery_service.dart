@@ -20,13 +20,13 @@ class DeliveryService extends GetConnect {
 
   Future<OrderSummaryModel?> getOrderSummary({
     required List<int> itemPrices,
-    int? deliveryCost,
+    required List<int> deliveryCosts,
   }) async {
     OrderSummaryModel _model = new OrderSummaryModel();
 
     final Map<String, dynamic> _data = {
       "item_price": itemPrices,
-      "delivery_cost": deliveryCost,
+      "delivery_cost": deliveryCosts,
     };
 
     try {
@@ -44,12 +44,14 @@ class DeliveryService extends GetConnect {
   }
 
   Future<CourierListModel?> getCourierList({
-    required String destination,
+    required int regionId,
+    required int destination,
     required double weight,
   }) async {
     CourierListModel _model = new CourierListModel();
 
     final Map<String, dynamic> _data = {
+      "id_region": regionId,
       "destination": destination,
       "weight": weight
     };

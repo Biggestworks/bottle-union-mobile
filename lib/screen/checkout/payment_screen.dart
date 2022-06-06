@@ -3,6 +3,7 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/model/checkout/courier_list_model.dart' as courier;
+import 'package:eight_barrels/model/checkout/delivery_courier_model.dart';
 import 'package:eight_barrels/model/checkout/order_summary_model.dart' as summary;
 import 'package:eight_barrels/model/product/product_detail_model.dart';
 import 'package:eight_barrels/provider/checkout/payment_provider.dart';
@@ -17,10 +18,10 @@ class PaymentScreen extends StatefulWidget {
   final int? addressId;
   final ProductDetailModel? product;
   final int? productQty;
-  final courier.Data? selectedCourier;
+  final List<DeliveryCourier>? selectedCourierList;
   final bool? isCart;
 
-  const PaymentScreen({Key? key, this.orderSummary, this.addressId, this.product, this.productQty, this.selectedCourier, this.isCart}) : super(key: key);
+  const PaymentScreen({Key? key, this.orderSummary, this.addressId, this.product, this.productQty, this.selectedCourierList, this.isCart}) : super(key: key);
 
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
@@ -333,7 +334,13 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                           lblColor: Colors.white,
                           icColor: Colors.white,
                           radius: 8,
-                          function: () async => await _provider.fnStoreOrder(_provider.scaffoldKey.currentContext!),
+                          function: () async {
+                            if (provider.isCart == true) {
+                              await _provider.fnStoreOrderCart(_provider.scaffoldKey.currentContext!);
+                            } else {
+                              await _provider.fnStoreOrderBuyNow(_provider.scaffoldKey.currentContext!);
+                            }
+                          },
                         ),
                       ),
                     ],

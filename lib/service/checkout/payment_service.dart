@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:eight_barrels/helper/url_helper.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
+import 'package:eight_barrels/model/checkout/delivery_courier_model.dart';
 import 'package:eight_barrels/model/checkout/midtrans_payment_model.dart';
 import 'package:eight_barrels/model/checkout/order_model.dart';
 import 'package:eight_barrels/model/checkout/payment_list_model.dart';
@@ -38,10 +39,44 @@ class PaymentService extends GetConnect {
     return _model;
   }
 
-  Future<OrderModel?> storeOrder({
+  Future<OrderModel?> storeOrderCart({
     required int? addressId,
-    required bool? isCart,
-    required List<ProductOrderModel>? products,
+    required List<Map<String,dynamic>> deliveries,
+    required String? paymentMethod,
+  }) async {
+    OrderModel _model = new OrderModel();
+
+
+    final Map<String, dynamic> _data = {
+      "id_address": addressId,
+      "deliveries": deliveries,
+      "payment_method": paymentMethod,
+    };
+
+    try {
+      http.Response _response = await http.post(
+        Uri.parse(URLHelper.storeOrderCartUrl),
+        body: json.encode(_data),
+        headers: await _headersAuth(),
+      );
+      ///GET CONNECT BUG
+      // Response _response = await post(
+      //   URLHelper.storeOrderUrl,
+      //   _data,
+      //   headers: await _headersAuth(),
+      // );
+      // print(_response.body);
+      _model = OrderModel.fromJson(json.decode(_response.body));
+    } catch (e) {
+      print(e);
+    }
+
+    return _model;
+  }
+
+  Future<OrderModel?> storeOrderBuyNow({
+    required int? addressId,
+    required ProductOrderModel? product,
     required String? paymentMethod,
     required String? courierName,
     required String? courierDesc,
@@ -52,8 +87,7 @@ class PaymentService extends GetConnect {
 
     final Map<String, dynamic> _data = {
       "id_address": addressId,
-      "is_cart": isCart,
-      "products": products,
+      "products": product?.toJson(),
       "payment_method": paymentMethod,
       "courier_name": courierName,
       "courier_desc": courierDesc,
@@ -63,7 +97,7 @@ class PaymentService extends GetConnect {
 
     try {
       http.Response _response = await http.post(
-        Uri.parse(URLHelper.storeOrderUrl),
+        Uri.parse(URLHelper.storeOrderNowUrl),
         body: json.encode(_data),
         headers: await _headersAuth(),
       );
@@ -73,7 +107,6 @@ class PaymentService extends GetConnect {
       //   _data,
       //   headers: await _headersAuth(),
       // );
-      print(_response.body);
       _model = OrderModel.fromJson(json.decode(_response.body));
     } catch (e) {
       print(e);

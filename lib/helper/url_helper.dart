@@ -76,7 +76,8 @@ class URLHelper {
 
   ///ORDER
   static final orderSummaryUrl = baseUrl + '/orders/summary';
-  static final storeOrderUrl = baseUrl + '/orders/checkout';
+  static final storeOrderCartUrl = baseUrl + '/orders/checkout/cart';
+  static final storeOrderNowUrl = baseUrl + '/orders/checkout/now';
   static final finishOrderUrl = baseUrl + '/orders/finish';
 
   ///LOG

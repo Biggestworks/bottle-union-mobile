@@ -6,7 +6,8 @@ import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/model/product/product_detail_model.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/product/product_detail_provider.dart';
-import 'package:eight_barrels/screen/checkout/delivery_screen.dart';
+import 'package:eight_barrels/screen/checkout/delivery_buy_screen.dart';
+import 'package:eight_barrels/screen/discussion/add_discussion_screen.dart';
 import 'package:eight_barrels/screen/discussion/discussion_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
       Provider.of<ProductDetailProvider>(context, listen: false).fnFetchProduct()
           .then((_) {
         Provider.of<ProductDetailProvider>(context, listen: false).fnCheckWishlist();
-        Provider.of<ProductDetailProvider>(context, listen: false).fnFetchDiscussionList(context);
+        Provider.of<ProductDetailProvider>(context, listen: false).fnFetchDiscussionList();
       });
       Provider.of<ProductDetailProvider>(context, listen: false).fnGetSelectedRegionProduct();
     });
@@ -145,7 +146,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                                             child: Center(
                                               child: Text('${_productRegion?.region?.name ?? '-'} (${AppLocalizations.instance.text('TXT_SOLD_OUT')})', style: TextStyle(
                                                 color: CustomColor.GREY_TXT,
-                                              ),),
+                                              ), textAlign: TextAlign.center,),
                                             ),
                                           );
                                         default:
@@ -159,21 +160,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                                                 borderRadius: BorderRadius.circular(15),
                                                 border: Border.all(color: CustomColor.GREY_BG, width: 2),
                                               ),
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Text(_productRegion?.region?.name ?? '-', style: TextStyle(
-                                                    color: provider.selectedRegionId == _productRegion?.idRegion
-                                                        ? Colors.white
-                                                        : Colors.black,
-                                                  ),),
-                                                  SizedBox(width: 4,),
-                                                  Text('(${_productRegion?.stock.toString() ?? '0'} ${_productRegion?.stock == 1 ? 'stock' : 'stocks'})', style: TextStyle(
-                                                    color: provider.selectedRegionId == _productRegion?.idRegion
-                                                        ? Colors.white
-                                                        : Colors.black,
-                                                  ),),
-                                                ],
+                                              child: Center(
+                                                child: Text('${_productRegion?.region?.name ?? '-'} (${_productRegion?.stock.toString() ?? '0'} ${_productRegion?.stock == 1 ? 'stock' : 'stocks'})', style: TextStyle(
+                                                  color: provider.selectedRegionId == _productRegion?.idRegion
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                ), textAlign: TextAlign.center,),
                                               ),
                                             ),
                                           );
@@ -278,7 +270,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                                         function: () async {
                                           Get.back();
                                           if (provider.selectedRegionId != null) {
-                                            Get.toNamed(DeliveryScreen.tag, arguments: DeliveryScreen(
+                                            Get.toNamed(DeliveryBuyScreen.tag, arguments: DeliveryBuyScreen(
                                               product: _provider.product,
                                               isCart: false,
                                               selectedRegionId: provider.selectedRegionId,
@@ -408,15 +400,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
             top: BorderSide(width: 0.5, color: CustomColor.GREY_ICON),
           ),
         ),
-        child: Expanded(
-          child: CustomWidget.roundBtn(
-            label: AppLocalizations.instance.text('TXT_SOLD_OUT'),
-            btnColor: CustomColor.GREY_TXT,
-            lblColor: Colors.white,
-            isBold: true,
-            radius: 5,
-            function: () {},
-          ),
+        child: CustomWidget.roundBtn(
+          label: AppLocalizations.instance.text('TXT_SOLD_OUT'),
+          btnColor: CustomColor.GREY_TXT,
+          lblColor: Colors.white,
+          isBold: true,
+          radius: 5,
+          function: () {},
         ),
       ),
     );
@@ -810,10 +800,31 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                       default:
                         switch (provider.discussionList.data?.length) {
                           case 0:
-                            return CustomWidget.emptyScreen(
-                              image: 'assets/images/ic_empty.png',
-                              size: 150,
-                              title: AppLocalizations.instance.text('TXT_NO_DISCUSSION'),
+                            return Center(
+                              child: SizedBox(
+                                height: 200,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(AppLocalizations.instance.text('TXT_NO_DISCUSSION')),
+                                    SizedBox(height: 5,),
+                                    CustomWidget.roundIconBtn(
+                                      icon: Icons.add,
+                                      label: AppLocalizations.instance.text('TXT_ADD_DISCUSSION'),
+                                      lblColor: Colors.white,
+                                      btnColor: CustomColor.MAIN,
+                                      radius: 8,
+                                      function: () => Get.toNamed(AddDiscussionScreen.tag, arguments: AddDiscussionScreen(
+                                        product: provider.product.data,
+                                      ))!.then((value) async {
+                                        if (value == true) {
+                                          await _provider.fnFetchDiscussionList();
+                                        }
+                                      }),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             );
                           default:
                             return Column(
@@ -933,7 +944,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                                   ),
                                   onPressed: () async => await Get.toNamed(DiscussionScreen.tag, arguments: DiscussionScreen(
                                     product: provider.product.data,
-                                  ))!.then((_) => provider.fnFetchDiscussionList(context)),
+                                  ))!.then((_) => provider.fnFetchDiscussionList()),
                                   child: Text(AppLocalizations.instance.text('TXT_ALL_DISCUSSION'), style: TextStyle(
                                     color: CustomColor.MAIN,
                                   ),),

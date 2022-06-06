@@ -71,7 +71,7 @@ class CartListProvider extends ChangeNotifier with PaginationInterface {
     if (cartTotalList.status != null) {
       if (cartTotalList.status == true) {
         totalPay = cartTotalList.total ?? 0;
-        totalCart = (cartTotalList.data != null ? cartTotalList.data?.length : 0)!;
+        totalCart = (cartTotalList.result != null ? cartTotalList.result?.length : 0)!;
       }
     }
     notifyListeners();

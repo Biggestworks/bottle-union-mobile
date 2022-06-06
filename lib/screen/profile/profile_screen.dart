@@ -446,7 +446,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: Text(AppLocalizations.instance.text('TXT_MY_ACCOUNT')),
       ),
       body: _mainContent,
-      // body: _mainContent,
     );
   }
 

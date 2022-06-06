@@ -4,16 +4,17 @@ import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/model/address/address_list_model.dart' as address;
 import 'package:eight_barrels/model/cart/cart_total_model.dart';
 import 'package:eight_barrels/model/checkout/courier_list_model.dart' as courier;
+import 'package:eight_barrels/model/checkout/delivery_courier_model.dart';
 import 'package:eight_barrels/model/checkout/order_summary_model.dart';
 import 'package:eight_barrels/model/product/product_detail_model.dart';
-import 'package:eight_barrels/screen/checkout/delivery_screen.dart';
+import 'package:eight_barrels/screen/checkout/delivery_buy_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/address/address_service.dart';
 import 'package:eight_barrels/service/checkout/delivery_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
-class DeliveryProvider extends ChangeNotifier {
+class DeliveryBuyProvider extends ChangeNotifier {
   DeliveryService _deliveryService = new DeliveryService();
   AddressService _addressService = new AddressService();
   TextEditingController searchController = new TextEditingController();
@@ -21,15 +22,13 @@ class DeliveryProvider extends ChangeNotifier {
   address.AddressListModel addressList = new address.AddressListModel();
   address.Data? selectedAddress;
   ProductDetailModel? product;
-  CartTotalModel? cartList;
   OrderSummaryModel orderSummary = new OrderSummaryModel();
   courier.CourierListModel courierList = new courier.CourierListModel();
 
   List<int> _prices = [];
   double _totalWeight = 0;
-  int? deliveryCost;
-  String? destination;
-  courier.Data? selectedCourier;
+  int? destination;
+  DeliveryCourier? selectedCourier;
   bool? isCart;
   int? selectedRegionId;
 
@@ -42,9 +41,8 @@ class DeliveryProvider extends ChangeNotifier {
   }
 
   fnGetArguments(BuildContext context) {
-    final _args = ModalRoute.of(context)!.settings.arguments as DeliveryScreen;
+    final _args = ModalRoute.of(context)!.settings.arguments as DeliveryBuyScreen;
     product = _args.product;
-    cartList = _args.cartList;
     isCart = _args.isCart;
     selectedRegionId = _args.selectedRegionId;
     notifyListeners();
@@ -62,7 +60,7 @@ class DeliveryProvider extends ChangeNotifier {
     await fnFetchAddressList();
     if (addressList.data != null && addressList.data?.length != 0) {
       selectedAddress = addressList.data!.firstWhere((item) => item.isChoosed == 1, orElse: null);
-      destination = selectedAddress?.cityCode.toString();
+      destination = selectedAddress?.cityCode;
     }
     _view!.onProgressFinish();
     notifyListeners();
@@ -97,27 +95,17 @@ class DeliveryProvider extends ChangeNotifier {
     await Future.delayed(Duration.zero).then((value) {
       _prices.clear();
       _totalWeight = 0;
-      if (cartList != null) {
-        List.generate(cartList?.data?.length ?? 0, (index) {
-          int _regPrice = cartList?.data?[index].product?.regularPrice ?? 0;
-          int _qty = cartList?.data?[index].qty ?? 0;
-          int _weight = cartList?.data?[index].product?.weight ?? 0;
-          int _itemPrices = _regPrice * _qty;
-          _prices.add(_itemPrices);
-          _totalWeight += _weight;
-        });
-      } else {
-        _prices.add((product?.data?.regularPrice ?? 0) * productQty);
-        _totalWeight = ((product?.data?.weight ?? 0) * productQty).toDouble();
-      }
+      _prices.add((product?.data?.regularPrice ?? 0) * productQty);
+      _totalWeight = ((product?.data?.weight ?? 0) * productQty).toDouble();
     });
     notifyListeners();
   }
 
   Future fnGetOrderSummary() async {
+    int _deliveryCost = selectedCourier?.courierData?.price ?? 0;
     orderSummary = (await _deliveryService.getOrderSummary(
       itemPrices: _prices,
-      deliveryCost: this.deliveryCost,
+      deliveryCosts: [_deliveryCost],
     ))!;
     notifyListeners();
   }
@@ -130,27 +118,25 @@ class DeliveryProvider extends ChangeNotifier {
   Future fnFetchCourierList() async {
     _view!.onProgressStart();
     courierList = (await _deliveryService.getCourierList(
-      destination: destination ?? '',
+      regionId: selectedRegionId ?? 1,
+      destination: destination ?? 0,
       weight: _totalWeight,
     ))!;
     _view!.onProgressFinish();
     notifyListeners();
   }
 
-  Future fnOnSelectCourier(courier.Data value) async {
+  Future fnOnSelectCourier({required int regionId, required courier.Data value}) async {
     _view!.onProgressStart();
     Get.back();
-    selectedCourier = value;
-    if (courierList.data != null) {
-      deliveryCost = selectedCourier?.price ?? 0;
-      await fnGetOrderSummary();
-    }
+    selectedCourier = DeliveryCourier(regionId, value);
+    await fnGetOrderSummary();
     _view!.onProgressFinish();
     notifyListeners();
   }
 
-  Future fnUpdateProductQty(String flag) async {
-    if (flag == 'increase') {
+  Future fnUpdateProductQty(bool isIncrease) async {
+    if (isIncrease) {
       productQty++;
       await fnInitOrderSummary();
     } else {

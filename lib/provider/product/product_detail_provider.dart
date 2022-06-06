@@ -140,7 +140,7 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
     }
   }
 
-  Future fnFetchDiscussionList(BuildContext context) async {
+  Future fnFetchDiscussionList() async {
     _view!.onProgressStart();
     discussionList = (await _discussionService.getDiscussionList(productId: product.data?.id ?? 0))!;
     _view!.onProgressFinish();

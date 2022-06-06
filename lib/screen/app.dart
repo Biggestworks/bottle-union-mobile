@@ -10,7 +10,8 @@ import 'package:eight_barrels/provider/auth/login_provider.dart';
 import 'package:eight_barrels/provider/auth/otp_provider.dart';
 import 'package:eight_barrels/provider/auth/register_provider.dart';
 import 'package:eight_barrels/provider/cart/cart_list_provider.dart';
-import 'package:eight_barrels/provider/checkout/delivery_provider.dart';
+import 'package:eight_barrels/provider/checkout/delivery_buy_provider.dart';
+import 'package:eight_barrels/provider/checkout/delivery_cart_provider.dart';
 import 'package:eight_barrels/provider/checkout/order_finish_provider.dart';
 import 'package:eight_barrels/provider/checkout/payment_provider.dart';
 import 'package:eight_barrels/provider/checkout/upload_payment_provider.dart';
@@ -42,7 +43,8 @@ import 'package:eight_barrels/screen/auth/register_screen.dart';
 import 'package:eight_barrels/screen/auth/start_screen.dart';
 import 'package:eight_barrels/screen/cart/base_cart_screen.dart';
 import 'package:eight_barrels/screen/cart/cart_list_screen.dart';
-import 'package:eight_barrels/screen/checkout/delivery_screen.dart';
+import 'package:eight_barrels/screen/checkout/delivery_buy_screen.dart';
+import 'package:eight_barrels/screen/checkout/delivery_cart_screen.dart';
 import 'package:eight_barrels/screen/checkout/midtrans_webview_screen.dart';
 import 'package:eight_barrels/screen/checkout/order_finish_screen.dart';
 import 'package:eight_barrels/screen/checkout/payment_screen.dart';
@@ -295,10 +297,17 @@ class _AppState extends State<App> {
             page: () => CartListScreen(),
           ),
           GetPage(
-            name: DeliveryScreen.tag,
-            page: () => ChangeNotifierProvider<DeliveryProvider>(
-              create: (context) => DeliveryProvider(),
-              child: DeliveryScreen(),
+            name: DeliveryCartScreen.tag,
+            page: () => ChangeNotifierProvider<DeliveryCartProvider>(
+              create: (context) => DeliveryCartProvider(),
+              child: DeliveryCartScreen(),
+            ),
+          ),
+          GetPage(
+            name: DeliveryBuyScreen.tag,
+            page: () => ChangeNotifierProvider<DeliveryBuyProvider>(
+              create: (context) => DeliveryBuyProvider(),
+              child: DeliveryBuyScreen(),
             ),
           ),
           GetPage(

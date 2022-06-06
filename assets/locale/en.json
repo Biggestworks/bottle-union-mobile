@@ -148,7 +148,7 @@
 	"TXT_CHOOSE_PAYMENT_METHOD": "Choose Payment Method",
 	"TXT_PAY": "Pay",
 	"TXT_CHOOSE_COURIER_INFO": "Please select the delivery courier first",
-	"TXT_NO_DISCUSSION": "No discussion yet",
+	"TXT_NO_DISCUSSION": "There is no discussion for this product yet",
 	"TXT_FINISH_PAYMENT": "Finish Payment",
 	"TXT_FINISH_PAYMENT_INFO": "Finish the payment before",
 	"TXT_BACK": "Back",
@@ -210,5 +210,9 @@
 	"TXT_ADD_NOW": "Add now",
 	"TXT_NO_PRODUCT_REGION": "Product is not available on any region",
 	"TXT_SELECT_PRODUCT_REGION_INFO": "Make sure to select available & nearest product from your region (region may affect delivery cost).",
-	"TXT_NO_PRODUCT_REGION_SELECTED": "Please select product region first"
+	"TXT_NO_PRODUCT_REGION_SELECTED": "Please select product region first",
+	"TXT_ADD_DISCUSSION": "Add Discussion",
+	"TXT_SEND": "Send",
+	"TXT_ORDER": "Order"
+
 }

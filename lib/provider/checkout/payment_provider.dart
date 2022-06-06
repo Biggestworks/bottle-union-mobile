@@ -1,6 +1,7 @@
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/model/checkout/courier_list_model.dart' as courier;
+import 'package:eight_barrels/model/checkout/delivery_courier_model.dart';
 import 'package:eight_barrels/model/checkout/order_summary_model.dart' as summary;
 import 'package:eight_barrels/model/checkout/payment_list_model.dart';
 import 'package:eight_barrels/model/checkout/product_order_model.dart';
@@ -21,9 +22,9 @@ class PaymentProvider extends ChangeNotifier {
   int? addressId;
   productDetail.ProductDetailModel? product;
   int? productQty;
-  courier.Data? selectedCourier;
+  List<DeliveryCourier> selectedCourierList = [];
   bool? isCart;
-  List<ProductOrderModel> productOrder = [];
+  ProductOrderModel productOrder = new ProductOrderModel();
 
   LoadingView? _view;
 
@@ -39,7 +40,7 @@ class PaymentProvider extends ChangeNotifier {
     addressId = _args.addressId;
     product = _args.product;
     productQty = _args.productQty;
-    selectedCourier = _args.selectedCourier;
+    selectedCourierList = _args.selectedCourierList ?? [];
     isCart = _args.isCart;
     notifyListeners();
   }
@@ -59,26 +60,59 @@ class PaymentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future fnStoreOrder(BuildContext context) async {
+  Future fnStoreOrderCart(BuildContext context) async {
+    _view!.onProgressStart();
+    List<Map<String,dynamic>> _courierList = [];
+
+    List.generate(selectedCourierList.length, (index) => _courierList.add({
+      'id_region': selectedCourierList[index].regionId,
+      'courier_name': selectedCourierList[index].courierData?.courier,
+      'courier_desc': selectedCourierList[index].courierData?.description,
+      'courier_etd': selectedCourierList[index].courierData?.etd,
+      'courier_cost': selectedCourierList[index].courierData?.price
+    }));
+
+    var _res = await _service.storeOrderCart(
+      addressId: addressId,
+      deliveries: _courierList,
+      paymentMethod: selectedPayment?.name,
+    );
+
+    if (_res!.status != null) {
+      if (_res.status == true) {
+        _view!.onProgressFinish();
+        Get.offNamedUntil(OrderFinishScreen.tag, (route) => route.isFirst, arguments: OrderFinishScreen(order: _res,));
+      } else {
+        _view!.onProgressFinish();
+        await CustomWidget.showSnackBar(context: context, content: Text(_res.message ?? '-'));
+      }
+    } else {
+      _view!.onProgressFinish();
+      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+    }
+    _view!.onProgressFinish();
+    notifyListeners();
+  }
+
+  Future fnStoreOrderBuyNow(BuildContext context) async {
     _view!.onProgressStart();
 
     if (product != null) {
-      productOrder.clear();
-      productOrder.add(ProductOrderModel(
+      productOrder = ProductOrderModel(
         idProduct: product?.data?.id,
+        idRegion: selectedCourierList[0].regionId,
         qty: productQty,
-      ));
+      );
     }
 
-    var _res = await _service.storeOrder(
+    var _res = await _service.storeOrderBuyNow(
       addressId: addressId,
-      isCart: isCart,
-      products: productOrder,
+      product: productOrder,
       paymentMethod: selectedPayment?.name,
-      courierName: selectedCourier?.courier,
-      courierDesc: selectedCourier?.description,
-      courierEtd: selectedCourier?.etd,
-      courierCost: selectedCourier?.price,
+      courierName: selectedCourierList[0].courierData?.courier,
+      courierDesc: selectedCourierList[0].courierData?.description,
+      courierEtd: selectedCourierList[0].courierData?.etd,
+      courierCost: selectedCourierList[0].courierData?.price,
     );
 
     if (_res!.status != null) {

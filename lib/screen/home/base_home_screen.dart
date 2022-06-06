@@ -266,7 +266,6 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
     );
 
     return Scaffold(
-      extendBody: true,
       body: Consumer<BaseHomeProvider>(
         builder: (context, provider, _) => provider.screenList(),
       ),

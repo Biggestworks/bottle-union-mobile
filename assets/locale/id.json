@@ -148,7 +148,7 @@
 	"TXT_CHOOSE_PAYMENT_METHOD": "Pilih Metode Pembayaran",
 	"TXT_PAY": "Bayar",
 	"TXT_CHOOSE_COURIER_INFO": "Mohon pilih kurir pengiriman terlebih dahulu",
-	"TXT_NO_DISCUSSION": "Belum ada diskusi",
+	"TXT_NO_DISCUSSION": "Belum ada diskusi yang tersedia untuk produk ini",
 	"TXT_FINISH_PAYMENT": "Selesaikan Pembayaran",
 	"TXT_FINISH_PAYMENT_INFO": "Selesaikan pembayaran sebelum",
 	"TXT_BACK": "Kembali",
@@ -209,5 +209,9 @@
 	"TXT_ADD_NOW": "Tambah sekarang",
 	"TXT_NO_PRODUCT_REGION": "Produk tidak tersedia di wilayah manapun",
 	"TXT_SELECT_PRODUCT_REGION_INFO": "Pastikan memilih wilayah yang tersedia & terdekat dari wilayah Anda (dapat mempengaruhi biaya pengiriman).",
-	"TXT_NO_PRODUCT_REGION_SELECTED": "Mohon pilih wilayah produk terlebih dahulu"
+	"TXT_NO_PRODUCT_REGION_SELECTED": "Mohon pilih wilayah produk terlebih dahulu",
+	"TXT_ADD_DISCUSSION": "Tambah Diskusi",
+	"TXT_SEND": "Kirim",
+	"TXT_ORDER": "Pesanan"
+
 }

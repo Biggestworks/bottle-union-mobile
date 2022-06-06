@@ -2,14 +2,44 @@ class CartTotalModel {
   bool? status;
   int? total;
   String? message;
-  List<Data>? data;
+  List<Result>? result;
 
-  CartTotalModel({this.status, this.total, this.message, this.data});
+  CartTotalModel({this.status, this.total, this.message, this.result});
 
   CartTotalModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     total = json['total'];
     message = json['message'];
+    if (json['result'] != null) {
+      result = <Result>[];
+      json['result'].forEach((v) {
+        result!.add(new Result.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    data['total'] = this.total;
+    data['message'] = this.message;
+    if (this.result != null) {
+      data['result'] = this.result!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Result {
+  int? idRegion;
+  String? region;
+  List<Data>? data;
+
+  Result({this.idRegion, this.region, this.data});
+
+  Result.fromJson(Map<String, dynamic> json) {
+    idRegion = json['id_region'];
+    region = json['region'];
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
@@ -20,9 +50,8 @@ class CartTotalModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['total'] = this.total;
-    data['message'] = this.message;
+    data['id_region'] = this.idRegion;
+    data['region'] = this.region;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -31,101 +60,53 @@ class CartTotalModel {
 }
 
 class Data {
-  int? id;
+  int? idCart;
   int? idUser;
-  int? idProduct;
-  int? idRegion;
+  int? idProcduct;
+  Product? product;
   int? qty;
   int? isSelected;
   String? statusPaid;
   String? createdAt;
   String? updatedAt;
-  Region? region;
-  Product? product;
 
   Data(
-      {this.id,
+      {this.idCart,
         this.idUser,
-        this.idProduct,
-        this.idRegion,
+        this.idProcduct,
+        this.product,
         this.qty,
         this.isSelected,
         this.statusPaid,
         this.createdAt,
-        this.updatedAt,
-        this.region,
-        this.product});
+        this.updatedAt});
 
   Data.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    idCart = json['id_cart'];
     idUser = json['id_user'];
-    idProduct = json['id_product'];
-    idRegion = json['id_region'];
+    idProcduct = json['id_procduct'];
+    product =
+    json['product'] != null ? new Product.fromJson(json['product']) : null;
     qty = json['qty'];
     isSelected = json['is_selected'];
     statusPaid = json['status_paid'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    region =
-    json['region'] != null ? new Region.fromJson(json['region']) : null;
-    product =
-    json['product'] != null ? new Product.fromJson(json['product']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
+    data['id_cart'] = this.idCart;
     data['id_user'] = this.idUser;
-    data['id_product'] = this.idProduct;
-    data['id_region'] = this.idRegion;
+    data['id_procduct'] = this.idProcduct;
+    if (this.product != null) {
+      data['product'] = this.product!.toJson();
+    }
     data['qty'] = this.qty;
     data['is_selected'] = this.isSelected;
     data['status_paid'] = this.statusPaid;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
-    if (this.region != null) {
-      data['region'] = this.region!.toJson();
-    }
-    if (this.product != null) {
-      data['product'] = this.product!.toJson();
-    }
-    return data;
-  }
-}
-
-class Region {
-  int? id;
-  int? idProvince;
-  String? name;
-  String? createdAt;
-  String? updatedAt;
-  String? deletedAt;
-
-  Region(
-      {this.id,
-        this.idProvince,
-        this.name,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt});
-
-  Region.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    idProvince = json['id_province'];
-    name = json['name'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    deletedAt = json['deleted_at'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['id_province'] = this.idProvince;
-    data['name'] = this.name;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['deleted_at'] = this.deletedAt;
     return data;
   }
 }
@@ -134,6 +115,7 @@ class Product {
   int? id;
   int? idBrand;
   int? idCategory;
+  int? idFlag;
   String? manufactureCountry;
   String? originCountry;
   String? year;
@@ -162,6 +144,7 @@ class Product {
       {this.id,
         this.idBrand,
         this.idCategory,
+        this.idFlag,
         this.manufactureCountry,
         this.originCountry,
         this.year,
@@ -190,6 +173,7 @@ class Product {
     id = json['id'];
     idBrand = json['id_brand'];
     idCategory = json['id_category'];
+    idFlag = json['id_flag'];
     manufactureCountry = json['manufacture_country'];
     originCountry = json['origin_country'];
     year = json['year'];
@@ -220,6 +204,7 @@ class Product {
     data['id'] = this.id;
     data['id_brand'] = this.idBrand;
     data['id_category'] = this.idCategory;
+    data['id_flag'] = this.idFlag;
     data['manufacture_country'] = this.manufactureCountry;
     data['origin_country'] = this.originCountry;
     data['year'] = this.year;

@@ -16,8 +16,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
 
 abstract class ProductCardInterface {
-  WishlistService _wishlistService = new WishlistService();
-  CartService _cartService = new CartService();
+  // WishlistService _wishlistService = new WishlistService();
+  // CartService _cartService = new CartService();
 
   // Future fnStoreWishlist(BuildContext context, int productId) async {
   //   var _res = await _wishlistService.storeWishlist(
