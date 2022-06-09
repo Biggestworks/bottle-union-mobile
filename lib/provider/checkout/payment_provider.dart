@@ -1,6 +1,5 @@
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
-import 'package:eight_barrels/model/checkout/courier_list_model.dart' as courier;
 import 'package:eight_barrels/model/checkout/delivery_courier_model.dart';
 import 'package:eight_barrels/model/checkout/order_summary_model.dart' as summary;
 import 'package:eight_barrels/model/checkout/payment_list_model.dart';
@@ -62,6 +61,9 @@ class PaymentProvider extends ChangeNotifier {
 
   Future fnStoreOrderCart(BuildContext context) async {
     _view!.onProgressStart();
+
+    await Future.delayed(Duration(seconds: 1));
+
     List<Map<String,dynamic>> _courierList = [];
 
     List.generate(selectedCourierList.length, (index) => _courierList.add({
@@ -81,7 +83,7 @@ class PaymentProvider extends ChangeNotifier {
     if (_res!.status != null) {
       if (_res.status == true) {
         _view!.onProgressFinish();
-        Get.offNamedUntil(OrderFinishScreen.tag, (route) => route.isFirst, arguments: OrderFinishScreen(order: _res,));
+        Get.offNamedUntil(OrderFinishScreen.tag, (route) => route.isFirst, arguments: OrderFinishScreen(orderCart: _res,));
       } else {
         _view!.onProgressFinish();
         await CustomWidget.showSnackBar(context: context, content: Text(_res.message ?? '-'));
@@ -96,6 +98,8 @@ class PaymentProvider extends ChangeNotifier {
 
   Future fnStoreOrderBuyNow(BuildContext context) async {
     _view!.onProgressStart();
+
+    await Future.delayed(Duration(seconds: 1));
 
     if (product != null) {
       productOrder = ProductOrderModel(
@@ -118,7 +122,7 @@ class PaymentProvider extends ChangeNotifier {
     if (_res!.status != null) {
       if (_res.status == true) {
         _view!.onProgressFinish();
-        Get.offNamedUntil(OrderFinishScreen.tag, (route) => route.isFirst, arguments: OrderFinishScreen(order: _res,));
+        Get.offNamedUntil(OrderFinishScreen.tag, (route) => route.isFirst, arguments: OrderFinishScreen(orderNow: _res,));
       } else {
         _view!.onProgressFinish();
         await CustomWidget.showSnackBar(context: context, content: Text(_res.message ?? '-'));

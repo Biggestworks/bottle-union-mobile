@@ -1,7 +1,8 @@
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
-import 'package:eight_barrels/model/checkout/order_model.dart';
+import 'package:eight_barrels/model/checkout/order_cart_model.dart';
+import 'package:eight_barrels/model/checkout/order_now_model.dart';
 import 'package:eight_barrels/screen/checkout/midtrans_webview_screen.dart';
 import 'package:eight_barrels/screen/checkout/order_finish_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
@@ -11,7 +12,8 @@ import 'package:get/route_manager.dart';
 
 class OrderFinishProvider extends ChangeNotifier {
   PaymentService _paymentService = new PaymentService();
-  OrderModel? order;
+  OrderNowModel? orderNow;
+  OrderCartModel? orderCart;
 
   LoadingView? _view;
 
@@ -23,7 +25,8 @@ class OrderFinishProvider extends ChangeNotifier {
 
   fnGetArguments(BuildContext context) {
     final _args = ModalRoute.of(context)!.settings.arguments as OrderFinishScreen;
-    order = _args.order;
+    orderNow = _args.orderNow;
+    orderCart = _args.orderCart;
     notifyListeners();
   }
 
@@ -31,7 +34,7 @@ class OrderFinishProvider extends ChangeNotifier {
 
   Future fnFinishPayment(BuildContext context) async {
     _view!.onProgressStart();
-    var _res = await _paymentService.midtransPayment(code: order?.data?[0].order?[0].codeTransaction ?? null);
+    var _res = await _paymentService.midtransPayment(code: orderNow?.data?[0].order?[0].codeTransaction ?? null);
 
     if (_res!.status != null) {
       if (_res.status == true) {
@@ -48,5 +51,7 @@ class OrderFinishProvider extends ChangeNotifier {
     _view!.onProgressFinish();
     notifyListeners();
   }
+
+  String fnGetSubtotal(int price, int qty) => FormatterHelper.moneyFormatter((price * qty));
 
 }

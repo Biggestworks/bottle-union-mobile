@@ -5,7 +5,6 @@ import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/provider/transaction/transaction_detail_provider.dart';
 import 'package:eight_barrels/screen/checkout/upload_payment_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
-import 'package:eight_barrels/screen/review/review_input_screen.dart';
 import 'package:eight_barrels/screen/transaction/track_order_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +19,9 @@ import 'package:provider/provider.dart';
 class TransactionDetailScreen extends StatefulWidget {
   static String tag = '/transaction-detail-screen';
   final String? orderId;
+  final int? regionId;
 
-  const TransactionDetailScreen({Key? key, this.orderId}) : super(key: key);
+  const TransactionDetailScreen({Key? key, this.orderId, this.regionId}) : super(key: key);
 
   @override
   _TransactionDetailScreenState createState() => _TransactionDetailScreenState();
@@ -36,6 +36,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
       Provider.of<TransactionDetailProvider>(context, listen: false).fnGetView(this);
       Provider.of<TransactionDetailProvider>(context, listen: false).fnGetArguments(context);
       Provider.of<TransactionDetailProvider>(context, listen: false).fnGetTransactionDetail();
+      Provider.of<TransactionDetailProvider>(context, listen: false).fnGetLocale();
     },);
     super.initState();
   }
@@ -194,12 +195,12 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
     Widget _orderInfoContent = Consumer<TransactionDetailProvider>(
         child: Container(),
         builder: (context, provider, skeleton) {
-          var _data = provider.transactionDetail.data;
+          var _data = provider.transactionDetail.result;
           return Container(
             color: Colors.white,
             child: Column(
               children: [
-                if (_data?.order?[0].payment?.idStatusPayment == 1)
+                if (_data?.data?[0].idStatusOrder == 1)
                   Container(
                     width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.all(10),
@@ -214,8 +215,8 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                         ),
                         TextSpan(text: ' '),
                         TextSpan(
-                          text: _data?.order?[0].payment?.expiredAt != null
-                              ? DateFormat('dd MMMM yyyy, HH:mm a').format(DateTime.parse(_data?.order?[0].payment?.expiredAt ?? ''))
+                          text: _data?.expiredAt != null
+                              ? DateFormat('dd MMMM yyyy, HH:mm a', provider.locale).format(DateTime.parse(_data?.expiredAt ?? ''))
                               : '-',
                           style: TextStyle(
                             color: Colors.amberAccent,
@@ -231,12 +232,12 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Order ID'),
+                          Text(AppLocalizations.instance.text('TXT_INVOICE_NUMBER')),
                           Row(
                             children: [
                               IconButton(
                                 onPressed: () => Clipboard.setData(ClipboardData(text: _data?.codeTransaction ?? '-'))
-                                    .then((_) => CustomWidget.showSnackBar(context: context, content: Text('Order ID successfully copied to clipboard'))),
+                                    .then((_) => CustomWidget.showSnackBar(context: context, content: Text('Invoice number is successfully copied to clipboard'))),
                                 icon: Icon(Icons.copy, size: 20,),
                                 constraints: BoxConstraints(),
                                 padding: EdgeInsets.zero,
@@ -249,7 +250,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                           ),
                         ],
                       ),
-                      if (_data?.order?[0].payment?.vaNumber != null)
+                      if (_data?.vaNumber != null)
                         Column(
                           children: [
                             Divider(height: 20, thickness: 1,),
@@ -260,14 +261,14 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                                 Row(
                                   children: [
                                     IconButton(
-                                      onPressed: () => Clipboard.setData(ClipboardData(text: _data?.order?[0].payment?.vaNumber ?? '-'))
-                                          .then((_) => CustomWidget.showSnackBar(context: context, content: Text('VA number successfully copied to clipboard'))),
+                                      onPressed: () => Clipboard.setData(ClipboardData(text: _data?.vaNumber ?? '-'))
+                                          .then((_) => CustomWidget.showSnackBar(context: context, content: Text('VA number is successfully copied to clipboard'))),
                                       icon: Icon(Icons.copy, size: 20,),
                                       constraints: BoxConstraints(),
                                       padding: EdgeInsets.zero,
                                     ),
                                     SizedBox(width: 10,),
-                                    Text(_data?.order?[0].payment?.vaNumber ?? '-', style: TextStyle(
+                                    Text(_data?.vaNumber ?? '-', style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),),
                                   ],
@@ -282,8 +283,10 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                         children: [
                           Text('Status'),
                           Flexible(
-                            child: Text(provider.fnGetStatus(_data?.order?[0].payment?.statusPayment?.id ?? 0), style: TextStyle(
-                              color: provider.fnGetStatus(_data?.order?[0].payment?.statusPayment?.id ?? 0) == AppLocalizations.instance.text('TXT_LBL_CANCELLED')
+                            child: Text(provider.fnGetStatus(_data?.data?[0].idStatusOrder ?? 0), style: TextStyle(
+                              color: _data?.data?[0].idStatusOrder == 6 /// Complete
+                                  ? Colors.green
+                                  : _data?.data?[0].idStatusOrder == 7 /// Cancel
                                   ? Colors.red
                                   : Colors.orange,
                             ),),
@@ -295,7 +298,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(AppLocalizations.instance.text('TXT_ORDER_DATE')),
-                          Flexible(child: Text(DateFormat('dd MMMM yyyy, HH:mm a').format(DateTime.parse(_data?.orderedAt ?? DateTime.now().toString())))),
+                          Flexible(child: Text(DateFormat('dd MMMM yyyy, HH:mm a', provider.locale).format(DateTime.parse(_data?.createdAt ?? DateTime.now().toString())))),
                         ],
                       ),
                     ],
@@ -324,17 +327,17 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
             child: Consumer<TransactionDetailProvider>(
               child: Container(),
               builder: (context, provider, skeleton) {
-                switch (provider.transactionDetail.data?.product) {
+                switch (provider.transactionDetail.result?.data) {
                   case null:
                     return skeleton!;
                   default:
                     return ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: provider.transactionDetail.data?.product?.length,
+                      itemCount: provider.transactionDetail.result?.data?.length,
                       itemBuilder: (context, index) {
-                        var _data = provider.transactionDetail.data?.order?[index];
+                        var _data = provider.transactionDetail.result?.data?[index];
                         return InkWell(
-                          onTap: () => Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(id: _data?.idProduct,)),
+                          onTap: () => Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(productId: _data?.idProduct,)),
                           child: Card(
                             elevation: 2,
                             shape: RoundedRectangleBorder(
@@ -366,7 +369,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                                           color: CustomColor.GREY_TXT,
                                         ),),
                                         SizedBox(height: 5,),
-                                        Text('Total: ${provider.fnGetSubtotal(_data?.price ?? 0, _data?.qty ?? 0)}', style: TextStyle(
+                                        Text('Total: ${provider.fnGetSubtotal(_data?.product?.regularPrice ?? 0, _data?.qty ?? 0)}', style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black,
                                         ),),
@@ -393,7 +396,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
       color: Colors.white,
       child: Consumer<TransactionDetailProvider>(
         builder: (context, provider, _) {
-          var _data = provider.transactionDetail.data;
+          var _data = provider.transactionDetail.result;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -416,9 +419,9 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                             child: Text(AppLocalizations.instance.text('TXT_COURIER')),
                           ),
                           Flexible(
-                            child: Text('${_data?.order?[0].payment?.courierName ?? '-'} '
-                                '${_data?.order?[0].payment?.courierEtd ?? '-'} '
-                                '(${FormatterHelper.moneyFormatter(_data?.order?[0].payment?.courierCost ?? 0)})', style: TextStyle(
+                            child: Text('${_data?.courierName ?? '-'} '
+                                '${_data?.courierEtd ?? '-'} '
+                                '(${FormatterHelper.moneyFormatter(_data?.courierCost ?? 0)})', style: TextStyle(
                               color: Colors.black,
                             )),
                           ),
@@ -436,13 +439,13 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(_data?.shipmentInformation?.shipment?.receiver ?? '-', style: TextStyle(
+                                Text(_data?.data?[0].shipment?.receiver ?? '-', style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),),
                                 SizedBox(height: 4),
-                                Text(_data?.shipmentInformation?.shipment?.phone ?? '-'),
+                                Text(_data?.data?[0].shipment?.phone ?? '-'),
                                 SizedBox(height: 4),
-                                Text(_data?.shipmentInformation?.shipment?.address ?? '-'),
+                                Text(_data?.data?[0].shipment?.address ?? '-'),
                               ],
                             ),
                           ),
@@ -463,7 +466,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
       color: Colors.white,
       child: Consumer<TransactionDetailProvider>(
         builder: (context, provider, _) {
-          var _data = provider.transactionDetail.data;
+          var _data = provider.transactionDetail.result;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -484,7 +487,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                         children: [
                           Text(AppLocalizations.instance.text('TXT_PAYMENT_METHOD')),
                           Flexible(
-                            child: Text(_data?.order?[0].payment?.paymentType ?? '-'),
+                            child: Text(_data?.paymentType ?? '-'),
                           ),
                         ],
                       ),
@@ -492,9 +495,9 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('${AppLocalizations.instance.text('TXT_TOTAL_PRICE')} (${_data?.countProduct} item(s))'),
+                          Text('${AppLocalizations.instance.text('TXT_TOTAL_PRICE')} (${_data?.data?.length} item(s))'),
                           Flexible(
-                            child: Text(FormatterHelper.moneyFormatter(_data?.detailPayments?.totalPrice ?? 0)),
+                            child: Text(provider.fnGetTotalPrice(_data?.amount ?? 0, _data?.courierCost ?? 0)),
                           ),
                         ],
                       ),
@@ -504,7 +507,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                         children: [
                           Text(AppLocalizations.instance.text('TXT_DELIVERY_COST')),
                           Flexible(
-                            child: Text(FormatterHelper.moneyFormatter(_data?.detailPayments?.courierCost ?? 0)),
+                            child: Text(FormatterHelper.moneyFormatter(_data?.courierCost ?? 0)),
                           ),
                         ],
                       ),
@@ -517,7 +520,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                             fontWeight: FontWeight.bold,
                           ),),
                           Flexible(
-                            child: Text(FormatterHelper.moneyFormatter(_data?.totalPay ?? 0), style: TextStyle(
+                            child: Text(FormatterHelper.moneyFormatter(_data?.amount ?? 0), style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),),
@@ -563,11 +566,11 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
             Consumer<TransactionDetailProvider>(
               child: SizedBox(),
               builder: (context, provider, skeleton) {
-                switch (provider.transactionDetail.data) {
+                switch (provider.transactionDetail.result) {
                   case null:
                     return skeleton!;
                   default:
-                    switch (provider.transactionDetail.data?.order?[0].payment?.idStatusPayment) {
+                    switch (provider.transactionDetail.result?.data?[0].idStatusOrder) {
                       case 4:
                         return Container(
                           width: MediaQuery.of(context).size.width,
@@ -607,53 +610,50 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
             Consumer<TransactionDetailProvider>(
               child: SizedBox(),
               builder: (context, provider, skeleton) {
-                switch (provider.transactionDetail.data) {
+                switch (provider.transactionDetail.result) {
                   case null:
                     return skeleton!;
                   default:
-                    switch (provider.transactionDetail.data?.order?[0].payment?.idStatusPayment) {
+                    switch (provider.transactionDetail.result?.data?[0].idStatusOrder) {
                       case 1:
-                        switch (provider.transactionDetail.data?.order?[0].payment?.vaNumber) {
-                          case null:
-                            switch (provider.transactionDetail.data?.detailPayments?.paymentMethod) {
-                              case 'transfer_manual':
-                                var _data = provider.transactionDetail.data;
-                                return Container(
-                                  color: Colors.white,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: CustomWidget.roundIconBtn(
-                                    icon: MdiIcons.shieldCheck,
-                                    label: AppLocalizations.instance.text('TXT_UPLOAD_PAYMENT'),
-                                    btnColor: Colors.green,
-                                    lblColor: Colors.white,
-                                    isBold: true,
-                                    radius: 8,
-                                    fontSize: 16,
-                                    function: () => Get.offAndToNamed(UploadPaymentScreen.tag, arguments: UploadPaymentScreen(
-                                      orderId: _data?.order?[0].codeTransaction,
-                                      orderDate: DateFormat('dd MMMM yyyy, HH:mm a').format(_data?.orderedAt != null ? DateTime.parse(_data?.orderedAt ?? '') : DateTime.now()),
-                                      totalPay: FormatterHelper.moneyFormatter(_data?.totalPay ?? 0),
-                                    )),
-                                  ),
-                                );
-                              default:
-                                return Container(
-                                  color: Colors.white,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: CustomWidget.roundIconBtn(
-                                    icon: MdiIcons.shieldCheck,
-                                    label: AppLocalizations.instance.text('TXT_FINISH_PAYMENT'),
-                                    btnColor: Colors.green,
-                                    lblColor: Colors.white,
-                                    isBold: true,
-                                    radius: 8,
-                                    fontSize: 16,
-                                    function: () async => await provider.fnFinishPayment(_provider.scaffoldKey.currentContext!),
-                                  ),
-                                );
-                            }
+                        switch (provider.transactionDetail.result?.paymentType) {
+                          case 'transfer_manual':
+                            var _data = provider.transactionDetail.result;
+                            return Container(
+                              color: Colors.white,
+                              width: MediaQuery.of(context).size.width,
+                              child: CustomWidget.roundIconBtn(
+                                icon: MdiIcons.shieldCheck,
+                                label: AppLocalizations.instance.text('TXT_UPLOAD_PAYMENT'),
+                                btnColor: Colors.green,
+                                lblColor: Colors.white,
+                                isBold: true,
+                                radius: 8,
+                                fontSize: 16,
+                                function: () => Get.offAndToNamed(UploadPaymentScreen.tag, arguments: UploadPaymentScreen(
+                                  orderId: _data?.codeTransaction,
+                                  orderDate: DateFormat('dd MMMM yyyy, HH:mm a', provider.locale).format(_data?.createdAt != null
+                                      ? DateTime.parse(_data?.createdAt ?? '')
+                                      : DateTime.now()),
+                                  totalPay: FormatterHelper.moneyFormatter(_data?.amount ?? 0),
+                                )),
+                              ),
+                            );
                           default:
-                            return skeleton!;
+                            return Container(
+                              color: Colors.white,
+                              width: MediaQuery.of(context).size.width,
+                              child: CustomWidget.roundIconBtn(
+                                icon: MdiIcons.shieldCheck,
+                                label: AppLocalizations.instance.text('TXT_FINISH_PAYMENT'),
+                                btnColor: Colors.green,
+                                lblColor: Colors.white,
+                                isBold: true,
+                                radius: 8,
+                                fontSize: 16,
+                                function: () async => await provider.fnFinishPayment(_provider.scaffoldKey.currentContext!),
+                              ),
+                            );
                         }
                       default:
                         return skeleton!;
@@ -673,6 +673,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                 fontSize: 16,
                 function: () => Get.toNamed(TrackOrderScreen.tag, arguments: TrackOrderScreen(
                   orderId: _provider.orderId,
+                  regionId: _provider.regionId,
                 )),
               ),
             ),

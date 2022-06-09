@@ -6,7 +6,6 @@ import 'package:eight_barrels/model/cart/cart_total_model.dart';
 import 'package:eight_barrels/model/checkout/courier_list_model.dart' as courier;
 import 'package:eight_barrels/model/checkout/delivery_courier_model.dart';
 import 'package:eight_barrels/model/checkout/order_summary_model.dart';
-import 'package:eight_barrels/model/product/product_detail_model.dart';
 import 'package:eight_barrels/screen/checkout/delivery_cart_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/address/address_service.dart';

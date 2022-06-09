@@ -2,7 +2,6 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/model/address/address_list_model.dart' as address;
-import 'package:eight_barrels/model/cart/cart_total_model.dart';
 import 'package:eight_barrels/model/checkout/courier_list_model.dart' as courier;
 import 'package:eight_barrels/model/checkout/delivery_courier_model.dart';
 import 'package:eight_barrels/model/checkout/order_summary_model.dart';
@@ -35,6 +34,8 @@ class DeliveryBuyProvider extends ChangeNotifier {
   int productQty = 1;
 
   LoadingView? _view;
+
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   fnGetView(LoadingView view) {
     this._view = view;

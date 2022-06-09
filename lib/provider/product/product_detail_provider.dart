@@ -28,7 +28,7 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
   UserPreferences _userPreferences = new UserPreferences();
 
   bool isWishlist = false;
-  int? id;
+  int? productId;
   bool isRegionSelected = false;
   int? selectedRegionId;
 
@@ -42,13 +42,13 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
 
   fnGetArguments(BuildContext context) {
     final _args = ModalRoute.of(context)!.settings.arguments as ProductDetailScreen;
-    id = _args.id!;
+    productId = _args.productId!;
     notifyListeners();
   }
 
   Future fnFetchProduct() async {
     _view!.onProgressStart();
-    product = (await _productService.getProductDetail(id: id))!;
+    product = (await _productService.getProductDetail(id: productId))!;
     _view!.onProgressFinish();
     notifyListeners();
   }

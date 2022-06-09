@@ -88,7 +88,7 @@ class _CartListScreenState extends State<CartListScreen>
                                   return InkWell(
                                     onTap: () async => await Get.toNamed(
                                       ProductDetailScreen.tag,
-                                      arguments: ProductDetailScreen(id: _data.idProduct,),
+                                      arguments: ProductDetailScreen(productId: _data.idProduct,),
                                     )!.then((_) => provider.fnFetchCartList()),
                                     child: Card(
                                       shape: RoundedRectangleBorder(
@@ -176,7 +176,7 @@ class _CartListScreenState extends State<CartListScreen>
                                                             },
                                                           );
                                                         },
-                                                        icon: Icon(FontAwesomeIcons.trashAlt, size: 20, color: CustomColor.GREY_TXT,),
+                                                        icon: Icon(FontAwesomeIcons.trashCan, size: 20, color: CustomColor.GREY_TXT,),
                                                         visualDensity: VisualDensity.compact,
                                                       ),
                                                       SizedBox(width: 10,),
@@ -283,54 +283,54 @@ class _CartListScreenState extends State<CartListScreen>
                 case 0:
                   return skeleton!;
                 default:
-                  switch (provider.totalCart) {
-                    case 0:
-                      return skeleton!;
-                    default:
-                      return Card(
-                        color: CustomColor.MAIN,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  return Card(
+                    color: CustomColor.MAIN,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(AppLocalizations.instance.text('TXT_TOTAL_PRICE'), style: TextStyle(
-                                    color: Colors.white,
-                                  ),),
-                                  SizedBox(height: 5,),
-                                  Text(FormatterHelper.moneyFormatter(provider.totalPay), style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),),
-                                ],
-                              ),
-                              SizedBox(
-                                width: 120,
-                                height: 40,
-                                child: CustomWidget.roundIconBtn(
-                                  icon: MdiIcons.cartArrowUp,
-                                  label: '${AppLocalizations.instance.text('TXT_LBL_BUY')} (${provider.totalCart})',
-                                  isBold: true,
-                                  fontSize: 14,
-                                  btnColor: Colors.green,
-                                  lblColor: Colors.white,
-                                  radius: 8,
-                                  function: () => Get.toNamed(DeliveryCartScreen.tag, arguments: DeliveryCartScreen(
-                                    cartList: _provider.cartTotalList,
-                                    isCart: true,
-                                  )),
-                                ),
-                              ),
+                              Text(AppLocalizations.instance.text('TXT_TOTAL_PRICE'), style: TextStyle(
+                                color: Colors.white,
+                              ),),
+                              SizedBox(height: 5,),
+                              Text(FormatterHelper.moneyFormatter(provider.totalPay), style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),),
                             ],
                           ),
-                        ),
-                      );
-                  }
+                          SizedBox(
+                            width: 120,
+                            height: 40,
+                            child: CustomWidget.roundIconBtn(
+                              icon: MdiIcons.cartArrowUp,
+                              label: '${AppLocalizations.instance.text('TXT_LBL_BUY')} (${provider.totalCart})',
+                              isBold: true,
+                              fontSize: 14,
+                              btnColor: provider.totalCart != 0
+                                  ? Colors.green
+                                  : CustomColor.GREY_ICON,
+                              lblColor: Colors.white,
+                              radius: 5,
+                              function: () {
+                                if (provider.totalCart != 0)
+                                  Get.toNamed(DeliveryCartScreen.tag, arguments: DeliveryCartScreen(
+                                    cartList: _provider.cartTotalList,
+                                    isCart: true,
+                                  ));
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
               }
           }
         }
@@ -342,11 +342,6 @@ class _CartListScreenState extends State<CartListScreen>
       appBar: AppBar(
         backgroundColor: CustomColor.BG,
         elevation: 0,
-        // centerTitle: true,
-        // title: SizedBox(
-        //   width: 150,
-        //   child: Image.asset('assets/images/ic_logo_bu_white.png',),
-        // ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 20,),

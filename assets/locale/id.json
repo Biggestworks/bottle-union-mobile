@@ -185,6 +185,7 @@
 	"TXT_DESC_REGION_PREFERENCE": "Ubah preferensi wilayah Anda",
 	"TXT_REGION_PREFERENCE_INFO": "Preferensi wilayah akan digunakan untuk mengubah rekomendasi produk-produk Anda di beranda. Wilayah yang telah Anda daftarkan tidak akan berubah.",
 	"TXT_REGION_PREFERENCE_SUCCESS": "Kamu berhasil mengganti preferensi wilayah. Sistem akan memuat ulang untuk menyimpan perubahan",
+	"TXT_INVOICE_NUMBER": "Nomor Invoice",
 	"TXT_VA_NUMBER": "Nomor VA",
 	"TXT_ORDER_DATE": "Tgl Order",
 	"TXT_REVIEW": "Beri Ulasan",

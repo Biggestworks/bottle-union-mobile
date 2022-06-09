@@ -5,7 +5,6 @@ import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/auth/region_list_model.dart';
 import 'package:eight_barrels/model/auth/user_detail_model.dart';
 import 'package:eight_barrels/screen/auth/start_screen.dart';
-import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

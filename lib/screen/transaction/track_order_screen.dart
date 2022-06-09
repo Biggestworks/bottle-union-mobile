@@ -11,8 +11,9 @@ import 'package:timelines/timelines.dart';
 class TrackOrderScreen extends StatefulWidget {
   static String tag = '/track-order-screen';
   final String? orderId;
+  final int? regionId;
 
-  const TrackOrderScreen({Key? key, this.orderId}) : super(key: key);
+  const TrackOrderScreen({Key? key, this.orderId, this.regionId}) : super(key: key);
 
   @override
   _TrackOrderScreenState createState() => _TrackOrderScreenState();
@@ -34,26 +35,24 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> with LoadingView {
   @override
   Widget build(BuildContext context) {
 
-    Widget _mainContent = Consumer<TrackOrderProvider>(
-      child: CustomWidget.emptyScreen(
-        image: 'assets/images/ic_empty.png',
-        title: AppLocalizations.instance.text('TXT_NO_DATA'),
-        size: 180
-      ),
-      builder: (context, provider, skeleton) {
-        switch (provider.trackOrder.data) {
-          case null:
-            return skeleton!;
-          default:
-            return SingleChildScrollView(
-              child: DefaultTextStyle(
-                style: TextStyle(
-                  color: CustomColor.GREY_TXT,
-                  fontSize: 14,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: FixedTimeline.tileBuilder(
+    Widget _mainContent = SingleChildScrollView(
+      child: DefaultTextStyle(
+        style: TextStyle(
+          color: CustomColor.GREY_TXT,
+          fontSize: 14,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Consumer<TrackOrderProvider>(
+            child: CustomWidget.showShimmerListView(
+                height: 50
+            ),
+            builder: (context, provider, skeleton) {
+              switch (provider.trackOrder.data) {
+                case null:
+                  return skeleton!;
+                default:
+                  return FixedTimeline.tileBuilder(
                     theme: TimelineThemeData(
                       nodePosition: 0,
                       color: CustomColor.GREY_BG,
@@ -148,12 +147,12 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> with LoadingView {
                             : null,
                       ),
                     ),
-                  ),
-                ),
-              ),
-            );
-        }
-      }
+                  );
+              }
+            },
+          ),
+        ),
+      ),
     );
     
     return CustomWidget.loadingHud(

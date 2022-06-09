@@ -316,6 +316,7 @@ class _TransactionScreenState extends State<TransactionScreen>
                                     return InkWell(
                                       onTap: () => Get.toNamed(TransactionDetailScreen.tag, arguments: TransactionDetailScreen(
                                         orderId: _data?.codeTransaction,
+                                        regionId: _data?.idRegion,
                                       )),
                                       child: Card(
                                         elevation: 4,
@@ -406,7 +407,7 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                       ),),
                                                     ],
                                                   ),
-                                                  if (_data?.idStatusPayment == 1 && _data?.vaNumber == null)
+                                                  if (_data?.idStatusPayment == 1)
                                                     if (_data?.paymentMethod == 'transfer_manual')
                                                       Container(
                                                         height: 30,
@@ -467,6 +468,7 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                         isBold: true,
                                                         function: () => Get.toNamed(TrackOrderScreen.tag, arguments: TrackOrderScreen(
                                                           orderId: _data?.codeTransaction,
+                                                          regionId: _data?.idRegion,
                                                         )),
                                                       ),
                                                     ),

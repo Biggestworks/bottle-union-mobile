@@ -5,7 +5,7 @@ import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/default_model.dart';
 import 'package:eight_barrels/model/transaction/track_order_model.dart';
 import 'package:eight_barrels/model/transaction/transaction_detail_model.dart';
-import 'package:eight_barrels/model/transaction/transaction_list_dart.dart';
+import 'package:eight_barrels/model/transaction/transaction_list_model.dart';
 import 'package:eight_barrels/model/transaction/upload_payment_model.dart';
 import 'package:get/get_connect.dart';
 import 'package:http_parser/http_parser.dart';
@@ -53,12 +53,21 @@ class TransactionService extends GetConnect {
     return _model;
   }
 
-  Future<TransactionDetailModel?> getTransactionDetail({required String orderId}) async {
+  Future<TransactionDetailModel?> getTransactionDetail({
+    required String orderId,
+    required int regionId
+  }) async {
     TransactionDetailModel _model = new TransactionDetailModel();
 
+    final Map<String, dynamic> _data = {
+      "code_transaction": orderId,
+      "id_region": regionId,
+    };
+
     try {
-      Response _response = await get(
-        URLHelper.transactionDetailUrl(orderId),
+      Response _response = await post(
+        URLHelper.transactionDetailUrl,
+        _data,
         headers: await _headersAuth(),
       );
       _model = TransactionDetailModel.fromJson(_response.body);
@@ -104,12 +113,21 @@ class TransactionService extends GetConnect {
     return _model;
   }
 
-  Future<TrackOrderModel?> getTrackOrder({required String? orderId}) async {
+  Future<TrackOrderModel?> getTrackOrder({
+    required String? orderId,
+    required int? regionId
+  }) async {
     TrackOrderModel _model = new TrackOrderModel();
 
+    final Map<String, dynamic> _data = {
+      "code_transaction": orderId,
+      "id_region": regionId,
+    };
+
     try {
-      Response _response = await get(
-        URLHelper.trackOrderUrl(orderId ?? ''),
+      Response _response = await post(
+        URLHelper.trackOrderUrl,
+        _data,
         headers: await _headersAuth(),
       );
       _model = TrackOrderModel.fromJson(_response.body);
@@ -120,11 +138,15 @@ class TransactionService extends GetConnect {
     return _model;
   }
 
-  Future<DefaultModel?> finishOrder({required String? orderId}) async {
+  Future<DefaultModel?> finishOrder({
+    required String? orderId,
+    required int? regionId
+  }) async {
     DefaultModel _model = new DefaultModel();
 
     final Map<String, dynamic> _data = {
       "code_transaction": orderId,
+      "id_region": regionId
     };
 
     try {

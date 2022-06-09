@@ -1,11 +1,9 @@
 import 'dart:io';
 
 import 'package:eight_barrels/helper/user_preferences.dart';
-import 'package:eight_barrels/provider/transaction/transaction_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:provider/provider.dart';
 
 class PushNotificationManager {
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;

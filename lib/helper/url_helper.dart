@@ -85,9 +85,9 @@ class URLHelper {
 
   ///TRANSACTION
   static final transactionUrl = baseUrl + '/transactions';
-  static transactionDetailUrl(String id) => baseUrl + '/transactions/$id';
+  static final transactionDetailUrl = baseUrl + '/transactions/detail';
   static final uploadPaymentUrl = baseUrl + '/transactions/upload-proof-transfer';
-  static trackOrderUrl(String id) => baseUrl + '/transactions/tracking/$id';
+  static final trackOrderUrl = baseUrl + '/transactions/tracking';
 
   ///PRODUCT REVIEW
   static final reviewUrl = baseUrl + '/reviews';

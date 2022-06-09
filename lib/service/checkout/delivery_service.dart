@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:eight_barrels/helper/url_helper.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/checkout/courier_list_model.dart';
 import 'package:eight_barrels/model/checkout/order_summary_model.dart';
 import 'package:get/get_connect.dart';
+import 'package:http/http.dart' as http;
 
 class DeliveryService extends GetConnect {
   UserPreferences _userPreferences = new UserPreferences();
@@ -57,11 +59,19 @@ class DeliveryService extends GetConnect {
     };
 
     try {
+      // http.Response _response = await http.post(
+      //   Uri.parse(URLHelper.chooseCourierUrl),
+      //   body: json.encode(_data),
+      //   headers: await _headersAuth(),
+      // );
+      ///GET CONNECT BUG
       Response _response = await post(
         URLHelper.chooseCourierUrl,
         _data,
         headers: await _headersAuth(),
       );
+      // print(_response.body);
+      // _model = CourierListModel.fromJson(json.decode(_response.body));
       _model = CourierListModel.fromJson(_response.body);
     } catch (e) {
       print(e);

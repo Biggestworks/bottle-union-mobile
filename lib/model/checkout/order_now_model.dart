@@ -1,11 +1,11 @@
-class OrderModel {
+class OrderNowModel {
   bool? status;
   String? message;
   List<Data>? data;
 
-  OrderModel({this.status, this.message, this.data});
+  OrderNowModel({this.status, this.message, this.data});
 
-  OrderModel.fromJson(Map<String, dynamic> json) {
+  OrderNowModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {

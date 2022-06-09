@@ -2,7 +2,6 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
-import 'package:eight_barrels/model/checkout/courier_list_model.dart' as courier;
 import 'package:eight_barrels/model/checkout/delivery_courier_model.dart';
 import 'package:eight_barrels/model/checkout/order_summary_model.dart' as summary;
 import 'package:eight_barrels/model/product/product_detail_model.dart';
@@ -351,61 +350,119 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
       ),
     );
 
-    return CustomWidget.loadingHud(
-      isLoad: _isLoad,
-      child: Scaffold(
-        key: _provider.scaffoldKey,
-        backgroundColor: CustomColor.BG,
-        appBar: AppBar(
+    switch(_isLoad) {
+      case true:
+        return CustomWidget.checkoutLoadingPage();
+      default:
+        return Scaffold(
+          key: _provider.scaffoldKey,
           backgroundColor: CustomColor.BG,
-          centerTitle: true,
-          titleSpacing: 0,
-          title: RichText(text: TextSpan(
-              children: [
-                TextSpan(
-                  text: AppLocalizations.instance.text('TXT_DELIVERY'),
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: CustomColor.GREY_TXT,
+          appBar: AppBar(
+            backgroundColor: CustomColor.BG,
+            centerTitle: true,
+            titleSpacing: 0,
+            title: RichText(text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: AppLocalizations.instance.text('TXT_DELIVERY'),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: CustomColor.GREY_TXT,
+                    ),
                   ),
-                ),
-                WidgetSpan(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: Icon(Icons.arrow_forward_ios, size: 18,),
+                  WidgetSpan(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: Icon(Icons.arrow_forward_ios, size: 18,),
+                    ),
                   ),
-                ),
-                TextSpan(
-                  text: AppLocalizations.instance.text('TXT_PAYMENT'),
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: CustomColor.BROWN_TXT,
-                    fontWeight: FontWeight.bold,
+                  TextSpan(
+                    text: AppLocalizations.instance.text('TXT_PAYMENT'),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: CustomColor.BROWN_TXT,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                WidgetSpan(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: Icon(Icons.arrow_forward_ios, size: 18,),
+                  WidgetSpan(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: Icon(Icons.arrow_forward_ios, size: 18,),
+                    ),
                   ),
-                ),
-                TextSpan(
-                  text: AppLocalizations.instance.text('TXT_FINISH'),
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: CustomColor.GREY_TXT,
+                  TextSpan(
+                    text: AppLocalizations.instance.text('TXT_FINISH'),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: CustomColor.GREY_TXT,
+                    ),
                   ),
-                ),
-              ]
-          )),
-          iconTheme: IconThemeData(
-            color: Colors.black,
+                ]
+            )),
+            iconTheme: IconThemeData(
+              color: Colors.black,
+            ),
           ),
-        ),
-        body: _mainContent,
-        bottomNavigationBar: _bottomMenuContent,
-      ),
-    );
+          body: _mainContent,
+          bottomNavigationBar: _bottomMenuContent,
+        );
+    }
+
+    // return CustomWidget.loadingHud(
+    //   isLoad: _isLoad,
+    //   child: Scaffold(
+    //     key: _provider.scaffoldKey,
+    //     backgroundColor: CustomColor.BG,
+    //     appBar: AppBar(
+    //       backgroundColor: CustomColor.BG,
+    //       centerTitle: true,
+    //       titleSpacing: 0,
+    //       title: RichText(text: TextSpan(
+    //           children: [
+    //             TextSpan(
+    //               text: AppLocalizations.instance.text('TXT_DELIVERY'),
+    //               style: TextStyle(
+    //                 fontSize: 16,
+    //                 color: CustomColor.GREY_TXT,
+    //               ),
+    //             ),
+    //             WidgetSpan(
+    //               child: Padding(
+    //                 padding: const EdgeInsets.symmetric(horizontal: 6),
+    //                 child: Icon(Icons.arrow_forward_ios, size: 18,),
+    //               ),
+    //             ),
+    //             TextSpan(
+    //               text: AppLocalizations.instance.text('TXT_PAYMENT'),
+    //               style: TextStyle(
+    //                 fontSize: 16,
+    //                 color: CustomColor.BROWN_TXT,
+    //                 fontWeight: FontWeight.bold,
+    //               ),
+    //             ),
+    //             WidgetSpan(
+    //               child: Padding(
+    //                 padding: const EdgeInsets.symmetric(horizontal: 6),
+    //                 child: Icon(Icons.arrow_forward_ios, size: 18,),
+    //               ),
+    //             ),
+    //             TextSpan(
+    //               text: AppLocalizations.instance.text('TXT_FINISH'),
+    //               style: TextStyle(
+    //                 fontSize: 16,
+    //                 color: CustomColor.GREY_TXT,
+    //               ),
+    //             ),
+    //           ]
+    //       )),
+    //       iconTheme: IconThemeData(
+    //         color: Colors.black,
+    //       ),
+    //     ),
+    //     body: _mainContent,
+    //     bottomNavigationBar: _bottomMenuContent,
+    //   ),
+    // );
   }
 
   @override

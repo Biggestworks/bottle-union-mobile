@@ -388,7 +388,7 @@ class _DeliveryCartScreenState extends State<DeliveryCartScreen>
                             child: ListTileTheme(
                               dense: true,
                               child: ExpansionTile(
-                                title: Text('${AppLocalizations.instance.text('TXT_ORDER')} ${index+1}', style: TextStyle(
+                                title: Text('${AppLocalizations.instance.text('TXT_ORDER')} #${index+1}', style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),),
                                 initiallyExpanded: true,
@@ -401,11 +401,11 @@ class _DeliveryCartScreenState extends State<DeliveryCartScreen>
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
-                                        Icon(MdiIcons.store, size: 24, color: CustomColor.MAIN,),
+                                        Icon(MdiIcons.store, size: 23, color: CustomColor.MAIN,),
                                         SizedBox(width: 5,),
                                         Text(_data?.region ?? '-', style: TextStyle(
                                           color: Colors.black,
-                                          fontSize: 16,
+                                          fontSize: 15,
                                         ), maxLines: 2, overflow: TextOverflow.ellipsis,),
                                       ],
                                     ),
@@ -421,7 +421,7 @@ class _DeliveryCartScreenState extends State<DeliveryCartScreen>
                                     itemBuilder: (context, index) {
                                       var _products = _data?.data?[index];
                                       return InkWell(
-                                        onTap: () => Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(id: _products?.idProcduct,)),
+                                        onTap: () => Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(productId: _products?.idProcduct,)),
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                                           child: Row(
@@ -505,7 +505,7 @@ class _DeliveryCartScreenState extends State<DeliveryCartScreen>
                                                               fontSize: 15,
                                                             ),),
                                                             leading: Padding(
-                                                              padding: const EdgeInsets.all(10.0),
+                                                              padding: const EdgeInsets.symmetric(horizontal: 10),
                                                               child: Icon(
                                                                 MdiIcons.truckFast,
                                                                 color: CustomColor.BROWN_TXT,
@@ -536,7 +536,7 @@ class _DeliveryCartScreenState extends State<DeliveryCartScreen>
                                                       child: ListTile(
                                                         dense: true,
                                                         visualDensity: VisualDensity.compact,
-                                                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                                                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
                                                         title: Text('${_courier.courierData?.courier ?? '-'} ${_courier.courierData?.etd ?? '-'} '
                                                             '(${FormatterHelper.moneyFormatter(_courier.courierData?.price ?? 0)})', style: TextStyle(
                                                           color: Colors.black,
@@ -544,7 +544,7 @@ class _DeliveryCartScreenState extends State<DeliveryCartScreen>
                                                         ),),
                                                         subtitle: Text(_courier.courierData?.description ?? '-'),
                                                         leading: Padding(
-                                                          padding: const EdgeInsets.all(10.0),
+                                                          padding: const EdgeInsets.symmetric(horizontal: 10),
                                                           child: Icon(
                                                             MdiIcons.truckFast,
                                                             color: CustomColor.BROWN_TXT,
@@ -614,7 +614,7 @@ class _DeliveryCartScreenState extends State<DeliveryCartScreen>
                             //                   itemBuilder: (context, index) {
                             //                     var _data = provider.product?.data;
                             //                     return InkWell(
-                            //                       onTap: () => Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(id: _data?.id,)),
+                            //                       onTap: () => Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(productId: _data?.id,)),
                             //                       child: Padding(
                             //                         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                             //                         child: Column(
@@ -761,7 +761,7 @@ class _DeliveryCartScreenState extends State<DeliveryCartScreen>
                             //                 //   itemBuilder: (context, index) {
                             //                 //     var _data = provider.cartList?.data?[index];
                             //                 //     return InkWell(
-                            //                 //       onTap: () => Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(id: _data?.idProduct,)),
+                            //                 //       onTap: () => Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(productId: _data?.idProduct,)),
                             //                 //       child: Padding(
                             //                 //         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                             //                 //         child: Row(

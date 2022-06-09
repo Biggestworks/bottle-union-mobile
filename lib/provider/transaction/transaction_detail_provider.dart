@@ -2,6 +2,7 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
+import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/model/transaction/transaction_detail_model.dart';
 import 'package:eight_barrels/screen/checkout/midtrans_webview_screen.dart';
 import 'package:eight_barrels/screen/transaction/transaction_detail_screen.dart';
@@ -10,20 +11,22 @@ import 'package:eight_barrels/service/checkout/payment_service.dart';
 import 'package:eight_barrels/service/review/review_service.dart';
 import 'package:eight_barrels/service/transaction/transcation_service.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/route_manager.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class TransactionDetailProvider extends ChangeNotifier {
   TransactionService _service = new TransactionService();
   PaymentService _paymentService = new PaymentService();
   ReviewService _reviewService = new ReviewService();
   String? orderId;
+  int? regionId;
   TransactionDetailModel transactionDetail = new TransactionDetailModel();
 
   double starRating = 0.0;
   String ratingInfo = '';
   TextEditingController commentController = new TextEditingController();
+
+  String? locale;
 
   LoadingView? _view;
 
@@ -36,19 +39,20 @@ class TransactionDetailProvider extends ChangeNotifier {
   fnGetArguments(BuildContext context) {
     final _args = ModalRoute.of(context)!.settings.arguments as TransactionDetailScreen;
     orderId = _args.orderId!;
+    regionId = _args.regionId!;
     notifyListeners();
   }
 
   Future fnGetTransactionDetail() async {
     _view!.onProgressStart();
-    transactionDetail = (await _service.getTransactionDetail(orderId: orderId!))!;
+    transactionDetail = (await _service.getTransactionDetail(orderId: orderId!, regionId: regionId!))!;
     _view!.onProgressFinish();
     notifyListeners();
   }
 
   Future fnFinishPayment(BuildContext context) async {
     _view!.onProgressStart();
-    var _res = await _paymentService.midtransPayment(code: transactionDetail.data?.codeTransaction ?? null);
+    var _res = await _paymentService.midtransPayment(code: transactionDetail.result?.codeTransaction ?? null);
 
     if (_res!.status != null) {
       if (_res.status == true) {
@@ -66,9 +70,7 @@ class TransactionDetailProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  fnGetSubtotal(int price, int qty) {
-    return FormatterHelper.moneyFormatter((price * qty));
-  }
+  String fnGetSubtotal(int price, int qty) => FormatterHelper.moneyFormatter((price * qty));
 
   String fnGetStatus(int id) {
     switch (id) {
@@ -91,7 +93,7 @@ class TransactionDetailProvider extends ChangeNotifier {
 
   Future fnFinishOrder(BuildContext context) async {
     _view!.onProgressStart();
-    var _res = await _service.finishOrder(orderId: orderId);
+    var _res = await _service.finishOrder(orderId: orderId, regionId: regionId);
     if (_res!.status != null) {
       if (_res.status == true) {
         _view!.onProgressFinish();
@@ -199,7 +201,15 @@ class TransactionDetailProvider extends ChangeNotifier {
     }
   }
 
-  // Future fnStoreReview(int productId) async {
+  fnGetTotalPrice(int pay, int deliveryCost) => FormatterHelper.moneyFormatter(pay - deliveryCost);
+
+  Future fnGetLocale() async {
+    final _storage = new FlutterSecureStorage();
+    locale = await _storage.read(key: KeyHelper.KEY_LOCALE);
+    notifyListeners();
+  }
+
+// Future fnStoreReview(int productId) async {
   //   _view!.onProgressStart();
   //   var _res = await _reviewService.storeReview(
   //     productId: productId,

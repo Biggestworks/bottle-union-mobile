@@ -21,9 +21,9 @@ import 'package:timeago/timeago.dart' as timeago;
 
 class ProductDetailScreen extends StatefulWidget {
   static String tag = '/product-detail-screen';
-  final int? id;
+  final int? productId;
 
-  const ProductDetailScreen({Key? key, this.id}) : super(key: key);
+  const ProductDetailScreen({Key? key, this.productId}) : super(key: key);
 
   @override
   _ProductDetailScreenState createState() => _ProductDetailScreenState();

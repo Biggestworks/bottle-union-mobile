@@ -1,23 +1,30 @@
-class TransactionDetailModel {
+class OrderCartModel {
   bool? status;
   String? message;
-  Result? result;
+  String? deeplink;
+  List<Result>? result;
 
-  TransactionDetailModel({this.status, this.message, this.result});
+  OrderCartModel({this.status, this.message, this.deeplink, this.result});
 
-  TransactionDetailModel.fromJson(Map<String, dynamic> json) {
+  OrderCartModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    result =
-    json['result'] != null ? new Result.fromJson(json['result']) : null;
+    deeplink = json['deeplink'];
+    if (json['result'] != null) {
+      result = <Result>[];
+      json['result'].forEach((v) {
+        result!.add(new Result.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['message'] = this.message;
+    data['deeplink'] = this.deeplink;
     if (this.result != null) {
-      data['result'] = this.result!.toJson();
+      data['result'] = this.result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -33,10 +40,6 @@ class Result {
   String? statusPayment;
   String? createdAt;
   String? expiredAt;
-  String? courierName;
-  String? courierDesc;
-  String? courierEtd;
-  int? courierCost;
   List<Data>? data;
 
   Result(
@@ -49,10 +52,6 @@ class Result {
         this.statusPayment,
         this.createdAt,
         this.expiredAt,
-        this.courierName,
-        this.courierDesc,
-        this.courierEtd,
-        this.courierCost,
         this.data});
 
   Result.fromJson(Map<String, dynamic> json) {
@@ -65,10 +64,6 @@ class Result {
     statusPayment = json['status_payment'];
     createdAt = json['created_at'];
     expiredAt = json['expired_at'];
-    courierName = json['courier_name'];
-    courierDesc = json['courier_desc'];
-    courierEtd = json['courier_etd'];
-    courierCost = json['courier_cost'];
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
@@ -88,10 +83,6 @@ class Result {
     data['status_payment'] = this.statusPayment;
     data['created_at'] = this.createdAt;
     data['expired_at'] = this.expiredAt;
-    data['courier_name'] = this.courierName;
-    data['courier_desc'] = this.courierDesc;
-    data['courier_etd'] = this.courierEtd;
-    data['courier_cost'] = this.courierCost;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -102,45 +93,51 @@ class Result {
 class Data {
   int? idCart;
   int? idUser;
-  int? idRegion;
-  int? idProduct;
-  int? idStatusOrder;
+  int? idProcduct;
+  Product? product;
   int? qty;
   int? isSelected;
-  String? statusOrder;
+  String? statusPaid;
+  String? courierName;
+  String? courierDesc;
+  String? courierEtd;
+  int? courierCost;
   Shipment? shipment;
-  Product? product;
   String? createdAt;
   String? updatedAt;
 
   Data(
       {this.idCart,
         this.idUser,
-        this.idRegion,
-        this.idProduct,
-        this.idStatusOrder,
+        this.idProcduct,
+        this.product,
         this.qty,
         this.isSelected,
-        this.statusOrder,
+        this.statusPaid,
+        this.courierName,
+        this.courierDesc,
+        this.courierEtd,
+        this.courierCost,
         this.shipment,
-        this.product,
         this.createdAt,
         this.updatedAt});
 
   Data.fromJson(Map<String, dynamic> json) {
     idCart = json['id_cart'];
     idUser = json['id_user'];
-    idRegion = json['id_region'];
-    idProduct = json['id_product'];
-    idStatusOrder = json['id_status_order'];
+    idProcduct = json['id_procduct'];
+    product =
+    json['product'] != null ? new Product.fromJson(json['product']) : null;
     qty = json['qty'];
     isSelected = json['is_selected'];
-    statusOrder = json['status_order'];
+    statusPaid = json['status_paid'];
+    courierName = json['courier_name'];
+    courierDesc = json['courier_desc'];
+    courierEtd = json['courier_etd'];
+    courierCost = json['courier_cost'];
     shipment = json['shipment'] != null
         ? new Shipment.fromJson(json['shipment'])
         : null;
-    product =
-    json['product'] != null ? new Product.fromJson(json['product']) : null;
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
@@ -149,85 +146,22 @@ class Data {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id_cart'] = this.idCart;
     data['id_user'] = this.idUser;
-    data['id_region'] = this.idRegion;
-    data['id_product'] = this.idProduct;
-    data['id_status_order'] = this.idStatusOrder;
-    data['qty'] = this.qty;
-    data['is_selected'] = this.isSelected;
-    data['status_order'] = this.statusOrder;
-    if (this.shipment != null) {
-      data['shipment'] = this.shipment!.toJson();
-    }
+    data['id_procduct'] = this.idProcduct;
     if (this.product != null) {
       data['product'] = this.product!.toJson();
     }
+    data['qty'] = this.qty;
+    data['is_selected'] = this.isSelected;
+    data['status_paid'] = this.statusPaid;
+    data['courier_name'] = this.courierName;
+    data['courier_desc'] = this.courierDesc;
+    data['courier_etd'] = this.courierEtd;
+    data['courier_cost'] = this.courierCost;
+    if (this.shipment != null) {
+      data['shipment'] = this.shipment!.toJson();
+    }
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
-    return data;
-  }
-}
-
-class Shipment {
-  int? id;
-  String? idOrder;
-  String? receiver;
-  String? address;
-  String? phone;
-  String? provinceName;
-  String? cityName;
-  String? postalCode;
-  String? latitude;
-  String? longitude;
-  String? createdAt;
-  String? updatedAt;
-  String? deletedAt;
-
-  Shipment(
-      {this.id,
-        this.idOrder,
-        this.receiver,
-        this.address,
-        this.phone,
-        this.provinceName,
-        this.cityName,
-        this.postalCode,
-        this.latitude,
-        this.longitude,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt});
-
-  Shipment.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    idOrder = json['id_order'];
-    receiver = json['receiver'];
-    address = json['address'];
-    phone = json['phone'];
-    provinceName = json['province_name'];
-    cityName = json['city_name'];
-    postalCode = json['postal_code'];
-    latitude = json['latitude'];
-    longitude = json['longitude'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    deletedAt = json['deleted_at'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['id_order'] = this.idOrder;
-    data['receiver'] = this.receiver;
-    data['address'] = this.address;
-    data['phone'] = this.phone;
-    data['province_name'] = this.provinceName;
-    data['city_name'] = this.cityName;
-    data['postal_code'] = this.postalCode;
-    data['latitude'] = this.latitude;
-    data['longitude'] = this.longitude;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['deleted_at'] = this.deletedAt;
     return data;
   }
 }
@@ -346,6 +280,71 @@ class Product {
     data['width'] = this.width;
     data['height'] = this.height;
     data['rating'] = this.rating;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    data['deleted_at'] = this.deletedAt;
+    return data;
+  }
+}
+
+class Shipment {
+  int? id;
+  String? idOrder;
+  String? receiver;
+  String? address;
+  String? phone;
+  String? provinceName;
+  String? cityName;
+  String? postalCode;
+  String? latitude;
+  String? longitude;
+  String? createdAt;
+  String? updatedAt;
+  String? deletedAt;
+
+  Shipment(
+      {this.id,
+        this.idOrder,
+        this.receiver,
+        this.address,
+        this.phone,
+        this.provinceName,
+        this.cityName,
+        this.postalCode,
+        this.latitude,
+        this.longitude,
+        this.createdAt,
+        this.updatedAt,
+        this.deletedAt});
+
+  Shipment.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    idOrder = json['id_order'];
+    receiver = json['receiver'];
+    address = json['address'];
+    phone = json['phone'];
+    provinceName = json['province_name'];
+    cityName = json['city_name'];
+    postalCode = json['postal_code'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    deletedAt = json['deleted_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['id_order'] = this.idOrder;
+    data['receiver'] = this.receiver;
+    data['address'] = this.address;
+    data['phone'] = this.phone;
+    data['province_name'] = this.provinceName;
+    data['city_name'] = this.cityName;
+    data['postal_code'] = this.postalCode;
+    data['latitude'] = this.latitude;
+    data['longitude'] = this.longitude;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['deleted_at'] = this.deletedAt;

@@ -2,7 +2,6 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
-import 'package:eight_barrels/model/cart/cart_total_model.dart';
 import 'package:eight_barrels/model/product/product_detail_model.dart';
 import 'package:eight_barrels/provider/checkout/delivery_buy_provider.dart';
 import 'package:eight_barrels/screen/checkout/payment_screen.dart';
@@ -45,6 +44,8 @@ class _DeliveryBuyScreenState extends State<DeliveryBuyScreen>
 
   @override
   Widget build(BuildContext context) {
+    final _provider = Provider.of<DeliveryBuyProvider>(context, listen: false);
+
     final Animation<double> offsetAnimation = Tween(begin: 0.0, end: 15.0)
         .chain(CurveTween(curve: Curves.elasticIn))
         .animate(_animationController!)
@@ -340,10 +341,10 @@ class _DeliveryBuyScreenState extends State<DeliveryBuyScreen>
                             builder: (context, child) {
                               return Padding(
                                 padding: EdgeInsets.only(left: offsetAnimation.value + 15.0, right: 15.0 - offsetAnimation.value),
-                                child: Card(
-                                  elevation: 2,
-                                  shape: RoundedRectangleBorder(
+                                child: Container(
+                                  decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(color: CustomColor.GREY_BG, width: 1.5),
                                   ),
                                   child: ListTile(
                                     dense: true,
@@ -354,7 +355,7 @@ class _DeliveryBuyScreenState extends State<DeliveryBuyScreen>
                                       fontSize: 15,
                                     ),),
                                     leading: Padding(
-                                      padding: const EdgeInsets.all(10.0),
+                                      padding: const EdgeInsets.symmetric(horizontal: 10),
                                       child: Icon(
                                         MdiIcons.truckFast,
                                         color: CustomColor.BROWN_TXT,
@@ -366,8 +367,13 @@ class _DeliveryBuyScreenState extends State<DeliveryBuyScreen>
                                       color: CustomColor.GREY_TXT,
                                       size: 15,
                                     ),
-                                    onTap: () async => await provider.fnFetchCourierList()
-                                        .then((_) => _showCourierSheet(provider.selectedCourier?.regionId ?? 1)),
+                                    onTap: () async => await provider.fnFetchCourierList().then((_) async {
+                                      if (provider.courierList.data != null) {
+                                        _showCourierSheet(provider.selectedCourier?.regionId ?? 1);
+                                      } else {
+                                        await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+                                      }
+                                    }),
                                   ),
                                 ),
                               );
@@ -377,15 +383,15 @@ class _DeliveryBuyScreenState extends State<DeliveryBuyScreen>
                           var _courier = provider.selectedCourier;
                           return Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: Card(
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
+                            child: Container(
+                              decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: CustomColor.GREY_BG, width: 1.5),
                               ),
                               child: ListTile(
                                 dense: true,
                                 visualDensity: VisualDensity.compact,
-                                contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                contentPadding: EdgeInsets.symmetric(horizontal: 10),
                                 title: Text('${_courier?.courierData?.courier ?? '-'} ${_courier?.courierData?.etd ?? '-'} '
                                     '(${FormatterHelper.moneyFormatter(_courier?.courierData?.price ?? 0)})', style: TextStyle(
                                   color: Colors.black,
@@ -393,7 +399,7 @@ class _DeliveryBuyScreenState extends State<DeliveryBuyScreen>
                                 ),),
                                 subtitle: Text(_courier?.courierData?.description ?? '-'),
                                 leading: Padding(
-                                  padding: const EdgeInsets.all(10.0),
+                                  padding: const EdgeInsets.symmetric(horizontal: 10),
                                   child: Icon(
                                     MdiIcons.truckFast,
                                     color: CustomColor.BROWN_TXT,
@@ -405,8 +411,13 @@ class _DeliveryBuyScreenState extends State<DeliveryBuyScreen>
                                   color: CustomColor.GREY_TXT,
                                   size: 15,
                                 ),
-                                onTap: () async => await provider.fnFetchCourierList()
-                                    .then((_) => _showCourierSheet(_courier?.regionId ?? 1)),
+                                onTap: () async => await provider.fnFetchCourierList().then((_) async {
+                                  if (provider.courierList.data != null) {
+                                    _showCourierSheet(_courier?.regionId ?? 1);
+                                  } else {
+                                    await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+                                  }
+                                }),
                               ),
                             ),
                           );
@@ -466,7 +477,7 @@ class _DeliveryBuyScreenState extends State<DeliveryBuyScreen>
                       itemBuilder: (context, index) {
                         var _data = provider.product?.data;
                         return InkWell(
-                          onTap: () => Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(id: _data?.id,)),
+                          onTap: () => Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(productId: _data?.id,)),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                             child: Column(
@@ -723,6 +734,7 @@ class _DeliveryBuyScreenState extends State<DeliveryBuyScreen>
     return CustomWidget.loadingHud(
       isLoad: _isLoad,
       child: Scaffold(
+        key: _provider.scaffoldKey,
         backgroundColor: CustomColor.BG,
         appBar: AppBar(
           backgroundColor: CustomColor.BG,

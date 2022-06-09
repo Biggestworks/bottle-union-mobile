@@ -10,6 +10,7 @@ class TrackOrderProvider extends ChangeNotifier {
   TrackOrderModel trackOrder = new TrackOrderModel();
 
   String? orderId;
+  int? regionId;
 
   LoadingView? _view;
 
@@ -20,12 +21,13 @@ class TrackOrderProvider extends ChangeNotifier {
   fnGetArguments(BuildContext context) {
     final _args = ModalRoute.of(context)!.settings.arguments as TrackOrderScreen;
     orderId = _args.orderId!;
+    regionId = _args.regionId!;
     notifyListeners();
   }
 
   Future fnGetTrackOrder() async {
     _view!.onProgressStart();
-    trackOrder = (await _service.getTrackOrder(orderId: orderId))!;
+    trackOrder = (await _service.getTrackOrder(orderId: orderId, regionId: regionId))!;
     _view!.onProgressFinish();
     notifyListeners();
   }

@@ -1,9 +1,8 @@
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/abstract/pagination_interface.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
-import 'package:eight_barrels/model/transaction/transaction_list_dart.dart';
+import 'package:eight_barrels/model/transaction/transaction_list_model.dart';
 import 'package:eight_barrels/screen/checkout/midtrans_webview_screen.dart';
-import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/cart/cart_service.dart';
 import 'package:eight_barrels/service/checkout/payment_service.dart';
@@ -31,11 +30,11 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
   List<TabLabel> tabLabel = [
     TabLabel(AppLocalizations.instance.text('TXT_LBL_PAYMENT'), 1, FontAwesomeIcons.creditCard),
     TabLabel(AppLocalizations.instance.text('TXT_LBL_CONFIRMATION'), 2, FontAwesomeIcons.clock),
-    TabLabel(AppLocalizations.instance.text('TXT_LBL_PROCESSED'), 3, FontAwesomeIcons.checkCircle),
+    TabLabel(AppLocalizations.instance.text('TXT_LBL_PROCESSED'), 3, FontAwesomeIcons.circleCheck),
     TabLabel(AppLocalizations.instance.text('TXT_LBL_DELIVERY'), 4, FontAwesomeIcons.truck),
     // TabLabel(AppLocalizations.instance.text('TXT_LBL_ARRIVE'), 0, FontAwesomeIcons.boxOpen),
     TabLabel(AppLocalizations.instance.text('TXT_LBL_COMPLETE'), 6, FontAwesomeIcons.solidStar),
-    TabLabel(AppLocalizations.instance.text('TXT_LBL_CANCELLED'), 7, FontAwesomeIcons.exclamationCircle),
+    TabLabel(AppLocalizations.instance.text('TXT_LBL_CANCELLED'), 7, FontAwesomeIcons.circleExclamation),
   ];
 
   List<DateFilter> dateFilter = [

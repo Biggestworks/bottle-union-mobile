@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
         debugPrint('Received URI: $uri');
         setState(() {
           if (uri?.queryParameters['product_id'] != null) {
-            Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(id: int.parse(uri?.queryParameters['product_id'] ?? '')));
+            Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(productId: int.parse(uri?.queryParameters['product_id'] ?? '')));
           }
         });
       }, onError: (Object err) {

@@ -4,12 +4,7 @@ import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/model/product/popular_product_list_model.dart' as popularProduct;
 import 'package:eight_barrels/model/product/product_model.dart';
-import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
-import 'package:eight_barrels/screen/product/wishlist_screen.dart';
-import 'package:eight_barrels/screen/widget/custom_widget.dart';
-import 'package:eight_barrels/service/cart/cart_service.dart';
-import 'package:eight_barrels/service/product/wishlist_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -93,7 +88,7 @@ abstract class ProductCardInterface {
               await storeClickLog();
               Get.toNamed(
                 ProductDetailScreen.tag,
-                arguments: ProductDetailScreen(id: data.id,),
+                arguments: ProductDetailScreen(productId: data.id,),
               );
             },
             child: Column(
@@ -221,7 +216,7 @@ abstract class ProductCardInterface {
           await storeLog();
           Get.toNamed(
             ProductDetailScreen.tag,
-            arguments: ProductDetailScreen(id: data.id,),
+            arguments: ProductDetailScreen(productId: data.id,),
           );
         },
         child: Column(
@@ -368,7 +363,7 @@ abstract class ProductCardInterface {
               await storeClickLog();
               Get.toNamed(
                 ProductDetailScreen.tag,
-                arguments: ProductDetailScreen(id: data.id,),
+                arguments: ProductDetailScreen(productId: data.id,),
               );
             },
             child: Column(
@@ -501,7 +496,7 @@ abstract class ProductCardInterface {
           await storeLog();
           Get.toNamed(
             ProductDetailScreen.tag,
-            arguments: ProductDetailScreen(id: data.id,),
+            arguments: ProductDetailScreen(productId: data.id,),
           );
         },
         child: Column(
@@ -648,7 +643,7 @@ abstract class ProductCardInterface {
             await storeClickLog();
             Get.toNamed(
               ProductDetailScreen.tag,
-              arguments: ProductDetailScreen(id: data.id,),
+              arguments: ProductDetailScreen(productId: data.id,),
             );
           },
           child: Column(
@@ -744,7 +739,7 @@ abstract class ProductCardInterface {
             await storeLog();
             Get.toNamed(
               ProductDetailScreen.tag,
-              arguments: ProductDetailScreen(id: data.id,),
+              arguments: ProductDetailScreen(productId: data.id,),
             );
           },
           child: Column(

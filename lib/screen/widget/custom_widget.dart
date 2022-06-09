@@ -655,4 +655,23 @@ class CustomWidget {
     );
   }
 
+  static Widget checkoutLoadingPage() {
+    return Scaffold(
+      backgroundColor: CustomColor.MAIN,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SpinKitChasingDots(
+            color: Colors.white,
+          ),
+          SizedBox(height: 20,),
+          Text('Placing Order...', style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+          ),),
+        ],
+      ),
+    );
+  }
+
 }

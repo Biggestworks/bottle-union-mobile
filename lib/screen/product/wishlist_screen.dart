@@ -92,7 +92,7 @@ class _WishListScreenState extends State<WishListScreen>
                                         child: InkWell(
                                           onTap: () async => await Get.toNamed(
                                             ProductDetailScreen.tag,
-                                            arguments: ProductDetailScreen(id: _data?.idProduct,),
+                                            arguments: ProductDetailScreen(productId: _data?.idProduct,),
                                           )!.then((_) => provider.fnFetchWishlist()),
                                           child: Card(
                                             shape: RoundedRectangleBorder(
