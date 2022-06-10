@@ -812,7 +812,7 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
             Consumer<OrderFinishProvider>(
               child: SizedBox(),
               builder: (context, provider, skeleton) {
-                switch (provider.orderNow?.data?[0].vaNumber) {
+                switch (provider.orderCart) {
                   case null:
                     switch (provider.orderNow?.data?[0].paymentMethod) {
                       case 'transfer_manual':
@@ -829,28 +829,76 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                             fontSize: 16,
                             function: () => Get.offAndToNamed(UploadPaymentScreen.tag, arguments: UploadPaymentScreen(
                               orderId: _data?.order?[0].codeTransaction,
-                              orderDate: DateFormat('dd MMMM yyyy, HH:mm a').format(_data?.transactionTime != null ? DateTime.parse(_data?.transactionTime ?? '') : DateTime.now()),
+                              orderDate: DateFormat('dd MMMM yyyy, HH:mm a').format(_data?.transactionTime != null
+                                  ? DateTime.parse(_data?.transactionTime ?? '')
+                                  : DateTime.now()),
                               totalPay: FormatterHelper.moneyFormatter(_data?.amount ?? 0),
                             )),
                           ),
                         );
                       default:
+                        switch (provider.orderNow?.data?[0].vaNumber) {
+                          case null:
+                            return Container(
+                              width: MediaQuery.of(context).size.width,
+                              child: CustomWidget.roundIconBtn(
+                                icon: MdiIcons.shieldCheck,
+                                label: AppLocalizations.instance.text('TXT_FINISH_PAYMENT'),
+                                btnColor: Colors.green,
+                                lblColor: Colors.white,
+                                isBold: true,
+                                radius: 8,
+                                fontSize: 16,
+                                function: () async => await _provider.fnFinishPayment(_provider.scaffoldKey.currentContext!),
+                              ),
+                            );
+                          default:
+                            return skeleton!;
+                        }
+                    }
+                  default:
+                    switch (provider.orderCart?.result?[0].paymentType) {
+                      case 'transfer_manual':
+                        var _data = provider.orderCart?.result?[0];
                         return Container(
                           width: MediaQuery.of(context).size.width,
                           child: CustomWidget.roundIconBtn(
                             icon: MdiIcons.shieldCheck,
-                            label: AppLocalizations.instance.text('TXT_FINISH_PAYMENT'),
+                            label: AppLocalizations.instance.text('TXT_UPLOAD_PAYMENT'),
                             btnColor: Colors.green,
                             lblColor: Colors.white,
                             isBold: true,
                             radius: 8,
                             fontSize: 16,
-                            function: () async => await _provider.fnFinishPayment(_provider.scaffoldKey.currentContext!),
+                            function: () => Get.offAndToNamed(UploadPaymentScreen.tag, arguments: UploadPaymentScreen(
+                              orderId: _data?.codeTransaction,
+                              orderDate: DateFormat('dd MMMM yyyy, HH:mm a').format(_data?.createdAt != null
+                                  ? DateTime.parse(_data?.createdAt ?? '')
+                                  : DateTime.now()),
+                              totalPay: FormatterHelper.moneyFormatter(_data?.amount ?? 0),
+                            )),
                           ),
                         );
+                      default:
+                        switch (provider.orderCart?.result?[0].vaNumber) {
+                          case null:
+                            return Container(
+                              width: MediaQuery.of(context).size.width,
+                              child: CustomWidget.roundIconBtn(
+                                icon: MdiIcons.shieldCheck,
+                                label: AppLocalizations.instance.text('TXT_FINISH_PAYMENT'),
+                                btnColor: Colors.green,
+                                lblColor: Colors.white,
+                                isBold: true,
+                                radius: 8,
+                                fontSize: 16,
+                                function: () async => await _provider.fnFinishPayment(_provider.scaffoldKey.currentContext!),
+                              ),
+                            );
+                          default:
+                            return skeleton!;
+                        }
                     }
-                  default:
-                    return skeleton!;
                 }
               },
             ),

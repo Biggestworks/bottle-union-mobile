@@ -401,14 +401,14 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 2,
                                 mainAxisSpacing: 4,
-                                itemCount: provider.productList.result!.data!.length,
+                                itemCount: provider.productList.result?.data?.length,
                                 itemBuilder: (context, index) {
-                                  var _data = provider.productList.result!.data![index];
-                                  switch (_data.stock) {
+                                  var _data = provider.productList.result?.data?[index];
+                                  switch (_data?.stock) {
                                     case 0:
                                       return provider.emptyProductCard(
                                         context: context,
-                                        data: _data,
+                                        data: _data!,
                                         index: index,
                                         storeLog: () async => await fnStoreLog(
                                           productId: [_data.id ?? 0],
@@ -421,7 +421,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                                         builder: (context, baseProvider, _) {
                                           return provider.productCard(
                                             context: context,
-                                            data: _data,
+                                            data: _data!,
                                             index: index,
                                             storeClickLog: () async => await fnStoreLog(
                                               productId: [_data.id ?? 0],

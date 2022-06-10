@@ -142,6 +142,11 @@ class _AppState extends State<App> {
         if (!mounted) {
           return;
         }
+        if (uri?.queryParameters['product_id'] != null) {
+          Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(
+            productId: int.parse(uri?.queryParameters['product_id'] ?? ''),
+          ),);
+        }
         debugPrint('Received URI: $uri');
       }, onError: (Object err) {
         if (!mounted) {

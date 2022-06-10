@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:eight_barrels/helper/url_helper.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/auth/region_list_model.dart';
@@ -8,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get_connect.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
 
 class AuthService extends GetConnect {
   UserPreferences _userPreferences = new UserPreferences();
@@ -86,13 +89,20 @@ class AuthService extends GetConnect {
     };
 
     try {
-      Response _response = await post(
-          URLHelper.registerUrl,
-          _data,
-          headers: _headers,
+      http.Response _response = await http.post(
+        Uri.parse(URLHelper.registerUrl),
+        body: json.encode(_data),
+        headers: _headers,
       );
-      print(_response.body);
-      _model = UserModel.fromJson(_response.body);
+      _model = UserModel.fromJson(json.decode(_response.body));
+
+      /// GET CONNECT BUG
+      // Response _response = await post(
+      //     URLHelper.registerUrl,
+      //     _data,
+      //     headers: _headers,
+      // );
+      // _model = UserModel.fromJson(_response.body);
     } catch (e) {
       print(e);
     }
@@ -191,7 +201,6 @@ class AuthService extends GetConnect {
         _data,
         headers: _headers,
       );
-      print(_response.body);
       _model = UserModel.fromJson(_response.body);
     } catch (e) {
       print(e);
@@ -228,7 +237,6 @@ class AuthService extends GetConnect {
         _data,
         headers: _headers,
       );
-      print(_response.body);
       _model = UserModel.fromJson(_response.body);
       if (_model.status == true) {
         await _userPreferences.saveUserToken(_model.token!);

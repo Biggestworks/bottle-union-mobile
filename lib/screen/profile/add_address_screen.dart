@@ -262,6 +262,7 @@ class _AddAddressScreenState extends State<AddAddressScreen>
                 controller: _provider.posCodeController,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: validateField,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: InputDecoration(
                   isDense: true,
                   border: OutlineInputBorder(

@@ -1,6 +1,7 @@
 class OrderNowModel {
   bool? status;
   String? message;
+  String? deepLink;
   List<Data>? data;
 
   OrderNowModel({this.status, this.message, this.data});
@@ -8,6 +9,7 @@ class OrderNowModel {
   OrderNowModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
+    deepLink = json['deeplink'];
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
@@ -20,6 +22,7 @@ class OrderNowModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['message'] = this.message;
+    data['deeplink'] = this.deepLink;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }

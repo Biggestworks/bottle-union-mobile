@@ -76,12 +76,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <!-- Deep Links -->
+            <meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
-                    android:scheme="https"
+                    android:scheme="union"
                     android:host="bottleunion.com"
                     android:pathPrefix="/link" />
             </intent-filter>

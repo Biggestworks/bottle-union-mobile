@@ -25,12 +25,27 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: CustomColor.MAIN,
-      body: Center(
-        child: Hero(
-          tag: 'logo',
-          child: SizedBox(
-            height: 80,
-            child: Image.asset('assets/images/ic_logo_bu_white.png',),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Image.asset('assets/images/ic_21_plus.png', scale: 2.2,),
+                ),
+              ),
+              Hero(
+                tag: 'logo',
+                child: SizedBox(
+                  height: 80,
+                  child: Image.asset('assets/images/ic_logo_bu_white.png',),
+                ),
+              ),
+            ],
           ),
         ),
       ),

@@ -16,6 +16,7 @@ import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TransactionScreen extends StatefulWidget {
   static String tag = '/transaction-screen';
@@ -407,8 +408,8 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                       ),),
                                                     ],
                                                   ),
-                                                  if (_data?.idStatusPayment == 1)
-                                                    if (_data?.paymentMethod == 'transfer_manual')
+                                                  if (_data?.idStatusPayment == 1) /// Waiting for payment
+                                                    if (_data?.paymentMethod == 'transfer_manual') /// Transfer Manual
                                                       Container(
                                                         height: 30,
                                                         child: CustomWidget.roundIconBtn(
@@ -417,7 +418,7 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                           lblColor: Colors.white,
                                                           btnColor: Colors.green,
                                                           fontSize: 12,
-                                                          radius: 8,
+                                                          radius: 5,
                                                           isBold: true,
                                                           function: () => Get.toNamed(UploadPaymentScreen.tag, arguments: UploadPaymentScreen(
                                                             orderId: _data?.codeTransaction,
@@ -426,7 +427,7 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                           )),
                                                         ),
                                                       )
-                                                    else
+                                                    else if (_data?.vaNumber == null) /// Gopay
                                                       Container(
                                                         height: 30,
                                                         child: CustomWidget.roundIconBtn(
@@ -435,12 +436,34 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                           lblColor: Colors.white,
                                                           btnColor: Colors.green,
                                                           fontSize: 12,
-                                                          radius: 8,
+                                                          radius: 5,
                                                           isBold: true,
-                                                          function: () async => await provider.fnFinishPayment(_scaffoldKey!.currentContext!),
+                                                          function: () async {
+                                                            final url = provider.transactionList.deepLink ?? '';
+                                                            if (await canLaunch(url)) {
+                                                              launch(url);
+                                                            }
+                                                          }
+                                                          // function: () async => await provider.fnFinishPayment(_scaffoldKey!.currentContext!),
                                                         ),
                                                       )
-                                                  else if (_data?.idStatusPayment == 6)
+                                                    else
+                                                      Container(
+                                                        height: 30,
+                                                        child: CustomWidget.roundBtn(
+                                                          label: AppLocalizations.instance.text('TXT_TRACK_ORDER'),
+                                                          lblColor: Colors.white,
+                                                          btnColor: Colors.green,
+                                                          fontSize: 12,
+                                                          radius: 5,
+                                                          isBold: true,
+                                                          function: () => Get.toNamed(TrackOrderScreen.tag, arguments: TrackOrderScreen(
+                                                            orderId: _data?.codeTransaction,
+                                                            regionId: _data?.idRegion,
+                                                          )),
+                                                        ),
+                                                      )
+                                                  else if (_data?.idStatusPayment == 6) /// Complete
                                                     Container(
                                                       width: 100,
                                                       height: 30,
@@ -449,7 +472,7 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                         lblColor: Colors.white,
                                                         btnColor: CustomColor.MAIN,
                                                         fontSize: 12,
-                                                        radius: 8,
+                                                        radius: 5,
                                                         isBold: true,
                                                         function: () {},
                                                         // function: () async => await provider.fnStoreCart(context, index)
@@ -464,7 +487,7 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                         lblColor: Colors.white,
                                                         btnColor: Colors.green,
                                                         fontSize: 12,
-                                                        radius: 8,
+                                                        radius: 5,
                                                         isBold: true,
                                                         function: () => Get.toNamed(TrackOrderScreen.tag, arguments: TrackOrderScreen(
                                                           orderId: _data?.codeTransaction,

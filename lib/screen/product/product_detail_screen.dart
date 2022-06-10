@@ -1005,7 +1005,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
               await FlutterShare.share(
                   title: 'Bottle Union',
                   text: 'Bottle Union Product',
-                  linkUrl: 'https://bottleunion.com/product_id=51',
+                  linkUrl: 'union://bottleunion.com/product_id=${_provider.productId}',
               );
             },
             icon: Icon(Icons.share),

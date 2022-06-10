@@ -517,8 +517,13 @@ class _DeliveryCartScreenState extends State<DeliveryCartScreen>
                                                               color: CustomColor.GREY_TXT,
                                                               size: 15,
                                                             ),
-                                                            onTap: () async => await provider.fnFetchCourierList(_data?.idRegion ?? 1)
-                                                                .then((_) => _showCourierSheet(_data?.idRegion ?? 1)),
+                                                            onTap: () async => await provider.fnFetchCourierList(_data?.idRegion ?? 1).then((_) async {
+                                                              if (provider.courierList.data != null) {
+                                                                _showCourierSheet(_data?.idRegion ?? 1);
+                                                              } else {
+                                                                await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+                                                              }
+                                                            }),
                                                           ),
                                                         ),
                                                       );
@@ -556,8 +561,13 @@ class _DeliveryCartScreenState extends State<DeliveryCartScreen>
                                                           color: CustomColor.GREY_TXT,
                                                           size: 15,
                                                         ),
-                                                        onTap: () async => await provider.fnFetchCourierList(_data?.idRegion ?? 1)
-                                                            .then((_) => _showCourierSheet(_data?.idRegion ?? 1)),
+                                                        onTap: () async => await provider.fnFetchCourierList(_data?.idRegion ?? 2).then((_) async {
+                                                          if (provider.courierList.data != null) {
+                                                            _showCourierSheet(_data?.idRegion ?? 1);
+                                                          } else {
+                                                            await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+                                                          }
+                                                        }),
                                                       ),
                                                     ),
                                                   );

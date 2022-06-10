@@ -1,6 +1,7 @@
 class TransactionListModel {
   bool? status;
   String? message;
+  String? deepLink;
   Result? result;
 
   TransactionListModel({this.status, this.message, this.result});
@@ -8,6 +9,7 @@ class TransactionListModel {
   TransactionListModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
+    deepLink = json['deeplink'];
     result =
     json['result'] != null ? new Result.fromJson(json['result']) : null;
   }
@@ -16,6 +18,7 @@ class TransactionListModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['message'] = this.message;
+    data['deeplink'] = this.deepLink;
     if (this.result != null) {
       data['result'] = this.result!.toJson();
     }

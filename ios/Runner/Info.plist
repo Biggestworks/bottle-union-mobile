@@ -23,6 +23,8 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>FlutterDeepLinkingEnabled</key>
+    <true/>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -48,7 +50,7 @@
 			<string>bottleunion.com</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>https</string>
+				<string>union</string>
 			</array>
 		</dict>
 	</array>

@@ -6,6 +6,7 @@ import 'package:eight_barrels/helper/validation.dart';
 import 'package:eight_barrels/model/address/ro_city_model.dart';
 import 'package:eight_barrels/model/address/ro_province_model.dart';
 import 'package:eight_barrels/model/auth/region_list_model.dart';
+import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/widget/BezierPainter.dart';
 import 'package:eight_barrels/service/address/address_service.dart';
 import 'package:eight_barrels/service/auth/auth_service.dart';
@@ -98,7 +99,7 @@ class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextVa
     if (_res!.status != null) {
       if (_res.status == true && _res.data != null) {
         _view!.onProgressFinish();
-        // await Get.offAllNamed(LoginScreen.tag, arguments: LoginScreen(isRegister: true,));
+        await Get.offAllNamed(LoginScreen.tag, arguments: LoginScreen(isRegister: true,));
       } else {
         _view!.onProgressFinish();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${_res.message.toString()}')));

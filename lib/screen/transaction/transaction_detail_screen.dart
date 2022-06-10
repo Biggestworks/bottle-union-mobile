@@ -15,6 +15,7 @@ import 'package:get/route_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TransactionDetailScreen extends StatefulWidget {
   static String tag = '/transaction-detail-screen';
@@ -651,7 +652,15 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                                 isBold: true,
                                 radius: 8,
                                 fontSize: 16,
-                                function: () async => await provider.fnFinishPayment(_provider.scaffoldKey.currentContext!),
+                                function: () async {
+                                  final _url = provider.transactionDetail.result?.deepLink ?? '';
+                                  if (await canLaunch(_url)) {
+                                    launch(_url);
+                                  } else {
+                                    await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text('Cannot launch $_url'));
+                                  }
+                                }
+                                // function: () async => await provider.fnFinishPayment(_provider.scaffoldKey.currentContext!),
                               ),
                             );
                         }

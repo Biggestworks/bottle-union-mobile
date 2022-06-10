@@ -45,7 +45,7 @@ class _StartScreenState extends State<StartScreen>
               alignment: Alignment.centerRight,
               child: Padding(
                 padding: const EdgeInsets.only(right: 10),
-                child: Image.asset('assets/images/ic_18_plus.png', scale: 2.2,),
+                child: Image.asset('assets/images/ic_21_plus.png', scale: 2.2,),
               ),
             ),
             Hero(

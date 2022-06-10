@@ -70,7 +70,6 @@ class DeliveryService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
-      // print(_response.body);
       // _model = CourierListModel.fromJson(json.decode(_response.body));
       _model = CourierListModel.fromJson(_response.body);
     } catch (e) {

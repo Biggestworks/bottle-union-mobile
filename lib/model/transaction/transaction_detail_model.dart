@@ -28,6 +28,7 @@ class Result {
   String? region;
   String? codeTransaction;
   String? vaNumber;
+  String? deepLink;
   String? paymentType;
   int? amount;
   String? statusPayment;
@@ -44,6 +45,7 @@ class Result {
         this.region,
         this.codeTransaction,
         this.vaNumber,
+        this.deepLink,
         this.paymentType,
         this.amount,
         this.statusPayment,
@@ -60,6 +62,7 @@ class Result {
     region = json['region'];
     codeTransaction = json['code_transaction'];
     vaNumber = json['va_number'];
+    deepLink = json['deeplink'];
     paymentType = json['payment_type'];
     amount = json['amount'];
     statusPayment = json['status_payment'];
@@ -83,6 +86,7 @@ class Result {
     data['region'] = this.region;
     data['code_transaction'] = this.codeTransaction;
     data['va_number'] = this.vaNumber;
+    data['deeplink'] = this.deepLink;
     data['payment_type'] = this.paymentType;
     data['amount'] = this.amount;
     data['status_payment'] = this.statusPayment;
