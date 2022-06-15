@@ -317,22 +317,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                 ),
               ),
               builder: (context, provider, skeleton) {
-                switch (_isLoad) {
-                  case true:
+                switch (provider.product.data) {
+                  case null:
                     return skeleton!;
                   default:
-                    switch (provider.product.data) {
-                      case null:
-                        return skeleton!;
-                      default:
-                        return IconButton(
-                          onPressed: () async => _showProductRegionSheet(_provider.product.data),
-                          icon: Icon(provider.isWishlist
-                              ? FontAwesomeIcons.solidHeart
-                              : FontAwesomeIcons.heart, color: CustomColor.MAIN,),
-                          visualDensity: VisualDensity.compact,
-                        );
-                    }
+                    return IconButton(
+                      onPressed: () async => _showProductRegionSheet(_provider.product.data),
+                      icon: Icon(provider.isWishlist
+                          ? FontAwesomeIcons.solidHeart
+                          : FontAwesomeIcons.heart, color: CustomColor.MAIN,),
+                      visualDensity: VisualDensity.compact,
+                    );
                 }
               },
             ),
@@ -402,8 +397,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
         ),
         child: CustomWidget.roundBtn(
           label: AppLocalizations.instance.text('TXT_SOLD_OUT'),
-          btnColor: CustomColor.GREY_TXT,
-          lblColor: Colors.white,
+          btnColor: CustomColor.GREY_ICON,
+          lblColor: CustomColor.GREY_TXT,
           isBold: true,
           radius: 5,
           function: () {},
@@ -1015,12 +1010,29 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
       ),
       body: _mainContent,
       bottomNavigationBar: Consumer<ProductDetailProvider>(
-        builder: (context, provider, _) {
-          switch (provider.product.data?.productRegion?.length) {
-            case 0:
-              return _bottomMenuDisabledContent;
+        child: CustomWidget.showShimmer(
+          child: Container(
+            color: Colors.white,
+            height: 40,
+            width: 40,
+          ),
+        ),
+        builder: (context, provider, skeleton) {
+          switch (_isLoad) {
+            case true:
+              return skeleton!;
             default:
-              return _bottomMenuContent;
+              switch (provider.product.data?.stock) {
+                case 0:
+                  return _bottomMenuDisabledContent;
+                default:
+                  switch (provider.product.data?.productRegion?.length) {
+                    case 0:
+                      return _bottomMenuDisabledContent;
+                    default:
+                      return _bottomMenuContent;
+                  }
+              }
           }
         }
       ),

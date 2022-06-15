@@ -15,6 +15,7 @@ class ProductService extends GetConnect {
 
     return {
       "Accept": "application/json",
+      "Content-Type": "application/json",
       "Authorization": "Bearer $_token",
     };
   }

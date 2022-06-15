@@ -39,9 +39,9 @@ class WishListProvider extends ChangeNotifier with PaginationInterface {
 
     selectionList.clear();
 
-    List.generate(wishlist.result!.data!.length, (index) {
+    List.generate(wishlist.result?.data?.length ?? 0, (index) {
       selectionList.add(
-        ItemSelect(wishlist.result!.data![index].id!, false,),
+        ItemSelect(wishlist.result?.data?[index].id ?? 0, false,),
       );
     });
 

@@ -4,6 +4,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/key_helper.dart' as key;
 import 'package:eight_barrels/helper/network_connection_helper.dart';
+import 'package:eight_barrels/helper/push_notification_manager.dart';
 import 'package:eight_barrels/provider/auth/forgot_password_provider.dart';
 import 'package:eight_barrels/provider/auth/login_provider.dart';
 import 'package:eight_barrels/provider/auth/otp_provider.dart';
@@ -19,6 +20,7 @@ import 'package:eight_barrels/provider/discussion/discussion_provider.dart';
 import 'package:eight_barrels/provider/home/banner_detail_provider.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
+import 'package:eight_barrels/provider/home/notification_provider.dart';
 import 'package:eight_barrels/provider/product/product_by_category_provider.dart';
 import 'package:eight_barrels/provider/product/product_by_region_provider.dart';
 import 'package:eight_barrels/provider/product/product_detail_provider.dart';
@@ -69,6 +71,7 @@ import 'package:eight_barrels/screen/profile/update_profile_screen.dart';
 import 'package:eight_barrels/screen/review/review_input_screen.dart';
 import 'package:eight_barrels/screen/splash/onboarding_screen.dart';
 import 'package:eight_barrels/screen/splash/splash_screen.dart';
+import 'package:eight_barrels/screen/transaction/invoice_webview_screen.dart';
 import 'package:eight_barrels/screen/transaction/track_order_screen.dart';
 import 'package:eight_barrels/screen/transaction/transaction_detail_screen.dart';
 import 'package:eight_barrels/screen/transaction/transaction_screen.dart';
@@ -186,7 +189,7 @@ class _AppState extends State<App> {
         ),
       ],
       child: GetMaterialApp(
-        // navigatorKey: PushNotificationManager.navigatorKey,
+
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           fontFamily: 'Futura',
@@ -455,7 +458,14 @@ class _AppState extends State<App> {
           ),
           GetPage(
             name: NotificationScreen.tag,
-            page: () => NotificationScreen(),
+            page: () => ChangeNotifierProvider<NotificationProvider>(
+              create: (context) => NotificationProvider(),
+              child: NotificationScreen(),
+            ),
+          ),
+          GetPage(
+            name: InvoiceWebviewScreen.tag,
+            page: () => InvoiceWebviewScreen(),
           ),
         ],
       ),

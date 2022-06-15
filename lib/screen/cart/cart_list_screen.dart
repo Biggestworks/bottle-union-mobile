@@ -163,6 +163,7 @@ class _CartListScreenState extends State<CartListScreen>
                                                             context,
                                                             desc: 'Are you sure you want to delete this item from cart?',
                                                             fnDeleteCart: () async {
+                                                              Get.back();
                                                               await fnStoreLog(
                                                                 productId: [_data.id ?? 0],
                                                                 categoryId: null,
@@ -172,7 +173,17 @@ class _CartListScreenState extends State<CartListScreen>
                                                                   .then((_) async => await _baseProvider.fnGetCartCount());
                                                             },
                                                             fnStoreWishlist: () async {
-
+                                                              Get.back();
+                                                              await fnStoreLog(
+                                                                productId: [_data.id ?? 0],
+                                                                categoryId: null,
+                                                                notes: KeyHelper.SAVE_WISHLIST_KEY,
+                                                              );
+                                                              await provider.fnDeleteCart(_provider.scaffoldKey.currentContext!, _data.id ?? 0)
+                                                                  .then((_) async {
+                                                                await provider.fnStoreWishlist(_provider.scaffoldKey.currentContext!, _data.idProduct ?? 0, _data.idRegion ?? 1);
+                                                                await _baseProvider.fnGetCartCount();
+                                                              });
                                                             },
                                                           );
                                                         },

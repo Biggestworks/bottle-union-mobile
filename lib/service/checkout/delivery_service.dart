@@ -16,6 +16,7 @@ class DeliveryService extends GetConnect {
 
     return {
       "Accept": "application/json",
+      "Content-Type": "application/json",
       "Authorization": "Bearer $_token",
     };
   }
@@ -53,25 +54,25 @@ class DeliveryService extends GetConnect {
     CourierListModel _model = new CourierListModel();
 
     final Map<String, dynamic> _data = {
-      "id_region": regionId,
-      "destination": destination,
+      "id_region": regionId.toString(),
+      "destination": destination.toString(),
       "weight": weight
     };
 
     try {
-      // http.Response _response = await http.post(
-      //   Uri.parse(URLHelper.chooseCourierUrl),
-      //   body: json.encode(_data),
-      //   headers: await _headersAuth(),
-      // );
-      ///GET CONNECT BUG
-      Response _response = await post(
-        URLHelper.chooseCourierUrl,
-        _data,
+      http.Response _response = await http.post(
+        Uri.parse(URLHelper.chooseCourierUrl),
+        body: json.encode(_data),
         headers: await _headersAuth(),
       );
-      // _model = CourierListModel.fromJson(json.decode(_response.body));
-      _model = CourierListModel.fromJson(_response.body);
+      _model = CourierListModel.fromJson(json.decode(_response.body));
+      ///GET CONNECT BUG
+      // Response _response = await post(
+      //   URLHelper.chooseCourierUrl,
+      //   _data,
+      //   headers: await _headersAuth(),
+      // );
+      // _model = CourierListModel.fromJson(_response.body);
     } catch (e) {
       print(e);
     }

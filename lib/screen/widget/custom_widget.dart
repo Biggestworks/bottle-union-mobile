@@ -466,7 +466,13 @@ class CustomWidget {
     );
   }
 
-  static Widget emptyScreen({required String image, String title = 'Title', double size = 220, Widget? action}) {
+  static Widget emptyScreen({
+    required String image,
+    String title = 'Title',
+    double size = 220,
+    Color? icColor,
+    Widget? action,
+  }) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(bottom: 50),
@@ -476,7 +482,7 @@ class CustomWidget {
             SizedBox(
               height: size,
               width: size,
-              child: Image.asset(image,),
+              child: Image.asset(image, color: icColor,),
             ),
             Text(title, style: TextStyle(
               color: CustomColor.GREY_TXT,

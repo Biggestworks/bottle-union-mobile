@@ -37,6 +37,7 @@ class _TransactionScreenState extends State<TransactionScreen>
       Provider.of<TransactionProvider>(context, listen: false).fnGetView(this);
       Provider.of<TransactionProvider>(context, listen: false).fnInitStatusOrder();
       Provider.of<TransactionProvider>(context, listen: false).fnFetchTransactionList();
+      Provider.of<TransactionProvider>(context, listen: false).fnOnReceiveNotification();
       _scaffoldKey = new GlobalKey<ScaffoldState>();
     });
     super.initState();
@@ -45,7 +46,7 @@ class _TransactionScreenState extends State<TransactionScreen>
   @override
   Widget build(BuildContext context) {
     final _provider = Provider.of<TransactionProvider>(context, listen: false);
-    final _baseProvider = Provider.of<BaseHomeProvider>(context, listen: false);
+    // final _baseProvider = Provider.of<BaseHomeProvider>(context, listen: false);
 
     _showDatePickerDialog(String flag) {
       return showDialog(
@@ -301,7 +302,7 @@ class _TransactionScreenState extends State<TransactionScreen>
                         );
                       default:
                         return Padding(
-                          padding: const EdgeInsets.all(10.0),
+                          padding: const EdgeInsets.all(5),
                           child: NotificationListener<ScrollNotification>(
                             onNotification: provider.fnOnNotification,
                             child: ListView(
@@ -335,7 +336,7 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                   Row(
                                                     crossAxisAlignment: CrossAxisAlignment.center,
                                                     children: [
-                                                      Icon(FontAwesomeIcons.shoppingBag, color: CustomColor.MAIN),
+                                                      Icon(FontAwesomeIcons.bagShopping, color: CustomColor.MAIN),
                                                       SizedBox(width: 10,),
                                                       Column(
                                                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -427,7 +428,7 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                           )),
                                                         ),
                                                       )
-                                                    else if (_data?.vaNumber == null) /// Gopay
+                                                    else if (_data?.paymentMethod == 'gopay') /// Gopay
                                                       Container(
                                                         height: 30,
                                                         child: CustomWidget.roundIconBtn(
@@ -439,9 +440,11 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                           radius: 5,
                                                           isBold: true,
                                                           function: () async {
-                                                            final url = provider.transactionList.deepLink ?? '';
-                                                            if (await canLaunch(url)) {
-                                                              launch(url);
+                                                            final _url = provider.transactionList.result?.data?[0].deepLink ?? '';
+                                                            if (await canLaunch(_url)) {
+                                                              launch(_url);
+                                                            } else {
+                                                              await CustomWidget.showSnackBar(context: _scaffoldKey!.currentContext!, content: Text('Cannot launch $_url'));
                                                             }
                                                           }
                                                           // function: () async => await provider.fnFinishPayment(_scaffoldKey!.currentContext!),

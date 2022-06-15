@@ -5,6 +5,7 @@ import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/provider/transaction/transaction_detail_provider.dart';
 import 'package:eight_barrels/screen/checkout/upload_payment_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
+import 'package:eight_barrels/screen/transaction/invoice_webview_screen.dart';
 import 'package:eight_barrels/screen/transaction/track_order_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class TransactionDetailScreen extends StatefulWidget {
   static String tag = '/transaction-detail-screen';
@@ -234,20 +236,20 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(AppLocalizations.instance.text('TXT_INVOICE_NUMBER')),
-                          Row(
-                            children: [
-                              IconButton(
-                                onPressed: () => Clipboard.setData(ClipboardData(text: _data?.codeTransaction ?? '-'))
-                                    .then((_) => CustomWidget.showSnackBar(context: context, content: Text('Invoice number is successfully copied to clipboard'))),
-                                icon: Icon(Icons.copy, size: 20,),
-                                constraints: BoxConstraints(),
-                                padding: EdgeInsets.zero,
-                              ),
-                              SizedBox(width: 10,),
-                              Text(_data?.codeTransaction ?? '-', style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),),
-                            ],
+                          GestureDetector(
+                            onTap: () => Get.toNamed(InvoiceWebviewScreen.tag, arguments: InvoiceWebviewScreen(
+                              url: '${dotenv.get('INVOICE_URL')}/${_data?.codeTransaction ?? '-'}',
+                            )),
+                            child: Row(
+                              children: [
+                                Icon(Icons.file_download, size: 20, color: Colors.blue,),
+                                SizedBox(width: 5,),
+                                Text(_data?.codeTransaction ?? '-', style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue,
+                                ),),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -618,7 +620,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                     switch (provider.transactionDetail.result?.data?[0].idStatusOrder) {
                       case 1:
                         switch (provider.transactionDetail.result?.paymentType) {
-                          case 'transfer_manual':
+                          case 'Transfer Manual':
                             var _data = provider.transactionDetail.result;
                             return Container(
                               color: Colors.white,
@@ -640,29 +642,31 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                                 )),
                               ),
                             );
-                          default:
+                          case 'GoPay':
                             return Container(
                               color: Colors.white,
                               width: MediaQuery.of(context).size.width,
                               child: CustomWidget.roundIconBtn(
-                                icon: MdiIcons.shieldCheck,
-                                label: AppLocalizations.instance.text('TXT_FINISH_PAYMENT'),
-                                btnColor: Colors.green,
-                                lblColor: Colors.white,
-                                isBold: true,
-                                radius: 8,
-                                fontSize: 16,
-                                function: () async {
-                                  final _url = provider.transactionDetail.result?.deepLink ?? '';
-                                  if (await canLaunch(_url)) {
-                                    launch(_url);
-                                  } else {
-                                    await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text('Cannot launch $_url'));
+                                  icon: MdiIcons.shieldCheck,
+                                  label: AppLocalizations.instance.text('TXT_FINISH_PAYMENT'),
+                                  btnColor: Colors.green,
+                                  lblColor: Colors.white,
+                                  isBold: true,
+                                  radius: 8,
+                                  fontSize: 16,
+                                  function: () async {
+                                    final _url = provider.transactionDetail.result?.deepLink ?? '';
+                                    if (await canLaunch(_url)) {
+                                      launch(_url);
+                                    } else {
+                                      await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text('Cannot launch $_url'));
+                                    }
                                   }
-                                }
                                 // function: () async => await provider.fnFinishPayment(_provider.scaffoldKey.currentContext!),
                               ),
                             );
+                          default:
+                            return skeleton!;
                         }
                       default:
                         return skeleton!;

@@ -106,9 +106,10 @@ class _DiscussionScreenState extends State<DiscussionScreen> with LoadingView {
                         switch (provider.discussionList.data?.length) {
                           case 0:
                             return CustomWidget.emptyScreen(
-                              image: 'assets/images/ic_empty.png',
+                              image: 'assets/images/ic_no_data.png',
                               size: 150,
                               title: AppLocalizations.instance.text('TXT_NO_DISCUSSION'),
+                              icColor: CustomColor.GREY_TXT,
                             );
                           default:
                             return ListView.separated(

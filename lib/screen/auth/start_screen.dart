@@ -24,11 +24,12 @@ class StartScreen extends StatefulWidget {
 class _StartScreenState extends State<StartScreen>
     with SocmedAuthInterface {
   bool _isLoad = false;
+  PushNotificationManager _pushNotificationManager = new PushNotificationManager();
 
   @override
   void initState() {
     Future.delayed(Duration.zero)
-        .then((_) async => await PushNotificationManager().saveFcmToken());
+        .then((_) async => await _pushNotificationManager.saveFcmToken());
     super.initState();
   }
 
@@ -150,7 +151,7 @@ class _StartScreenState extends State<StartScreen>
 
     Widget _authBtns = SafeArea(
       child: Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

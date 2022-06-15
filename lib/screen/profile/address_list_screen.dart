@@ -126,9 +126,10 @@ class _AddressListScreenState extends State<AddressListScreen> with LoadingView 
                     switch (provider.addressList.data?.length) {
                       case 0:
                         return CustomWidget.emptyScreen(
-                          image: 'assets/images/ic_empty.png',
+                          image: 'assets/images/ic_no_data.png',
                           title: AppLocalizations.instance.text('TXT_NO_ADDRESS'),
-                          size: 180
+                          size: 180,
+                          icColor: CustomColor.GREY_TXT,
                         );
                       default:
                         return ListView.builder(

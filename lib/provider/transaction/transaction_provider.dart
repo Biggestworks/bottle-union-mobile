@@ -7,6 +7,7 @@ import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/cart/cart_service.dart';
 import 'package:eight_barrels/service/checkout/payment_service.dart';
 import 'package:eight_barrels/service/transaction/transcation_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
@@ -236,6 +237,12 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
       default:
         return '-';
     }
+  }
+
+  Future fnOnReceiveNotification() async {
+    FirebaseMessaging.onMessage.listen(
+            (RemoteMessage message) async => await fnFetchTransactionList());
+    notifyListeners();
   }
 
   // Future fnStoreCart(BuildContext context, int index) async {

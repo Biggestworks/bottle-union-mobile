@@ -35,6 +35,7 @@ class WishlistService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
+      print(_response.body);
       _model = WishlistModel.fromJson(_response.body);
     } catch (e) {
       print(e);

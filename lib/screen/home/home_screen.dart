@@ -40,6 +40,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerProviderStateMixin {
   StreamSubscription<ConnectivityResult>? _subscription;
   bool _initialURILinkHandled = false;
+  PushNotificationManager _pushNotificationManager = new PushNotificationManager();
 
   StreamSubscription? _linkSubs;
   // TabController? _tabController;
@@ -102,10 +103,9 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
       Provider.of<HomeProvider>(context, listen: false).fnFetchPopularProductList();
       Provider.of<HomeProvider>(context, listen: false).fnSaveFcmToken();
       Provider.of<HomeProvider>(context, listen: false).fnFetchAddressList();
-      PushNotificationManager().initFCM();
+      _pushNotificationManager.initFCM();
       _initURIHandler();
       _incomingLinkHandler();
-      // _tabController = new TabController(length: 4, vsync: this);
     });
     super.initState();
   }

@@ -9,7 +9,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 
 Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  Firebase.initializeApp();
+  print('Background message: ${message.data}');
   await PushNotificationManager().showNotification(message.data);
 }
 
@@ -37,6 +37,7 @@ void main() async {
   // await dotenv.load(fileName: ".env.production");
   await dotenv.load(fileName: ".env.development");
   await Firebase.initializeApp();
+  await FirebaseMessaging.instance.getToken();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await _checkAppSecurity();
 }

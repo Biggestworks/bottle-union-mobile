@@ -37,62 +37,74 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
     Widget _bottomNavBar = Consumer<BaseHomeProvider>(
       child: Container(),
       builder: (context, provider, skeleton) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            canvasColor: CustomColor.MAIN,
-          ),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            elevation: 0,
-            currentIndex: provider.pageIndex,
-            selectedItemColor: Colors.white,
-            unselectedItemColor: Colors.white,
-            showUnselectedLabels: false,
-            iconSize: 18,
-            selectedFontSize: 12,
-            onTap: provider.fnOnNavBarSelected,
-            items: [
-              BottomNavigationBarItem(
-                icon: Padding(
-                  padding: const EdgeInsets.only(bottom: 2),
-                  child: Icon(FontAwesomeIcons.home),
-                ),
-                label: AppLocalizations.instance.text('TXT_NAV_HOME'),
-              ),
-              BottomNavigationBarItem(
-                icon: Padding(
-                  padding: const EdgeInsets.only(bottom: 2),
-                  child: Icon(FontAwesomeIcons.wineBottle),
-                ),
-                label: AppLocalizations.instance.text('TXT_NAV_PRODUCT'),
-              ),
-              BottomNavigationBarItem(
-                icon: Padding(
-                  padding: const EdgeInsets.only(bottom: 2),
-                  child: Consumer<BaseHomeProvider>(
-                    builder: (context, provider, _) {
-                      return Badge(
-                        badgeContent: Text(provider.cartCount.toString(), style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                        ),),
-                        badgeColor: CustomColor.BROWN_TXT,
-                        padding: EdgeInsets.all(6),
-                        child: Icon(FontAwesomeIcons.cartShopping),
-                      );
-                    },
-                  ),
-                ),
-                label: AppLocalizations.instance.text('TXT_NAV_CART'),
-              ),
-              BottomNavigationBarItem(
-                icon: Padding(
-                  padding: const EdgeInsets.only(bottom: 2),
-                  child: Icon(FontAwesomeIcons.receipt),
-                ),
-                label: AppLocalizations.instance.text('TXT_NAV_TRANSACTION'),
+        return Container(
+          decoration: BoxDecoration(
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: CustomColor.GREY_TXT,
+                blurRadius: 8,
               ),
             ],
+          ),
+          child: Theme(
+            data: Theme.of(context).copyWith(
+              // canvasColor: Colors.white,
+              canvasColor: CustomColor.MAIN,
+            ),
+            child: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              elevation: 0,
+              currentIndex: provider.pageIndex,
+              selectedItemColor: Colors.white,
+              unselectedItemColor: Colors.white,
+              showUnselectedLabels: false,
+              iconSize: 18,
+              selectedFontSize: 12,
+              onTap: provider.fnOnNavBarSelected,
+              items: [
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: const EdgeInsets.only(bottom: 2),
+                    child: Icon(FontAwesomeIcons.house),
+                  ),
+                  label: AppLocalizations.instance.text('TXT_NAV_HOME'),
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: const EdgeInsets.only(bottom: 2),
+                    child: Icon(FontAwesomeIcons.wineBottle),
+                  ),
+                  label: AppLocalizations.instance.text('TXT_NAV_PRODUCT'),
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: const EdgeInsets.only(bottom: 2),
+                    child: Consumer<BaseHomeProvider>(
+                      builder: (context, provider, _) {
+                        return Badge(
+                          badgeContent: Text(provider.cartCount.toString(), style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),),
+                          badgeColor: CustomColor.BROWN_TXT,
+                          padding: EdgeInsets.all(6),
+                          position: BadgePosition.topEnd(top: -12, end: -15),
+                          child: Icon(FontAwesomeIcons.cartShopping),
+                        );
+                      },
+                    ),
+                  ),
+                  label: AppLocalizations.instance.text('TXT_NAV_CART'),
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: const EdgeInsets.only(bottom: 2),
+                    child: Icon(FontAwesomeIcons.receipt),
+                  ),
+                  label: AppLocalizations.instance.text('TXT_NAV_TRANSACTION'),
+                ),
+              ],
+            ),
           ),
         );
       },

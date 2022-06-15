@@ -1,7 +1,6 @@
 class TransactionListModel {
   bool? status;
   String? message;
-  String? deepLink;
   Result? result;
 
   TransactionListModel({this.status, this.message, this.result});
@@ -9,7 +8,6 @@ class TransactionListModel {
   TransactionListModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    deepLink = json['deeplink'];
     result =
     json['result'] != null ? new Result.fromJson(json['result']) : null;
   }
@@ -18,7 +16,6 @@ class TransactionListModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['message'] = this.message;
-    data['deeplink'] = this.deepLink;
     if (this.result != null) {
       data['result'] = this.result!.toJson();
     }
@@ -100,6 +97,7 @@ class Data {
   int? idRegion;
   String? region;
   String? vaNumber;
+  String? deepLink;
   String? codeTransaction;
   String? orderedAt;
   String? paymentMethod;
@@ -130,6 +128,7 @@ class Data {
     idRegion = json['id_region'];
     region = json['region'];
     vaNumber = json['va_number'];
+    deepLink = json['deeplink'];
     codeTransaction = json['code_transaction'];
     orderedAt = json['ordered_at'];
     paymentMethod = json['payment_method'];
@@ -147,6 +146,7 @@ class Data {
     data['id_region'] = this.idRegion;
     data['region'] = this.region;
     data['va_number'] = this.vaNumber;
+    data['deeplink'] = this.deepLink;
     data['code_transaction'] = this.codeTransaction;
     data['ordered_at'] = this.orderedAt;
     data['payment_method'] = this.paymentMethod;

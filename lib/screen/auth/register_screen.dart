@@ -133,16 +133,16 @@ class _RegisterScreenState extends State<RegisterScreen>
                                 builder: (context, provider, skeleton) {
                                   switch (provider.isAgeValid) {
                                     case true:
-                                      return Icon(FontAwesomeIcons.solidCheckCircle, size: 24, color: Colors.greenAccent,);
+                                      return Icon(FontAwesomeIcons.solidCircleCheck, size: 20, color: Colors.greenAccent,);
                                     case false:
-                                      return Icon(FontAwesomeIcons.exclamationCircle, size: 24, color: Colors.amberAccent,);
+                                      return Icon(FontAwesomeIcons.circleExclamation, size: 20, color: Colors.amberAccent,);
                                     default:
                                       return skeleton!;
                                   }
                                 }
                               ),
                               SizedBox(width: 10,),
-                              Icon(FontAwesomeIcons.calendarAlt, size: 24, color: Colors.white,),
+                              Icon(FontAwesomeIcons.calendarDays, size: 20, color: Colors.white,),
                             ],
                           ),
                         ),
@@ -188,9 +188,9 @@ class _RegisterScreenState extends State<RegisterScreen>
                                     builder: (context, provider, skeleton) {
                                       switch (provider.isEmailValid) {
                                         case false:
-                                          return Icon(FontAwesomeIcons.solidCheckCircle, size: 24, color: Colors.greenAccent,);
+                                          return Icon(FontAwesomeIcons.solidCircleCheck, size: 20, color: Colors.greenAccent,);
                                         case true:
-                                          return Icon(FontAwesomeIcons.exclamationCircle, size: 24, color: Colors.amberAccent,);
+                                          return Icon(FontAwesomeIcons.circleExclamation, size: 20, color: Colors.amberAccent,);
                                         default:
                                           return skeleton!;
                                       }
@@ -288,7 +288,7 @@ class _RegisterScreenState extends State<RegisterScreen>
             ),
           ),
         ),
-        SizedBox(height: 5,),
+        SizedBox(height: 10,),
         Padding(
           padding: const EdgeInsets.only(left: 10),
           child: Text('*${AppLocalizations.instance.text('TXT_AGE_INFO')}', style: TextStyle(

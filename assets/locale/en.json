@@ -214,6 +214,7 @@
 	"TXT_NO_PRODUCT_REGION_SELECTED": "Please select product region first",
 	"TXT_ADD_DISCUSSION": "Add Discussion",
 	"TXT_SEND": "Send",
-	"TXT_ORDER": "Order"
+	"TXT_ORDER": "Order",
+	"TXT_NOTIFICATION": "Notification"
 
 }

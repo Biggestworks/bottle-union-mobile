@@ -8,9 +8,11 @@ import 'package:eight_barrels/provider/checkout/order_finish_provider.dart';
 import 'package:eight_barrels/screen/checkout/upload_payment_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
+import 'package:eight_barrels/screen/transaction/invoice_webview_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
 import 'package:intl/intl.dart';
@@ -111,20 +113,20 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(AppLocalizations.instance.text('TXT_INVOICE_NUMBER')),
-                            Row(
-                              children: [
-                                IconButton(
-                                  onPressed: () => Clipboard.setData(ClipboardData(text: _data?.order?[0].codeTransaction ?? '-'))
-                                      .then((_) => CustomWidget.showSnackBar(context: context, content: Text('Order ID successfully copied to clipboard'))),
-                                  icon: Icon(Icons.copy, size: 20,),
-                                  constraints: BoxConstraints(),
-                                  padding: EdgeInsets.zero,
-                                ),
-                                SizedBox(width: 10,),
-                                Text(_data?.order?[0].codeTransaction ?? '-', style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),),
-                              ],
+                            GestureDetector(
+                              onTap: () => Get.toNamed(InvoiceWebviewScreen.tag, arguments: InvoiceWebviewScreen(
+                                url: '${dotenv.get('INVOICE_URL')}/${_data?.order?[0].codeTransaction ?? '-'}',
+                              )),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.file_download, size: 20, color: Colors.blue,),
+                                  SizedBox(width: 5,),
+                                  Text(_data?.order?[0].codeTransaction ?? '-', style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue,
+                                  ),),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -911,7 +913,7 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                 isBold: true,
                 radius: 8,
                 fontSize: 16,
-                function: () async => await Get.offNamedUntil(BaseHomeScreen.tag, (route) => route.isFirst, arguments: BaseHomeScreen(pageIndex: 3)),
+                function: () async => await Get.offNamedUntil(BaseHomeScreen.tag, (route) => false, arguments: BaseHomeScreen(pageIndex: 3)),
               ),
             ),
           ],

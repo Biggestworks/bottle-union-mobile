@@ -86,9 +86,10 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                           switch (provider.paymentList.data?.length) {
                             case 0:
                               return CustomWidget.emptyScreen(
-                                  image: 'assets/images/ic_empty.png',
-                                  title: AppLocalizations.instance.text('TXT_NO_DATA'),
-                                  size: 180
+                                image: 'assets/images/ic_no_data.png',
+                                title: AppLocalizations.instance.text('TXT_NO_DATA'),
+                                size: 180,
+                                icColor: CustomColor.GREY_TXT,
                               );
                             default:
                               return ListView.separated(

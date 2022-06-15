@@ -3,12 +3,16 @@ import 'package:eight_barrels/abstract/pagination_interface.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/model/cart/cart_list_model.dart';
 import 'package:eight_barrels/model/cart/cart_total_model.dart';
+import 'package:eight_barrels/screen/product/wishlist_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/cart/cart_service.dart';
+import 'package:eight_barrels/service/product/wishlist_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 
 class CartListProvider extends ChangeNotifier with PaginationInterface {
   CartService _service = new CartService();
+  WishlistService _wishlistService = new WishlistService();
   CartListModel cartList = new CartListModel();
   CartTotalModel cartTotalList = new CartTotalModel();
   
@@ -98,6 +102,34 @@ class CartListProvider extends ChangeNotifier with PaginationInterface {
       }
     }
     notifyListeners();
+  }
+
+  Future fnStoreWishlist(BuildContext context, int productId, int regionId) async {
+    var _res = await _wishlistService.storeWishlist(
+      productId: productId,
+      regionId: regionId
+    );
+
+    if (_res!.status != null) {
+      if (_res.status == true && _res.message == 'Save Success') {
+        await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_WISHLIST_ADD')),
+          duration: 4,
+          action: SnackBarAction(
+            label: 'Go to wishlist',
+            textColor: Colors.white,
+            onPressed: () => Get.toNamed(WishListScreen.tag),
+          ),
+        );
+      } else if (_res.status == true && _res.message == 'Success remove wishlist') {
+        await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_WISHLIST_DELETE_SUCCESS')));
+      } else {
+        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
+      }
+    } else {
+      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+    }
   }
 
   @override

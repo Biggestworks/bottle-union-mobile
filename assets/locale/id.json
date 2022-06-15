@@ -213,6 +213,7 @@
 	"TXT_NO_PRODUCT_REGION_SELECTED": "Mohon pilih wilayah produk terlebih dahulu",
 	"TXT_ADD_DISCUSSION": "Tambah Diskusi",
 	"TXT_SEND": "Kirim",
-	"TXT_ORDER": "Pesanan"
+	"TXT_ORDER": "Pesanan",
+	"TXT_NOTIFICATION": "Notifikasi"
 
 }

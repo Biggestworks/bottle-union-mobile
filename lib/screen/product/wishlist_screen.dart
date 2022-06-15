@@ -298,7 +298,7 @@ class _WishListScreenState extends State<WishListScreen>
     );
 
     Widget _mainContent = Container(
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+      padding: EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -385,7 +385,6 @@ class _WishListScreenState extends State<WishListScreen>
       backgroundColor: CustomColor.BG,
       appBar: AppBar(
         backgroundColor: CustomColor.BG,
-        elevation: 0,
         centerTitle: true,
         title: Text(AppLocalizations.instance.text('TXT_LBL_WISHLIST'), style: TextStyle(
           color: CustomColor.BROWN_TXT,
