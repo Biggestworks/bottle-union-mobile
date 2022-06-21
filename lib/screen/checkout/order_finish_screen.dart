@@ -244,20 +244,20 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(AppLocalizations.instance.text('TXT_INVOICE_NUMBER')),
-                            Row(
-                              children: [
-                                IconButton(
-                                  onPressed: () => Clipboard.setData(ClipboardData(text: _data?.codeTransaction ?? '-'))
-                                      .then((_) => CustomWidget.showSnackBar(context: context, content: Text('Invoice number is successfully copied to clipboard'))),
-                                  icon: Icon(Icons.copy, size: 20,),
-                                  constraints: BoxConstraints(),
-                                  padding: EdgeInsets.zero,
-                                ),
-                                SizedBox(width: 10,),
-                                Text(_data?.codeTransaction ?? '-', style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),),
-                              ],
+                            GestureDetector(
+                              onTap: () => Get.toNamed(InvoiceWebviewScreen.tag, arguments: InvoiceWebviewScreen(
+                                url: '${dotenv.get('INVOICE_URL')}/${_data?.codeTransaction ?? '-'}',
+                              )),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.file_download, size: 20, color: Colors.blue,),
+                                  SizedBox(width: 5,),
+                                  Text(_data?.codeTransaction ?? '-', style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue,
+                                  ),),
+                                ],
+                              ),
                             ),
                           ],
                         ),

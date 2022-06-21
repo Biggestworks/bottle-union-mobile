@@ -10,11 +10,14 @@ import 'package:eight_barrels/helper/push_notification_manager.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
 import 'package:eight_barrels/screen/home/banner_detail_screen.dart';
+import 'package:eight_barrels/screen/home/member_loyalty_screen.dart';
 import 'package:eight_barrels/screen/home/notification_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_region_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/product/wishlist_screen.dart';
+import 'package:eight_barrels/screen/profile/add_address_screen.dart';
+import 'package:eight_barrels/screen/profile/address_list_screen.dart';
 import 'package:eight_barrels/screen/profile/profile_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/screen/widget/sliver_title.dart';
@@ -125,142 +128,155 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
       width: MediaQuery.of(context).size.width,
       height: 150,
       padding: EdgeInsets.symmetric(horizontal: 5),
-      child: Card(
-        color: CustomColor.BG,
-        elevation: 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(5),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(
-              color: CustomColor.BROWN_LIGHT_3,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(MdiIcons.starCircle, color: Colors.orange, size: 32,),
-                        SizedBox(width: 5,),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Status', style: TextStyle(
-                              color: CustomColor.BROWN_TXT,
-                              // fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),),
-                            SizedBox(height: 4,),
-                            Text('Gold Member', style: TextStyle(
-                              color: CustomColor.MAIN_TXT,
-                              fontWeight: FontWeight.bold,
-                            ),),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text('Bottle Points', style: TextStyle(
-                          color: CustomColor.BROWN_TXT,
-                          // fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),),
-                        SizedBox(height: 4,),
-                        Text('1,250 pts', style: TextStyle(
-                          color: CustomColor.MAIN_TXT,
-                          fontWeight: FontWeight.bold,
-                        ),),
-                      ],
-                    ),
-                  ],
-                ),
-                Divider(
-                  color: CustomColor.GREY_ICON,
-                  thickness: 1,
-                ),
-                Flexible(
-                  child: Card(
-                    color: CustomColor.BG,
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+      child: GestureDetector(
+        onTap: () => {},
+        child: Card(
+          color: CustomColor.BG,
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(5),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: CustomColor.BROWN_LIGHT_3,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
                         children: [
-                          Row(
+                          Icon(MdiIcons.starCircle, color: Colors.orange, size: 32,),
+                          SizedBox(width: 5,),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(AppLocalizations.instance.text('TXT_DELIVERY_TO'), style: TextStyle(
-                                // fontWeight: FontWeight.bold,
+                              Text('Status', style: TextStyle(
                                 color: CustomColor.BROWN_TXT,
+                                // fontWeight: FontWeight.bold,
+                                fontSize: 12,
                               ),),
-                              SizedBox(width: 4,),
-                              Icon(Icons.keyboard_arrow_down, size: 16,)
+                              SizedBox(height: 4,),
+                              Text('Coming Soon', style: TextStyle(
+                                color: CustomColor.MAIN_TXT,
+                                fontWeight: FontWeight.bold,
+                              ),),
                             ],
-                          ),
-                          SizedBox(height: 2,),
-                          Flexible(
-                            child: Consumer<HomeProvider>(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(AppLocalizations.instance.text('TXT_NO_ADDRESS_INFO'), style: TextStyle(
-                                      color: CustomColor.GREY_TXT,
-                                      fontSize: 12,
-                                    ),),
-                                    Flexible(
-                                      child: Text(AppLocalizations.instance.text('TXT_ADD_NOW'), style: TextStyle(
-                                        color: CustomColor.BROWN_TXT,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12,
-                                      ),),
-                                    ),
-                                  ],
-                                ),
-                                builder: (context, provider, skeleton) {
-                                  switch (provider.selectedAddress) {
-                                    case null:
-                                      return skeleton!;
-                                    default:
-                                      var _data = provider.selectedAddress;
-                                      return Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(_data?.receiver ?? '-', style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                          ),),
-                                          SizedBox(height: 2,),
-                                          Flexible(
-                                            child: Text(_data?.address ?? '-', style: TextStyle(
-                                              color: CustomColor.GREY_TXT,
-                                              fontSize: 12,
-                                            ), maxLines: 1, overflow: TextOverflow.ellipsis,),
-                                          ),
-                                        ],
-                                      );
-                                  }
-                                }
-                            ),
                           ),
                         ],
                       ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text('Bottle Points', style: TextStyle(
+                            color: CustomColor.BROWN_TXT,
+                            // fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),),
+                          SizedBox(height: 4,),
+                          Text('Coming Soon', style: TextStyle(
+                            color: CustomColor.MAIN_TXT,
+                            fontWeight: FontWeight.bold,
+                          ),),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Divider(
+                    color: CustomColor.GREY_ICON,
+                    thickness: 1,
+                  ),
+                  Flexible(
+                    child: GestureDetector(
+                      onTap: () async => await Get.toNamed(AddressListScreen.tag,)!
+                          .then((_) async => await _provider.fnFetchAddressList()),
+                      child: Card(
+                        color: CustomColor.BG,
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(AppLocalizations.instance.text('TXT_DELIVERY_TO'), style: TextStyle(
+                                    color: CustomColor.BROWN_TXT,
+                                  ),),
+                                  SizedBox(width: 4,),
+                                  Icon(Icons.keyboard_arrow_down, size: 16,)
+                                ],
+                              ),
+                              SizedBox(height: 2,),
+                              Flexible(
+                                child: Consumer<HomeProvider>(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(AppLocalizations.instance.text('TXT_NO_ADDRESS_INFO'), style: TextStyle(
+                                          color: CustomColor.GREY_TXT,
+                                          fontSize: 12,
+                                        ),),
+                                        Flexible(
+                                          child: GestureDetector(
+                                            onTap: () async => await Get.toNamed(AddAddressScreen.tag, arguments: AddAddressScreen())!
+                                                .then((value) async {
+                                              if (value == true)
+                                                await _provider.fnFetchAddressList();
+                                            }),
+                                            child: Text(AppLocalizations.instance.text('TXT_ADD_NOW'), style: TextStyle(
+                                              color: CustomColor.BROWN_TXT,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12,
+                                            ),),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    builder: (context, provider, skeleton) {
+                                      switch (provider.selectedAddress) {
+                                        case null:
+                                          return skeleton!;
+                                        default:
+                                          var _data = provider.selectedAddress;
+                                          return Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(_data?.receiver ?? '-', style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                              ),),
+                                              SizedBox(height: 2,),
+                                              Flexible(
+                                                child: Text(_data?.address ?? '-', style: TextStyle(
+                                                  color: CustomColor.GREY_TXT,
+                                                  fontSize: 12,
+                                                ), maxLines: 1, overflow: TextOverflow.ellipsis,),
+                                              ),
+                                            ],
+                                          );
+                                      }
+                                    }
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -852,7 +868,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
                             Text('${AppLocalizations.instance.text('TXT_HALLO_USER')}${provider.userModel.user?.fullname ?? '-'}', style: TextStyle(
                               fontSize: 10,
                             ),),
-                            Text('Gold Member', style: TextStyle(
+                            Text('Coming Soon', style: TextStyle(
                               fontSize: 10,
                               color: Colors.amber,
                             ),),

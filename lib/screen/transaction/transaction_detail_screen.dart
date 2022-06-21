@@ -592,18 +592,19 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                           ),
                         );
                       case 6:
-                        return Container(
-                          width: MediaQuery.of(context).size.width,
-                          child: CustomWidget.roundOutlinedBtn(
-                            label: AppLocalizations.instance.text('TXT_REVIEW'),
-                            btnColor: CustomColor.MAIN,
-                            lblColor: CustomColor.MAIN,
-                            isBold: true,
-                            radius: 8,
-                            fontSize: 16,
-                            function: () => _showRatingSheet(),
-                          ),
-                        );
+                        return skeleton!;
+                        // return Container(
+                        //   width: MediaQuery.of(context).size.width,
+                        //   child: CustomWidget.roundOutlinedBtn(
+                        //     label: AppLocalizations.instance.text('TXT_REVIEW'),
+                        //     btnColor: CustomColor.MAIN,
+                        //     lblColor: CustomColor.MAIN,
+                        //     isBold: true,
+                        //     radius: 8,
+                        //     fontSize: 16,
+                        //     function: () => _showRatingSheet(),
+                        //   ),
+                        // );
                       default:
                         return skeleton!;
                     }

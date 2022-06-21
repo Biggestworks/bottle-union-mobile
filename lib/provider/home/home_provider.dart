@@ -100,7 +100,6 @@ class HomeProvider extends ChangeNotifier
 
   Future fnSaveFcmToken() async {
     String _token = await _storage.read(key: KeyHelper.KEY_FCM_TOKEN) ?? '';
-    print(_token);
     if (_token.isEmpty)
       await _pushNotificationManager.saveFcmToken();
   }

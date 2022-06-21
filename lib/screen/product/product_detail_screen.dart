@@ -997,11 +997,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
         actions: [
           IconButton(
             onPressed: () async {
-              await FlutterShare.share(
-                  title: 'Bottle Union',
-                  text: 'Bottle Union Product',
-                  linkUrl: 'union://bottleunion.com/product_id=${_provider.productId}',
-              );
+              CustomWidget.showSnackBar(context: context, content: Text('Coming Soon'));
+              // await FlutterShare.share(
+              //     title: 'Bottle Union',
+              //     text: 'Bottle Union Product',
+              //     linkUrl: 'union://bottleunion.com/product_id=${_provider.productId}',
+              // );
             },
             icon: Icon(Icons.share),
             padding: EdgeInsets.only(right: 10,),

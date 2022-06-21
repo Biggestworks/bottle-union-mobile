@@ -1,10 +1,12 @@
 class UserDetailModel {
+  dynamic status;
   User? user;
   Region? region;
 
   UserDetailModel({this.user, this.region});
 
   UserDetailModel.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     region =
     json['region'] != null ? new Region.fromJson(json['region']) : null;
@@ -12,6 +14,7 @@ class UserDetailModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
     if (this.user != null) {
       data['user'] = this.user!.toJson();
     }

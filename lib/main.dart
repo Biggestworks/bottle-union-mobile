@@ -1,4 +1,7 @@
+import 'package:eight_barrels/helper/db_helper.dart';
 import 'package:eight_barrels/helper/push_notification_manager.dart';
+import 'package:eight_barrels/helper/user_preferences.dart';
+import 'package:eight_barrels/model/notification/notification_model.dart';
 import 'package:eight_barrels/screen/app.dart';
 import 'package:eight_barrels/screen/misc/fallBack_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -9,8 +12,27 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 
 Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print('Background message: ${message.data}');
+  await dotenv.load(fileName: ".env.production");
+  // await dotenv.load(fileName: ".env.development");
+  await Firebase.initializeApp();
   await PushNotificationManager().showNotification(message.data);
+  DbHelper _dbHelper = new DbHelper();
+  UserPreferences _userPreferences = new UserPreferences();
+
+  var _user = await _userPreferences.getUserData();
+
+  await _dbHelper.insertNotification(items: NotificationModel(
+    userId: _user?.user?.id,
+    title: message.data['title'] ?? '',
+    body: message.data['body'] ?? '',
+    type: message.data['type'] ?? '',
+    codeTransaction: message.data['code_transaction'] ?? '',
+    regionId: message.data['id_region'] ?? '',
+    isNew: 1,
+    createdAt: DateTime.now().toString(),
+  ),);
+
+  print('Background message: ${message.data}');
 }
 
 Future _checkAppSecurity() async {
@@ -34,8 +56,8 @@ Future _checkAppSecurity() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await dotenv.load(fileName: ".env.production");
-  await dotenv.load(fileName: ".env.development");
+  await dotenv.load(fileName: ".env.production");
+  // await dotenv.load(fileName: ".env.development");
   await Firebase.initializeApp();
   await FirebaseMessaging.instance.getToken();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);

@@ -34,7 +34,6 @@ class LogService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
-      print(_response.body);
     } catch (e) {
       print(e);
     }

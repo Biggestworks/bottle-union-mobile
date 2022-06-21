@@ -67,13 +67,13 @@ class LoginProvider extends ChangeNotifier
 
   @override
   onAuthFinish() {
-    _view!.onProgressStart();
+    _view!.onProgressFinish();
     notifyListeners();
   }
 
   @override
   onAuthStart() {
-    _view!.onProgressFinish();
+    _view!.onProgressStart();
     notifyListeners();
   }
 

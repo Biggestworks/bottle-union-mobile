@@ -30,6 +30,7 @@ class _InvoiceWebviewScreenState extends State<InvoiceWebviewScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: CustomColor.MAIN,
+        centerTitle: true,
         title: Text('Invoice'),
         // actions: [
         //   Padding(

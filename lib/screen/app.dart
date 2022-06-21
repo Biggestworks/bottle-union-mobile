@@ -55,6 +55,7 @@ import 'package:eight_barrels/screen/discussion/discussion_screen.dart';
 import 'package:eight_barrels/screen/home/banner_detail_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/home/home_screen.dart';
+import 'package:eight_barrels/screen/home/member_loyalty_screen.dart';
 import 'package:eight_barrels/screen/misc/success_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_region_screen.dart';
@@ -466,6 +467,10 @@ class _AppState extends State<App> {
           GetPage(
             name: InvoiceWebviewScreen.tag,
             page: () => InvoiceWebviewScreen(),
+          ),
+          GetPage(
+            name: MemberLoyaltyScreen.tag,
+            page: () => MemberLoyaltyScreen(),
           ),
         ],
       ),

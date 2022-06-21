@@ -442,7 +442,7 @@ class CustomWidget {
             border: Border.all(color: Colors.white, width: 2),
             image: DecorationImage(
               image: imageProvider,
-              fit: BoxFit.cover,
+              fit: BoxFit.contain,
             ),
           ),
         );
