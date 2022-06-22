@@ -30,8 +30,6 @@ class OrderFinishProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  fnGetTotalPrice(int pay, int deliveryCost) => FormatterHelper.moneyFormatter(pay - deliveryCost);
-
   Future fnFinishPayment(BuildContext context) async {
     _view!.onProgressStart();
     var _res = await _paymentService.midtransPayment(code: orderNow?.data?[0].order?[0].codeTransaction ?? null);
@@ -53,5 +51,29 @@ class OrderFinishProvider extends ChangeNotifier {
   }
 
   String fnGetSubtotal(int price, int qty) => FormatterHelper.moneyFormatter((price * qty));
+
+  String fnGetTotalCourierCost() {
+    int _total = 0;
+    for (int i = 0; i < (orderCart?.result?.length ?? 0); i++) {
+      _total += orderCart?.result?[i].courierCost ?? 0;
+    }
+    return FormatterHelper.moneyFormatter(_total);
+  }
+
+  String fnGetTotalPrice(int pay, int deliveryCost) {
+    int _total = 0;
+    for (int i = 0; i < (orderCart?.result?.length ?? 0); i++) {
+      _total += orderCart?.result?[i].courierCost ?? 0;
+    }
+    return FormatterHelper.moneyFormatter(pay - _total);
+  }
+
+  String fnGetTotalItem() {
+    int _total = 0;
+    for (int i = 0; i < (orderCart?.result?.length ?? 0); i++) {
+      _total += orderCart?.result?[i].data?.length ?? 0;
+    }
+    return _total.toString();
+  }
 
 }

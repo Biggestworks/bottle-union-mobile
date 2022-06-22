@@ -37,6 +37,7 @@ class Result {
   String? vaNumber;
   String? paymentType;
   int? amount;
+  int? courierCost;
   String? statusPayment;
   String? createdAt;
   String? expiredAt;
@@ -49,6 +50,7 @@ class Result {
         this.vaNumber,
         this.paymentType,
         this.amount,
+        this.courierCost,
         this.statusPayment,
         this.createdAt,
         this.expiredAt,
@@ -61,6 +63,7 @@ class Result {
     vaNumber = json['va_number'];
     paymentType = json['payment_type'];
     amount = json['amount'];
+    courierCost = json['courier_cost'];
     statusPayment = json['status_payment'];
     createdAt = json['created_at'];
     expiredAt = json['expired_at'];
@@ -80,6 +83,7 @@ class Result {
     data['va_number'] = this.vaNumber;
     data['payment_type'] = this.paymentType;
     data['amount'] = this.amount;
+    data['courier_cost'] = this.courierCost;
     data['status_payment'] = this.statusPayment;
     data['created_at'] = this.createdAt;
     data['expired_at'] = this.expiredAt;

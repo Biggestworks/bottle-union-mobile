@@ -384,7 +384,7 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                             fontWeight: FontWeight.bold,
                                                           ),),
                                                           SizedBox(height: 5,),
-                                                          Text('${_data?.countProduct} item(s)', style: TextStyle(
+                                                          Text('${_data?.qtyProduct} item(s)', style: TextStyle(
                                                             color: CustomColor.GREY_TXT,
                                                           ),),
                                                         ],

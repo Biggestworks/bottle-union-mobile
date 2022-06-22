@@ -326,7 +326,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
           ),),
           SizedBox(height: 10,),
           Container(
-            height: 120,
+            height: 140,
             child: Consumer<TransactionDetailProvider>(
               child: Container(),
               builder: (context, provider, skeleton) {
@@ -334,57 +334,74 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                   case null:
                     return skeleton!;
                   default:
-                    return ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: provider.transactionDetail.result?.data?.length,
-                      itemBuilder: (context, index) {
-                        var _data = provider.transactionDetail.result?.data?[index];
-                        return InkWell(
-                          onTap: () => Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(productId: _data?.idProduct,)),
-                          child: Card(
-                            elevation: 2,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 80,
-                                    height: 80,
-                                    child: ClipRRect(
-                                      child: CustomWidget.networkImg(context, _data?.product?.image1),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
+                    return Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(MdiIcons.store, size: 23, color: CustomColor.MAIN,),
+                            SizedBox(width: 5,),
+                            Text(provider.transactionDetail.result?.region ?? '-', style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                            ), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                          ],
+                        ),
+                        SizedBox(height: 10,),
+                        Flexible(
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: provider.transactionDetail.result?.data?.length,
+                            itemBuilder: (context, index) {
+                              var _data = provider.transactionDetail.result?.data?[index];
+                              return InkWell(
+                                onTap: () => Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(productId: _data?.idProduct,)),
+                                child: Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                                    child: Column(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Row(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(_data?.product?.name ?? '-', style: TextStyle(
-                                          color: Colors.black,
-                                        ), maxLines: 1, overflow: TextOverflow.ellipsis,),
-                                        SizedBox(height: 5,),
-                                        Text('${_data?.qty} x ${FormatterHelper.moneyFormatter(_data?.product?.regularPrice ?? 0)}', style: TextStyle(
-                                          color: CustomColor.GREY_TXT,
-                                        ),),
-                                        SizedBox(height: 5,),
-                                        Text('Total: ${provider.fnGetSubtotal(_data?.product?.regularPrice ?? 0, _data?.qty ?? 0)}', style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),),
+                                        Container(
+                                          width: 80,
+                                          height: 80,
+                                          child: ClipRRect(
+                                            child: CustomWidget.networkImg(context, _data?.product?.image1, fit: BoxFit.cover,),
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(_data?.product?.name ?? '-', style: TextStyle(
+                                                color: Colors.black,
+                                              ), maxLines: 1, overflow: TextOverflow.ellipsis,),
+                                              SizedBox(height: 5,),
+                                              Text('${_data?.qty} x ${FormatterHelper.moneyFormatter(_data?.product?.regularPrice ?? 0)}', style: TextStyle(
+                                                color: CustomColor.GREY_TXT,
+                                              ),),
+                                              SizedBox(height: 5,),
+                                              Text('Total: ${provider.fnGetSubtotal(_data?.product?.regularPrice ?? 0, _data?.qty ?? 0)}', style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),),
+                                            ],
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
+                        ),
+                      ],
                     );
                 }
               },
@@ -634,7 +651,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                                 isBold: true,
                                 radius: 8,
                                 fontSize: 16,
-                                function: () => Get.offAndToNamed(UploadPaymentScreen.tag, arguments: UploadPaymentScreen(
+                                function: () => Get.toNamed(UploadPaymentScreen.tag, arguments: UploadPaymentScreen(
                                   orderId: _data?.codeTransaction,
                                   orderDate: DateFormat('dd MMMM yyyy, HH:mm a', provider.locale).format(_data?.createdAt != null
                                       ? DateTime.parse(_data?.createdAt ?? '')

@@ -104,7 +104,7 @@ class Data {
   String? statusOrder;
   String? product;
   String? productImage;
-  int? countProduct;
+  int? qtyProduct;
   int? totalPay;
 
   Data(
@@ -119,7 +119,7 @@ class Data {
         this.statusOrder,
         this.product,
         this.productImage,
-        this.countProduct,
+        this.qtyProduct,
         this.totalPay});
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -135,7 +135,7 @@ class Data {
     statusOrder = json['status_order'];
     product = json['product'];
     productImage = json['product_image'];
-    countProduct = json['count_product'];
+    qtyProduct = json['qty_product'];
     totalPay = json['total_pay'];
   }
 
@@ -153,7 +153,7 @@ class Data {
     data['status_order'] = this.statusOrder;
     data['product'] = this.product;
     data['product_image'] = this.productImage;
-    data['count_product'] = this.countProduct;
+    data['qty_product'] = this.qtyProduct;
     data['total_pay'] = this.totalPay;
     return data;
   }

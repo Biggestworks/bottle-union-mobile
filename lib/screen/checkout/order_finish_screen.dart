@@ -645,7 +645,10 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(AppLocalizations.instance.text('TXT_PAYMENT_METHOD')),
+                              SizedBox(
+                                width: 150,
+                                child: Text(AppLocalizations.instance.text('TXT_PAYMENT_METHOD')),
+                              ),
                               Flexible(
                                 child: Text(_data?.paymentType ?? '-'),
                               ),
@@ -655,7 +658,10 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('${AppLocalizations.instance.text('TXT_TOTAL_PRICE')} (${_data?.order?.length} item(s))'),
+                              SizedBox(
+                                width: 150,
+                                child: Text('${AppLocalizations.instance.text('TXT_TOTAL_PRICE')} (${_data?.order?.length} item(s))'),
+                              ),
                               Flexible(
                                 child: Text(provider.fnGetTotalPrice(_data?.amount ?? 0, _data?.courierCost ?? 0)),
                               ),
@@ -665,7 +671,10 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(AppLocalizations.instance.text('TXT_DELIVERY_COST')),
+                              SizedBox(
+                                width: 150,
+                                child: Text(AppLocalizations.instance.text('TXT_DELIVERY_COST')),
+                              ),
                               Flexible(
                                 child: Text(FormatterHelper.moneyFormatter(_data?.courierCost ?? 0)),
                               ),
@@ -675,10 +684,13 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(AppLocalizations.instance.text('TXT_TOTAL_PAY'), style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),),
+                              SizedBox(
+                                width: 150,
+                                child: Text(AppLocalizations.instance.text('TXT_TOTAL_PAY'), style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),),
+                              ),
                               Flexible(
                                 child: Text(FormatterHelper.moneyFormatter(_data?.amount ?? 0), style: TextStyle(
                                   fontSize: 16,
@@ -718,7 +730,7 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
-                                width: 130,
+                                width: 150,
                                 child: Text(AppLocalizations.instance.text('TXT_PAYMENT_METHOD')),
                               ),
                               Flexible(
@@ -732,8 +744,8 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
-                                width: 130,
-                                child: Text('${AppLocalizations.instance.text('TXT_TOTAL_PRICE')} (3 items)'),
+                                width: 150,
+                                child: Text('${AppLocalizations.instance.text('TXT_TOTAL_PRICE')} (${provider.fnGetTotalItem()} item(s))'),
                               ),
                               Flexible(
                                 child: Text(provider.fnGetTotalPrice(_data?.amount ?? 0, _data?.data?[0].courierCost ?? 0),
@@ -746,11 +758,11 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
-                                width: 130,
+                                width: 150,
                                 child: Text(AppLocalizations.instance.text('TXT_DELIVERY_COST')),
                               ),
                               Flexible(
-                                child: Text(FormatterHelper.moneyFormatter(_data?.data?[0].courierCost ?? 0),
+                                child: Text(provider.fnGetTotalCourierCost(),
                                   textAlign: TextAlign.right,),
                               ),
                             ],
@@ -760,7 +772,7 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
-                                width: 130,
+                                width: 150,
                                 child: Text(AppLocalizations.instance.text('TXT_TOTAL_PAY'), style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -829,7 +841,7 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                             isBold: true,
                             radius: 8,
                             fontSize: 16,
-                            function: () => Get.offAndToNamed(UploadPaymentScreen.tag, arguments: UploadPaymentScreen(
+                            function: () => Get.toNamed(UploadPaymentScreen.tag, arguments: UploadPaymentScreen(
                               orderId: _data?.order?[0].codeTransaction,
                               orderDate: DateFormat('dd MMMM yyyy, HH:mm a').format(_data?.transactionTime != null
                                   ? DateTime.parse(_data?.transactionTime ?? '')
@@ -860,7 +872,7 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                     }
                   default:
                     switch (provider.orderCart?.result?[0].paymentType) {
-                      case 'transfer_manual':
+                      case 'Transfer Manual':
                         var _data = provider.orderCart?.result?[0];
                         return Container(
                           width: MediaQuery.of(context).size.width,
@@ -872,7 +884,7 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                             isBold: true,
                             radius: 8,
                             fontSize: 16,
-                            function: () => Get.offAndToNamed(UploadPaymentScreen.tag, arguments: UploadPaymentScreen(
+                            function: () => Get.toNamed(UploadPaymentScreen.tag, arguments: UploadPaymentScreen(
                               orderId: _data?.codeTransaction,
                               orderDate: DateFormat('dd MMMM yyyy, HH:mm a').format(_data?.createdAt != null
                                   ? DateTime.parse(_data?.createdAt ?? '')

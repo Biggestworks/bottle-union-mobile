@@ -99,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     Widget _headerContent = Container(
       width: MediaQuery.of(context).size.width,
-      height: 150,
+      height: 200,
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage('assets/images/bg_marron.png',),
@@ -115,13 +115,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 builder: (context, provider, _) {
                   return CustomWidget.roundedAvatarImg(
                     url: provider.userModel.user?.avatar ?? '',
-                    size: 120,
+                    size: 150,
                   );
                 }
               ),
               Positioned(
                 bottom: 0,
-                right: 0,
+                right: 5,
                 child: Icon(
                   CupertinoIcons.pencil_circle_fill,
                   color: Colors.white,
@@ -142,7 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadiusDirectional.circular(10),
             ),
-            elevation: 4,
+            elevation: 2,
             child: Column(
               children: [
                 ListTile(
@@ -311,12 +311,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           ),
-          SizedBox(height: 5,),
           Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadiusDirectional.circular(10),
             ),
-            elevation: 4,
+            elevation: 2,
             child: Column(
               children: [
                 ListTile(
@@ -374,12 +373,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           ),
-          SizedBox(height: 5,),
           Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadiusDirectional.circular(10),
             ),
-            elevation: 4,
+            elevation: 2,
             child: ListTile(
               dense: true,
               title: Text(AppLocalizations.instance.text('TXT_SIGN_OUT'), style: TextStyle(
