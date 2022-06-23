@@ -18,9 +18,8 @@ class DeliveryCartScreen extends StatefulWidget {
   static String tag = '/delivery-cart-screen';
   final CartTotalModel? cartList;
   final ProductDetailModel? product;
-  final int? selectedRegionId;
   final bool? isCart;
-  const DeliveryCartScreen({Key? key, this.cartList, this.product, this.selectedRegionId, this.isCart}) : super(key: key);
+  const DeliveryCartScreen({Key? key, this.cartList, this.product, this.isCart}) : super(key: key);
 
   @override
   _DeliveryCartScreenState createState() => _DeliveryCartScreenState();
@@ -519,9 +518,9 @@ class _DeliveryCartScreenState extends State<DeliveryCartScreen>
                                                               color: CustomColor.GREY_TXT,
                                                               size: 15,
                                                             ),
-                                                            onTap: () async => await provider.fnFetchCourierList(_data?.idRegion ?? 1).then((_) async {
+                                                            onTap: () async => await provider.fnFetchCourierList(_data?.idProvince ?? 0).then((_) async {
                                                               if (provider.courierList.data != null) {
-                                                                _showCourierSheet(_data?.idRegion ?? 1);
+                                                                _showCourierSheet(_data?.idRegion ?? 0);
                                                               } else {
                                                                 await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
                                                               }
@@ -563,9 +562,9 @@ class _DeliveryCartScreenState extends State<DeliveryCartScreen>
                                                           color: CustomColor.GREY_TXT,
                                                           size: 15,
                                                         ),
-                                                        onTap: () async => await provider.fnFetchCourierList(_data?.idRegion ?? 2).then((_) async {
+                                                        onTap: () async => await provider.fnFetchCourierList(_data?.idProvince ?? 0).then((_) async {
                                                           if (provider.courierList.data != null) {
-                                                            _showCourierSheet(_data?.idRegion ?? 1);
+                                                            _showCourierSheet(_data?.idRegion ?? 0);
                                                           } else {
                                                             await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
                                                           }

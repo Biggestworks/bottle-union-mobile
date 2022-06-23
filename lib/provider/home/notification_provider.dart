@@ -1,6 +1,4 @@
-import 'package:badges/badges.dart';
 import 'package:eight_barrels/abstract/loading.dart';
-import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/db_helper.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/notification/notification_model.dart';

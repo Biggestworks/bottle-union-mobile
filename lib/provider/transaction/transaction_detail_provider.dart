@@ -4,20 +4,16 @@ import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/model/transaction/transaction_detail_model.dart';
-import 'package:eight_barrels/screen/checkout/midtrans_webview_screen.dart';
 import 'package:eight_barrels/screen/transaction/transaction_detail_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
-import 'package:eight_barrels/service/checkout/payment_service.dart';
-import 'package:eight_barrels/service/review/review_service.dart';
 import 'package:eight_barrels/service/transaction/transcation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:get/route_manager.dart';
 
 class TransactionDetailProvider extends ChangeNotifier {
   TransactionService _service = new TransactionService();
-  PaymentService _paymentService = new PaymentService();
-  ReviewService _reviewService = new ReviewService();
+  // PaymentService _paymentService = new PaymentService();
+  // ReviewService _reviewService = new ReviewService();
   String? orderId;
   int? regionId;
   TransactionDetailModel transactionDetail = new TransactionDetailModel();
@@ -50,25 +46,25 @@ class TransactionDetailProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future fnFinishPayment(BuildContext context) async {
-    _view!.onProgressStart();
-    var _res = await _paymentService.midtransPayment(code: transactionDetail.result?.codeTransaction ?? null);
-
-    if (_res!.status != null) {
-      if (_res.status == true) {
-        _view!.onProgressFinish();
-        await Get.offAndToNamed(MidtransWebviewScreen.tag, arguments: MidtransWebviewScreen(url: _res.data?.redirectUrl,));
-      } else {
-        _view!.onProgressFinish();
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message ?? '-'));
-      }
-    } else {
-      _view!.onProgressFinish();
-      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
-    }
-    _view!.onProgressFinish();
-    notifyListeners();
-  }
+  // Future fnFinishPayment(BuildContext context) async {
+  //   _view!.onProgressStart();
+  //   var _res = await _paymentService.midtransPayment(code: transactionDetail.result?.codeTransaction ?? null);
+  //
+  //   if (_res!.status != null) {
+  //     if (_res.status == true) {
+  //       _view!.onProgressFinish();
+  //       await Get.offAndToNamed(MidtransWebviewScreen.tag, arguments: MidtransWebviewScreen(url: _res.data?.redirectUrl,));
+  //     } else {
+  //       _view!.onProgressFinish();
+  //       await CustomWidget.showSnackBar(context: context, content: Text(_res.message ?? '-'));
+  //     }
+  //   } else {
+  //     _view!.onProgressFinish();
+  //     await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+  //   }
+  //   _view!.onProgressFinish();
+  //   notifyListeners();
+  // }
 
   String fnGetSubtotal(int price, int qty) => FormatterHelper.moneyFormatter((price * qty));
 

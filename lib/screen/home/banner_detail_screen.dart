@@ -51,7 +51,32 @@ class _BannerDetailScreenState extends State<BannerDetailScreen> {
                       backgroundColor: Colors.transparent,
                       leading: SizedBox(),
                       flexibleSpace: FlexibleSpaceBar(
-                        background: CustomWidget.networkImg(context, provider.banner?.banner?[0].image,),
+                        background: Stack(
+                          children: [
+                            CustomWidget.networkImg(context, provider.banner?.banner?[0].image),
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Container(
+                                color: CustomColor.GREY_TXT,
+                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.access_time_outlined, color: Colors.white, size: 20,),
+                                    SizedBox(width: 5,),
+                                    Text(DateFormat('dd MMMM yyyy')
+                                        .format(DateTime.parse(provider.banner?.createdAt ?? '')),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                         collapseMode: CollapseMode.parallax,
                       ),
                     ),
@@ -62,14 +87,6 @@ class _BannerDetailScreenState extends State<BannerDetailScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(DateFormat('EEEE, dd MMMM yyyy')
-                              .format(DateTime.parse(provider.banner?.createdAt ?? '')),
-                            style: TextStyle(
-                              color: CustomColor.MAIN,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 10,),
                           Text(provider.banner?.banner?[0].title ?? '-', style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -88,7 +105,6 @@ class _BannerDetailScreenState extends State<BannerDetailScreen> {
         },
       ),
     );
-
 
     return Scaffold(
       backgroundColor: CustomColor.BG,

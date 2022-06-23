@@ -420,7 +420,8 @@ class CustomWidget {
   static Widget networkImg(BuildContext context, String? url, {BoxFit? fit = BoxFit.fill}) {
     return CachedNetworkImage(
       imageUrl: url ?? '',
-      width: MediaQuery.of(context).size.width,
+      width: double.infinity,
+      height: double.infinity,
       alignment: Alignment.center,
       fit: fit,
       placeholder: (context, url) => Center(
@@ -588,7 +589,7 @@ class CustomWidget {
         return AlertDialog(
           backgroundColor: Colors.white,
           insetPadding: EdgeInsets.symmetric(horizontal: 10),
-          contentPadding: EdgeInsets.fromLTRB(20, 20, 20, 5),
+          contentPadding: EdgeInsets.fromLTRB(15, 20, 15, 5),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10))
           ),
@@ -598,7 +599,7 @@ class CustomWidget {
             children: [
               Flexible(
                 child: Text(desc, style: TextStyle(
-                  fontSize: 18.0,
+                  fontSize: 18,
                   color: Colors.black,
                 ),),
               ),
@@ -615,7 +616,7 @@ class CustomWidget {
                         ),
                       ),
                       onPressed: () => fnStoreWishlist(),
-                      child: Text('Go to Wishlist', style: TextStyle(
+                      child: Text(AppLocalizations.instance.text('TXT_GOTO_WISHLIST'), style: TextStyle(
                         color: CustomColor.MAIN,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -630,7 +631,7 @@ class CustomWidget {
                         primary: CustomColor.MAIN,
                       ),
                       onPressed: () => fnDeleteCart(),
-                      child: Text('Delete', style: TextStyle(
+                      child: Text(AppLocalizations.instance.text('TXT_DELETE'), style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,

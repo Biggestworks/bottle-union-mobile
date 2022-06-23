@@ -33,6 +33,7 @@ class CartTotalModel {
 class Result {
   int? idRegion;
   String? region;
+  int? idProvince;
   List<Data>? data;
 
   Result({this.idRegion, this.region, this.data});
@@ -40,6 +41,7 @@ class Result {
   Result.fromJson(Map<String, dynamic> json) {
     idRegion = json['id_region'];
     region = json['region'];
+    idProvince = json['id_province'];
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
@@ -52,6 +54,7 @@ class Result {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id_region'] = this.idRegion;
     data['region'] = this.region;
+    data['id_province'] = this.idProvince;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }

@@ -161,7 +161,7 @@ class _CartListScreenState extends State<CartListScreen>
                                                         onPressed: () async {
                                                           CustomWidget.showCartConfirmationDialog(
                                                             context,
-                                                            desc: 'Are you sure you want to delete this item from cart?',
+                                                            desc: AppLocalizations.instance.text('TXT_DELETE_CART_INFO'),
                                                             fnDeleteCart: () async {
                                                               Get.back();
                                                               await fnStoreLog(
@@ -181,7 +181,7 @@ class _CartListScreenState extends State<CartListScreen>
                                                               );
                                                               await provider.fnDeleteCart(_provider.scaffoldKey.currentContext!, _data.id ?? 0)
                                                                   .then((_) async {
-                                                                await provider.fnStoreWishlist(_provider.scaffoldKey.currentContext!, _data.idProduct ?? 0, _data.idRegion ?? 1);
+                                                                await provider.fnStoreWishlist(_provider.scaffoldKey.currentContext!, _data.idProduct ?? 0, _data.idRegion ?? 0);
                                                                 await _baseProvider.fnGetCartCount();
                                                               });
                                                             },

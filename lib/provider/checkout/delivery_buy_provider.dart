@@ -30,6 +30,7 @@ class DeliveryBuyProvider extends ChangeNotifier {
   DeliveryCourier? selectedCourier;
   bool? isCart;
   int? selectedRegionId;
+  int? selectedProvinceId;
 
   int productQty = 1;
 
@@ -46,6 +47,7 @@ class DeliveryBuyProvider extends ChangeNotifier {
     product = _args.product;
     isCart = _args.isCart;
     selectedRegionId = _args.selectedRegionId;
+    selectedProvinceId = _args.selectedProvinceId;
     notifyListeners();
   }
 
@@ -119,7 +121,7 @@ class DeliveryBuyProvider extends ChangeNotifier {
   Future fnFetchCourierList() async {
     _view!.onProgressStart();
     courierList = (await _deliveryService.getCourierList(
-      regionId: selectedRegionId ?? 1,
+      provinceId: selectedProvinceId ?? 0,
       destination: destination ?? 0,
       weight: _totalWeight,
     ))!;

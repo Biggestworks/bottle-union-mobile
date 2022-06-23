@@ -1,5 +1,4 @@
 import 'package:eight_barrels/abstract/loading.dart';
-import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/provider/transaction/track_order_provider.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';

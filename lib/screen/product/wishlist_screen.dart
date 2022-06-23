@@ -346,7 +346,7 @@ class _WishListScreenState extends State<WishListScreen>
 
     Widget _submitBtn = SafeArea(
       child: Container(
-        padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
+        padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
         width: MediaQuery.of(context).size.width,
         child: CustomWidget.roundBtn(
           label: AppLocalizations.instance.text('TXT_LBL_REMOVE_WISHLIST'),

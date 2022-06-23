@@ -680,7 +680,6 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                                       await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text('Cannot launch $_url'));
                                     }
                                   }
-                                // function: () async => await provider.fnFinishPayment(_provider.scaffoldKey.currentContext!),
                               ),
                             );
                           default:

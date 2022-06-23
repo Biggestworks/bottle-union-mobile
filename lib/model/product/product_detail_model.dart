@@ -195,18 +195,21 @@ class ProductRegion {
 
 class Region {
   int? id;
+  int? idProvince;
   String? name;
 
   Region({this.id, this.name});
 
   Region.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    idProvince = json['id_province'];
     name = json['name'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['id_province'] = this.idProvince;
     data['name'] = this.name;
     return data;
   }

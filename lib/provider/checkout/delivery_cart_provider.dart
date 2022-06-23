@@ -29,8 +29,6 @@ class DeliveryCartProvider extends ChangeNotifier {
   int? destination;
   List<DeliveryCourier> selectedCourierList = [];
   bool? isCart;
-  int? selectedRegionId;
-
   int productQty = 1;
 
   final scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -45,7 +43,6 @@ class DeliveryCartProvider extends ChangeNotifier {
     final _args = ModalRoute.of(context)!.settings.arguments as DeliveryCartScreen;
     cartList = _args.cartList;
     isCart = _args.isCart;
-    selectedRegionId = _args.selectedRegionId;
     notifyListeners();
   }
 
@@ -134,16 +131,17 @@ class DeliveryCartProvider extends ChangeNotifier {
     selectedCourierList.clear();
     if (cartList?.result != null) {
       List.generate(cartList?.result?.length ?? 0, (index) {
-        selectedCourierList.add(DeliveryCourier(cartList?.result?[index].idRegion ?? 1, null));
+        selectedCourierList.add(DeliveryCourier(cartList?.result?[index].idRegion ?? 0, null));
       }) ;
     }
     notifyListeners();
   }
 
-  Future fnFetchCourierList(int regionId) async {
+  Future fnFetchCourierList(int provinceId) async {
+    print(provinceId);
     _view!.onProgressStart();
     courierList = (await _deliveryService.getCourierList(
-      regionId: regionId,
+      provinceId: provinceId,
       destination: destination ?? 0,
       weight: _totalWeight,
     ))!;

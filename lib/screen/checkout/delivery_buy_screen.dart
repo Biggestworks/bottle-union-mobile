@@ -17,8 +17,9 @@ class DeliveryBuyScreen extends StatefulWidget {
   static String tag = '/checkout-screen';
   final ProductDetailModel? product;
   final int? selectedRegionId;
+  final int? selectedProvinceId;
   final bool? isCart;
-  const DeliveryBuyScreen({Key? key, this.product, this.selectedRegionId, this.isCart}) : super(key: key);
+  const DeliveryBuyScreen({Key? key, this.product, this.selectedRegionId, this.selectedProvinceId, this.isCart}) : super(key: key);
 
   @override
   _DeliveryBuyScreenState createState() => _DeliveryBuyScreenState();

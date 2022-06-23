@@ -214,6 +214,9 @@
 	"TXT_ADD_DISCUSSION": "Tambah Diskusi",
 	"TXT_SEND": "Kirim",
 	"TXT_ORDER": "Pesanan",
-	"TXT_NOTIFICATION": "Notifikasi"
+	"TXT_NOTIFICATION": "Notifikasi",
+	"TXT_DELETE_CART_INFO": "Kamu yakin ingin menghapus barang ini dari keranjang?",
+	"TXT_GOTO_WISHLIST": "Ke Wishlist",
+	"TXT_DELETE": "Hapus"
 
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:eight_barrels/abstract/pagination_interface.dart';
 import 'package:eight_barrels/abstract/product_card_interface.dart';
 import 'package:eight_barrels/helper/key_helper.dart';
@@ -13,6 +15,8 @@ import 'package:eight_barrels/service/banner/banner_service.dart';
 import 'package:eight_barrels/service/product/product_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+// import 'package:firebase_database/firebase_database.dart';
 
 class HomeProvider extends ChangeNotifier
     with PaginationInterface, ProductCardInterface{
@@ -38,6 +42,9 @@ class HomeProvider extends ChangeNotifier
   int? userRegionId;
   String? userRegion;
 
+  // final androidVersionRef = FirebaseDatabase.instance.ref().child('bottleUnion').child('android');
+  // final iosVersionRef = FirebaseDatabase.instance.ref().child('bottleUnion').child('ios');
+
   Future fnFetchUserInfo() async {
     this.userModel = (await _userPreferences.getUserData())!;
     var _regionId = await _storage.read(key: KeyHelper.KEY_USER_REGION_ID) ?? null;
@@ -53,7 +60,7 @@ class HomeProvider extends ChangeNotifier
     notifyListeners();
   }
 
-  onBannerChanged(int value) {
+  fnOnBannerChanged(int value) {
     this.currBanner = value;
     notifyListeners();
   }
@@ -111,6 +118,33 @@ class HomeProvider extends ChangeNotifier
     }
     notifyListeners();
   }
+
+  // fnUpdateApp(BuildContext context) async {
+  //   PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  //   var _version = "${packageInfo.version}+${packageInfo.buildNumber}";
+  //
+  //   if (Platform.isAndroid) {
+  //     androidSubscription = androidVersionRef.onValue.listen((event) async {
+  //       newVerAndroid = event.snapshot.value;
+  //       if (newVerAndroid != version) {
+  //         await showVersionDialog(context);
+  //       } else {
+  //         await showRatingDialog(context: context);
+  //       }
+  //       notifyListeners();
+  //     });
+  //   } else if (Platform.isIOS) {
+  //     iosSubscription = iosVersionRef.onValue.listen((event) async {
+  //       newVerIos = event.snapshot.value;
+  //       if (newVerIos != version) {
+  //         await showVersionDialog(context);
+  //       } else {
+  //         await showRatingDialog(context: context);
+  //       }
+  //     });
+  //   }
+  //   notifyListeners();
+  // }
 
   @override
   Future fnShowNextPage() async {

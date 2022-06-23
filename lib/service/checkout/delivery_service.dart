@@ -47,17 +47,19 @@ class DeliveryService extends GetConnect {
   }
 
   Future<CourierListModel?> getCourierList({
-    required int regionId,
+    required int provinceId,
     required int destination,
     required double weight,
   }) async {
     CourierListModel _model = new CourierListModel();
 
     final Map<String, dynamic> _data = {
-      "id_region": regionId.toString(),
+      "id_province": provinceId.toString(),
       "destination": destination.toString(),
       "weight": weight
     };
+
+    print(_data.entries);
 
     try {
       http.Response _response = await http.post(
@@ -65,6 +67,7 @@ class DeliveryService extends GetConnect {
         body: json.encode(_data),
         headers: await _headersAuth(),
       );
+      print(_response.body);
       _model = CourierListModel.fromJson(json.decode(_response.body));
       ///GET CONNECT BUG
       // Response _response = await post(

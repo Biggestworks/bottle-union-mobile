@@ -29,8 +29,7 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
 
   bool isWishlist = false;
   int? productId;
-  bool isRegionSelected = false;
-  int? selectedRegionId;
+  SelectedRegion selectedRegion = new SelectedRegion();
 
   LoadingView? _view;
 
@@ -71,7 +70,7 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
   Future fnStoreWishlist(BuildContext context) async {
     var _res = await _wishlistService.storeWishlist(
       productId: product.data?.id ?? 0,
-      regionId: selectedRegionId ?? 1,
+      regionId: selectedRegion.selectedRegionId ?? 0,
     );
 
     if (_res!.status != null) {
@@ -111,7 +110,7 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
   Future fnStoreCart(BuildContext context) async {
     var _res = await _cartService.storeCart(
       productIds: [product.data?.id ?? 0],
-      regionIds: [selectedRegionId ?? 0],
+      regionIds: [selectedRegion.selectedRegionId ?? 0],
     );
 
     if (_res!.status != null) {
@@ -147,19 +146,33 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
     notifyListeners();
   }
 
-  fnConvertHtmlString(String text) {
-    return parse(text).documentElement?.text;
-  }
+  fnConvertHtmlString(String text) => parse(text).documentElement?.text;
 
   Future fnGetSelectedRegionProduct() async {
-    var _data = await _userPreferences.getUserData();
-    selectedRegionId = _data?.region?.id;
+    await _userPreferences.getUserData().then((value) {
+      selectedRegion.selectedRegionId = product.data?.productRegion?.singleWhere(
+              (i) => i.idRegion == (value?.region?.id ?? 0), orElse: null).idRegion;
+      selectedRegion.selectedProvinceId = product.data?.productRegion?.singleWhere(
+              (i) => i.idRegion == (value?.region?.id ?? 0), orElse: null).region?.idProvince;
+      selectedRegion.stock = product.data?.productRegion?.singleWhere(
+              (i) => i.idRegion == (value?.region?.id ?? 0), orElse: null).stock ?? 0;
+    });
     notifyListeners();
   }
 
-  fnOnSelectRegionProduct(int value) {
-    this.selectedRegionId = value;
+  fnOnSelectRegionProduct({required int regionId, required int provinceId, required int stock}) {
+    selectedRegion.selectedRegionId = regionId;
+    selectedRegion.selectedProvinceId = provinceId;
+    selectedRegion.stock = stock;
     notifyListeners();
   }
 
+}
+
+class SelectedRegion {
+  int? selectedRegionId;
+  int? selectedProvinceId;
+  int? stock;
+
+  SelectedRegion({this.selectedRegionId, this.selectedProvinceId, this.stock});
 }

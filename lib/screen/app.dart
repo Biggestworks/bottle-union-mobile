@@ -4,7 +4,6 @@ import 'package:connectivity/connectivity.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/key_helper.dart' as key;
 import 'package:eight_barrels/helper/network_connection_helper.dart';
-import 'package:eight_barrels/helper/push_notification_manager.dart';
 import 'package:eight_barrels/provider/auth/forgot_password_provider.dart';
 import 'package:eight_barrels/provider/auth/login_provider.dart';
 import 'package:eight_barrels/provider/auth/otp_provider.dart';

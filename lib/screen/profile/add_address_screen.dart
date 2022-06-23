@@ -42,7 +42,7 @@ class _AddAddressScreenState extends State<AddAddressScreen>
 
     Widget _mainContent = SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.all(15),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
         child: Form(
           key: _provider.formKey,
           child: Column(
@@ -343,7 +343,7 @@ class _AddAddressScreenState extends State<AddAddressScreen>
 
     Widget _submitBtn = SafeArea(
       child: Container(
-        padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
+        padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
         width: MediaQuery.of(context).size.width,
         child: CustomWidget.roundBtn(
           label: AppLocalizations.instance.text('TXT_SAVE'),

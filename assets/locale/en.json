@@ -215,6 +215,9 @@
 	"TXT_ADD_DISCUSSION": "Add Discussion",
 	"TXT_SEND": "Send",
 	"TXT_ORDER": "Order",
-	"TXT_NOTIFICATION": "Notification"
+	"TXT_NOTIFICATION": "Notification",
+	"TXT_DELETE_CART_INFO": "Are you sure you want to delete this item from cart?",
+	"TXT_GOTO_WISHLIST": "Go to Wishlist",
+	"TXT_DELETE": "Delete"
 
 }

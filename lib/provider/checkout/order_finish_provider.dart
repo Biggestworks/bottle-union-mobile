@@ -1,17 +1,12 @@
 import 'package:eight_barrels/abstract/loading.dart';
-import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/model/checkout/order_cart_model.dart';
 import 'package:eight_barrels/model/checkout/order_now_model.dart';
-import 'package:eight_barrels/screen/checkout/midtrans_webview_screen.dart';
 import 'package:eight_barrels/screen/checkout/order_finish_screen.dart';
-import 'package:eight_barrels/screen/widget/custom_widget.dart';
-import 'package:eight_barrels/service/checkout/payment_service.dart';
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
 
 class OrderFinishProvider extends ChangeNotifier {
-  PaymentService _paymentService = new PaymentService();
+  // PaymentService _paymentService = new PaymentService();
   OrderNowModel? orderNow;
   OrderCartModel? orderCart;
 
@@ -30,25 +25,25 @@ class OrderFinishProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future fnFinishPayment(BuildContext context) async {
-    _view!.onProgressStart();
-    var _res = await _paymentService.midtransPayment(code: orderNow?.data?[0].order?[0].codeTransaction ?? null);
-
-    if (_res!.status != null) {
-      if (_res.status == true) {
-        _view!.onProgressFinish();
-        await Get.offAndToNamed(MidtransWebviewScreen.tag, arguments: MidtransWebviewScreen(url: _res.data?.redirectUrl,));
-      } else {
-        _view!.onProgressFinish();
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message ?? '-'));
-      }
-    } else {
-      _view!.onProgressFinish();
-      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
-    }
-    _view!.onProgressFinish();
-    notifyListeners();
-  }
+  // Future fnFinishPayment(BuildContext context) async {
+  //   _view!.onProgressStart();
+  //   var _res = await _paymentService.midtransPayment(code: orderNow?.data?[0].order?[0].codeTransaction ?? null);
+  //
+  //   if (_res!.status != null) {
+  //     if (_res.status == true) {
+  //       _view!.onProgressFinish();
+  //       await Get.offAndToNamed(MidtransWebviewScreen.tag, arguments: MidtransWebviewScreen(url: _res.data?.redirectUrl,));
+  //     } else {
+  //       _view!.onProgressFinish();
+  //       await CustomWidget.showSnackBar(context: context, content: Text(_res.message ?? '-'));
+  //     }
+  //   } else {
+  //     _view!.onProgressFinish();
+  //     await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+  //   }
+  //   _view!.onProgressFinish();
+  //   notifyListeners();
+  // }
 
   String fnGetSubtotal(int price, int qty) => FormatterHelper.moneyFormatter((price * qty));
 

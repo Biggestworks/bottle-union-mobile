@@ -18,6 +18,7 @@ import 'package:get/route_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OrderFinishScreen extends StatefulWidget {
   static String tag = '/order-finish-screen';
@@ -813,7 +814,7 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
 
     Widget _bottomGroupBtn = SafeArea(
       child: Container(
-        padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
+        padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border(
@@ -863,7 +864,14 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                                 isBold: true,
                                 radius: 8,
                                 fontSize: 16,
-                                function: () async => await _provider.fnFinishPayment(_provider.scaffoldKey.currentContext!),
+                                function: () async {
+                                  final _url = provider.orderNow?.deepLink ?? '';
+                                  if (await canLaunch(_url)) {
+                                    launch(_url);
+                                  } else {
+                                    await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text('Cannot launch $_url'));
+                                  }
+                                },
                               ),
                             );
                           default:
@@ -906,7 +914,14 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                                 isBold: true,
                                 radius: 8,
                                 fontSize: 16,
-                                function: () async => await _provider.fnFinishPayment(_provider.scaffoldKey.currentContext!),
+                                function: () async {
+                                  final _url = provider.orderCart?.deeplink ?? '';
+                                  if (await canLaunch(_url)) {
+                                    launch(_url);
+                                  } else {
+                                    await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text('Cannot launch $_url'));
+                                  }
+                                },
                               ),
                             );
                           default:

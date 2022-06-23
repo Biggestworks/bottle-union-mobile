@@ -10,7 +10,6 @@ import 'package:eight_barrels/helper/push_notification_manager.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
 import 'package:eight_barrels/screen/home/banner_detail_screen.dart';
-import 'package:eight_barrels/screen/home/member_loyalty_screen.dart';
 import 'package:eight_barrels/screen/home/notification_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_region_screen.dart';
@@ -287,7 +286,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+          padding: const EdgeInsets.fromLTRB(15, 20, 15, 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -330,20 +329,20 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
                       children: [
                         CarouselSlider(
                           options: CarouselOptions(
-                            height: 200.0,
+                            height: 180,
                             autoPlay: true,
                             enlargeCenterPage: false,
                             enableInfiniteScroll: false,
                             viewportFraction: 1,
                             onPageChanged: (index, reason) {
-                              _provider.onBannerChanged(index);
+                              _provider.fnOnBannerChanged(index);
                             },
                           ),
                           items: provider.bannerList.data?.map((i) {
                             return Builder(
                               builder: (BuildContext context) {
                                 return Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 4),
+                                  margin: EdgeInsets.symmetric(horizontal: 2),
                                   width: MediaQuery.of(context).size.width,
                                   child: GestureDetector(
                                     onTap: () => Get.toNamed(BannerDetailScreen.tag, arguments: BannerDetailScreen(
@@ -352,11 +351,11 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
                                     child: Card(
                                       elevation: 2,
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: ClipRRect(
-                                        child: CustomWidget.networkImg(context, i.banner?[0].image,),
-                                        borderRadius: BorderRadius.circular(20),
+                                        child: CustomWidget.networkImg(context, i.banner?[0].image, fit: BoxFit.cover),
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
                                     ),
                                   ),
@@ -794,7 +793,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
         children: [
           Container(
             margin: EdgeInsets.only(top: 50),
-            padding: EdgeInsets.only(top: 90, bottom: 20),
+            padding: EdgeInsets.only(top: 100, bottom: 20),
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(

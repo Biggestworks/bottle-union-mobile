@@ -151,10 +151,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                                           );
                                         default:
                                           return GestureDetector(
-                                            onTap: () async => await provider.fnOnSelectRegionProduct(_productRegion?.idRegion ?? 1),
+                                            onTap: () async => await provider.fnOnSelectRegionProduct(
+                                              regionId:  _productRegion?.idRegion ?? 0,
+                                              provinceId: _productRegion?.region?.idProvince ?? 0,
+                                              stock: _productRegion?.stock ?? 0,
+                                            ),
                                             child: Container(
                                               decoration: BoxDecoration(
-                                                color: provider.selectedRegionId == _productRegion?.idRegion
+                                                color: provider.selectedRegion.selectedRegionId == _productRegion?.idRegion
                                                     ? CustomColor.MAIN
                                                     : Colors.transparent,
                                                 borderRadius: BorderRadius.circular(15),
@@ -162,7 +166,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                                               ),
                                               child: Center(
                                                 child: Text('${_productRegion?.region?.name ?? '-'} (${_productRegion?.stock.toString() ?? '0'} ${_productRegion?.stock == 1 ? 'stock' : 'stocks'})', style: TextStyle(
-                                                  color: provider.selectedRegionId == _productRegion?.idRegion
+                                                  color: provider.selectedRegion.selectedRegionId == _productRegion?.idRegion
                                                       ? Colors.white
                                                       : Colors.black,
                                                 ), textAlign: TextAlign.center,),
@@ -207,7 +211,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                               return IconButton(
                                 onPressed: () async {
                                   Get.back();
-                                  if (provider.selectedRegionId != null) {
+                                  if (provider.selectedRegion.selectedRegionId != null && provider.selectedRegion.stock != 0) {
                                     await provider.fnStoreWishlist(provider.scaffoldKey.currentContext!);
                                   } else {
                                     await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_NO_PRODUCT_REGION_SELECTED')));
@@ -249,7 +253,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                                         radius: 5,
                                         function: () async {
                                           Get.back();
-                                          if (provider.selectedRegionId != null) {
+                                          if (provider.selectedRegion.selectedRegionId != null && provider.selectedRegion.stock != 0) {
                                             await _provider.fnStoreCart(_provider.scaffoldKey.currentContext!)
                                                 .then((_) async => await _baseProvider.fnGetCartCount());
                                             setState(() {});
@@ -269,11 +273,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                                         radius: 5,
                                         function: () async {
                                           Get.back();
-                                          if (provider.selectedRegionId != null) {
+                                          if (provider.selectedRegion.selectedRegionId != null && provider.selectedRegion.stock != 0) {
                                             Get.toNamed(DeliveryBuyScreen.tag, arguments: DeliveryBuyScreen(
                                               product: _provider.product,
                                               isCart: false,
-                                              selectedRegionId: provider.selectedRegionId,
+                                              selectedRegionId: provider.selectedRegion.selectedRegionId,
+                                              selectedProvinceId: provider.selectedRegion.selectedProvinceId,
                                             ));
                                           } else {
                                             await CustomWidget.showSnackBar(context: context, content: Text('Please select product region'));
@@ -602,7 +607,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                                     padding: EdgeInsets.symmetric(horizontal: 15),
                                     margin: EdgeInsets.only(right: 10, left: index == 0 ? 10 : 0),
                                     decoration: BoxDecoration(
-                                      color: provider.selectedRegionId == _productRegion?.idRegion
+                                      color: provider.selectedRegion.selectedRegionId == _productRegion?.idRegion
                                           ? CustomColor.MAIN
                                           : Colors.transparent,
                                       borderRadius: BorderRadius.circular(15),
@@ -611,13 +616,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                                     child: Row(
                                       children: [
                                         Text(_productRegion?.region?.name ?? '-', style: TextStyle(
-                                          color: provider.selectedRegionId == _productRegion?.idRegion
+                                          color: provider.selectedRegion.selectedRegionId == _productRegion?.idRegion
                                               ? Colors.white
                                               : Colors.black,
                                         ),),
                                         SizedBox(width: 4,),
                                         Text('(${_productRegion?.stock.toString() ?? '0'} ${_productRegion?.stock == 1 ? 'stock' : 'stocks'})', style: TextStyle(
-                                          color: provider.selectedRegionId == _productRegion?.idRegion
+                                          color: provider.selectedRegion.selectedRegionId == _productRegion?.idRegion
                                               ? Colors.white
                                               : Colors.black,
                                         ),),
