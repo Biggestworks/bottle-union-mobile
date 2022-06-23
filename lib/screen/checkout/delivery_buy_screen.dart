@@ -138,7 +138,7 @@ class _DeliveryBuyScreenState extends State<DeliveryBuyScreen>
       );
     }
 
-    _showCourierSheet(int regionId) {
+    _showCourierSheet() {
       return CustomWidget.showSheet(
         context: context,
         isScroll: true,
@@ -172,7 +172,7 @@ class _DeliveryBuyScreenState extends State<DeliveryBuyScreen>
                           itemBuilder: (context, index) {
                             var _data = provider.courierList.data?[index];
                             return GestureDetector(
-                              onTap: () async => await provider.fnOnSelectCourier(regionId: regionId, value: _data!),
+                              onTap: () async => await provider.fnOnSelectCourier(value: _data!),
                               child: ListTile(
                                 dense: true,
                                 visualDensity: VisualDensity.compact,
@@ -372,7 +372,7 @@ class _DeliveryBuyScreenState extends State<DeliveryBuyScreen>
                                     ),
                                     onTap: () async => await provider.fnFetchCourierList().then((_) async {
                                       if (provider.courierList.data != null) {
-                                        _showCourierSheet(provider.selectedCourier?.regionId ?? 1);
+                                        _showCourierSheet();
                                       } else {
                                         await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
                                       }
@@ -416,7 +416,7 @@ class _DeliveryBuyScreenState extends State<DeliveryBuyScreen>
                                 ),
                                 onTap: () async => await provider.fnFetchCourierList().then((_) async {
                                   if (provider.courierList.data != null) {
-                                    _showCourierSheet(_courier?.regionId ?? 1);
+                                    _showCourierSheet();
                                   } else {
                                     await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
                                   }

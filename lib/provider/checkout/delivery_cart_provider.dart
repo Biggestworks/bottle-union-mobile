@@ -138,7 +138,6 @@ class DeliveryCartProvider extends ChangeNotifier {
   }
 
   Future fnFetchCourierList(int provinceId) async {
-    print(provinceId);
     _view!.onProgressStart();
     courierList = (await _deliveryService.getCourierList(
       provinceId: provinceId,

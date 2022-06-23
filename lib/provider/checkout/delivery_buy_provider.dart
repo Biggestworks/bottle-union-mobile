@@ -48,6 +48,8 @@ class DeliveryBuyProvider extends ChangeNotifier {
     isCart = _args.isCart;
     selectedRegionId = _args.selectedRegionId;
     selectedProvinceId = _args.selectedProvinceId;
+    print(selectedRegionId);
+    print(selectedProvinceId);
     notifyListeners();
   }
 
@@ -129,10 +131,10 @@ class DeliveryBuyProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future fnOnSelectCourier({required int regionId, required courier.Data value}) async {
+  Future fnOnSelectCourier({required courier.Data value}) async {
     _view!.onProgressStart();
     Get.back();
-    selectedCourier = DeliveryCourier(regionId, value);
+    selectedCourier = DeliveryCourier(selectedRegionId ?? 0, value);
     await fnGetOrderSummary();
     _view!.onProgressFinish();
     notifyListeners();

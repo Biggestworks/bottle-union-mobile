@@ -94,6 +94,8 @@ class PaymentService extends GetConnect {
       "courier_cost": courierCost
     };
 
+    print(_data.entries);
+
     try {
       http.Response _response = await http.post(
         Uri.parse(URLHelper.storeOrderNowUrl),
@@ -106,6 +108,7 @@ class PaymentService extends GetConnect {
       //   _data,
       //   headers: await _headersAuth(),
       // );
+      print(_response.body);
       _model = OrderNowModel.fromJson(json.decode(_response.body));
     } catch (e) {
       print(e);
