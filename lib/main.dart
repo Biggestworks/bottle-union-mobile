@@ -11,9 +11,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 
+Future _loadEnv() async =>
+  await dotenv.load(fileName: ".env.production");
+  // await dotenv.load(fileName: ".env.development");
+
 Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // await dotenv.load(fileName: ".env.production");
-  await dotenv.load(fileName: ".env.development");
+  await _loadEnv();
   await Firebase.initializeApp();
   await PushNotificationManager().showNotification(message.data);
   DbHelper _dbHelper = new DbHelper();
@@ -56,10 +59,9 @@ Future _checkAppSecurity() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await dotenv.load(fileName: ".env.production");
-  await dotenv.load(fileName: ".env.development");
+  await _loadEnv();
+  await _checkAppSecurity();
   await Firebase.initializeApp();
   await FirebaseMessaging.instance.getToken();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  await _checkAppSecurity();
 }
