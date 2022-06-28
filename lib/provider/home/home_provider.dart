@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:eight_barrels/abstract/pagination_interface.dart';
@@ -42,8 +43,10 @@ class HomeProvider extends ChangeNotifier
   int? userRegionId;
   String? userRegion;
 
-  // final androidVersionRef = FirebaseDatabase.instance.ref().child('bottleUnion').child('android');
-  // final iosVersionRef = FirebaseDatabase.instance.ref().child('bottleUnion').child('ios');
+  // final _androidVersionRef = FirebaseDatabase.instance.ref().child('bottleUnion').child('android');
+  // final _iosVersionRef = FirebaseDatabase.instance.ref().child('bottleUnion').child('ios');
+  // StreamSubscription<Event> _androidSubscription;
+  // StreamSubscription<Event> _iosSubscription;
 
   Future fnFetchUserInfo() async {
     this.userModel = (await _userPreferences.getUserData())!;
@@ -124,7 +127,7 @@ class HomeProvider extends ChangeNotifier
   //   var _version = "${packageInfo.version}+${packageInfo.buildNumber}";
   //
   //   if (Platform.isAndroid) {
-  //     androidSubscription = androidVersionRef.onValue.listen((event) async {
+  //     androidSubscription = _androidVersionRef.onValue.listen((event) async {
   //       newVerAndroid = event.snapshot.value;
   //       if (newVerAndroid != version) {
   //         await showVersionDialog(context);

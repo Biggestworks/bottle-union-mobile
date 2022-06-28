@@ -139,7 +139,7 @@ class _StartScreenState extends State<StartScreen>
                 height: 40,
                 onPressed: () async {
                   Get.back();
-                  // await provider.signInApple(context);
+                  await fnAuthApple(context);
                 },
                 borderRadius: BorderRadius.circular(20),
               ),

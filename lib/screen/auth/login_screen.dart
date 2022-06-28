@@ -315,7 +315,7 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation, LoadingV
                 icon: FontAwesomeIcons.apple,
                 btnColor: Colors.white,
                 icColor: Colors.black,
-                function: () async => CustomWidget.showSnackBar(context: context, content: Text('Coming Soon'),),
+                function: () async => await _provider.fnAuthApple(context, isLogin: true),
               ),
           ],
         ),
@@ -337,6 +337,8 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation, LoadingV
                     ? AppLocalizations.instance.text('TXT_SIGN_GOOGLE')
                     : _args.providerId!.contains('facebook')
                     ? AppLocalizations.instance.text('TXT_SIGN_FACEBOOK')
+                    : _args.providerId!.contains('apple.com')
+                    ? AppLocalizations.instance.text('TXT_SIGN_APPLE')
                     : AppLocalizations.instance.text('TXT_SIGN_IN')
                     : AppLocalizations.instance.text('TXT_SIGN_IN'),
                 btnColor: CustomColor.SECONDARY,
@@ -349,6 +351,8 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation, LoadingV
                       await _provider.fnAuthGoogle(context, isLogin: true);
                     } else if (_args.providerId!.contains('facebook')) {
                       await _provider.fnAuthFacebook(context, isLogin: true);
+                    } else if (_args.providerId!.contains('apple.com')) {
+                      await _provider.fnAuthApple(context, isLogin: true);
                     }
                   } else {
                     await _provider.fnLogin(context: context);

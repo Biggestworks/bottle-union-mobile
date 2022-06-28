@@ -45,7 +45,7 @@ class ProfileProvider extends ChangeNotifier {
 
   Future _fnFetchLocale() async {
     final _storage = new FlutterSecureStorage();
-    locale = (await _storage.read(key: KeyHelper.KEY_LOCALE))!;
+    locale = await _storage.read(key: KeyHelper.KEY_LOCALE) ?? 'en';
     if (locale == 'en') {
       language = 'Bahasa Indonesia';
       switchVal = true;

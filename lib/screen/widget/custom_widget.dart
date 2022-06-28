@@ -524,7 +524,7 @@ class CustomWidget {
   static Widget loadingHud({required bool isLoad, required Widget child}) {
     return ModalProgressHUD(
       inAsyncCall: isLoad,
-      progressIndicator: SpinKitFadingCube(color: CustomColor.MAIN,),
+      progressIndicator: SpinKitFadingCube(color: CustomColor.MAIN, size: 40,),
       opacity: 0.5,
       child: child,
     );

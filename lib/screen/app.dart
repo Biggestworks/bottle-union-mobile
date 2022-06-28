@@ -95,7 +95,7 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  NetworkConnectionHelper _networkConnectionHelper = new NetworkConnectionHelper();
+  // NetworkConnectionHelper _networkConnectionHelper = new NetworkConnectionHelper();
   SpecifiedLocalizationDelegate? _localeOverrideDelegate;
   StreamSubscription<ConnectivityResult>? _connectivitySubs;
   bool _initialURILinkHandled = false;

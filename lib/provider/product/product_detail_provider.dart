@@ -150,12 +150,14 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
 
   Future fnGetSelectedRegionProduct() async {
     await _userPreferences.getUserData().then((value) {
-      selectedRegion.selectedRegionId = product.data?.productRegion?.singleWhere(
-              (i) => i.idRegion == (value?.region?.id ?? 0), orElse: null).idRegion;
-      selectedRegion.selectedProvinceId = product.data?.productRegion?.singleWhere(
-              (i) => i.idRegion == (value?.region?.id ?? 0), orElse: null).region?.idProvince;
-      selectedRegion.stock = product.data?.productRegion?.singleWhere(
-              (i) => i.idRegion == (value?.region?.id ?? 0), orElse: null).stock ?? 0;
+      if (product.data?.productRegion?.length != 0) {
+        selectedRegion.selectedRegionId = product.data?.productRegion?.singleWhere(
+                (i) => i.idRegion == (value?.region?.id ?? 0), orElse: null).idRegion;
+        selectedRegion.selectedProvinceId = product.data?.productRegion?.singleWhere(
+                (i) => i.idRegion == (value?.region?.id ?? 0), orElse: null).region?.idProvince;
+        selectedRegion.stock = product.data?.productRegion?.singleWhere(
+                (i) => i.idRegion == (value?.region?.id ?? 0), orElse: null).stock ?? 0;
+      }
     });
     notifyListeners();
   }

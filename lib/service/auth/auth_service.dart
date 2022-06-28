@@ -11,6 +11,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get_connect.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AuthService extends GetConnect {
   UserPreferences _userPreferences = new UserPreferences();
@@ -252,13 +253,13 @@ class AuthService extends GetConnect {
     UserCredential? _data;
 
     try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
-      final OAuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
+      final GoogleSignInAccount? _googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication _googleAuth = await _googleUser!.authentication;
+      final OAuthCredential _credential = GoogleAuthProvider.credential(
+        accessToken: _googleAuth.accessToken,
+        idToken: _googleAuth.idToken,
       );
-      _data = await FirebaseAuth.instance.signInWithCredential(credential);
+      _data = await FirebaseAuth.instance.signInWithCredential(_credential);
     } catch (e) {
       print(e);
     }
@@ -270,9 +271,30 @@ class AuthService extends GetConnect {
     UserCredential? _data;
 
     try {
-      final LoginResult result = await FacebookAuth.instance.login();
-      final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(result.accessToken!.token);
+      final LoginResult _result = await FacebookAuth.instance.login();
+      final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(_result.accessToken!.token);
       _data = await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+    } catch (e) {
+      print(e);
+    }
+
+    return _data;
+  }
+
+  Future<UserCredential?> authApple() async {
+    UserCredential? _data;
+
+    try {
+      final result = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+      final OAuthCredential _credential = OAuthProvider("apple.com").credential(
+        idToken: result.identityToken,
+      );
+      _data = await FirebaseAuth.instance.signInWithCredential(_credential);
     } catch (e) {
       print(e);
     }
