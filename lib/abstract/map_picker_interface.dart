@@ -1,35 +1,47 @@
+import 'package:eight_barrels/screen/widget/custom_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/route_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_place_picker/google_maps_place_picker.dart';
-import 'package:location/location.dart';
 
 abstract class MapPickerInterface {
-  Location _location = new Location();
 
-  Future showMapPicker({required LatLng currLocation}) async {
+  Future showMapPicker({required BuildContext context, LatLng? currLocation}) async {
     try {
       bool _serviceEnabled;
-      PermissionStatus _permissionGranted;
+      LocationPermission _permission;
 
-      _serviceEnabled = await _location.serviceEnabled();
+      _serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!_serviceEnabled) {
-        _serviceEnabled = await _location.requestService();
+        await CustomWidget.showSnackBar(context: context, content: Text('Location services are disabled.'));
       }
 
-      _permissionGranted = await _location.hasPermission();
-      if (_permissionGranted == PermissionStatus.denied) {
-        _permissionGranted = await _location.requestPermission();
+      _permission = await Geolocator.checkPermission();
+      if (_permission == LocationPermission.denied) {
+        _permission = await Geolocator.requestPermission();
+        if (_permission == LocationPermission.denied) {
+          await CustomWidget.showSnackBar(context: context, content: Text('Location permissions are denied.'));
+        }
+      } else if (_permission == LocationPermission.deniedForever) {
+        await CustomWidget.showSnackBar(context: context, content: Text('Location permissions are permanently denied, Bottle Union cannot request permissions.'));
       }
 
-      if (_serviceEnabled && _permissionGranted != PermissionStatus.denied) {
+      if (currLocation == null) {
+        await Geolocator.getCurrentPosition().then((value) {
+          currLocation = LatLng(value.latitude, value.longitude);
+        });
+      }
+
+      if (currLocation != null) {
         Get.to(() => PlacePicker(
           apiKey: dotenv.get('MAP_API_KEY', fallback: 'API_URL not found'),
           enableMapTypeButton: true,
           usePlaceDetailSearch: true,
           onPlacePicked: (result) => onPlacePicked(result),
           region: 'ID',
-          initialPosition: currLocation,
+          initialPosition: currLocation!,
           useCurrentLocation: false,
           enableMyLocationButton: true,
           selectInitialPosition: true,

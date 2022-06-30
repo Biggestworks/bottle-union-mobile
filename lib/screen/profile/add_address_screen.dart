@@ -54,7 +54,7 @@ class _AddAddressScreenState extends State<AddAddressScreen>
               ),),
               SizedBox(height: 5,),
               GestureDetector(
-                onTap: () async => _provider.fnShowMapPicker(),
+                onTap: () async => _provider.fnShowMapPicker(context),
                 child: TextFormField(
                   enabled: false,
                   controller: _provider.addressController,

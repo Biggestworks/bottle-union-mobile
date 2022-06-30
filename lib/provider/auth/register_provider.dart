@@ -8,6 +8,7 @@ import 'package:eight_barrels/model/address/ro_province_model.dart';
 import 'package:eight_barrels/model/auth/region_list_model.dart';
 import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/widget/BezierPainter.dart';
+import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/address/address_service.dart';
 import 'package:eight_barrels/service/auth/auth_service.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,6 @@ import 'package:get/route_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:location/location.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:timelines/timelines.dart';
 
@@ -239,50 +239,56 @@ class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextVa
   }
 
   Future fnShowPlacePicker(BuildContext context) async {
-    Location location = new Location();
     bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-    }
-
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-    }
+    LocationPermission _permission;
 
     try {
+      _serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!_serviceEnabled) {
+        await CustomWidget.showSnackBar(context: context, content: Text('Location services are disabled.'));
+      }
+
+      _permission = await Geolocator.checkPermission();
+      if (_permission == LocationPermission.denied) {
+        _permission = await Geolocator.requestPermission();
+        if (_permission == LocationPermission.denied) {
+          await CustomWidget.showSnackBar(context: context, content: Text('Location permissions are denied.'));
+        }
+      } else if (_permission == LocationPermission.deniedForever) {
+        await CustomWidget.showSnackBar(context: context, content: Text('Location permissions are permanently denied, Bottle Union cannot request permissions.'));
+      }
+
       await Geolocator.getCurrentPosition().then((value) {
         currLocation = LatLng(value.latitude, value.longitude);
       });
+
+      if (currLocation != null) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => PlacePicker(
+              apiKey: dotenv.get('MAP_API_KEY', fallback: 'API_URL not found'),
+              enableMapTypeButton: true,
+              usePlaceDetailSearch: true,
+              onPlacePicked: (result) async {
+                Get.back();
+                addressController.text = result.formattedAddress!;
+                selectedLocation = LatLng(result.geometry!.location.lat, result.geometry!.location.lng);
+                notifyListeners();
+              },
+              region: 'ID',
+              initialPosition: currLocation!,
+              useCurrentLocation: true,
+              enableMyLocationButton: true,
+              selectInitialPosition: true,
+            ),
+          ),
+        );
+      }
+
     } catch (e) {
       print(e);
-      currLocation = null;
     }
-
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => PlacePicker(
-          apiKey: dotenv.get('MAP_API_KEY', fallback: 'API_URL not found'),
-          enableMapTypeButton: true,
-          usePlaceDetailSearch: true,
-          onPlacePicked: (result) async {
-            Get.back();
-            addressController.text = result.formattedAddress!;
-            selectedLocation = LatLng(result.geometry!.location.lat, result.geometry!.location.lng);
-            notifyListeners();
-          },
-          region: 'ID',
-          initialPosition: currLocation!,
-          useCurrentLocation: true,
-          enableMyLocationButton: true,
-          selectInitialPosition: true,
-        ),
-      ),
-    );
-
+    notifyListeners();
   }
 
   Future fnFetchRegionList() async {

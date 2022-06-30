@@ -69,22 +69,20 @@ class AddAddressProvider extends ChangeNotifier with MapPickerInterface {
     notifyListeners();
   }
 
-  Future fnShowMapPicker() async {
+  Future fnShowMapPicker(BuildContext context) async {
     double _lat = 0;
     double _lng = 0;
+
     if (_addr != null) {
       if (_currLocation != null) {
-        await super.showMapPicker(currLocation: LatLng(_currLocation!.latitude, _currLocation!.longitude));
+        await super.showMapPicker(context: context, currLocation: LatLng(_currLocation!.latitude, _currLocation!.longitude));
       } else {
         _lat = double.parse(_addr?.latitude ?? '0');
         _lng = double.parse(_addr?.longitude ?? '0');
-        await super.showMapPicker(currLocation: LatLng(_lat, _lng));
+        await super.showMapPicker(context: context, currLocation: LatLng(_lat, _lng));
       }
     } else {
-      await Geolocator.getCurrentPosition().then((value) {
-        _currLocation = LatLng(value.latitude, value.longitude);
-      });
-      await super.showMapPicker(currLocation: LatLng(_currLocation!.latitude, _currLocation!.longitude));
+      await super.showMapPicker(context: context);
     }
   }
 

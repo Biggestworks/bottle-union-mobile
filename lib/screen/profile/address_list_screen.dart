@@ -128,7 +128,7 @@ class _AddressListScreenState extends State<AddressListScreen> with LoadingView 
                         return CustomWidget.emptyScreen(
                           image: 'assets/images/ic_no_data.png',
                           title: AppLocalizations.instance.text('TXT_NO_ADDRESS'),
-                          size: 180,
+                          size: 150,
                           icColor: CustomColor.GREY_TXT,
                         );
                       default:
