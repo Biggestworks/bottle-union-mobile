@@ -35,15 +35,24 @@ class AuthService extends GetConnect {
     };
 
     try {
-      Response _response = await post(
-        URLHelper.loginUrl,
-        _data,
+      http.Response _response = await http.post(
+        Uri.parse(URLHelper.loginUrl),
+        body: json.encode(_data),
         headers: _headers,
       );
-      _model = UserModel.fromJson(_response.body);
+      _model = UserModel.fromJson(json.decode(_response.body));
+
       if (_model.status == true) {
         await _userPreferences.saveUserToken(_model.token!);
       }
+
+      /// GET CONNECT BUG
+      // Response _response = await post(
+      //   URLHelper.loginUrl,
+      //   _data,
+      //   headers: _headers,
+      // );
+      // _model = UserModel.fromJson(_response.body);
     } catch (e) {
       print(e);
     }
@@ -197,12 +206,20 @@ class AuthService extends GetConnect {
     };
 
     try {
-      Response _response = await post(
-        URLHelper.registerSocMedUrl,
-        _data,
+      http.Response _response = await http.post(
+        Uri.parse(URLHelper.registerSocMedUrl),
+        body: json.encode(_data),
         headers: _headers,
       );
-      _model = UserModel.fromJson(_response.body);
+      _model = UserModel.fromJson(json.decode(_response.body));
+
+      /// GET CONNECT BUG
+      // Response _response = await post(
+      //   URLHelper.registerSocMedUrl,
+      //   _data,
+      //   headers: _headers,
+      // );
+      // _model = UserModel.fromJson(_response.body);
     } catch (e) {
       print(e);
     }
@@ -233,15 +250,24 @@ class AuthService extends GetConnect {
     };
 
     try {
-      Response _response = await post(
-        URLHelper.loginSocMedUrl,
-        _data,
+      http.Response _response = await http.post(
+        Uri.parse(URLHelper.loginSocMedUrl),
+        body: json.encode(_data),
         headers: _headers,
       );
-      _model = UserModel.fromJson(_response.body);
+      _model = UserModel.fromJson(json.decode(_response.body));
+
       if (_model.status == true) {
         await _userPreferences.saveUserToken(_model.token!);
       }
+
+      /// GET CONNECT BUG
+      // Response _response = await post(
+      //   URLHelper.loginSocMedUrl,
+      //   _data,
+      //   headers: _headers,
+      // );
+      // _model = UserModel.fromJson(_response.body);
     } catch (e) {
       print(e);
     }

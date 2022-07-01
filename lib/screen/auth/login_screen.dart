@@ -30,6 +30,7 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation, LoadingV
   void initState() {
     Future.delayed(Duration.zero).then((value) async {
       Provider.of<LoginProvider>(context, listen: false).fnGetView(this);
+      Provider.of<LoginProvider>(context, listen: false).fnGetArguments(context);
     });
     super.initState();
   }
@@ -37,7 +38,6 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation, LoadingV
   @override
   Widget build(BuildContext context) {
     final _provider = Provider.of<LoginProvider>(context, listen: false);
-    final _args = ModalRoute.of(context)!.settings.arguments as LoginScreen;
 
     Widget _mainContent = Center(
       child: SingleChildScrollView(
@@ -47,41 +47,50 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation, LoadingV
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (_args.isRegister == true)
-                Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: Card(
-                          elevation: 0,
-                          color: CustomColor.SECONDARY,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          // shape: StadiumBorder(),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Row(
-                              children: [
-                                Icon(FontAwesomeIcons.infoCircle, color: CustomColor.BROWN_TXT,),
-                                SizedBox(width: 10,),
-                                Flexible(
-                                  child: Text(AppLocalizations.instance.text('TXT_VERIFY_INFO'), style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 12,
-                                  ), textAlign: TextAlign.left,),
+              Consumer<LoginProvider>(
+                child: SizedBox(),
+                builder: (context, provider, skeleton) {
+                  switch (provider.isRegister) {
+                    case true:
+                      return Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.center,
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: Card(
+                                elevation: 0,
+                                color: CustomColor.SECONDARY,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                              ],
+                                // shape: StadiumBorder(),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Row(
+                                    children: [
+                                      Icon(FontAwesomeIcons.circleInfo, color: CustomColor.BROWN_TXT,),
+                                      SizedBox(width: 10,),
+                                      Flexible(
+                                        child: Text(AppLocalizations.instance.text('TXT_VERIFY_INFO'), style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 12,
+                                        ), textAlign: TextAlign.left,),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10,),
-                  ],
-                ),
+                          SizedBox(height: 10,),
+                        ],
+                      );
+                    default:
+                      return skeleton!;
+                  }
+                },
+              ),
               Text(AppLocalizations.instance.text('TXT_SIGN_IN'), style: TextStyle(
                 fontSize: 24,
                 color: Colors.white,
@@ -219,7 +228,7 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation, LoadingV
                           padding: const EdgeInsets.all(10),
                           child: Row(
                             children: [
-                              Icon(FontAwesomeIcons.infoCircle, color: CustomColor.BROWN_TXT,),
+                              Icon(FontAwesomeIcons.circleInfo, color: CustomColor.BROWN_TXT,),
                               SizedBox(width: 10,),
                               Flexible(
                                 child: Text(AppLocalizations.instance.text('TXT_VERIFY_INFO'), style: TextStyle(
@@ -325,44 +334,48 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation, LoadingV
     Widget _submitBtn = SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              child: CustomWidget.roundBtn(
-                label: _args.providerId != null
-                    ?  _args.providerId!.contains('google')
-                    ? AppLocalizations.instance.text('TXT_SIGN_GOOGLE')
-                    : _args.providerId!.contains('facebook')
-                    ? AppLocalizations.instance.text('TXT_SIGN_FACEBOOK')
-                    : _args.providerId!.contains('apple.com')
-                    ? AppLocalizations.instance.text('TXT_SIGN_APPLE')
-                    : AppLocalizations.instance.text('TXT_SIGN_IN')
-                    : AppLocalizations.instance.text('TXT_SIGN_IN'),
-                btnColor: CustomColor.SECONDARY,
-                lblColor: CustomColor.MAIN,
-                isBold: true,
-                fontSize: 16,
-                function: () async {
-                  if (_args.providerId != null) {
-                    if (_args.providerId!.contains('google')) {
-                      await _provider.fnAuthGoogle(context, isLogin: true);
-                    } else if (_args.providerId!.contains('facebook')) {
-                      await _provider.fnAuthFacebook(context, isLogin: true);
-                    } else if (_args.providerId!.contains('apple.com')) {
-                      await _provider.fnAuthApple(context, isLogin: true);
-                    }
-                  } else {
-                    await _provider.fnLogin(context: context);
-                  }
-                },
-              ),
-            ),
-            if (_args.providerId == null)
-              _socmedBtns
-          ],
+        child: Consumer<LoginProvider>(
+          builder: (context, provider, _) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: CustomWidget.roundBtn(
+                    label: provider.providerId != null
+                        ?  provider.providerId!.contains('google.com')
+                        ? AppLocalizations.instance.text('TXT_SIGN_GOOGLE')
+                        : provider.providerId!.contains('facebook.com')
+                        ? AppLocalizations.instance.text('TXT_SIGN_FACEBOOK')
+                        : provider.providerId!.contains('apple.com')
+                        ? AppLocalizations.instance.text('TXT_SIGN_APPLE')
+                        : AppLocalizations.instance.text('TXT_SIGN_IN')
+                        : AppLocalizations.instance.text('TXT_SIGN_IN'),
+                    btnColor: CustomColor.SECONDARY,
+                    lblColor: CustomColor.MAIN,
+                    isBold: true,
+                    fontSize: 16,
+                    function: () async {
+                      if (provider.providerId != null) {
+                        if (provider.providerId!.contains('google.com')) {
+                          await _provider.fnAuthGoogle(context, isLogin: true);
+                        } else if (provider.providerId!.contains('facebook.com')) {
+                          await _provider.fnAuthFacebook(context, isLogin: true);
+                        } else if (provider.providerId!.contains('apple.com')) {
+                          await _provider.fnAuthApple(context, isLogin: true);
+                        }
+                      } else {
+                        await _provider.fnLogin(context: context);
+                      }
+                    },
+                  ),
+                ),
+                if (provider.providerId == null)
+                  _socmedBtns
+              ],
+            );
+          }
         ),
       ),
     );
@@ -389,7 +402,16 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation, LoadingV
               ),
             ],
           ),
-          body: _args.providerId != null ? _mainContentSocmed : _mainContent,
+          body: Consumer<LoginProvider>(
+              builder: (context, provider, _) {
+                switch(provider.providerId) {
+                  case null:
+                    return _mainContent;
+                  default:
+                    return _mainContentSocmed;
+                }
+              }
+          ),
           bottomNavigationBar: _submitBtn,
         ),
       ),

@@ -12,15 +12,17 @@ abstract class SocmedAuthInterface {
     onAuthStart();
     await _service.authGoogle().then((value) async {
       if (value != null) {
+        var _data = value.user?.providerData.firstWhere((i) => i.providerId == 'google.com', orElse: null);
+
         /// USER LOGIN SOCMED
         if (isLogin) {
           var _res = await _service.loginSocmed(
-            email: value.user?.providerData.first.email,
-            fullName: value.user?.providerData.first.displayName,
-            phone: value.user?.providerData.first.phoneNumber,
-            avatar: value.user?.providerData.first.photoURL,
-            providerId: value.user?.providerData.first.providerId,
-            providerUid: value.user?.providerData.first.uid,
+            email: _data?.email,
+            fullName: _data?.displayName,
+            phone: _data?.phoneNumber,
+            avatar: _data?.photoURL,
+            providerId: _data?.providerId,
+            providerUid: _data?.uid,
           );
 
           if (_res?.status != null) {
@@ -38,22 +40,22 @@ abstract class SocmedAuthInterface {
         }
         /// USER REGISTER SOCMED
         else {
-          bool? _isValid = await _service.validateEmailPhone(value: value.user?.providerData.first.email!);
+          bool? _isValid = await _service.validateEmailPhone(value: _data?.email!);
 
           if (_isValid == false) {
             var _res = await _service.registerSocmed(
-              email: value.user?.providerData.first.email,
-              fullName: value.user?.providerData.first.displayName,
-              phone: value.user?.providerData.first.phoneNumber,
-              avatar: value.user?.providerData.first.photoURL,
-              providerId: value.user?.providerData.first.providerId,
-              providerUid: value.user?.providerData.first.uid,
+              email: _data?.email,
+              fullName: _data?.displayName,
+              phone: _data?.phoneNumber,
+              avatar: _data?.photoURL,
+              providerId: _data?.providerId,
+              providerUid: _data?.uid,
             );
 
             if (_res?.status == true) {
               onAuthFinish();
               Get.offAndToNamed(LoginScreen.tag, arguments: LoginScreen(
-                providerId: value.user?.providerData.first.providerId,
+                providerId: _data?.providerId,
                 isRegister: true,)
               );
             } else {
@@ -76,15 +78,17 @@ abstract class SocmedAuthInterface {
     onAuthStart();
     await _service.authFacebook().then((value) async {
       if (value != null) {
+        var _data = value.user?.providerData.firstWhere((i) => i.providerId == 'facebook.com', orElse: null);
+
         /// USER LOGIN SOCMED
         if (isLogin) {
           var _res = await _service.loginSocmed(
-            email: value.user?.providerData.first.email,
-            fullName: value.user?.providerData.first.displayName,
-            phone: value.user?.providerData.first.phoneNumber,
-            avatar: value.user?.providerData.first.photoURL,
-            providerId: value.user?.providerData.first.providerId,
-            providerUid: value.user?.providerData.first.uid,
+            email: _data?.email,
+            fullName: _data?.displayName,
+            phone: _data?.phoneNumber,
+            avatar: _data?.photoURL,
+            providerId: _data?.providerId,
+            providerUid: _data?.uid,
           );
 
           if (_res?.status != null) {
@@ -102,22 +106,22 @@ abstract class SocmedAuthInterface {
         }
         /// USER REGISTER SOCMED
         else {
-          bool? _isValid = await _service.validateEmailPhone(value: value.user?.providerData.first.email!);
+          bool? _isValid = await _service.validateEmailPhone(value: _data?.email!);
 
           if (_isValid == false) {
             var _res = await _service.registerSocmed(
-              email: value.user?.providerData.first.email,
-              fullName: value.user?.providerData.first.displayName,
-              phone: value.user?.providerData.first.phoneNumber,
-              avatar: value.user?.providerData.first.photoURL,
-              providerId: value.user?.providerData.first.providerId,
-              providerUid: value.user?.providerData.first.uid,
+              email: _data?.email,
+              fullName: _data?.displayName,
+              phone: _data?.phoneNumber,
+              avatar: _data?.photoURL,
+              providerId: _data?.providerId,
+              providerUid: _data?.uid,
             );
 
             if (_res?.status == true) {
               onAuthFinish();
               Get.offAndToNamed(LoginScreen.tag, arguments: LoginScreen(
-                providerId: value.user?.providerData.first.providerId,
+                providerId: _data?.providerId,
                 isRegister: true,)
               );
             } else {
@@ -138,15 +142,17 @@ abstract class SocmedAuthInterface {
     onAuthStart();
     await _service.authApple().then((value) async {
       if (value != null) {
+        var _data = value.user?.providerData.firstWhere((i) => i.providerId == 'apple.com', orElse: null);
+        
         /// USER LOGIN SOCMED
         if (isLogin) {
           var _res = await _service.loginSocmed(
-            email: value.user?.providerData.first.email,
-            fullName: value.user?.providerData.first.displayName,
-            phone: value.user?.providerData.first.phoneNumber,
-            avatar: value.user?.providerData.first.photoURL,
-            providerId: value.user?.providerData.first.providerId,
-            providerUid: value.user?.providerData.first.uid,
+            email: _data?.email,
+            fullName: _data?.displayName ?? _data?.email,
+            phone: _data?.phoneNumber,
+            avatar: _data?.photoURL,
+            providerId: _data?.providerId,
+            providerUid: _data?.uid,
           );
 
           if (_res?.status != null) {
@@ -164,23 +170,22 @@ abstract class SocmedAuthInterface {
         }
         /// USER REGISTER SOCMED
         else {
-          onAuthFinish();
-          bool? _isValid = await _service.validateEmailPhone(value: value.user?.providerData.first.email!);
+          bool? _isValid = await _service.validateEmailPhone(value: _data?.email!);
 
           if (_isValid == false) {
             var _res = await _service.registerSocmed(
-              email: value.user?.providerData.first.email,
-              fullName: value.user?.providerData.first.displayName,
-              phone: value.user?.providerData.first.phoneNumber,
-              avatar: value.user?.providerData.first.photoURL,
-              providerId: value.user?.providerData.first.providerId,
-              providerUid: value.user?.providerData.first.uid,
+              email: _data?.email,
+              fullName: _data?.displayName ?? _data?.email,
+              phone: _data?.phoneNumber,
+              avatar: _data?.photoURL,
+              providerId: _data?.providerId,
+              providerUid: _data?.uid,
             );
-
+            
             if (_res?.status == true) {
               onAuthFinish();
               Get.offAndToNamed(LoginScreen.tag, arguments: LoginScreen(
-                providerId: value.user?.providerData.first.providerId,
+                providerId: _data?.providerId,
                 isRegister: true,)
               );
             } else {

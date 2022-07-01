@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/key_helper.dart' as key;
-import 'package:eight_barrels/helper/network_connection_helper.dart';
-import 'package:eight_barrels/provider/auth/forgot_password_provider.dart';
 import 'package:eight_barrels/provider/auth/login_provider.dart';
 import 'package:eight_barrels/provider/auth/otp_provider.dart';
 import 'package:eight_barrels/provider/auth/register_provider.dart';
@@ -36,7 +34,6 @@ import 'package:eight_barrels/provider/splash/splash_provider.dart';
 import 'package:eight_barrels/provider/transaction/track_order_provider.dart';
 import 'package:eight_barrels/provider/transaction/transaction_detail_provider.dart';
 import 'package:eight_barrels/provider/transaction/transaction_provider.dart';
-import 'package:eight_barrels/screen/auth/forgot_password_screen.dart';
 import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/auth/otp_screen.dart';
 import 'package:eight_barrels/screen/auth/register_screen.dart';
@@ -336,13 +333,6 @@ class _AppState extends State<App> {
             page: () => ChangeNotifierProvider<ChangePasswordProvider>(
               create: (context) => ChangePasswordProvider(),
               child: ChangePasswordScreen(),
-            ),
-          ),
-          GetPage(
-            name: ForgotPasswordScreen.tag,
-            page: () => ChangeNotifierProvider<ForgotPasswordProvider>(
-              create: (context) => ForgotPasswordProvider(),
-              child: ForgotPasswordScreen(),
             ),
           ),
           GetPage(
