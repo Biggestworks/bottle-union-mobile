@@ -19,6 +19,7 @@ abstract class RegisterStepInterface {
   bool? isAgeValid;
   bool? isEmailValid;
   String? errEmail;
+  bool isTacAccepted = false;
 
   Future validateAgeValid(BuildContext context, String dob) async {
     isAgeValid = await _service.validateAge(dob: dob);
@@ -89,7 +90,11 @@ abstract class RegisterStepInterface {
     } else if (stepIndex == 2) {
       if (fKeyPassword.currentState!.validate()) {
         fKeyPassword.currentState!.save();
-        await function();
+        if (isTacAccepted) {
+          await function();
+        } else {
+          await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_TERM_AND_CONDITION_INFO_3')));
+        }
       }
     }
   }

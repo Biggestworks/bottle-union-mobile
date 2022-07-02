@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
+import 'package:eight_barrels/screen/auth/tac_webview_screen.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -678,6 +680,104 @@ class CustomWidget {
           ),),
         ],
       ),
+    );
+  }
+
+  static showTacDialog(
+      BuildContext context, {
+        bool isTacAccepted = false,
+        required void fnOnCheckTac(value),
+      }) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: '',
+      pageBuilder: (ctx, a1, a2) {
+        return Container();
+      },
+      transitionBuilder: (ctx, a1, a2, child) {
+        var curve = Curves.easeInOut.transform(a1.value);
+        return Transform.scale(
+          scale: curve,
+          child: AlertDialog(
+            backgroundColor: Colors.white,
+            insetPadding: EdgeInsets.symmetric(horizontal: 10),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10))
+            ),
+            content: new Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(AppLocalizations.instance.text('TXT_TERM_AND_CONDITION'), style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,),
+                ),
+                Divider(
+                  color: CustomColor.MAIN,
+                  thickness: 2,
+                  height: 30,
+                ),
+                Flexible(
+                  child: Text(AppLocalizations.instance.text('TXT_TERM_AND_CONDITION_INFO_4'), style: TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.black,
+                  ),
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Checkbox(
+                    value: isTacAccepted,
+                    onChanged: (value) => fnOnCheckTac(value),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    visualDensity: VisualDensity.compact,
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    activeColor: Colors.blue,
+                  ),
+                  Flexible(
+                    child: Text.rich(TextSpan(
+                        children: [
+                          TextSpan(
+                            text: AppLocalizations.instance.text('TXT_TERM_AND_CONDITION_INFO_1'),
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          TextSpan(
+                            text: ' ${AppLocalizations.instance.text('TXT_TERM_AND_CONDITION')} ',
+                            style: TextStyle(
+                              color: Colors.blue,
+                            ),
+                            recognizer: new TapGestureRecognizer()..onTap =
+                                () => Get.toNamed(TacWebviewScreen.tag),
+                          ),
+                          TextSpan(
+                            text: AppLocalizations.instance.text('TXT_TERM_AND_CONDITION_INFO_2'),
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                        ]
+                    ),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300),
     );
   }
 

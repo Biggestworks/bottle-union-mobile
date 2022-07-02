@@ -3,6 +3,8 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/validation.dart';
 import 'package:eight_barrels/provider/auth/register_provider.dart';
+import 'package:eight_barrels/screen/auth/tac_webview_screen.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -74,7 +76,7 @@ class _RegisterScreenState extends State<RegisterScreen>
             borderRadius: BorderRadius.circular(10),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+            padding: const EdgeInsets.all(15),
             child: Form(
               key: _provider.fKeyPersonal,
               child: Column(
@@ -258,6 +260,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                   groupValue: provider.genderValue,
                                   onChanged: provider.fnOnChangeGender,
                                   activeColor: Colors.white,
+                                  visualDensity: VisualDensity.compact,
                                 ),
                                 Text(AppLocalizations.instance.text('TXT_LBL_MALE'), style: TextStyle(
                                   fontSize: 16,
@@ -272,6 +275,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                   groupValue: provider.genderValue,
                                   onChanged: provider.fnOnChangeGender,
                                   activeColor: Colors.white,
+                                  visualDensity: VisualDensity.compact,
                                 ),
                                 Text(AppLocalizations.instance.text('TXT_LBL_FEMALE'), style: TextStyle(
                                   fontSize: 16,
@@ -288,7 +292,7 @@ class _RegisterScreenState extends State<RegisterScreen>
             ),
           ),
         ),
-        SizedBox(height: 10,),
+        SizedBox(height: 5,),
         Padding(
           padding: const EdgeInsets.only(left: 10),
           child: Text('*${AppLocalizations.instance.text('TXT_AGE_INFO')}', style: TextStyle(
@@ -313,7 +317,7 @@ class _RegisterScreenState extends State<RegisterScreen>
               borderRadius: BorderRadius.circular(10),
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+              padding: const EdgeInsets.all(15),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -333,7 +337,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                       maxLines: null,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(vertical: 10),
-                        suffixIcon: Icon(FontAwesomeIcons.mapMarkedAlt, size: 24, color: Colors.white,),
+                        suffixIcon: Icon(FontAwesomeIcons.mapLocationDot, size: 20, color: Colors.white,),
                         isDense: true,
                         disabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -587,7 +591,7 @@ class _RegisterScreenState extends State<RegisterScreen>
         borderRadius: BorderRadius.circular(10),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+        padding: const EdgeInsets.all(15),
         child: Form(
           key: _provider.fKeyPassword,
           child: Column(
@@ -701,7 +705,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                     return SlideTransition(
                       position: provider.offsetAnimation!,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 20),
                         child: provider.stepIndex == 0
                             ? _formPersonal
                             : provider.stepIndex == 1
@@ -711,7 +715,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                     );
                 }
               }
-          )
+          ),
         ],
       ),
     );
@@ -719,19 +723,72 @@ class _RegisterScreenState extends State<RegisterScreen>
     Widget _submitBtn = Consumer<RegisterProvider>(
         builder: (context, provider, _) {
           return SafeArea(
-            child: Container(
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
-              width: MediaQuery.of(context).size.width,
-              child: CustomWidget.roundBtn(
-                label: provider.stepIndex != 2
-                    ? AppLocalizations.instance.text('TXT_CONTINUE')
-                    : AppLocalizations.instance.text('TXT_JOIN'),
-                btnColor: CustomColor.SECONDARY,
-                lblColor: CustomColor.MAIN,
-                isBold: true,
-                fontSize: 16,
-                function: () async => await provider.fnOnForwardTransition(context),
-              ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Theme(
+                      data: ThemeData(unselectedWidgetColor: Colors.white,),
+                      child: Checkbox(
+                        value: provider.isTacAccepted,
+                        onChanged: provider.fnOnCheckTOC,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        visualDensity: VisualDensity.compact,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        activeColor: Colors.blue,
+
+                      ),
+                    ),
+                    Flexible(
+                      child: Text.rich(TextSpan(
+                        children: [
+                          TextSpan(
+                            text: AppLocalizations.instance.text('TXT_TERM_AND_CONDITION_INFO_1'),
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          TextSpan(
+                            text: ' ${AppLocalizations.instance.text('TXT_TERM_AND_CONDITION')} ',
+                            style: TextStyle(
+                              color: Colors.orangeAccent,
+                            ),
+                            recognizer: new TapGestureRecognizer()..onTap =
+                                () => Get.toNamed(TacWebviewScreen.tag),
+                          ),
+                          TextSpan(
+                            text: AppLocalizations.instance.text('TXT_TERM_AND_CONDITION_INFO_2'),
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ]
+                      ),
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,),
+                    ),
+                  ],
+                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                  width: MediaQuery.of(context).size.width,
+                  child: CustomWidget.roundBtn(
+                    label: provider.stepIndex != 2
+                        ? AppLocalizations.instance.text('TXT_CONTINUE')
+                        : AppLocalizations.instance.text('TXT_JOIN'),
+                    btnColor: CustomColor.SECONDARY,
+                    lblColor: CustomColor.MAIN,
+                    isBold: true,
+                    fontSize: 16,
+                    function: () async => await provider.fnOnForwardTransition(context),
+                  ),
+                ),
+              ],
             ),
           );
         }

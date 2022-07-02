@@ -217,6 +217,11 @@
 	"TXT_NOTIFICATION": "Notifikasi",
 	"TXT_DELETE_CART_INFO": "Kamu yakin ingin menghapus barang ini dari keranjang?",
 	"TXT_GOTO_WISHLIST": "Ke Wishlist",
-	"TXT_DELETE": "Hapus"
+	"TXT_DELETE": "Hapus",
+	"TXT_TERM_AND_CONDITION": "Syarat & Ketentuan",
+	"TXT_TERM_AND_CONDITION_INFO_1": "Setujui",
+	"TXT_TERM_AND_CONDITION_INFO_2": "kami sebelum mendaftar",
+	"TXT_TERM_AND_CONDITION_INFO_3": "Mohon setujui syarat & ketentuan kami sebelum mendaftar",
+	"TXT_TERM_AND_CONDITION_INFO_4": "Sebelum mendaftar di aplikasi Bottle Union, mohon untuk membaca dan menyetujui Syarat & Ketentuan kami dibawah ini."
 
 }

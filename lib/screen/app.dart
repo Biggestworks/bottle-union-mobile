@@ -38,6 +38,7 @@ import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/auth/otp_screen.dart';
 import 'package:eight_barrels/screen/auth/register_screen.dart';
 import 'package:eight_barrels/screen/auth/start_screen.dart';
+import 'package:eight_barrels/screen/auth/tac_webview_screen.dart';
 import 'package:eight_barrels/screen/cart/base_cart_screen.dart';
 import 'package:eight_barrels/screen/cart/cart_list_screen.dart';
 import 'package:eight_barrels/screen/checkout/delivery_buy_screen.dart';
@@ -460,6 +461,10 @@ class _AppState extends State<App> {
           GetPage(
             name: MemberLoyaltyScreen.tag,
             page: () => MemberLoyaltyScreen(),
+          ),
+          GetPage(
+            name: TacWebviewScreen.tag,
+            page: () => TacWebviewScreen(),
           ),
         ],
       ),

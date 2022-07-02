@@ -366,4 +366,10 @@ class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextVa
     notifyListeners();
   }
 
+  fnOnCheckTOC(bool? value) {
+    super.isTacAccepted = value ?? false;
+    print(super.isTacAccepted);
+    notifyListeners();
+  }
+
 }

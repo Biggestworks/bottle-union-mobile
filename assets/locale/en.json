@@ -218,6 +218,11 @@
 	"TXT_NOTIFICATION": "Notification",
 	"TXT_DELETE_CART_INFO": "Are you sure you want to delete this item from cart?",
 	"TXT_GOTO_WISHLIST": "Go to Wishlist",
-	"TXT_DELETE": "Delete"
+	"TXT_DELETE": "Delete",
+	"TXT_TERM_AND_CONDITION": "Term & Condition",
+	"TXT_TERM_AND_CONDITION_INFO_1": "Agree to our",
+	"TXT_TERM_AND_CONDITION_INFO_2": "before registering",
+	"TXT_TERM_AND_CONDITION_INFO_3": "Please agree to our term & condition first before registering",
+	"TXT_TERM_AND_CONDITION_INFO_4": "Before registering to Bottle Union application, please read and agree to our Term & Condition below."
 
 }
