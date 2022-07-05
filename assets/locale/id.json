@@ -38,6 +38,7 @@
 	"TXT_REGISTER_CITY_INFO": "Mohon pilih provinsi terlebih dahulu",
 	"TXT_LBL_MALE": "Laki-laki",
 	"TXT_LBL_FEMALE": "Perempuan",
+	"TXT_LBL_OTHER": "Lbh baik tidak bilang",
 	"TXT_REGISTER_WITH": "Masuk dengan",
 	"TXT_AGE_INFO": "usia harus melebihi dari 21 tahun",
 	"TXT_VERIFY_INFO": "Terima kasih telah mendaftar. Mohon verifikasi akun Anda sebelum masuk. Kami telah mengirimkan email verifikasi ke akun Anda.",

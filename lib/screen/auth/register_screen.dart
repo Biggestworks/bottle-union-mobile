@@ -252,38 +252,28 @@ class _RegisterScreenState extends State<RegisterScreen>
                       builder: (context, provider, _) {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Row(
-                              children: [
-                                Radio(
-                                  value: provider.genderList[0],
-                                  groupValue: provider.genderValue,
-                                  onChanged: provider.fnOnChangeGender,
-                                  activeColor: Colors.white,
-                                  visualDensity: VisualDensity.compact,
-                                ),
-                                Text(AppLocalizations.instance.text('TXT_LBL_MALE'), style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                ),),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Radio(
-                                  value: provider.genderList[1],
-                                  groupValue: provider.genderValue,
-                                  onChanged: provider.fnOnChangeGender,
-                                  activeColor: Colors.white,
-                                  visualDensity: VisualDensity.compact,
-                                ),
-                                Text(AppLocalizations.instance.text('TXT_LBL_FEMALE'), style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                ),),
-                              ],
-                            )
-                          ],
+                          children: provider.genderList.map((item) {
+                            return Flexible(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Radio(
+                                    value: item.gender,
+                                    groupValue: provider.genderValue,
+                                    onChanged: provider.fnOnChangeGender,
+                                    activeColor: Colors.white,
+                                    visualDensity: VisualDensity.compact,
+                                  ),
+                                  Flexible(
+                                    child: Text(item.title, style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
                         );
                       }
                   ),

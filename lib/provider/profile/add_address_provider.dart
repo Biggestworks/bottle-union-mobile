@@ -9,7 +9,6 @@ import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/address/address_service.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/route_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_place_picker/google_maps_place_picker.dart';

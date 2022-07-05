@@ -5,6 +5,7 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/validation.dart';
 import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
+import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
@@ -65,11 +66,11 @@ class LoginProvider extends ChangeNotifier
           Get.offAllNamed(BaseHomeScreen.tag, arguments: BaseHomeScreen());
         } else {
           _view!.onProgressFinish();
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${_res.message.toString()}')));
+          await CustomWidget.showSnackBar(context: context, content: Text('${_res.message != null ? _res.message.toString() : ''}'));
         }
       } else {
         _view!.onProgressFinish();
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR'))));
+        await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
       }
       _view!.onProgressFinish();
     }

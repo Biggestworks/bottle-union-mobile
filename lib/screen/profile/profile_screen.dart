@@ -99,8 +99,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     Widget _headerContent = Container(
       width: MediaQuery.of(context).size.width,
-      height: 200,
+      height: 150,
       decoration: BoxDecoration(
+        // color: CustomColor.MAIN,
         image: DecorationImage(
           image: AssetImage('assets/images/bg_marron.png',),
           fit: BoxFit.cover,
@@ -115,7 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 builder: (context, provider, _) {
                   return CustomWidget.roundedAvatarImg(
                     url: provider.userModel.user?.avatar ?? '',
-                    size: 150,
+                    size: 120,
                   );
                 }
               ),

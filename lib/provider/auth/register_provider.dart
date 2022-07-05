@@ -36,7 +36,11 @@ class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextVa
   TextEditingController cityController = new TextEditingController();
   TextEditingController regionController = new TextEditingController();
 
-  List<String> genderList = ['male', 'female'];
+  List<Genders> genderList = [
+    Genders(gender: 'male', title: AppLocalizations.instance.text('TXT_LBL_MALE')),
+    Genders(gender: 'female', title: AppLocalizations.instance.text('TXT_LBL_FEMALE')),
+    Genders(gender: 'other', title: AppLocalizations.instance.text('TXT_LBL_OTHER')),
+  ];
   String genderValue = 'male';
 
   LatLng? currLocation;
@@ -372,4 +376,11 @@ class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextVa
     notifyListeners();
   }
 
+}
+
+class Genders {
+  final String gender;
+  final String title;
+
+  Genders({required this.gender, required this.title});
 }

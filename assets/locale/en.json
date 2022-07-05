@@ -38,6 +38,7 @@
 	"TXT_REGISTER_CITY_INFO": "Please select province first",
 	"TXT_LBL_MALE": "Male",
 	"TXT_LBL_FEMALE": "Female",
+	"TXT_LBL_OTHER": "Rather not say",
 	"TXT_REGISTER_WITH": "Register with",
 	"TXT_AGE_INFO": "age must be more than 21 years old",
 	"TXT_VERIFY_INFO": "Thank you for registering. Please verify your account before logging in. We've sent you verification email to your account.",

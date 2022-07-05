@@ -171,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation, LoadingV
                               onTap: () => _provider.fnPassVisible(context),
                             ),
                           ),
-                          onFieldSubmitted: (_) async => await _provider.fnLogin(context: context),
+                          onFieldSubmitted: (_) async => await _provider.fnLogin(context: _provider.scaffoldKey.currentContext!),
                         ),
                       ],
                     ),
@@ -311,20 +311,20 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation, LoadingV
               icon: FontAwesomeIcons.facebookF,
               btnColor: Colors.blue,
               icColor: Colors.white,
-              function: () async => await _provider.fnAuthFacebook(context, isLogin: true),
+              function: () async => await _provider.fnAuthFacebook(_provider.scaffoldKey.currentContext!, isLogin: true),
             ),
             CustomWidget.circleIconBtn(
               icon: FontAwesomeIcons.google,
               btnColor: Colors.red,
               icColor: Colors.white,
-              function: () async => await _provider.fnAuthGoogle(context, isLogin: true),
+              function: () async => await _provider.fnAuthGoogle(_provider.scaffoldKey.currentContext!, isLogin: true),
             ),
             if (Platform.isIOS)
               CustomWidget.circleIconBtn(
                 icon: FontAwesomeIcons.apple,
                 btnColor: Colors.white,
                 icColor: Colors.black,
-                function: () async => await _provider.fnAuthApple(context, isLogin: true),
+                function: () async => await _provider.fnAuthApple(_provider.scaffoldKey.currentContext!, isLogin: true),
               ),
           ],
         ),
@@ -359,20 +359,19 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation, LoadingV
                     function: () async {
                       if (provider.providerId != null) {
                         if (provider.providerId!.contains('google.com')) {
-                          await _provider.fnAuthGoogle(context, isLogin: true);
+                          await _provider.fnAuthGoogle(_provider.scaffoldKey.currentContext!, isLogin: true);
                         } else if (provider.providerId!.contains('facebook.com')) {
-                          await _provider.fnAuthFacebook(context, isLogin: true);
+                          await _provider.fnAuthFacebook(_provider.scaffoldKey.currentContext!, isLogin: true);
                         } else if (provider.providerId!.contains('apple.com')) {
-                          await _provider.fnAuthApple(context, isLogin: true);
+                          await _provider.fnAuthApple(_provider.scaffoldKey.currentContext!, isLogin: true);
                         }
                       } else {
-                        await _provider.fnLogin(context: context);
+                        await _provider.fnLogin(context: _provider.scaffoldKey.currentContext!);
                       }
                     },
                   ),
                 ),
-                if (provider.providerId == null)
-                  _socmedBtns
+                if (provider.providerId == null) _socmedBtns
               ],
             );
           }
@@ -385,6 +384,7 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation, LoadingV
       child: GestureDetector(
         onTap: () => _provider.fnKeyboardUnFocus(context),
         child: Scaffold(
+          key: _provider.scaffoldKey,
           backgroundColor: CustomColor.MAIN,
           extendBodyBehindAppBar: true,
           appBar: AppBar(

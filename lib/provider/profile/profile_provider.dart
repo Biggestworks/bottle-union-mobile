@@ -87,7 +87,7 @@ class ProfileProvider extends ChangeNotifier {
       selectedRegionId = int.parse(_regionId);
       selectedRegion = _regionName;
     } else {
-      if (regionList.data != null) {
+      if (regionList.data != null && regionList.data?.length != 0) {
         selectedRegionId = regionList.data?.singleWhere((i) => i.id == selectedRegionId).id;
         selectedRegion = regionList.data?.singleWhere((i) => i.id == selectedRegionId).name;
       }
