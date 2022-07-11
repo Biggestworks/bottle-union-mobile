@@ -213,6 +213,10 @@ class AuthService extends GetConnect {
       );
       _model = UserModel.fromJson(json.decode(_response.body));
 
+      if (_model.status == true) {
+        await _userPreferences.saveUserToken(_model.token!);
+      }
+
       /// GET CONNECT BUG
       // Response _response = await post(
       //   URLHelper.registerSocMedUrl,

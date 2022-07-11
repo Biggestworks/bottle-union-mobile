@@ -99,37 +99,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     Widget _headerContent = Container(
       width: MediaQuery.of(context).size.width,
-      height: 150,
+      height: 250,
       decoration: BoxDecoration(
-        // color: CustomColor.MAIN,
+        color: CustomColor.MAIN,
         image: DecorationImage(
-          image: AssetImage('assets/images/bg_marron.png',),
-          fit: BoxFit.cover,
+          image: AssetImage('assets/images/bg_marron_lg.png',),
+          fit: BoxFit.fill,
         ),
       ),
       child: Center(
-        child: GestureDetector(
-          onTap: () => Get.toNamed(UpdateProfileScreen.tag),
-          child: Stack(
-            children: [
-              Consumer<ProfileProvider>(
-                builder: (context, provider, _) {
-                  return CustomWidget.roundedAvatarImg(
-                    url: provider.userModel.user?.avatar ?? '',
-                    size: 120,
-                  );
-                }
-              ),
-              Positioned(
-                bottom: 0,
-                right: 5,
-                child: Icon(
-                  CupertinoIcons.pencil_circle_fill,
-                  color: Colors.white,
-                  size: 35,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 80),
+          child: GestureDetector(
+            onTap: () => Get.toNamed(UpdateProfileScreen.tag),
+            child: Stack(
+              children: [
+                Consumer<ProfileProvider>(
+                  builder: (context, provider, _) {
+                    return CustomWidget.roundedAvatarImg(
+                      url: provider.userModel.user?.avatar ?? '',
+                      size: 130,
+                    );
+                  }
                 ),
-              ),
-            ],
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Icon(
+                    CupertinoIcons.pencil_circle_fill,
+                    color: Colors.white,
+                    size: 35,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -437,10 +440,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       backgroundColor: CustomColor.BG,
+      extendBodyBehindAppBar: true,
+      extendBody: true,
       appBar: AppBar(
         elevation: 0,
-        // backgroundColor: CustomColor.MAIN,
-        flexibleSpace: Image.asset('assets/images/bg_marron.png', fit: BoxFit.cover,),
+        backgroundColor: Colors.transparent,
+        // flexibleSpace: Image.asset('assets/images/bg_marron.png', fit: BoxFit.cover,),
         centerTitle: true,
         title: Text(AppLocalizations.instance.text('TXT_MY_ACCOUNT')),
       ),

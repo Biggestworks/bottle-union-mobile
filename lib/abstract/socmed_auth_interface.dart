@@ -73,11 +73,11 @@ abstract class SocmedAuthInterface {
                   );
                 } else {
                   onAuthFinish();
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR'))));
+                  await CustomWidget.showSnackBar(context: context, content: Text('${_res?.message != null ? _res?.message.toString() : ''}'));
                 }
               } else {
                 onAuthFinish();
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.instance.text('TXT_EMAIL_ERROR'))));
+                await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_EMAIL_ERROR')));
               }
             } else {
               onAuthFinish();
@@ -151,11 +151,11 @@ abstract class SocmedAuthInterface {
                   );
                 } else {
                   onAuthFinish();
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR'))));
+                  await CustomWidget.showSnackBar(context: context, content: Text('${_res?.message != null ? _res?.message.toString() : ''}'));
                 }
               } else {
                 onAuthFinish();
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.instance.text('TXT_EMAIL_ERROR'))));
+                await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_EMAIL_ERROR')));
               }
             } else {
               onAuthFinish();
@@ -196,6 +196,7 @@ abstract class SocmedAuthInterface {
           }
         } else {
           onAuthFinish();
+          await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
         }
       });
       onAuthFinish();
@@ -221,22 +222,25 @@ abstract class SocmedAuthInterface {
                   providerUid: _data?.uid,
                 );
 
-                if (_res?.status == true) {
-                  onAuthFinish();
-                  Get.offAndToNamed(LoginScreen.tag, arguments: LoginScreen(
-                    providerId: _data?.providerId,
-                    isRegister: true,)
-                  );
+                if (_res?.status != null) {
+                  if (_res?.status == true) {
+                    onAuthFinish();
+                    Get.offAllNamed(BaseHomeScreen.tag, arguments: BaseHomeScreen());
+                  } else {
+                    onAuthFinish();
+                    await CustomWidget.showSnackBar(context: context, content: Text('${_res?.message != null ? _res?.message.toString() : ''}'));
+                  }
                 } else {
                   onAuthFinish();
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR'))));
+                  await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
                 }
               } else {
                 onAuthFinish();
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.instance.text('TXT_EMAIL_ERROR'))));
+                await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_EMAIL_ERROR')));
               }
             } else {
               onAuthFinish();
+              await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
             }
           });
           onAuthFinish();

@@ -27,7 +27,11 @@ class UpdateProfileProvider extends ChangeNotifier with TextValidation {
   TextEditingController genderController = TextEditingController();
   TextEditingController regionController = TextEditingController();
 
-  List<String> genderList = ['male', 'female'];
+  List<Genders> genderList = [
+    Genders(gender: 'male', title: AppLocalizations.instance.text('TXT_LBL_MALE')),
+    Genders(gender: 'female', title: AppLocalizations.instance.text('TXT_LBL_FEMALE')),
+    Genders(gender: 'other', title: AppLocalizations.instance.text('TXT_LBL_OTHER')),
+  ];
   RegionListModel regionList = new RegionListModel();
   int? regionId;
   String? avatar;
@@ -168,4 +172,11 @@ class UpdateProfileProvider extends ChangeNotifier with TextValidation {
     notifyListeners();
   }
 
+}
+
+class Genders {
+  final String gender;
+  final String title;
+
+  Genders({required this.gender, required this.title});
 }

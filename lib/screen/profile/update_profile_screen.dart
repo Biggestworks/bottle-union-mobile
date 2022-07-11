@@ -42,7 +42,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
       return showDialog(
         context: context,
         barrierDismissible: true,
-        builder: (context) {
+        builder: (BuildContext bc) {
           return Center(
             child: Container(
               decoration: BoxDecoration(
@@ -68,58 +68,98 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
       return showDialog(
         context: context,
         barrierDismissible: true,
-        builder: (context) {
-          return AlertDialog(
-            contentPadding: EdgeInsets.zero,
-            content: StatefulBuilder(
-              builder: (context, setState) {
-                return Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                  ),
-                  width: MediaQuery.of(context).size.width * 0.95,
-                  height: 120,
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Radio(
-                              value: _provider.genderList[0],
-                              groupValue: _provider.genderController.text,
-                              onChanged: (value) => _provider.fnOnChangeGender(value as String, _provider.scaffoldKey.currentContext!),
-                              activeColor: CustomColor.MAIN,
-                            ),
-                            Text(AppLocalizations.instance.text('TXT_LBL_MALE'), style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Radio(
-                              value: _provider.genderList[1],
-                              groupValue: _provider.genderController.text,
-                              onChanged: (value) => _provider.fnOnChangeGender(value as String, context),
-                              activeColor: CustomColor.MAIN,
-                            ),
-                            Text(AppLocalizations.instance.text('TXT_LBL_FEMALE'), style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              }
+        builder: (BuildContext bc) {
+          return ChangeNotifierProvider.value(
+            value: Provider.of<UpdateProfileProvider>(context, listen: false),
+            child: AlertDialog(
+              contentPadding: EdgeInsets.zero,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              content: Container(
+                width: MediaQuery.of(context).size.width * 0.95,
+                height: 120,
+                padding: EdgeInsets.all(10),
+                child: Consumer<UpdateProfileProvider>(
+                  builder: (context, provider, _) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: provider.genderList.map((item) {
+                        return Expanded(
+                          child: Row(
+                            children: [
+                              Radio(
+                                value: item.gender,
+                                groupValue: _provider.genderController.text,
+                                onChanged: (value) => _provider.fnOnChangeGender(value as String, context),
+                                activeColor: CustomColor.MAIN,
+                              ),
+                              Text(item.title, style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  },
+                ),
+
+                // child: Column(
+                //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //   children: [
+                //     Expanded(
+                //       child: Row(
+                //         children: [
+                //           Radio(
+                //             value: _provider.genderList[0],
+                //             groupValue: _provider.genderController.text,
+                //             onChanged: (value) => _provider.fnOnChangeGender(value as String, _provider.scaffoldKey.currentContext!),
+                //             activeColor: CustomColor.MAIN,
+                //           ),
+                //           Text(AppLocalizations.instance.text('TXT_LBL_MALE'), style: TextStyle(
+                //             fontSize: 16,
+                //             color: Colors.black,
+                //           ),),
+                //         ],
+                //       ),
+                //     ),
+                //     Expanded(
+                //       child: Row(
+                //         children: [
+                //           Radio(
+                //             value: _provider.genderList[1],
+                //             groupValue: _provider.genderController.text,
+                //             onChanged: (value) => _provider.fnOnChangeGender(value as String, context),
+                //             activeColor: CustomColor.MAIN,
+                //           ),
+                //           Text(AppLocalizations.instance.text('TXT_LBL_FEMALE'), style: TextStyle(
+                //             fontSize: 16,
+                //             color: Colors.black,
+                //           ),),
+                //         ],
+                //       ),
+                //     ),
+                //     Expanded(
+                //       child: Row(
+                //         children: [
+                //           Radio(
+                //             value: _provider.genderList[1],
+                //             groupValue: _provider.genderController.text,
+                //             onChanged: (value) => _provider.fnOnChangeGender(value as String, context),
+                //             activeColor: CustomColor.MAIN,
+                //           ),
+                //           Text(AppLocalizations.instance.text('TXT_LBL_FEMALE'), style: TextStyle(
+                //             fontSize: 16,
+                //             color: Colors.black,
+                //           ),),
+                //         ],
+                //       ),
+                //     )
+                //   ],
+                // ),
+              ),
             ),
           );
         },

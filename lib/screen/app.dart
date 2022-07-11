@@ -95,7 +95,7 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   // NetworkConnectionHelper _networkConnectionHelper = new NetworkConnectionHelper();
   SpecifiedLocalizationDelegate? _localeOverrideDelegate;
-  StreamSubscription<ConnectivityResult>? _connectivitySubs;
+  // StreamSubscription<ConnectivityResult>? _connectivitySubs;
   bool _initialURILinkHandled = false;
 
   StreamSubscription? _linkSubs;
@@ -173,7 +173,7 @@ class _AppState extends State<App> {
 
   @override
   void dispose() {
-    _connectivitySubs?.cancel();
+    // _connectivitySubs?.cancel();
     _linkSubs?.cancel();
     super.dispose();
   }

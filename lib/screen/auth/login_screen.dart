@@ -402,16 +402,7 @@ class _LoginScreenState extends State<LoginScreen> with TextValidation, LoadingV
               ),
             ],
           ),
-          body: Consumer<LoginProvider>(
-              builder: (context, provider, _) {
-                switch(provider.providerId) {
-                  case null:
-                    return _mainContent;
-                  default:
-                    return _mainContentSocmed;
-                }
-              }
-          ),
+          body: _mainContent,
           bottomNavigationBar: _submitBtn,
         ),
       ),

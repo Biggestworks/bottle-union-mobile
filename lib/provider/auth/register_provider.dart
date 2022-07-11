@@ -106,11 +106,10 @@ class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextVa
         await Get.offAllNamed(LoginScreen.tag, arguments: LoginScreen(isRegister: true,));
       } else {
         _view!.onProgressFinish();
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${_res.message.toString()}')));
-      }
+        await CustomWidget.showSnackBar(context: context, content: Text('${_res.message != null ? _res.message.toString() : ''}'));                }
     } else {
       _view!.onProgressFinish();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR'))));
+      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
     _view!.onProgressFinish();
   }
