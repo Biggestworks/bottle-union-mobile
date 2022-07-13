@@ -48,8 +48,6 @@ class DeliveryBuyProvider extends ChangeNotifier {
     isCart = _args.isCart;
     selectedRegionId = _args.selectedRegionId;
     selectedProvinceId = _args.selectedProvinceId;
-    print(selectedRegionId);
-    print(selectedProvinceId);
     notifyListeners();
   }
 

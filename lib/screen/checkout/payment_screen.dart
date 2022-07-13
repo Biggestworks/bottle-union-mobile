@@ -353,7 +353,7 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
 
     switch(_isLoad) {
       case true:
-        return CustomWidget.checkoutLoadingPage();
+        return CustomWidget.checkoutLoadingPage(_provider.scaffoldKey);
       default:
         return Scaffold(
           key: _provider.scaffoldKey,
@@ -408,62 +408,6 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
           bottomNavigationBar: _bottomMenuContent,
         );
     }
-
-    // return CustomWidget.loadingHud(
-    //   isLoad: _isLoad,
-    //   child: Scaffold(
-    //     key: _provider.scaffoldKey,
-    //     backgroundColor: CustomColor.BG,
-    //     appBar: AppBar(
-    //       backgroundColor: CustomColor.BG,
-    //       centerTitle: true,
-    //       titleSpacing: 0,
-    //       title: RichText(text: TextSpan(
-    //           children: [
-    //             TextSpan(
-    //               text: AppLocalizations.instance.text('TXT_DELIVERY'),
-    //               style: TextStyle(
-    //                 fontSize: 16,
-    //                 color: CustomColor.GREY_TXT,
-    //               ),
-    //             ),
-    //             WidgetSpan(
-    //               child: Padding(
-    //                 padding: const EdgeInsets.symmetric(horizontal: 6),
-    //                 child: Icon(Icons.arrow_forward_ios, size: 18,),
-    //               ),
-    //             ),
-    //             TextSpan(
-    //               text: AppLocalizations.instance.text('TXT_PAYMENT'),
-    //               style: TextStyle(
-    //                 fontSize: 16,
-    //                 color: CustomColor.BROWN_TXT,
-    //                 fontWeight: FontWeight.bold,
-    //               ),
-    //             ),
-    //             WidgetSpan(
-    //               child: Padding(
-    //                 padding: const EdgeInsets.symmetric(horizontal: 6),
-    //                 child: Icon(Icons.arrow_forward_ios, size: 18,),
-    //               ),
-    //             ),
-    //             TextSpan(
-    //               text: AppLocalizations.instance.text('TXT_FINISH'),
-    //               style: TextStyle(
-    //                 fontSize: 16,
-    //                 color: CustomColor.GREY_TXT,
-    //               ),
-    //             ),
-    //           ]
-    //       )),
-    //       iconTheme: IconThemeData(
-    //         color: Colors.black,
-    //       ),
-    //     ),
-    //     body: _mainContent,
-    //     bottomNavigationBar: _bottomMenuContent,
-    //   ),
-    // );
   }
 
   @override

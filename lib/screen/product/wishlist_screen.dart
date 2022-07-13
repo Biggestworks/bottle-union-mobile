@@ -57,8 +57,21 @@ class _WishListScreenState extends State<WishListScreen>
                     switch (provider.wishlist.result!.data!.length) {
                       case 0:
                         return CustomWidget.emptyScreen(
-                          image: 'assets/images/ic_empty_product.png',
-                          title: AppLocalizations.instance.text('TXT_NO_PRODUCT'),
+                          image: 'assets/images/ic_empty_2.png',
+                          size: 180,
+                          title: AppLocalizations.instance.text('TXT_NO_WISHLIST'),
+                          action: SizedBox(
+                            width: 150,
+                            child: CustomWidget.roundBtn(
+                              label: AppLocalizations.instance.text('TXT_SHOP_NOW'),
+                              lblColor: Colors.white,
+                              btnColor: CustomColor.MAIN,
+                              function: () {
+                                Get.back();
+                                _baseProvider.fnOnNavBarSelected(1);
+                              },
+                            ),
+                          ),
                         );
                       default:
                         return NotificationListener<ScrollNotification>(

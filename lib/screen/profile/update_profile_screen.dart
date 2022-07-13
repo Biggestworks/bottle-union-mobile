@@ -29,7 +29,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
     Future.delayed(Duration.zero, () {
       Provider.of<UpdateProfileProvider>(context, listen: false).fnGetView(this);
       Provider.of<UpdateProfileProvider>(context, listen: false).fnFetchUserData()
-          .then((value) => Provider.of<UpdateProfileProvider>(context, listen: false).fnFetchRegionList());
+          .then((_) => Provider.of<UpdateProfileProvider>(context, listen: false).fnFetchRegionList());
     },);
     super.initState();
   }
@@ -184,8 +184,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                   width: MediaQuery.of(context).size.width * 0.95,
                   padding: EdgeInsets.all(10),
                   child: Consumer<UpdateProfileProvider>(
-                    child: Container(
-                      child: Text('No Data'),
+                    child: Center(
+                      child: Container(
+                        child: Text('No Data'),
+                      ),
                     ),
                     builder: (context, provider, skeleton) {
                       switch (provider.regionList.data) {
@@ -212,7 +214,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                                     child: Text(_data?.name ?? '-', style: TextStyle(
                                         fontSize: 14,
                                         color: _data?.id == _provider.regionId ? Colors.white : Colors.black
-                                    ),),
+                                    ), textAlign: TextAlign.center,),
                                   ),
                                 ),
                               );
@@ -228,6 +230,25 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
         },
       );
     }
+
+    Widget _deleteAccBtn = SafeArea(
+      child: CustomWidget.roundBtn(
+        label: AppLocalizations.instance.text('TXT_DELETE_ACCOUNT'),
+        btnColor: CustomColor.MAIN,
+        lblColor: Colors.white,
+        isBold: true,
+        radius: 8,
+        fontSize: 14,
+        function: () => CustomWidget.showDeleteAccountDialog(
+          context,
+          desc: AppLocalizations.instance.text('TXT_DELETE_ACCOUNT_INFO'),
+          function: () async {
+            Get.back();
+            await _provider.fnDeleteAccount(_provider.scaffoldKey.currentContext!);
+          },
+        ),
+      ),
+    );
 
     Widget _mainContent = SingleChildScrollView(
       child: Container(
@@ -249,20 +270,29 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                           onTap: () async => await provider.fnUpdateAvatar(provider.scaffoldKey.currentContext!),
                           child: Stack(
                             children: [
-                              CustomWidget.roundedAvatarImg(url: provider.userModel.user?.avatar ?? '',),
+                              CustomWidget.roundedAvatarImg(
+                                url: provider.userModel.user?.avatar ?? '',
+                                borderColor: CustomColor.MAIN,
+                              ),
                               Positioned(
                                 bottom: 5,
                                 right: 0,
-                                child: Icon(
-                                  CupertinoIcons.pencil_circle_fill,
-                                  color: CustomColor.MAIN,
-                                  size: 35,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: CustomColor.MAIN,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  padding: EdgeInsets.all(8),
+                                  child: Icon(
+                                    Icons.camera_alt,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        SizedBox(height: 10,),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -300,7 +330,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                                     }
                                   }),
                                   child: Text(AppLocalizations.instance.text('TXT_CHANGE'), style: TextStyle(
-                                    color: Colors.green,
+                                    color: CustomColor.BROWN_TXT,
                                     fontSize: 14,
                                   ),),
                                 ),
@@ -326,9 +356,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                                           builder: (context, provider, skeleton) {
                                             switch (provider.isAgeValid) {
                                               case true:
-                                                return Icon(FontAwesomeIcons.solidCheckCircle, size: 24, color: Colors.green,);
+                                                return Icon(FontAwesomeIcons.solidCircleCheck, size: 24, color: Colors.green,);
                                               case false:
-                                                return Icon(FontAwesomeIcons.exclamationCircle, size: 24, color: Colors.red,);
+                                                return Icon(FontAwesomeIcons.circleExclamation, size: 24, color: Colors.red,);
                                               default:
                                                 return skeleton!;
                                             }
@@ -348,7 +378,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                                 GestureDetector(
                                   onTap: () => _showDobDialog(),
                                   child: Text(AppLocalizations.instance.text('TXT_CHANGE'), style: TextStyle(
-                                    color: Colors.green,
+                                    color: CustomColor.BROWN_TXT,
                                     fontSize: 14,
                                   ),),
                                 ),
@@ -383,7 +413,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                                 GestureDetector(
                                   onTap: () => _showGenderDialog(),
                                   child: Text(AppLocalizations.instance.text('TXT_CHANGE'), style: TextStyle(
-                                    color: Colors.green,
+                                    color: CustomColor.BROWN_TXT,
                                     fontSize: 14,
                                   ),),
                                 ),
@@ -399,12 +429,19 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                                   color: CustomColor.GREY_TXT,
                                 ),),
                                 SizedBox(width: 10,),
-                                Text(provider.isVerified!
-                                    ? AppLocalizations.instance.text('TXT_VERIFIED')
-                                    : AppLocalizations.instance.text('TXT_NOT_VERIFIED'), style: TextStyle(
-                                  fontSize: 16,
-                                  color: provider.isVerified! ? Colors.green : Colors.red,
-                                ),),
+                                Row(
+                                  children: [
+                                    Text(provider.isVerified!
+                                        ? AppLocalizations.instance.text('TXT_VERIFIED')
+                                        : AppLocalizations.instance.text('TXT_NOT_VERIFIED'), style: TextStyle(
+                                      fontSize: 16,
+                                      color: provider.isVerified! ? Colors.green : Colors.red,
+                                    ),),
+                                    provider.isVerified!
+                                        ? Icon(Icons.check, color: Colors.green, size: 20,)
+                                        : SizedBox(),
+                                  ],
+                                ),
                               ],
                             ),
                             SizedBox(height: 5,),
@@ -437,7 +474,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                                     }
                                   }),
                                   child: Text(AppLocalizations.instance.text('TXT_CHANGE'), style: TextStyle(
-                                    color: Colors.green,
+                                    color: CustomColor.BROWN_TXT,
                                     fontSize: 14,
                                   ),),
                                 ),
@@ -480,7 +517,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                                     }
                                   }),
                                   child: Text(AppLocalizations.instance.text('TXT_CHANGE'), style: TextStyle(
-                                    color: Colors.green,
+                                    color: CustomColor.BROWN_TXT,
                                     fontSize: 14,
                                   ),),
                                 ),
@@ -515,7 +552,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                                       GestureDetector(
                                         onTap: () => _showRegionDialog(),
                                         child: Text(AppLocalizations.instance.text('TXT_CHANGE'), style: TextStyle(
-                                          color: Colors.green,
+                                          color: CustomColor.BROWN_TXT,
                                           fontSize: 14,
                                         ),),
                                       ),
@@ -525,6 +562,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                             ),
                           ],
                         ),
+                        SizedBox(height: 20,),
+                        _deleteAccBtn,
                       ],
                     );
                 }

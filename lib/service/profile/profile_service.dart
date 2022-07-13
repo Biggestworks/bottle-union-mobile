@@ -17,7 +17,6 @@ class ProfileService extends GetConnect {
 
     return {
       "Accept": "application/json",
-      "Content-Type": "application/json",
       "Authorization": "Bearer $_token",
     };
   }
@@ -71,21 +70,19 @@ class ProfileService extends GetConnect {
     return _model;
   }
 
-  Future<DefaultModel?> updateUserAvatar({File? image}) async {
+  Future<DefaultModel?> updateUserAvatar({required File image}) async {
     DefaultModel _model = new DefaultModel();
     MultipartFile? _imageFile;
 
     try {
-      if (image != null) {
-        _imageFile = MultipartFile(
-          image.path,
-          filename: basename(image.path),
-          contentType: MediaType(
-            "image",
-            basename(image.path),
-          ).type,
-        );
-      }
+      _imageFile = MultipartFile(
+        image.path,
+        filename: basename(image.path),
+        contentType: MediaType(
+          "image",
+          basename(image.path),
+        ).type,
+      );
 
       FormData _data = new FormData({
         "image": _imageFile
@@ -96,6 +93,7 @@ class ProfileService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
+      print(_response.body);
       _model = DefaultModel.fromJson(_response.body);
     } catch (e) {
       print(e);
@@ -149,6 +147,23 @@ class ProfileService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
+      _model = DefaultModel.fromJson(_response.body);
+    } catch (e) {
+      print(e);
+    }
+
+    return _model;
+  }
+
+  Future<DefaultModel?> deleteAccount() async {
+    DefaultModel _model = new DefaultModel();
+
+    try {
+      Response _response = await get(
+        URLHelper.deleteAccountUrl,
+        headers: await _headersAuth(),
+      );
+      print(_response.body);
       _model = DefaultModel.fromJson(_response.body);
     } catch (e) {
       print(e);

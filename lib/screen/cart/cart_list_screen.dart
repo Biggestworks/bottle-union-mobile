@@ -60,7 +60,7 @@ class _CartListScreenState extends State<CartListScreen>
                       case 0:
                         return CustomWidget.emptyScreen(
                           image: 'assets/images/ic_empty_2.png',
-                          size: 200,
+                          size: 180,
                           title: AppLocalizations.instance.text('TXT_NO_CART'),
                           action: SizedBox(
                             width: 150,

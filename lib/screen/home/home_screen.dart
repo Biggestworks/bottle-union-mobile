@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:eight_barrels/abstract/product_log.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
@@ -40,63 +39,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerProviderStateMixin {
-  StreamSubscription<ConnectivityResult>? _subscription;
-  bool _initialURILinkHandled = false;
   PushNotificationManager _pushNotificationManager = new PushNotificationManager();
-
-  StreamSubscription? _linkSubs;
   // TabController? _tabController;
-
-  Future<void> _initURIHandler() async {
-    if (!_initialURILinkHandled) {
-      _initialURILinkHandled = true;
-      print('Invoked _initURIHandler');
-      try {
-        final initialURI = await getInitialUri();
-        if (initialURI != null) {
-          debugPrint("Initial URI received $initialURI");
-          if (!mounted) {
-            return;
-          }
-        } else {
-          debugPrint("Null Initial URI received");
-        }
-      } on PlatformException {
-        debugPrint("Failed to receive initial uri");
-      } on FormatException catch (err) {
-        if (!mounted) {
-          return;
-        }
-        debugPrint('Malformed Initial URI received');
-      }
-    }
-  }
-
-  void _incomingLinkHandler() {
-    if (!kIsWeb) {
-      _linkSubs = uriLinkStream.listen((Uri? uri) {
-        if (!mounted) {
-          return;
-        }
-        debugPrint('Received URI: $uri');
-        setState(() {
-          if (uri?.queryParameters['product_id'] != null) {
-            Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(productId: int.parse(uri?.queryParameters['product_id'] ?? '')));
-          }
-        });
-      }, onError: (Object err) {
-        if (!mounted) {
-          return;
-        }
-        debugPrint('Error occurred: $err');
-      });
-    }
-  }
 
   @override
   void initState() {
     Future.delayed(Duration.zero).then((value) {
-      // NetworkConnectionHelper().initConnectivity(subscription: _subscription, context: context);
       Provider.of<HomeProvider>(context, listen: false).fnFetchUserInfo().then((_) {
         Provider.of<HomeProvider>(context, listen: false).fnFetchRegionProductList();
         Provider.of<HomeProvider>(context, listen: false).fnFetchBannerList();
@@ -106,17 +54,8 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
       Provider.of<HomeProvider>(context, listen: false).fnSaveFcmToken();
       Provider.of<HomeProvider>(context, listen: false).fnFetchAddressList();
       _pushNotificationManager.initFCM();
-      _initURIHandler();
-      _incomingLinkHandler();
     });
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _linkSubs?.cancel();
-    _subscription?.cancel();
-    super.dispose();
   }
 
   @override
@@ -128,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
       height: 150,
       padding: EdgeInsets.symmetric(horizontal: 5),
       child: GestureDetector(
-        onTap: () => {},
+        onTap: () {},
         child: Card(
           color: CustomColor.BG,
           elevation: 4,

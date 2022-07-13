@@ -73,6 +73,7 @@
 	"TXT_LBL_HELP": "Bantuan",
 	"TXT_CONFIRMATION": "Konfirmasi",
 	"TXT_YES": "Ya",
+	"TXT_UNDERSTAND": "Ya, Saya mengerti",
 	"TXT_CANCEL": "Batal",
 	"TXT_LOGOUT_INFO": "Anda yakin ingin keluar dari aplikasi Bottle Union?",
 	"TXT_LBL_LANGUAGE": "Bahasa",
@@ -102,9 +103,10 @@
 	"TXT_LBL_ARRIVE": "Tiba di Tujuan",
 	"TXT_LBL_COMPLETE": "Selesai",
 	"TXT_LBL_COMPLAINT": "Keluhan",
-	"TXT_LBL_CANCELLED": "Dibatalkan",
+	"TXT_LBL_CANCELED": "Dibatalkan",
 	"TXT_NO_PRODUCT": "Maaf, tidak ada produk yang tersedia",
 	"TXT_NO_CART": "Anda belum memiliki pesanan",
+	"TXT_NO_WISHLIST": "Anda belum memiliki wishlist",
 	"TXT_LBL_REMOVE_WISHLIST": "Hapus Wishlist",
 	"TXT_REMOVE_WISHLIST_INFO": "Anda yakin ingin menghapus barang dari Wishlist?",
 	"TXT_SELECT_ITEM_INFO": "Mohon pilih minimal 1 barang",
@@ -223,6 +225,9 @@
 	"TXT_TERM_AND_CONDITION_INFO_1": "Setujui",
 	"TXT_TERM_AND_CONDITION_INFO_2": "kami sebelum mendaftar",
 	"TXT_TERM_AND_CONDITION_INFO_3": "Mohon setujui syarat & ketentuan kami sebelum mendaftar",
-	"TXT_TERM_AND_CONDITION_INFO_4": "Sebelum mendaftar di aplikasi Bottle Union, mohon untuk membaca dan menyetujui Syarat & Ketentuan kami dibawah ini."
+	"TXT_TERM_AND_CONDITION_INFO_4": "Sebelum mendaftar di aplikasi Bottle Union, mohon untuk membaca dan menyetujui Syarat & Ketentuan kami dibawah ini.",
+	"TXT_DELETE_ACCOUNT": "HAPUS AKUN",
+	"TXT_DELETE_ACCOUNT_INFO": "Anda yakin ingin hapus akun?\nKami akan mengirimkan email untuk melakukan verifikasi terakhir. Setelah proses tersebut akun Anda akan dihapus permanen dalam 2 hari kerja dan tidak bisa kembali.",
+	"TXT_DELETE_ACCOUNT_SUCCESS": "Permintaan penghapusan akun Anda sudah terkirim. Silahkan cek email Anda."
 
 }

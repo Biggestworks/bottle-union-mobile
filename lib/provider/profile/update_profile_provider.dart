@@ -83,7 +83,7 @@ class UpdateProfileProvider extends ChangeNotifier with TextValidation {
     if (tempImage != null) {
       _view!.onProgressStart();
       imageFile = tempImage;
-      var _res = await _service.updateUserAvatar(image: imageFile);
+      var _res = await _service.updateUserAvatar(image: imageFile!);
 
       if (_res!.status != null) {
         if (_res.status == true) {
@@ -169,6 +169,29 @@ class UpdateProfileProvider extends ChangeNotifier with TextValidation {
     } else {
       await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_AGE_ERROR')));
     }
+    notifyListeners();
+  }
+
+  Future fnDeleteAccount(BuildContext context) async {
+    _view!.onProgressStart();
+    var _res = await _service.deleteAccount();
+    if (_res?.status != null) {
+      if (_res?.status == true) {
+        _view!.onProgressFinish();
+        await CustomWidget.showSuccessDialog(
+          context,
+          desc: AppLocalizations.instance.text('TXT_DELETE_ACCOUNT_SUCCESS'),
+          function: () => Get.back(),
+        );
+      } else {
+        _view!.onProgressFinish();
+        await CustomWidget.showSnackBar(context: context, content: Text('${_res?.message != null ? _res?.message.toString() : ''}'));
+      }
+    } else {
+      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+      _view!.onProgressFinish();
+    }
+    _view!.onProgressFinish();
     notifyListeners();
   }
 

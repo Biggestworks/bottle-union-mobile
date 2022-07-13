@@ -33,9 +33,8 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
     TabLabel(AppLocalizations.instance.text('TXT_LBL_CONFIRMATION'), 2, FontAwesomeIcons.clock),
     TabLabel(AppLocalizations.instance.text('TXT_LBL_PROCESSED'), 3, FontAwesomeIcons.circleCheck),
     TabLabel(AppLocalizations.instance.text('TXT_LBL_DELIVERY'), 4, FontAwesomeIcons.truck),
-    // TabLabel(AppLocalizations.instance.text('TXT_LBL_ARRIVE'), 0, FontAwesomeIcons.boxOpen),
     TabLabel(AppLocalizations.instance.text('TXT_LBL_COMPLETE'), 6, FontAwesomeIcons.solidStar),
-    TabLabel(AppLocalizations.instance.text('TXT_LBL_CANCELLED'), 7, FontAwesomeIcons.circleExclamation),
+    TabLabel(AppLocalizations.instance.text('TXT_LBL_CANCELED'), 7, FontAwesomeIcons.circleExclamation),
   ];
 
   List<DateFilter> dateFilter = [
@@ -97,25 +96,25 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
     notifyListeners();
   }
 
-  Future fnFinishPayment(BuildContext context) async {
-    _view!.onProgressStart();
-    var _res = await _paymentService.midtransPayment(code: transactionList.result?.data?[0].codeTransaction ?? null);
-
-    if (_res!.status != null) {
-      if (_res.status == true) {
-        _view!.onProgressFinish();
-        await Get.toNamed(MidtransWebviewScreen.tag, arguments: MidtransWebviewScreen(url: _res.data?.redirectUrl,));
-      } else {
-        _view!.onProgressFinish();
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message ?? '-'));
-      }
-    } else {
-      _view!.onProgressFinish();
-      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
-    }
-    _view!.onProgressFinish();
-    notifyListeners();
-  }
+  // Future fnFinishPayment(BuildContext context) async {
+  //   _view!.onProgressStart();
+  //   var _res = await _paymentService.midtransPayment(code: transactionList.result?.data?[0].codeTransaction ?? null);
+  //
+  //   if (_res!.status != null) {
+  //     if (_res.status == true) {
+  //       _view!.onProgressFinish();
+  //       await Get.toNamed(MidtransWebviewScreen.tag, arguments: MidtransWebviewScreen(url: _res.data?.redirectUrl,));
+  //     } else {
+  //       _view!.onProgressFinish();
+  //       await CustomWidget.showSnackBar(context: context, content: Text(_res.message ?? '-'));
+  //     }
+  //   } else {
+  //     _view!.onProgressFinish();
+  //     await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+  //   }
+  //   _view!.onProgressFinish();
+  //   notifyListeners();
+  // }
 
   fnOnSelectDateFilter(int value) {
     this.selectedDateFilter = value;
@@ -233,7 +232,7 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
       case 6:
         return AppLocalizations.instance.text('TXT_LBL_COMPLETE');
       case 7:
-        return AppLocalizations.instance.text('TXT_LBL_CANCELLED');
+        return AppLocalizations.instance.text('TXT_LBL_CANCELED');
       default:
         return '-';
     }

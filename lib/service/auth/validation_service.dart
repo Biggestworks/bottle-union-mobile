@@ -25,7 +25,6 @@ class ValidationService extends GetConnect {
         _data,
         headers: _headers,
       );
-      print(_response.body);
       _model = DefaultModel.fromJson(_response.body);
     } catch (e) {
       print(e);
@@ -47,7 +46,6 @@ class ValidationService extends GetConnect {
         _data,
         headers: _headers,
       );
-      print(_response.body);
       _model = ValidationModel.fromJson(_response.body);
       _userPreferences.saveOtpToken(_model.token ?? '');
     } catch (e) {

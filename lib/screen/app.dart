@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/key_helper.dart' as key;
+import 'package:eight_barrels/helper/network_connection_helper.dart';
+import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/provider/auth/login_provider.dart';
 import 'package:eight_barrels/provider/auth/otp_provider.dart';
 import 'package:eight_barrels/provider/auth/register_provider.dart';
@@ -73,12 +75,14 @@ import 'package:eight_barrels/screen/transaction/invoice_webview_screen.dart';
 import 'package:eight_barrels/screen/transaction/track_order_screen.dart';
 import 'package:eight_barrels/screen/transaction/transaction_detail_screen.dart';
 import 'package:eight_barrels/screen/transaction/transaction_screen.dart';
+import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:uni_links/uni_links.dart';
@@ -93,9 +97,10 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  // NetworkConnectionHelper _networkConnectionHelper = new NetworkConnectionHelper();
+  final GlobalKey<ScaffoldMessengerState> _snackBarKey = GlobalKey<ScaffoldMessengerState>();
+  NetworkConnectionHelper _networkConnectionHelper = new NetworkConnectionHelper();
   SpecifiedLocalizationDelegate? _localeOverrideDelegate;
-  // StreamSubscription<ConnectivityResult>? _connectivitySubs;
+  StreamSubscription<InternetConnectionStatus>? _connectionSubs;
   bool _initialURILinkHandled = false;
 
   StreamSubscription? _linkSubs;
@@ -104,8 +109,8 @@ class _AppState extends State<App> {
     final _storage = new FlutterSecureStorage();
     bool _isExist = await _storage.containsKey(key: key.KeyHelper.KEY_LOCALE);
     if (_isExist) {
-      String? _locale = await _storage.read(key: key.KeyHelper.KEY_LOCALE);
-      return Locale(_locale!);
+      String _locale = await _storage.read(key: key.KeyHelper.KEY_LOCALE) ?? "en";
+      return Locale(_locale);
     } else {
       await _storage.write(key: key.KeyHelper.KEY_LOCALE, value: "en");
       return Locale("en");
@@ -160,7 +165,7 @@ class _AppState extends State<App> {
 
   @override
   void initState() {
-    // _networkConnectionHelper.initConnectivity(subscription: _connectivitySubs, context: context);
+    _networkConnectionHelper.checkConnection(subscription: _connectionSubs, context: context);
     _getLocale().then((Locale myLocale) => {
       setState(() {
         _localeOverrideDelegate = new SpecifiedLocalizationDelegate(myLocale);
@@ -168,12 +173,13 @@ class _AppState extends State<App> {
     });
     _initURIHandler();
     _incomingLinkHandler();
+    // _checkUserToken();
     super.initState();
   }
 
   @override
   void dispose() {
-    // _connectivitySubs?.cancel();
+    _connectionSubs?.cancel();
     _linkSubs?.cancel();
     super.dispose();
   }
@@ -187,7 +193,7 @@ class _AppState extends State<App> {
         ),
       ],
       child: GetMaterialApp(
-
+        scaffoldMessengerKey: _snackBarKey,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           fontFamily: 'Futura',

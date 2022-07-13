@@ -1,6 +1,7 @@
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/provider/profile/profile_provider.dart';
+import 'package:eight_barrels/screen/auth/tac_webview_screen.dart';
 import 'package:eight_barrels/screen/product/wishlist_screen.dart';
 import 'package:eight_barrels/screen/profile/address_list_screen.dart';
 import 'package:eight_barrels/screen/profile/change_password_screen.dart';
@@ -123,12 +124,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   }
                 ),
                 Positioned(
-                  bottom: 0,
+                  bottom: 5,
                   right: 0,
-                  child: Icon(
-                    CupertinoIcons.pencil_circle_fill,
-                    color: Colors.white,
-                    size: 35,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    padding: EdgeInsets.all(5),
+                    child: Icon(
+                      Icons.edit,
+                      color: CustomColor.MAIN,
+                      size: 20,
+                    ),
                   ),
                 ),
               ],
@@ -342,17 +350,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: CustomColor.GREY_TXT,
                     size: 15,
                   ),
-                  onTap: () {
-                    Get.toNamed(ContactUsScreen.tag);
-                    // ReusableWidget.showSnackBar('Under Construction', context);
-                  },
+                  onTap: () => Get.toNamed(ContactUsScreen.tag),
                 ),
                 Divider(
                   thickness: 1,
                 ),
                 ListTile(
                   dense: true,
-                  title: Text(AppLocalizations.instance.text('TXT_LBL_HELP'), style: TextStyle(
+                  title: Text('Privacy Policy', style: TextStyle(
                       color: Colors.black,
                       fontSize: 15,
                     ),
@@ -360,7 +365,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   leading: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Icon(
-                      FontAwesomeIcons.question,
+                      FontAwesomeIcons.userShield,
                       color: CustomColor.GREY_TXT,
                       size: 18,
                     ),
@@ -370,9 +375,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: CustomColor.GREY_TXT,
                     size: 15,
                   ),
-                  onTap: () {
-                    CustomWidget.showSnackBar(context: context, content: Text('Under Construction'));
-                  },
+                  onTap: () => Get.toNamed(TacWebviewScreen.tag),
                 ),
               ],
             ),
@@ -418,6 +421,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   builder: (context, provider, _) {
                     return Text("App Version ${provider.fullVersion}", style: TextStyle(
                       fontWeight: FontWeight.bold,
+                      color: CustomColor.GREY_TXT,
                     ),);
                   }
               ),

@@ -43,6 +43,7 @@ class URLHelper {
   static final updateAvatarUrl = baseUrl + '/user/update-avatar';
   static final newPasswordUrl = baseUrl + '/user/password/new';
   static final resetPasswordUrl = baseUrl + '/user/password/reset';
+  static final deleteAccountUrl = baseUrl + '/user/delete-account/confirmation';
 
   ///OTP
   static final sendOtpUrl = baseUrl + '/verification/send';

@@ -1,9 +1,17 @@
+import 'dart:async';
+
 import 'package:badges/badges.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
+import 'package:eight_barrels/helper/key_helper.dart';
+import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
+import 'package:eight_barrels/screen/auth/start_screen.dart';
+import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 
@@ -18,10 +26,36 @@ class BaseHomeScreen extends StatefulWidget {
 }
 
 class _BaseHomeScreenState extends State<BaseHomeScreen> {
+  UserPreferences _userPreferences = new UserPreferences();
+  final _storage = new FlutterSecureStorage();
+  var _period;
+
+  Future _fnCheckUserToken(BuildContext context, ) async {
+    _period = new Timer.periodic(Duration(seconds: 10), (timer) async {
+      var _res = await _userPreferences.getUserData();
+      if (_res?.status == 'Token is Invalid' || _res?.user == null) {
+        timer.cancel();
+        CustomWidget.showSuccessDialog(
+          context,
+          title: '[Error 401] Token is invalid',
+          desc: 'You will be logged out from the application',
+          function: () async {
+            await _userPreferences.removeUserToken();
+            await _userPreferences.removeFcmToken();
+            await _storage.delete(key: KeyHelper.KEY_USER_REGION_ID);
+            await _storage.delete(key: KeyHelper.KEY_USER_REGION_NAME);
+            Get.offNamedUntil(StartScreen.tag, (route) => false);
+          },
+        );
+      }
+      setState(() {});
+    });
+  }
 
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
+      _fnCheckUserToken(context);
       Provider.of<BaseHomeProvider>(context, listen: false).fnIsFirstTime()
           .then((_) => WidgetsBinding.instance!.addPostFrameCallback(
               (_) => Provider.of<BaseHomeProvider>(context, listen: false).fnStartShowcase(context)));
@@ -29,6 +63,12 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
       Provider.of<BaseHomeProvider>(context, listen: false).fnGetCartCount();
     },);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _period?.cancel();
+    super.dispose();
   }
 
   @override

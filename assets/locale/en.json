@@ -73,6 +73,7 @@
 	"TXT_LBL_HELP": "Help",
 	"TXT_CONFIRMATION": "Confirmation",
 	"TXT_YES": "Yes",
+	"TXT_UNDERSTAND": "Yes, I Understand",
 	"TXT_CANCEL": "Cancel",
 	"TXT_LOGOUT_INFO": "Are you sure you want to logout from Bottle Union app?",
 	"TXT_LBL_LANGUAGE": "Language",
@@ -102,9 +103,10 @@
 	"TXT_LBL_ARRIVE": "Arrive",
 	"TXT_LBL_COMPLETE": "Complete",
 	"TXT_LBL_COMPLAINT": "Complaint",
-	"TXT_LBL_CANCELLED": "Cancelled",
+	"TXT_LBL_CANCELED": "Canceled",
 	"TXT_NO_PRODUCT": "Sorry, there is no product available",
 	"TXT_NO_CART": "You have no order yet",
+	"TXT_NO_WISHLIST": "You have no wishlist yet",
 	"TXT_LBL_REMOVE_WISHLIST": "Remove Wishlist",
 	"TXT_REMOVE_WISHLIST_INFO": "Are you sure you want to remove items from Wishlist?",
 	"TXT_SELECT_ITEM_INFO": "Please select at least one item",
@@ -224,6 +226,9 @@
 	"TXT_TERM_AND_CONDITION_INFO_1": "Agree to our",
 	"TXT_TERM_AND_CONDITION_INFO_2": "before registering",
 	"TXT_TERM_AND_CONDITION_INFO_3": "Please agree to our term & condition first before registering",
-	"TXT_TERM_AND_CONDITION_INFO_4": "Before registering to Bottle Union application, please read and agree to our Term & Condition below."
+	"TXT_TERM_AND_CONDITION_INFO_4": "Before registering to Bottle Union application, please read and agree to our Term & Condition below.",
+	"TXT_DELETE_ACCOUNT": "DELETE ACCOUNT",
+	"TXT_DELETE_ACCOUNT_INFO": "Are you sure you want to delete your account?\nWe will send you an email to do final verification. After that your account will be deleted permanently in 2 working days and cannot be undone.",
+	"TXT_DELETE_ACCOUNT_SUCCESS": "Your account deletion request has been sent. Please check your email."
 
 }

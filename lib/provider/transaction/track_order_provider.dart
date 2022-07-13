@@ -45,7 +45,7 @@ class TrackOrderProvider extends ChangeNotifier {
       case '6':
         return AppLocalizations.instance.text('TXT_LBL_COMPLETE');
       case '7':
-        return AppLocalizations.instance.text('TXT_LBL_CANCELLED');
+        return AppLocalizations.instance.text('TXT_LBL_CANCELED');
       default:
         return '-';
     }

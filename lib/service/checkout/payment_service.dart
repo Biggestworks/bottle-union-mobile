@@ -102,13 +102,13 @@ class PaymentService extends GetConnect {
         body: json.encode(_data),
         headers: await _headersAuth(),
       );
+      print(_response.body);
       ///GET CONNECT BUG
       // Response _response = await post(
       //   URLHelper.storeOrderUrl,
       //   _data,
       //   headers: await _headersAuth(),
       // );
-      print(_response.body);
       _model = OrderNowModel.fromJson(json.decode(_response.body));
     } catch (e) {
       print(e);

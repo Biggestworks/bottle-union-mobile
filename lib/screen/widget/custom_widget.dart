@@ -289,7 +289,7 @@ class CustomWidget {
           ),
           actions: [
             TextButton(
-              child: Text(AppLocalizations.instance.text('TXT_YES'), style: TextStyle(
+              child: Text(AppLocalizations.instance.text('TXT_UNDERSTAND'), style: TextStyle(
                 color: CustomColor.MAIN,),
               ),
               onPressed: () {
@@ -433,7 +433,7 @@ class CustomWidget {
     );
   }
 
-  static Widget roundedAvatarImg({required String url, double? size}) {
+  static Widget roundedAvatarImg({required String url, double? size, Color borderColor = Colors.white}) {
     return CachedNetworkImage(
       imageUrl: url,
       imageBuilder: (context, imageProvider) {
@@ -441,11 +441,12 @@ class CustomWidget {
           width: size ?? 150,
           height: size ?? 150,
           decoration: BoxDecoration(
+            color: Colors.white,
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: 2),
+            border: Border.all(color: borderColor, width: 2),
             image: DecorationImage(
               image: imageProvider,
-              fit: BoxFit.contain,
+              fit: BoxFit.cover,
             ),
           ),
         );
@@ -644,28 +645,14 @@ class CustomWidget {
               ),
             ],
           ),
-          // actions: [
-          //   TextButton(
-          //     child: Text(AppLocalizations.instance.text('TXT_CANCEL'), style: TextStyle(color: Colors.redAccent,),
-          //     ),
-          //     onPressed: () => Get.back(),
-          //   ),
-          //   TextButton(
-          //     child: Text(AppLocalizations.instance.text('TXT_YES'), style: TextStyle(color: Colors.green),
-          //     ),
-          //     onPressed: () {
-          //       Get.back();
-          //       function();
-          //     },
-          //   ),
-          // ],
         );
       },
     );
   }
 
-  static Widget checkoutLoadingPage() {
+  static Widget checkoutLoadingPage(GlobalKey<ScaffoldState> scaffoldKey) {
     return Scaffold(
+      key: scaffoldKey,
       backgroundColor: CustomColor.MAIN,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -774,6 +761,105 @@ class CustomWidget {
                 ],
               ),
             ],
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+    );
+  }
+
+  static showDeleteAccountDialog(
+      BuildContext context, {
+        String desc = '',
+        required void function(),
+      }) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: '',
+      pageBuilder: (ctx, a1, a2) {
+        return Container();
+      },
+      transitionBuilder: (ctx, a1, a2, child) {
+        var curve = Curves.easeInOut.transform(a1.value);
+        return Transform.scale(
+          scale: curve,
+          child: AlertDialog(
+            backgroundColor: Colors.white,
+            insetPadding: EdgeInsets.symmetric(horizontal: 10),
+            contentPadding: EdgeInsets.fromLTRB(15, 20, 15, 5),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10))
+            ),
+            title: Text('Warning', style: TextStyle(
+              color: CustomColor.MAIN,
+              fontWeight: FontWeight.bold,
+            ),),
+            titlePadding: EdgeInsets.fromLTRB(15, 20, 15, 0),
+            content: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.topCenter,
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Flexible(
+                      child: Text(desc, style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                      ),),
+                    ),
+                    SizedBox(height: 20,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),),
+                              side: BorderSide(
+                                color: CustomColor.MAIN,
+                              ),
+                            ),
+                            onPressed: () => Get.back(),
+                            child: Text(AppLocalizations.instance.text('TXT_CANCEL'), style: TextStyle(
+                              color: CustomColor.MAIN,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ), textAlign: TextAlign.center,),
+                          ),
+                        ),
+                        SizedBox(width: 10,),
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),),
+                              primary: CustomColor.MAIN,
+                            ),
+                            onPressed: () => function(),
+                            child: Text(AppLocalizations.instance.text('TXT_DELETE_ACCOUNT'), style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ), textAlign: TextAlign.center,),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Positioned(
+                  right: 0,
+                  top: -90,
+                  child: CircleAvatar(
+                    backgroundColor: CustomColor.MAIN,
+                    radius: 30,
+                    child: Icon(FontAwesomeIcons.info, color: Colors.white,),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
