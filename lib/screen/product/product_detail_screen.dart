@@ -444,7 +444,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 20),
+                      padding: const EdgeInsets.only(top: 100),
                       child: CarouselSlider(
                         options: CarouselOptions(
                           height: 300.0,
@@ -966,12 +966,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
         children: [
           Container(
             width: double.infinity,
-            height: 200,
+            height: 250,
             decoration: BoxDecoration(
               // color: CustomColor.MAIN,
               image: DecorationImage(
-                image: AssetImage('assets/images/bg_marron.png',),
-                fit: BoxFit.cover,
+                image: AssetImage('assets/images/bg_marron_lg.png',),
+                fit: BoxFit.fill,
               ),
               borderRadius: BorderRadius.vertical(
                   bottom: Radius.elliptical(MediaQuery.of(context).size.width, 100.0)
@@ -994,8 +994,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
     return Scaffold(
       key: _provider.scaffoldKey,
       backgroundColor: CustomColor.BG,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        flexibleSpace: Image.asset('assets/images/bg_marron.png', fit: BoxFit.cover,),
+        flexibleSpace: Image.asset('assets/images/bg_marron_lg.png', fit: BoxFit.cover,),
         elevation: 0,
         centerTitle: true,
         title: Text(AppLocalizations.instance.text('TXT_PRODUCT_DETAIL'),),

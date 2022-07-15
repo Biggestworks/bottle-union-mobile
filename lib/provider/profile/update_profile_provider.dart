@@ -56,11 +56,11 @@ class UpdateProfileProvider extends ChangeNotifier with TextValidation {
     if (userModel.user != null) {
       fullNameController.text = userModel.user?.fullname ?? '-';
       emailController.text = userModel.user?.email ?? '-';
-      phoneController.text = userModel.user?.phone ?? '-';
+      phoneController.text = userModel.user?.phone ?? '';
       dobController.text = DateFormat('dd MMMM yyyy').format(userModel.user?.dateOfBirth != null
           ? DateTime.parse(userModel.user?.dateOfBirth ?? '')
           : DateTime.now());
-      genderController.text = userModel.user?.gender ?? '-';
+      genderController.text = userModel.user?.gender ?? 'other';
       regionId = userModel.user?.idRegion;
       avatar = userModel.user?.avatar;
       isVerified = userModel.user?.isVerified == 1 ? true : false;

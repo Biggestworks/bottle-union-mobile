@@ -18,6 +18,9 @@ class ProfileInputProvider extends ChangeNotifier with TextValidation {
   String? flag;
   String? data;
 
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  Widget? textField;
+
   fnGetArguments(BuildContext context) {
     final _args = ModalRoute.of(context)!.settings.arguments as ProfileInputScreen;
     flag = _args.flag;
@@ -25,10 +28,10 @@ class ProfileInputProvider extends ChangeNotifier with TextValidation {
     notifyListeners();
   }
 
-  Widget fnGetTextFormField() {
+  fnGetTextFormField() {
     if (flag == AppLocalizations.instance.text('TXT_LBL_NAME')) {
       fullNameController.text = data!;
-      return TextFormField(
+      textField = TextFormField(
         controller: fullNameController,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         validator: validateField,
@@ -48,7 +51,7 @@ class ProfileInputProvider extends ChangeNotifier with TextValidation {
       );
     } else if (flag == AppLocalizations.instance.text('TXT_LBL_EMAIL')) {
       emailController.text = data!;
-      return TextFormField(
+      textField = TextFormField(
         controller: emailController,
         keyboardType: TextInputType.emailAddress,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -69,7 +72,7 @@ class ProfileInputProvider extends ChangeNotifier with TextValidation {
       );
     } else if (flag == AppLocalizations.instance.text('TXT_LBL_PHONE')) {
       phoneController.text = data!;
-      return TextFormField(
+      textField = TextFormField(
         controller: phoneController,
         keyboardType: TextInputType.phone,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -89,25 +92,28 @@ class ProfileInputProvider extends ChangeNotifier with TextValidation {
         ),
       );
     } else {
-      return Container();
+      textField = Container();
     }
   }
 
   Future fnUpdateProfile(BuildContext context) async {
-    var _res = await _service.updateProfile(
-      fullName: fullNameController.text,
-      email: emailController.text,
-      phone: phoneController.text,
-    );
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      var _res = await _service.updateProfile(
+        fullName: fullNameController.text,
+        email: emailController.text,
+        phone: phoneController.text,
+      );
 
-    if (_res!.status != null) {
-      if (_res.status == true) {
-        Get.back(result: true);
+      if (_res!.status != null) {
+        if (_res.status == true) {
+          Get.back(result: true);
+        } else {
+          await CustomWidget.showSnackBar(context: context, content: Text(_res.errors != null ? _res.errors.toString() : _res.message!));
+        }
       } else {
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.errors != null ? _res.errors.toString() : _res.message!));
+        await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
       }
-    } else {
-      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
   }
 

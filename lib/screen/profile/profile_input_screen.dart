@@ -24,6 +24,7 @@ class _ProfileInputScreenState extends State<ProfileInputScreen> with TextValida
   void initState() {
     Future.delayed(Duration.zero, () {
       Provider.of<ProfileInputProvider>(context, listen: false).fnGetArguments(context);
+      Provider.of<ProfileInputProvider>(context, listen: false).fnGetTextFormField();
     },);
     super.initState();
   }
@@ -72,7 +73,10 @@ class _ProfileInputScreenState extends State<ProfileInputScreen> with TextValida
                 ],
               ),
               SizedBox(height: 5,),
-              provider.fnGetTextFormField(),
+              Form(
+                key: provider.formKey,
+                child: provider.textField ?? Container(),
+              ),
             ],
           ),
         );

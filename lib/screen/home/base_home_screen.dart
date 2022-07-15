@@ -33,7 +33,7 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
   Future _fnCheckUserToken(BuildContext context, ) async {
     _period = new Timer.periodic(Duration(seconds: 10), (timer) async {
       var _res = await _userPreferences.getUserData();
-      if (_res?.status == 'Token is Invalid' || _res?.user == null) {
+      if (_res?.status == 'Token is Invalid') {
         timer.cancel();
         CustomWidget.showSuccessDialog(
           context,

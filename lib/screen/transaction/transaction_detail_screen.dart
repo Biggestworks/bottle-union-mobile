@@ -2,6 +2,7 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
+import 'package:eight_barrels/helper/launch_url_helper.dart';
 import 'package:eight_barrels/provider/transaction/transaction_detail_provider.dart';
 import 'package:eight_barrels/screen/checkout/upload_payment_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
@@ -674,11 +675,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                                   fontSize: 16,
                                   function: () async {
                                     final _url = provider.transactionDetail.result?.deepLink ?? '';
-                                    if (await canLaunch(_url)) {
-                                      launch(_url);
-                                    } else {
-                                      await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text('Cannot launch $_url'));
-                                    }
+                                    await LaunchUrlHelper.launchUrl(context: provider.scaffoldKey.currentContext!, url: _url);
                                   }
                               ),
                             );

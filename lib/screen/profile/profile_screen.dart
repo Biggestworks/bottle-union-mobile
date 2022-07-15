@@ -445,11 +445,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: CustomColor.BG,
       extendBodyBehindAppBar: true,
-      extendBody: true,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.transparent,
-        // flexibleSpace: Image.asset('assets/images/bg_marron.png', fit: BoxFit.cover,),
+        flexibleSpace: Image.asset('assets/images/bg_marron_lg.png', fit: BoxFit.cover,),
         centerTitle: true,
         title: Text(AppLocalizations.instance.text('TXT_MY_ACCOUNT')),
       ),

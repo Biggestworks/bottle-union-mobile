@@ -2,6 +2,7 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
+import 'package:eight_barrels/helper/launch_url_helper.dart';
 import 'package:eight_barrels/provider/transaction/transaction_provider.dart';
 import 'package:eight_barrels/screen/checkout/upload_payment_screen.dart';
 import 'package:eight_barrels/screen/transaction/track_order_screen.dart';
@@ -440,13 +441,8 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                           isBold: true,
                                                           function: () async {
                                                             final _url = provider.transactionList.result?.data?[0].deepLink ?? '';
-                                                            if (await canLaunch(_url)) {
-                                                              launch(_url);
-                                                            } else {
-                                                              await CustomWidget.showSnackBar(context: _scaffoldKey!.currentContext!, content: Text('Cannot launch $_url'));
-                                                            }
+                                                            await LaunchUrlHelper.launchUrl(context: _scaffoldKey!.currentContext!, url: _url);
                                                           }
-                                                          // function: () async => await provider.fnFinishPayment(_scaffoldKey!.currentContext!),
                                                         ),
                                                       )
                                                     else

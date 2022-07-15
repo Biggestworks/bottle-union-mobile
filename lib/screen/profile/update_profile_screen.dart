@@ -494,6 +494,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                                   child: TextFormField(
                                     enabled: false,
                                     controller: provider.phoneController,
+                                    keyboardType: TextInputType.phone,
                                     decoration: InputDecoration(
                                       isDense: true,
                                       disabledBorder: OutlineInputBorder(

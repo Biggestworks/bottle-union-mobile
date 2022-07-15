@@ -2,6 +2,7 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
+import 'package:eight_barrels/helper/launch_url_helper.dart';
 import 'package:eight_barrels/model/checkout/order_cart_model.dart';
 import 'package:eight_barrels/model/checkout/order_now_model.dart';
 import 'package:eight_barrels/provider/checkout/order_finish_provider.dart';
@@ -866,11 +867,7 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                                 fontSize: 16,
                                 function: () async {
                                   final _url = provider.orderNow?.deepLink ?? '';
-                                  if (await canLaunch(_url)) {
-                                    launch(_url);
-                                  } else {
-                                    await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text('Cannot launch $_url'));
-                                  }
+                                  await LaunchUrlHelper.launchUrl(context: provider.scaffoldKey.currentContext!, url: _url);
                                 },
                               ),
                             );
@@ -916,11 +913,7 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                                 fontSize: 16,
                                 function: () async {
                                   final _url = provider.orderCart?.deeplink ?? '';
-                                  if (await canLaunch(_url)) {
-                                    launch(_url);
-                                  } else {
-                                    await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text('Cannot launch $_url'));
-                                  }
+                                  await LaunchUrlHelper.launchUrl(context: provider.scaffoldKey.currentContext!, url: _url);
                                 },
                               ),
                             );
