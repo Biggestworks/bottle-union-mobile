@@ -81,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       child: Text(_data?.name ?? '-', style: TextStyle(
                                           fontSize: 14,
                                           color: _data?.id == _provider.selectedRegionId ? Colors.white : Colors.black
-                                      ),),
+                                      ), textAlign: TextAlign.center,),
                                     ),
                                   ),
                                 );

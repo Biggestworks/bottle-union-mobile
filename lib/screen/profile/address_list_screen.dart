@@ -138,10 +138,11 @@ class _AddressListScreenState extends State<AddressListScreen> with LoadingView 
                           itemBuilder: (context, index) {
                             var _data = provider.addressList.data?[index];
                             return Card(
-                              elevation: 4,
+                              elevation: 0,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadiusDirectional.circular(10),
                               ),
+                              margin: EdgeInsets.symmetric(vertical: 5),
                               child: Padding(
                                 padding: const EdgeInsets.all(10),
                                 child: Column(

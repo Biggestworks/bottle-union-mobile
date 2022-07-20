@@ -3,6 +3,7 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/helper/launch_url_helper.dart';
+import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/transaction/transaction_provider.dart';
 import 'package:eight_barrels/screen/checkout/upload_payment_screen.dart';
 import 'package:eight_barrels/screen/transaction/track_order_screen.dart';
@@ -46,7 +47,7 @@ class _TransactionScreenState extends State<TransactionScreen>
   @override
   Widget build(BuildContext context) {
     final _provider = Provider.of<TransactionProvider>(context, listen: false);
-    // final _baseProvider = Provider.of<BaseHomeProvider>(context, listen: false);
+    final _baseProvider = Provider.of<BaseHomeProvider>(context, listen: false);
 
     _showDatePickerDialog(String flag) {
       return showDialog(
@@ -144,6 +145,7 @@ class _TransactionScreenState extends State<TransactionScreen>
                         switch (provider.isCustomDate) {
                           case true:
                             return Card(
+                              elevation: 0,
                               color: CustomColor.GREY_LIGHT_BG,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
@@ -321,10 +323,11 @@ class _TransactionScreenState extends State<TransactionScreen>
                                         regionId: _data?.idRegion,
                                       )),
                                       child: Card(
-                                        elevation: 4,
+                                        elevation: 0,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(10),
                                         ),
+                                        margin: EdgeInsets.symmetric(vertical: 5),
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                                           child: Column(
@@ -472,9 +475,9 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                         fontSize: 12,
                                                         radius: 5,
                                                         isBold: true,
-                                                        function: () {},
-                                                        // function: () async => await provider.fnStoreCart(context, index)
-                                                        //     .then((_) async => await _baseProvider.fnGetCartCount()),
+                                                        // function: () {},
+                                                        function: () async => await provider.fnStoreCart(context, index)
+                                                            .then((_) async => await _baseProvider.fnGetCartCount()),
                                                       ),
                                                     )
                                                   else

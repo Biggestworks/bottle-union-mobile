@@ -69,7 +69,7 @@ class ReviewService extends GetConnect {
       }
 
       FormData _data = new FormData({
-        "id_product": productId,
+        "id_product": productId.toString(),
         "rating": rating,
         "comment": comment,
         "image_1": _imageFile1 ?? null,
@@ -77,11 +77,14 @@ class ReviewService extends GetConnect {
         "image_3": _imageFile3 ??  null,
       });
 
+      print(_data.fields);
+
       Response _response = await post(
         URLHelper.storeReviewUrl,
         _data,
         headers: await _headersAuth(),
       );
+      print(_response.body);
       _model = DefaultModel.fromJson(_response.body);
     } catch (e) {
       print(e);

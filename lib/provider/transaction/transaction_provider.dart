@@ -3,6 +3,7 @@ import 'package:eight_barrels/abstract/pagination_interface.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/model/transaction/transaction_list_model.dart';
 import 'package:eight_barrels/screen/checkout/midtrans_webview_screen.dart';
+import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/cart/cart_service.dart';
 import 'package:eight_barrels/service/checkout/payment_service.dart';
@@ -244,35 +245,39 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
     notifyListeners();
   }
 
-  // Future fnStoreCart(BuildContext context, int index) async {
-  //   List<int> _idList = [];
-  //   var _detail = await _service.getTransactionDetail(orderId: transactionList.result?.data?[index].codeTransaction ?? '');
-  //   List.generate(_detail?.data?.product?.length ?? 0,
-  //           (index) => _idList.add(_detail?.data?.product?[index].id ?? 0));
-  //
-  //   var _res = await _cartService.storeCart(
-  //     productIds: _idList,
-  //   );
-  //
-  //   if (_res!.status != null) {
-  //     if (_res.status == true) {
-  //       await CustomWidget.showSnackBar(
-  //         context: context,
-  //         content: Text(AppLocalizations.instance.text('TXT_CART_ADD_INFO')),
-  //         duration: 4,
-  //         action: SnackBarAction(
-  //           label: 'Go to cart',
-  //           textColor: Colors.white,
-  //           onPressed: () => Get.offNamedUntil(BaseHomeScreen.tag, (route) => false, arguments: BaseHomeScreen(pageIndex: 2,)),
-  //         ),
-  //       );
-  //     } else {
-  //       await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
-  //     }
-  //   } else {
-  //     await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
-  //   }
-  // }
+  Future fnStoreCart(BuildContext context, int index) async {
+    List<int> _productIdList = [];
+    var _detail = await _service.getTransactionDetail(
+      regionId: transactionList.result?.data?[index].idRegion ?? 0,
+      orderId: transactionList.result?.data?[index].codeTransaction ?? '',
+    );
+    List.generate(_detail?.result?.data?.length ?? 0,
+            (index) => _productIdList.add(_detail?.result?.data?[index].product?.id ?? 0));
+
+    var _res = await _cartService.storeCart(
+      regionIds: [transactionList.result?.data?[index].idRegion ?? 0],
+      productIds: _productIdList,
+    );
+
+    if (_res!.status != null) {
+      if (_res.status == true) {
+        await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_CART_ADD_INFO')),
+          duration: 4,
+          action: SnackBarAction(
+            label: 'Go to cart',
+            textColor: Colors.white,
+            onPressed: () => Get.offNamedUntil(BaseHomeScreen.tag, (route) => false, arguments: BaseHomeScreen(pageIndex: 2,)),
+          ),
+        );
+      } else {
+        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
+      }
+    } else {
+      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+    }
+  }
 
   @override
   Future fnShowNextPage() async {

@@ -325,15 +325,12 @@ class CustomWidget {
         ),
         itemCount: 6,
         itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Card(
-              elevation: 1,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadiusDirectional.circular(20),
-              ),
-              child: Container(),
+          return Card(
+            elevation: 1,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadiusDirectional.circular(20),
             ),
+            child: Container(),
           );
         },
       ),
@@ -433,7 +430,7 @@ class CustomWidget {
     );
   }
 
-  static Widget roundedAvatarImg({required String url, double? size, Color borderColor = Colors.white}) {
+  static Widget roundedAvatarImg({required String url, double? size, Color borderColor = Colors.white, BoxFit fit = BoxFit.cover}) {
     return CachedNetworkImage(
       imageUrl: url,
       imageBuilder: (context, imageProvider) {
@@ -446,7 +443,7 @@ class CustomWidget {
             border: Border.all(color: borderColor, width: 2),
             image: DecorationImage(
               image: imageProvider,
-              fit: BoxFit.cover,
+              fit: fit,
             ),
           ),
         );

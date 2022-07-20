@@ -91,9 +91,11 @@ class _CartListScreenState extends State<CartListScreen>
                                       arguments: ProductDetailScreen(productId: _data.idProduct,),
                                     )!.then((_) => provider.fnFetchCartList()),
                                     child: Card(
+                                      elevation: 0,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
                                       ),
+                                      margin: EdgeInsets.symmetric(vertical: 5),
                                       child: Padding(
                                         padding: const EdgeInsets.fromLTRB(10, 10, 10, 2),
                                         child: Row(
@@ -295,6 +297,7 @@ class _CartListScreenState extends State<CartListScreen>
                   return skeleton!;
                 default:
                   return Card(
+                    elevation: 0,
                     color: CustomColor.MAIN,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),

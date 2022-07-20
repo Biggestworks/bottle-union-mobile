@@ -288,7 +288,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
                                       banner: i,
                                     )),
                                     child: Card(
-                                      elevation: 2,
+                                      elevation: 0,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
                                       ),
@@ -303,7 +303,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
                             );
                           }).toList(),
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(height: 5,),
                         Padding(
                           padding: const EdgeInsets.only(left: 20,),
                           child: Row(
@@ -341,7 +341,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
           Material(
             elevation: 4,
             child: Container(
-              height: 130,
+              height: 150,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/bg_brown.png',),
@@ -475,7 +475,23 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Consumer<HomeProvider>(
-                  child: Container(),
+                  child: CustomWidget.showShimmer(
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 4,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadiusDirectional.circular(10),
+                          ),
+                          child: SizedBox(
+                            width: 150,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                   builder: (context, provider, skeleton) {
                     switch (provider.regionProductList.result) {
                       case null:
@@ -767,12 +783,12 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
             actions: [
               IconButton(
                 onPressed: () => Get.toNamed(WishListScreen.tag),
-                icon: Icon(FontAwesomeIcons.heart, size: 22,),
+                icon: Icon(FontAwesomeIcons.heart, size: 20,),
                 visualDensity: VisualDensity.compact,
               ),
               IconButton(
                 onPressed: () => Get.toNamed(NotificationScreen.tag),
-                icon: Icon(FontAwesomeIcons.bell, size: 22,),
+                icon: Icon(FontAwesomeIcons.bell, size: 20,),
                 visualDensity: VisualDensity.compact,
               ),
               Padding(
@@ -780,7 +796,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
                 child: GestureDetector(
                   onTap: () async => await Get.toNamed(ProfileScreen.tag)!
                       .then((_) async => await _provider.onRefresh()),
-                  child: CustomWidget.roundedAvatarImg(url: _provider.userModel.user?.avatar ?? '', size: 30),
+                  child: CustomWidget.roundedAvatarImg(url: _provider.userModel.user?.avatar ?? '', size: 25, fit: BoxFit.contain),
                 ),
               ),
             ],

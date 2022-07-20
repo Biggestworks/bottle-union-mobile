@@ -6,6 +6,7 @@ import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/model/transaction/transaction_detail_model.dart';
 import 'package:eight_barrels/screen/transaction/transaction_detail_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
+import 'package:eight_barrels/service/review/review_service.dart';
 import 'package:eight_barrels/service/transaction/transcation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -13,7 +14,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class TransactionDetailProvider extends ChangeNotifier {
   TransactionService _service = new TransactionService();
   // PaymentService _paymentService = new PaymentService();
-  // ReviewService _reviewService = new ReviewService();
+  ReviewService _reviewService = new ReviewService();
   String? orderId;
   int? regionId;
   TransactionDetailModel transactionDetail = new TransactionDetailModel();
@@ -23,6 +24,7 @@ class TransactionDetailProvider extends ChangeNotifier {
   TextEditingController commentController = new TextEditingController();
 
   String? locale;
+  int? selectedProductId;
 
   LoadingView? _view;
 
@@ -205,28 +207,49 @@ class TransactionDetailProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-// Future fnStoreReview(int productId) async {
-  //   _view!.onProgressStart();
-  //   var _res = await _reviewService.storeReview(
-  //     productId: productId,
-  //     rating: starRating.toInt(),
-  //     comment: commentController.text,
-  //   );
-  //
-  //   if (_res!.status != null) {
-  //     if (_res.status == true) {
-  //       _view!.onProgressFinish();
-  //       await Get.offAndToNamed(MidtransWebviewScreen.tag, arguments: MidtransWebviewScreen(url: _res.data?.redirectUrl,));
-  //     } else {
-  //       _view!.onProgressFinish();
-  //       await CustomWidget.showSnackBar(context: context, content: Text(_res.message ?? '-'));
-  //     }
-  //   } else {
-  //     _view!.onProgressFinish();
-  //     await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
-  //   }
-  //   _view!.onProgressFinish();
-  //   notifyListeners();
-  // }
+  fnOnSelectProduct(int value) {
+    this.selectedProductId = value;
+    notifyListeners();
+  }
+
+  fnInitReviewValue() {
+    if (transactionDetail.result?.data != null) {
+      if ((transactionDetail.result?.data?.length ?? 0) == 1) {
+        selectedProductId = transactionDetail.result?.data?[0].idProduct;
+      } else {
+        selectedProductId = null;
+      }
+    } else {
+      selectedProductId = null;
+    }
+    starRating = 0;
+    commentController.clear();
+    notifyListeners();
+  }
+
+  Future fnStoreReview(BuildContext context) async {
+    _view!.onProgressStart();
+    print(selectedProductId);
+    var _res = await _reviewService.storeReview(
+      productId: selectedProductId ?? 0,
+      rating: starRating.toInt(),
+      comment: commentController.text,
+    );
+
+    if (_res!.status != null) {
+      if (_res.status == true) {
+        _view!.onProgressFinish();
+        await CustomWidget.showSnackBar(context: context, content: Text('Thank you for reviewing'));
+      } else {
+        _view!.onProgressFinish();
+        await CustomWidget.showSnackBar(context: context, content: Text(_res.message ?? '-'));
+      }
+    } else {
+      _view!.onProgressFinish();
+      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+    }
+    _view!.onProgressFinish();
+    notifyListeners();
+  }
 
 }

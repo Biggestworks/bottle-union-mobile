@@ -83,6 +83,7 @@ abstract class ProductCardInterface {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadiusDirectional.circular(10),
           ),
+          shadowColor: CustomColor.GREY_TXT,
           child: InkWell(
             onTap: () async {
               await storeClickLog();
@@ -211,6 +212,7 @@ abstract class ProductCardInterface {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadiusDirectional.circular(10),
       ),
+      shadowColor: CustomColor.GREY_TXT,
       child: InkWell(
         onTap: () async {
           await storeLog();
@@ -255,7 +257,7 @@ abstract class ProductCardInterface {
                   ),
                   child: Center(
                     child: Text(AppLocalizations.instance.text('TXT_SOLD_OUT'), style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       color: CustomColor.MAIN,
                       fontWeight: FontWeight.bold,
                     ),),
@@ -358,6 +360,7 @@ abstract class ProductCardInterface {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadiusDirectional.circular(10),
           ),
+          shadowColor: CustomColor.GREY_TXT,
           child: InkWell(
             onTap: () async {
               await storeClickLog();
@@ -491,6 +494,7 @@ abstract class ProductCardInterface {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadiusDirectional.circular(10),
       ),
+      shadowColor: CustomColor.GREY_TXT,
       child: InkWell(
         onTap: () async {
           await storeLog();
@@ -535,7 +539,7 @@ abstract class ProductCardInterface {
                   ),
                   child: Center(
                     child: Text(AppLocalizations.instance.text('TXT_SOLD_OUT'), style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       color: CustomColor.MAIN,
                       fontWeight: FontWeight.bold,
                     ),),
@@ -778,7 +782,7 @@ abstract class ProductCardInterface {
                     ),
                     child: Center(
                       child: Text(AppLocalizations.instance.text('TXT_SOLD_OUT'), style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         color: CustomColor.MAIN,
                         fontWeight: FontWeight.bold,
                       ),),
