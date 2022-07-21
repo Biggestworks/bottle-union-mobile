@@ -14,6 +14,7 @@ import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 Future _loadEnv() async =>
   await dotenv.load(fileName: ".env.production");
   // await dotenv.load(fileName: ".env.development");
+  // await dotenv.load(fileName: ".env.local");
 
 Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await _loadEnv();
@@ -34,8 +35,6 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     isNew: 1,
     createdAt: DateTime.now().toString(),
   ),);
-
-  print('Background message: ${message.data}');
 }
 
 Future _checkAppSecurity() async {

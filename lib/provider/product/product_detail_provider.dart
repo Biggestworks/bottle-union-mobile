@@ -5,6 +5,7 @@ import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/product/discussion_list_model.dart';
 import 'package:eight_barrels/model/product/product_detail_model.dart';
+import 'package:eight_barrels/screen/auth/start_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/product/wishlist_screen.dart';
@@ -14,8 +15,10 @@ import 'package:eight_barrels/service/discussion/discussion_service.dart';
 import 'package:eight_barrels/service/product/product_service.dart';
 import 'package:eight_barrels/service/product/wishlist_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/route_manager.dart';
 import 'package:html/parser.dart' show parse;
+import 'package:collection/collection.dart';
 
 class ProductDetailProvider extends ChangeNotifier with ProductLog {
   ProductService _productService = new ProductService();
@@ -26,10 +29,12 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
   DiscussionListModel discussionList = new DiscussionListModel();
 
   UserPreferences _userPreferences = new UserPreferences();
+  FlutterSecureStorage _storage = new FlutterSecureStorage();
 
   bool isWishlist = false;
   int? productId;
   SelectedRegion selectedRegion = new SelectedRegion();
+  String? isGuest;
 
   LoadingView? _view;
 
@@ -39,10 +44,20 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
     this._view = view;
   }
 
-  fnGetArguments(BuildContext context) {
+  Future fnGetArguments(BuildContext context) async {
     final _args = ModalRoute.of(context)!.settings.arguments as ProductDetailScreen;
     productId = _args.productId!;
+    isGuest = await _userPreferences.getGuestStatus();
     notifyListeners();
+  }
+
+  Future fnGoToStartScreen() async {
+    await _userPreferences.removeUserToken();
+    await _userPreferences.removeFcmToken();
+    await _storage.delete(key: KeyHelper.KEY_USER_REGION_ID);
+    await _storage.delete(key: KeyHelper.KEY_USER_REGION_NAME);
+    await _storage.delete(key: KeyHelper.KEY_IS_GUEST);
+    Get.offNamedUntil(StartScreen.tag, (route) => false);
   }
 
   Future fnFetchProduct() async {
@@ -53,15 +68,17 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
   }
 
   Future fnCheckWishlist() async {
-    var _res = await _wishlistService.checkWishlist(
-      productId: product.data?.id ?? 0,
-    );
+    if (isGuest != 'true') {
+      var _res = await _wishlistService.checkWishlist(
+        productId: product.data?.id ?? 0,
+      );
 
-    if (_res!.status != null) {
-      if (_res.status == true) {
-        isWishlist = true;
-      } else {
-        isWishlist = false;
+      if (_res!.status != null) {
+        if (_res.status == true) {
+          isWishlist = true;
+        } else {
+          isWishlist = false;
+        }
       }
     }
     notifyListeners();
@@ -137,28 +154,33 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
     } else {
       await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
+    notifyListeners();
   }
 
   Future fnFetchDiscussionList() async {
-    _view!.onProgressStart();
-    discussionList = (await _discussionService.getDiscussionList(productId: product.data?.id ?? 0))!;
-    _view!.onProgressFinish();
+    if (isGuest != 'true') {
+      _view!.onProgressStart();
+      discussionList = (await _discussionService.getDiscussionList(productId: product.data?.id ?? 0))!;
+      _view!.onProgressFinish();
+    }
     notifyListeners();
   }
 
   fnConvertHtmlString(String text) => parse(text).documentElement?.text;
 
   Future fnGetSelectedRegionProduct() async {
-    await _userPreferences.getUserData().then((value) {
-      if (product.data?.productRegion?.length != 0) {
-        selectedRegion.selectedRegionId = product.data?.productRegion?.singleWhere(
-                (i) => i.idRegion == (value?.region?.id ?? 0), orElse: null).idRegion;
-        selectedRegion.selectedProvinceId = product.data?.productRegion?.singleWhere(
-                (i) => i.idRegion == (value?.region?.id ?? 0), orElse: null).region?.idProvince;
-        selectedRegion.stock = product.data?.productRegion?.singleWhere(
-                (i) => i.idRegion == (value?.region?.id ?? 0), orElse: null).stock ?? 0;
-      }
-    });
+    if (isGuest != 'true') {
+      await _userPreferences.getUserData().then((value) {
+        if (product.data?.productRegion?.length != 0) {
+          selectedRegion.selectedRegionId = product.data?.productRegion?.singleWhereOrNull(
+                  (i) => i.idRegion == (value?.region?.id ?? 0))?.idRegion;
+          selectedRegion.selectedProvinceId = product.data?.productRegion?.singleWhereOrNull(
+                  (i) => i.idRegion == (value?.region?.id ?? 0))?.region?.idProvince;
+          selectedRegion.stock = product.data?.productRegion?.singleWhereOrNull(
+                  (i) => i.idRegion == (value?.region?.id ?? 0))?.stock ?? 0;
+        }
+      });
+    }
     notifyListeners();
   }
 

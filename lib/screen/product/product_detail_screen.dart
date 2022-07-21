@@ -302,6 +302,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
       );
     }
 
+    _showRegisterConfirmation() {
+      return CustomWidget.showConfirmationDialog(
+        context,
+        desc: AppLocalizations.instance.text('TXT_REGISTER_CONFIRMATION_INFO'),
+        function: () => _provider.fnGoToStartScreen(),
+      );
+    }
+
     Widget _bottomMenuContent = SafeArea(
       child: Container(
         padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
@@ -327,7 +335,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                     return skeleton!;
                   default:
                     return IconButton(
-                      onPressed: () async => _showProductRegionSheet(_provider.product.data),
+                      onPressed: () {
+                        if (provider.isGuest != 'true') {
+                          _showProductRegionSheet(_provider.product.data);
+                        } else {
+                          _showRegisterConfirmation();
+                        }
+                      },
                       icon: Icon(provider.isWishlist
                           ? FontAwesomeIcons.solidHeart
                           : FontAwesomeIcons.heart, color: CustomColor.MAIN,),
@@ -366,7 +380,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                                   btnColor: CustomColor.MAIN,
                                   isBold: true,
                                   radius: 5,
-                                  function: () => _showProductRegionSheet(_provider.product.data),
+                                  function: () {
+                                    if (provider.isGuest != 'true') {
+                                      _showProductRegionSheet(_provider.product.data);
+                                    } else {
+                                      _showRegisterConfirmation();
+                                    }
+                                  },
                                 ),
                               ),
                               SizedBox(width: 5,),
@@ -377,7 +397,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                                   lblColor: Colors.white,
                                   isBold: true,
                                   radius: 5,
-                                  function: () => _showProductRegionSheet(_provider.product.data),
+                                  function: () {
+                                    if (provider.isGuest != 'true') {
+                                      _showProductRegionSheet(_provider.product.data);
+                                    } else {
+                                      _showRegisterConfirmation();
+                                    }
+                                  },
                                 ),
                               ),
                             ],
@@ -550,8 +576,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                 var _data = _provider.product.data!;
                 return GestureDetector(
                   onTap: () {
-                    if (_data.productRegion?.length != 0)
-                      _showProductRegionSheet(_data);
+                    if (provider.isGuest != 'true')
+                      if (_data.productRegion?.length != 0)
+                        _showProductRegionSheet(_data);
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -767,7 +794,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
         children: [
           Consumer<ProductDetailProvider>(
             builder: (context, provider, _) {
-              return Text('${AppLocalizations.instance.text('TXT_PRODUCT_DISCUSSION')} (${provider.discussionList.data?.length})', style: TextStyle(
+              return Text('${AppLocalizations.instance.text('TXT_PRODUCT_DISCUSSION')} (${provider.discussionList.data?.length ?? '0'})', style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 // color: CustomColor.MAIN_TXT,
@@ -984,7 +1011,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
               _productHeaderContent,
               _productRegionContent,
               _productDetailContent,
-              _productDiscussionContent,
+              if (_provider.isGuest != 'true')
+                _productDiscussionContent,
             ],
           )
         ],

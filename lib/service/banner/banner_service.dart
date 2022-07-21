@@ -20,7 +20,7 @@ class BannerService extends GetConnect {
     BannerListModel _model = new BannerListModel();
 
     final Map<String, dynamic> _query = {
-      "id_region": regionId ?? null,
+      "id_region": regionId ?? '1',
     };
 
     try {

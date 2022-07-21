@@ -180,65 +180,75 @@ class CustomWidget {
         String desc = '',
         required void function(),
       }) {
-    showDialog(
+    showGeneralDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          insetPadding: EdgeInsets.symmetric(horizontal: 10),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10))
-          ),
-          content: new Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(FontAwesomeIcons.infoCircle, color: Colors.blue,),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Flexible(
-                    child: Text(AppLocalizations.instance.text('TXT_CONFIRMATION'), style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,),
+      barrierDismissible: true,
+      barrierLabel: '',
+      pageBuilder: (ctx, a1, a2) {
+        return Container();
+      },
+      transitionBuilder: (ctx, a1, a2, child) {
+        var curve = Curves.easeInOut.transform(a1.value);
+        return Transform.scale(
+          scale: curve,
+          child: AlertDialog(
+            backgroundColor: Colors.white,
+            insetPadding: EdgeInsets.symmetric(horizontal: 10),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10))
+            ),
+            content: new Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(FontAwesomeIcons.circleInfo, color: CustomColor.MAIN,),
+                    SizedBox(
+                      width: 10,
                     ),
+                    Flexible(
+                      child: Text(AppLocalizations.instance.text('TXT_CONFIRMATION'), style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,),
+                      ),
+                    ),
+                  ],
+                ),
+                Divider(
+                  color: CustomColor.MAIN,
+                  thickness: 2,
+                  height: 30,
+                ),
+                Flexible(
+                  child: Text(desc, style: TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.black,
                   ),
-                ],
-              ),
-              Divider(
-                color: CustomColor.MAIN,
-                thickness: 2,
-                height: 30,
-              ),
-              Flexible(
-                child: Text(desc, style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.black,
+                  ),
                 ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                child: Text(AppLocalizations.instance.text('TXT_CANCEL'), style: TextStyle(color: Colors.red,),
                 ),
+                onPressed: () => Get.back(),
+              ),
+              TextButton(
+                child: Text(AppLocalizations.instance.text('TXT_YES'), style: TextStyle(color: Colors.green),
+                ),
+                onPressed: () {
+                  Get.back();
+                  function();
+                },
               ),
             ],
           ),
-          actions: [
-            TextButton(
-              child: Text(AppLocalizations.instance.text('TXT_CANCEL'), style: TextStyle(color: Colors.redAccent,),
-              ),
-              onPressed: () => Get.back(),
-            ),
-            TextButton(
-              child: Text(AppLocalizations.instance.text('TXT_YES'), style: TextStyle(color: Colors.green),
-              ),
-              onPressed: () {
-                Get.back();
-                function();
-              },
-            ),
-          ],
         );
       },
+      transitionDuration: const Duration(milliseconds: 300),
     );
   }
 

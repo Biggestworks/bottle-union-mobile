@@ -17,14 +17,26 @@ import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   static String tag = '/profile-screen';
+  final bool? isGuest;
 
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({Key? key, this.isGuest}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
+  @override
+  void initState() {
+    Future.delayed(Duration.zero, () {
+      Provider.of<ProfileProvider>(context, listen: false).fnFetchUserInfo()
+          .whenComplete(() => Provider.of<ProfileProvider>(context, listen: false).fnFetchRegionList());
+      Provider.of<ProfileProvider>(context, listen: false).fnFetchLocale();
+      Provider.of<ProfileProvider>(context, listen: false).fnFetchAppVersion();
+    },);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -442,16 +454,209 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
 
-    return Scaffold(
-      backgroundColor: CustomColor.BG,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
+    Widget _guestHeaderContent = Padding(
+      padding: EdgeInsets.all(5),
+      child: Card(
         elevation: 0,
-        flexibleSpace: Image.asset('assets/images/bg_marron_lg.png', fit: BoxFit.cover,),
-        centerTitle: true,
-        title: Text(AppLocalizations.instance.text('TXT_MY_ACCOUNT')),
+        color: CustomColor.SECONDARY,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            children: [
+              Icon(FontAwesomeIcons.circleInfo, color: CustomColor.BROWN_TXT,),
+              SizedBox(width: 10,),
+              Flexible(
+                child: Text(AppLocalizations.instance.text('TXT_GUEST_ACCOUNT_INFO'), style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ), textAlign: TextAlign.left,),
+              ),
+            ],
+          ),
+        ),
       ),
-      body: _mainContent,
+    );
+
+    Widget _guestMenuContent = Padding(
+      padding: EdgeInsets.all(5),
+      child: Column(
+        children: [
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadiusDirectional.circular(10),
+            ),
+            elevation: 2,
+            child: Column(
+              children: [
+                ListTile(
+                  leading: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Icon(
+                      Icons.translate,
+                      color: CustomColor.GREY_TXT,
+                      size: 20,
+                    ),
+                  ),
+                  title: Text(AppLocalizations.instance.text("TXT_LBL_LANGUAGE")),
+                  subtitle: Text(AppLocalizations.instance.text("TXT_LBL_LANG_LOCALE")),
+                  trailing: Consumer<ProfileProvider>(
+                      builder: (context, provider, _) {
+                        return Transform.scale(
+                          scale: 1.4,
+                          child: Switch(
+                            value: provider.switchVal,
+                            onChanged: (value) => CustomWidget.showConfirmationDialog(
+                              context,
+                              desc: '${AppLocalizations.instance.text('TXT_LANGUAGE_INFO')}${provider.language} ?',
+                              function: () async {
+                                await provider.fnOnSwitchLanguage(value)
+                                    .then((_) => CustomWidget.showSuccessDialog(
+                                  context,
+                                  desc: AppLocalizations.instance.text('TXT_LANGUAGE_SUCCESS'),
+                                  function: () => Get.offNamedUntil(SplashScreen.tag, (route) => false),
+                                ));
+                              },
+                            ),
+                            activeThumbImage: AssetImage('assets/images/ic_england.png'),
+                            inactiveThumbImage: AssetImage('assets/images/ic_indonesia.png'),
+                            activeColor: Colors.grey,
+                            inactiveTrackColor: Colors.grey,
+                          ),
+                        );
+                      }
+                  ),
+                ),
+                Divider(
+                  thickness: 1,
+                ),
+                ListTile(
+                  dense: true,
+                  title: Text(AppLocalizations.instance.text('TXT_LBL_CONTACT_US'), style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                  ),
+                  ),
+                  leading: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Icon(
+                      FontAwesomeIcons.phoneAlt,
+                      color: CustomColor.GREY_TXT,
+                      size: 18,
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    color: CustomColor.GREY_TXT,
+                    size: 15,
+                  ),
+                  onTap: () => Get.toNamed(ContactUsScreen.tag),
+                ),
+                Divider(
+                  thickness: 1,
+                ),
+                ListTile(
+                  dense: true,
+                  title: Text('Privacy Policy', style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                  ),
+                  ),
+                  leading: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Icon(
+                      FontAwesomeIcons.userShield,
+                      color: CustomColor.GREY_TXT,
+                      size: 18,
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    color: CustomColor.GREY_TXT,
+                    size: 15,
+                  ),
+                  onTap: () => Get.toNamed(TacWebviewScreen.tag),
+                ),
+              ],
+            ),
+          ),
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadiusDirectional.circular(10),
+            ),
+            elevation: 2,
+            child: ListTile(
+              dense: true,
+              title: Text(AppLocalizations.instance.text('TXT_SIGN_OUT'), style: TextStyle(
+                color: CustomColor.MAIN,
+                fontSize: 15,
+              ),),
+              leading: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Icon(
+                  FontAwesomeIcons.signOutAlt,
+                  color: CustomColor.MAIN,
+                  size: 18,
+                ),
+              ),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                color: CustomColor.GREY_TXT,
+                size: 15,
+              ),
+              onTap: () {
+                CustomWidget.showConfirmationDialog(
+                  context,
+                  desc: AppLocalizations.instance.text('TXT_LOGOUT_INFO'),
+                  function: () async => await _provider.fnLogout(),
+                );
+              },
+            ),
+          ),
+          SizedBox(height: 10,),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Consumer<ProfileProvider>(
+                  builder: (context, provider, _) {
+                    return Text("App Version ${provider.fullVersion}", style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: CustomColor.GREY_TXT,
+                    ),);
+                  }
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+
+    Widget _guestMainContent = SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
+      child: Column(
+        children: [
+          _guestHeaderContent,
+          _guestMenuContent,
+        ],
+      ),
+    );
+
+    return Consumer<ProfileProvider>(
+      builder: (context, provider, _) {
+        return Scaffold(
+          backgroundColor: CustomColor.BG,
+          extendBodyBehindAppBar: provider.isGuest == 'false' ? true : false,
+          appBar: AppBar(
+            elevation: 0,
+            flexibleSpace: Image.asset('assets/images/bg_marron_lg.png', fit: BoxFit.cover,),
+            centerTitle: true,
+            title: Text(AppLocalizations.instance.text('TXT_MY_ACCOUNT')),
+          ),
+          body: provider.isGuest == 'true' ? _guestMainContent : _mainContent,
+        );
+      }
     );
   }
 

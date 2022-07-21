@@ -46,7 +46,7 @@ abstract class RegisterStepInterface {
 
   Future onBackTransition(BuildContext context) async {
     if (stepIndex == 0) {
-      await Get.offNamedUntil(StartScreen.tag, (route) => false);
+      Get.back();
     } else if (stepIndex >= 1) {
       animationController!.forward();
       animationController!.addStatusListener((status) {

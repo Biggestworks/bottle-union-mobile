@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:get/route_manager.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -72,8 +73,8 @@ class _ProductListScreenState extends State<ProductListScreen>
                               ),),
                               TextButton(
                                 onPressed: () async {
-                                  Navigator.pop(context);
-                                  await _provider.onResetFilter();
+                                  Get.back();
+                                  await _provider.fnOnResetFilter();
                                 },
                                 child: Text('Reset Filter', style: TextStyle(
                                   color: CustomColor.MAIN,
@@ -236,7 +237,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                                       filled: true,
                                       fillColor: CustomColor.GREY_BG,
                                     ),
-                                    onChanged: _provider.fnOnChangedYear,
+                                    onChanged: (_) => _provider.fnOnFiltered(),
                                   ),
                                 ],
                               ),
@@ -294,7 +295,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                                               ],
                                             ),
                                           ),
-                                          onChanged: (_) => _provider.fnOnChangedPrice(),
+                                          onChanged: (_) => _provider.fnOnFiltered(),
                                         ),
                                       ),
                                       SizedBox(width: 10,),
@@ -327,7 +328,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                                               ],
                                             ),
                                           ),
-                                          onChanged: (_) => _provider.fnOnChangedPrice(),
+                                          onChanged: (_) => _provider.fnOnFiltered(),
                                         ),
                                       ),
                                     ],
@@ -484,7 +485,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                 icSize: 22,
                 fontSize: 16,
                 function: () async => await _provider.fnInitFilter()
-                    .then((_) => _showFilterSheet()),
+                    .whenComplete(() => _showFilterSheet()),
               ),
             ],
           ),
@@ -542,17 +543,12 @@ class _ProductListScreenState extends State<ProductListScreen>
     );
 
     return RefreshIndicator(
-      onRefresh: () async => await _provider.onResetFilter(),
+      onRefresh: () async => await _provider.fnOnResetFilter(),
       child: Scaffold(
         backgroundColor: CustomColor.BG,
         appBar: AppBar(
           backgroundColor: CustomColor.BG,
           elevation: 0,
-          // centerTitle: true,
-          // title: SizedBox(
-          //   width: 150,
-          //   child: Image.asset('assets/images/ic_logo_bu_white.png',),
-          // ),
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 20,),

@@ -17,15 +17,15 @@ class UserPreferences extends GetConnect {
   }
 
   Future<String?> getUserToken() async {
-    String? token;
+    String? _token;
 
     try {
-      token = await _storage.read(key: KeyHelper.KEY_TOKEN);
-      // print(token);
+      _token = await _storage.read(key: KeyHelper.KEY_TOKEN);
+      // print(_token);
     } catch (e) {
       print(e);
     }
-    return token;
+    return _token;
   }
 
   Future<UserDetailModel?> getUserData() async {
@@ -66,14 +66,14 @@ class UserPreferences extends GetConnect {
   }
 
   Future<String?> getFcmToken() async {
-    String? token;
+    String? _token;
 
     try {
-      token = await _storage.read(key: KeyHelper.KEY_FCM_TOKEN);
+      _token = await _storage.read(key: KeyHelper.KEY_FCM_TOKEN);
     } catch (e) {
       print(e);
     }
-    return token;
+    return _token;
   }
 
   removeFcmToken() async {
@@ -93,14 +93,33 @@ class UserPreferences extends GetConnect {
   }
 
   Future<String?> getOtpToken() async {
-    String? token;
+    String? _token;
 
     try {
-      token = await _storage.read(key: KeyHelper.KEY_OTP_TOKEN);
+      _token = await _storage.read(key: KeyHelper.KEY_OTP_TOKEN);
     } catch (e) {
       print(e);
     }
-    return token;
+    return _token;
+  }
+
+  Future? saveGuestStatus(String value) async {
+    try {
+      await _storage.write(key: KeyHelper.KEY_IS_GUEST, value: value);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<String?> getGuestStatus() async {
+    String? _guest;
+
+    try {
+      _guest = await _storage.read(key: KeyHelper.KEY_IS_GUEST);
+    } catch (e) {
+      print(e);
+    }
+    return _guest;
   }
 
 }

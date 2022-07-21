@@ -11,62 +11,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
 
 abstract class ProductCardInterface {
-  // WishlistService _wishlistService = new WishlistService();
-  // CartService _cartService = new CartService();
-
-  // Future fnStoreWishlist(BuildContext context, int productId) async {
-  //   var _res = await _wishlistService.storeWishlist(
-  //     productId: productId,
-  //   );
-  //
-  //   if (_res!.status != null) {
-  //     if (_res.status == true && _res.message == 'Save Success') {
-  //       await CustomWidget.showSnackBar(
-  //         context: context,
-  //         content: Text(AppLocalizations.instance.text('TXT_WISHLIST_ADD')),
-  //         duration: 4,
-  //         action: SnackBarAction(
-  //           label: 'Go to wishlist',
-  //           textColor: Colors.white,
-  //           onPressed: () => Get.toNamed(WishListScreen.tag),
-  //         ),
-  //       );
-  //     } else if (_res.status == true && _res.message == 'Success remove wishlist') {
-  //       await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_WISHLIST_DELETE_SUCCESS')));
-  //     } else {
-  //       await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
-  //     }
-  //   } else {
-  //     await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
-  //   }
-  // }
-
-  // Future fnStoreCart(BuildContext context, int productId) async {
-  //   var _res = await _cartService.storeCart(
-  //     productIds: [productId],
-  //     regionIds: [regionId],
-  //   );
-  //
-  //   if (_res!.status != null) {
-  //     if (_res.status == true) {
-  //       await CustomWidget.showSnackBar(
-  //         context: context,
-  //         content: Text(AppLocalizations.instance.text('TXT_CART_ADD_INFO')),
-  //         duration: 4,
-  //         action: SnackBarAction(
-  //           label: 'Go to cart',
-  //           textColor: Colors.white,
-  //           onPressed: () => Get.offNamedUntil(BaseHomeScreen.tag, (route) => false, arguments: BaseHomeScreen(pageIndex: 2,)),
-  //         ),
-  //       );
-  //     } else {
-  //       await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
-  //     }
-  //   } else {
-  //     await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
-  //   }
-  // }
-
   Widget productCard({
     required BuildContext context,
     required Data data,
@@ -156,40 +100,6 @@ abstract class ProductCardInterface {
                         ),),
                       ),
                       SizedBox(height: index.isEven ? 15 : 35,),
-                      // Flexible(
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //     children: [
-                      //       Expanded(
-                      //         child: Text('Stock: ${data.stock ?? '0'}', style: TextStyle(
-                      //           color: CustomColor.GREY_TXT,
-                      //         ),),
-                      //       ),
-                      //       Expanded(
-                      //         child: Row(
-                      //           mainAxisAlignment: MainAxisAlignment.end,
-                      //           children: [
-                      //             GestureDetector(
-                      //               onTap: () async {
-                      //                 await storeCartLog();
-                      //                 await fnStoreCart(context, data.id!, regionId).then((_) => onUpdateCart());
-                      //               },
-                      //               child: Icon(FontAwesomeIcons.cartShopping, color: CustomColor.GREY_ICON, size: 18,),
-                      //             ),
-                      //             SizedBox(width: 15,),
-                      //             GestureDetector(
-                      //               onTap: () async {
-                      //                 await storeWishlistLog();
-                      //                 await fnStoreWishlist(context, data.id!);
-                      //               },
-                      //               child: Icon(FontAwesomeIcons.heart, color: CustomColor.GREY_ICON, size: 18,),
-                      //             ),
-                      //           ],
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),
@@ -307,34 +217,6 @@ abstract class ProductCardInterface {
                     ),),
                   ),
                   SizedBox(height: index.isEven ? 15 : 35,),
-                  Flexible(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // Expanded(
-                        //   child: Text('${AppLocalizations.instance.text('TXT_SOLD_OUT')}', style: TextStyle(
-                        //     color: Colors.red,
-                        //   ),),
-                        // ),
-                        // Expanded(
-                        //   child: Row(
-                        //     mainAxisAlignment: MainAxisAlignment.end,
-                        //     children: [
-                        //       GestureDetector(
-                        //         onTap: () {},
-                        //         child: Icon(FontAwesomeIcons.cartShopping, color: CustomColor.GREY_ICON, size: 18,),
-                        //       ),
-                        //       SizedBox(width: 15,),
-                        //       GestureDetector(
-                        //         onTap: () {},
-                        //         child: Icon(FontAwesomeIcons.heart, color: CustomColor.GREY_ICON, size: 18,),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -433,40 +315,6 @@ abstract class ProductCardInterface {
                         ),),
                       ),
                       SizedBox(height: index.isEven ? 25 : 45,),
-                      Flexible(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // Expanded(
-                            //   child: Text('Stock: ${data.stock ?? '0'}', style: TextStyle(
-                            //     color: CustomColor.GREY_TXT,
-                            //   ),),
-                            // ),
-                            // Expanded(
-                            //   child: Row(
-                            //     mainAxisAlignment: MainAxisAlignment.end,
-                            //     children: [
-                            //       GestureDetector(
-                            //         onTap: () async {
-                            //           await storeCartLog();
-                            //           await fnStoreCart(context, data.id!, regionId).then((_) => onUpdateCart());
-                            //         },
-                            //         child: Icon(FontAwesomeIcons.cartShopping, color: CustomColor.GREY_ICON, size: 18,),
-                            //       ),
-                            //       SizedBox(width: 15,),
-                            //       GestureDetector(
-                            //         onTap: () async {
-                            //           await storeWishlistLog();
-                            //           await fnStoreWishlist(context, data.id!);
-                            //         },
-                            //         child: Icon(FontAwesomeIcons.heart, color: CustomColor.GREY_ICON, size: 18,),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
-                          ],
-                        ),
-                      ),
                     ],
                   ),
                 ),

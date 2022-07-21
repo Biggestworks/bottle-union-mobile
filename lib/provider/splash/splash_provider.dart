@@ -14,22 +14,28 @@ class SplashProvider extends ChangeNotifier {
 
   Future fnAuthentication() async {
     var _res = await _userPreferences.getUserData();
+    String? _isGuest = await _userPreferences.getGuestStatus();
+    print(_isGuest);
 
-    /// LOGOUT USER IF TOKEN IS INVALID
-    if (_res?.status == 'Token is Invalid') {
-      await _userPreferences.removeUserToken();
-      await _userPreferences.removeFcmToken();
-      await _storage.delete(key: KeyHelper.KEY_USER_REGION_ID);
-      await _storage.delete(key: KeyHelper.KEY_USER_REGION_NAME);
-      Get.offNamedUntil(StartScreen.tag, (route) => false);
+    if (_isGuest == 'true') {
+      Future.delayed(Duration(seconds: 2)).then((_) => Get.offAndToNamed(BaseHomeScreen.tag, arguments: BaseHomeScreen()));
     } else {
-      var _token = await _userPreferences.getUserToken();
-
-      if (_token != null) {
-        Future.delayed(Duration(seconds: 2)).then((_) => Get.offAndToNamed(BaseHomeScreen.tag, arguments: BaseHomeScreen()));
-        // Future.delayed(Duration(seconds: 2)).then((_) => Get.offAndToNamed(OnBoardingScreen.tag));
+      /// LOGOUT USER IF TOKEN IS INVALID
+      if (_res?.status == 'Token is Invalid') {
+        await _userPreferences.removeUserToken();
+        await _userPreferences.removeFcmToken();
+        await _storage.delete(key: KeyHelper.KEY_USER_REGION_ID);
+        await _storage.delete(key: KeyHelper.KEY_USER_REGION_NAME);
+        Get.offNamedUntil(StartScreen.tag, (route) => false);
       } else {
-        Future.delayed(Duration(seconds: 2)).then((_) => Get.offAndToNamed(StartScreen.tag));
+        var _token = await _userPreferences.getUserToken();
+
+        if (_token != null) {
+          Future.delayed(Duration(seconds: 2)).then((_) => Get.offAndToNamed(BaseHomeScreen.tag, arguments: BaseHomeScreen()));
+          // Future.delayed(Duration(seconds: 2)).then((_) => Get.offAndToNamed(OnBoardingScreen.tag));
+        } else {
+          Future.delayed(Duration(seconds: 2)).then((_) => Get.offAndToNamed(StartScreen.tag));
+        }
       }
     }
   }

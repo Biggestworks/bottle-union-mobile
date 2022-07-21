@@ -1,14 +1,17 @@
 import 'package:eight_barrels/helper/app_localization.dart';
+import 'package:eight_barrels/helper/key_helper.dart';
+import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/auth/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/route_manager.dart';
 
 abstract class SocmedAuthInterface {
   AuthService _service = new AuthService();
-
+  UserPreferences _userPreferences = new UserPreferences();
   bool isTacAccepted = false;
 
   Future fnAuthGoogle(BuildContext context, {bool isLogin = false}) async {
@@ -29,6 +32,7 @@ abstract class SocmedAuthInterface {
           if (_res?.status != null) {
             if (_res?.status == true) {
               onAuthFinish();
+              await _userPreferences.saveGuestStatus('false');
               Get.offAllNamed(BaseHomeScreen.tag, arguments: BaseHomeScreen());
             } else {
               onAuthFinish();
@@ -67,6 +71,7 @@ abstract class SocmedAuthInterface {
 
                 if (_res?.status == true) {
                   onAuthFinish();
+                  await _userPreferences.saveGuestStatus('false');
                   Get.offAndToNamed(LoginScreen.tag, arguments: LoginScreen(
                     providerId: _data?.providerId,
                     isRegister: true,)
@@ -107,6 +112,7 @@ abstract class SocmedAuthInterface {
           if (_res?.status != null) {
             if (_res?.status == true) {
               onAuthFinish();
+              await _userPreferences.saveGuestStatus('false');
               Get.offAllNamed(BaseHomeScreen.tag, arguments: BaseHomeScreen());
             } else {
               onAuthFinish();
@@ -145,6 +151,7 @@ abstract class SocmedAuthInterface {
 
                 if (_res?.status == true) {
                   onAuthFinish();
+                  await _userPreferences.saveGuestStatus('false');
                   Get.offAndToNamed(LoginScreen.tag, arguments: LoginScreen(
                     providerId: _data?.providerId,
                     isRegister: true,)
@@ -185,6 +192,7 @@ abstract class SocmedAuthInterface {
           if (_res?.status != null) {
             if (_res?.status == true) {
               onAuthFinish();
+              await _userPreferences.saveGuestStatus('false');
               Get.offAllNamed(BaseHomeScreen.tag, arguments: BaseHomeScreen());
             } else {
               onAuthFinish();
@@ -225,6 +233,7 @@ abstract class SocmedAuthInterface {
                 if (_res?.status != null) {
                   if (_res?.status == true) {
                     onAuthFinish();
+                    await _userPreferences.saveGuestStatus('false');
                     Get.offAllNamed(BaseHomeScreen.tag, arguments: BaseHomeScreen());
                   } else {
                     onAuthFinish();
@@ -248,6 +257,10 @@ abstract class SocmedAuthInterface {
       });
     }
   }
+
+  Future fnGuestAccount() async =>
+      await Future.delayed(Duration(seconds: 1), () async => await _userPreferences.saveGuestStatus('true'))
+          .whenComplete(() => Get.offAllNamed(BaseHomeScreen.tag, arguments: BaseHomeScreen()));
   
   onAuthStart();
   

@@ -5,6 +5,7 @@ import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/auth/region_list_model.dart';
 import 'package:eight_barrels/model/auth/user_detail_model.dart';
 import 'package:eight_barrels/screen/auth/start_screen.dart';
+import 'package:eight_barrels/screen/profile/profile_screen.dart';
 import 'package:eight_barrels/service/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -24,26 +25,22 @@ class ProfileProvider extends ChangeNotifier {
   String language = '';
   int? selectedRegionId;
   String? selectedRegion;
+  String? isGuest;
 
-  ProfileProvider() {
-    _fnFetchUserInfo().then((_) => _fnFetchRegionList());
-    _fnFetchAppVersion();
-    _fnFetchLocale();
-  }
-
-  Future _fnFetchUserInfo() async {
+  Future fnFetchUserInfo() async {
     this.userModel = (await _userPreferences.getUserData())!;
     selectedRegionId = userModel.region?.id;
+    isGuest = await _userPreferences.getGuestStatus();
     notifyListeners();
   }
 
-  Future _fnFetchAppVersion() async {
+  Future fnFetchAppVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     fullVersion = "${packageInfo.version}+${packageInfo.buildNumber}";
     notifyListeners();
   }
 
-  Future _fnFetchLocale() async {
+  Future fnFetchLocale() async {
     final _storage = new FlutterSecureStorage();
     locale = await _storage.read(key: KeyHelper.KEY_LOCALE) ?? 'en';
     if (locale == 'en') {
@@ -75,10 +72,11 @@ class ProfileProvider extends ChangeNotifier {
     await _userPreferences.removeFcmToken();
     await _storage.delete(key: KeyHelper.KEY_USER_REGION_ID);
     await _storage.delete(key: KeyHelper.KEY_USER_REGION_NAME);
+    await _storage.delete(key: KeyHelper.KEY_IS_GUEST);
     Get.offNamedUntil(StartScreen.tag, (route) => false);
   }
 
-  Future _fnFetchRegionList() async {
+  Future fnFetchRegionList() async {
     regionList = (await _authService.regionList())!;
     var _regionId = await _storage.read(key: KeyHelper.KEY_USER_REGION_ID) ?? null;
     var _regionName = await _storage.read(key: KeyHelper.KEY_USER_REGION_NAME) ?? null;

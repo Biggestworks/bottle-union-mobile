@@ -1,21 +1,38 @@
+import 'dart:async';
+
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/abstract/pagination_interface.dart';
 import 'package:eight_barrels/abstract/product_card_interface.dart';
 import 'package:eight_barrels/abstract/product_filter_interface.dart';
+import 'package:eight_barrels/helper/key_helper.dart';
+import 'package:eight_barrels/helper/push_notification_manager.dart';
+import 'package:eight_barrels/helper/user_preferences.dart';
+import 'package:eight_barrels/model/address/address_list_model.dart' as address;
+import 'package:eight_barrels/model/auth/user_detail_model.dart';
+import 'package:eight_barrels/model/banner/banner_list_model.dart';
 import 'package:eight_barrels/model/product/brand_model.dart';
 import 'package:eight_barrels/model/product/category_model.dart';
+import 'package:eight_barrels/model/product/popular_product_list_model.dart';
 import 'package:eight_barrels/model/product/product_model.dart';
+import 'package:eight_barrels/provider/product/product_list_provider.dart';
+import 'package:eight_barrels/service/address/address_service.dart';
+import 'package:eight_barrels/service/banner/banner_service.dart';
 import 'package:eight_barrels/service/product/product_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
+import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/route_manager.dart';
 
-class ProductListProvider extends ChangeNotifier
+class GuestHomeProvider extends ChangeNotifier
     with PaginationInterface, ProductCardInterface, ProductFilterInterface {
-  ProductService _service = new ProductService();
-  ProductListModel productList = new ProductListModel();
+  int currBanner = 0;
+  ProductService _productService = new ProductService();
+  BannerService _bannerService = new BannerService();
+
+  BannerListModel bannerList = new BannerListModel();
   BrandListModel brandList = new BrandListModel();
   CategoryListModel categoryList = new CategoryListModel();
+  ProductListModel productList = new ProductListModel();
 
   final TextEditingController searchController = new TextEditingController();
   final TextEditingController yearController = new TextEditingController();
@@ -35,8 +52,28 @@ class ProductListProvider extends ChangeNotifier
 
   bool isPaginateLoad = false;
 
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   fnGetView(LoadingView view) {
     this._view = view;
+  }
+
+  Future fnFetchBannerList() async {
+    bannerList = (await _bannerService.getBannerList(
+        regionId: null
+    ))!;
+    notifyListeners();
+  }
+
+  fnOnBannerChanged(int value) {
+    this.currBanner = value;
+    notifyListeners();
+  }
+
+  Future fnFetchCategoryList() async {
+    categoryList = (await _productService.getCategoryList())!;
+    notifyListeners();
   }
 
   Future fnFetchProductList() async {
@@ -44,7 +81,7 @@ class ProductListProvider extends ChangeNotifier
 
     super.currentPage = 1;
 
-    productList = (await _service.productList(
+    productList = (await _productService.productList(
       name: searchController.text,
       brand: selectedBrandIndex != null
           ? brandList.data![selectedBrandIndex!].name
@@ -65,7 +102,7 @@ class ProductListProvider extends ChangeNotifier
   Future fnOnSearchProduct(String value) async {
     _view!.onProgressStart();
 
-    productList = (await _service.productList(
+    productList = (await _productService.productList(
       name: value,
       brand: selectedBrandIndex != null
           ? brandList.data![selectedBrandIndex!].name
@@ -144,12 +181,32 @@ class ProductListProvider extends ChangeNotifier
     notifyListeners();
   }
 
+  Future onRefresh() async {
+    super.currentPage = 1;
+    await fnFetchCategoryList();
+    await fnFetchProductList();
+    notifyListeners();
+  }
+
+  Future onResetFilter() async {
+    selectedBrandIndex = null;
+    selectedCategoryIndex = null;
+    yearController.clear();
+    searchController.clear();
+    minPriceController.clear();
+    maxPriceController.clear();
+    isFiltered = false;
+    filterVal.clear();
+    await fnFetchProductList();
+    notifyListeners();
+  }
+
   @override
   Future fnShowNextPage() async {
     onPaginationLoadStart();
     super.currentPage++;
 
-    var _products = await _service.productList(
+    var _products = await _productService.productList(
       name: searchController.text,
       brand: selectedBrandIndex != null
           ? brandList.data![selectedBrandIndex!].name

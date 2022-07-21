@@ -1,10 +1,8 @@
 import 'dart:async';
 
-import 'package:connectivity/connectivity.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/key_helper.dart' as key;
 import 'package:eight_barrels/helper/network_connection_helper.dart';
-import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/provider/auth/login_provider.dart';
 import 'package:eight_barrels/provider/auth/otp_provider.dart';
 import 'package:eight_barrels/provider/auth/register_provider.dart';
@@ -18,8 +16,10 @@ import 'package:eight_barrels/provider/discussion/add_discussion_provider.dart';
 import 'package:eight_barrels/provider/discussion/discussion_provider.dart';
 import 'package:eight_barrels/provider/home/banner_detail_provider.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
+import 'package:eight_barrels/provider/home/guest_home_provider.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
 import 'package:eight_barrels/provider/home/notification_provider.dart';
+import 'package:eight_barrels/provider/product/guest_product_detail_provider.dart';
 import 'package:eight_barrels/provider/product/product_by_category_provider.dart';
 import 'package:eight_barrels/provider/product/product_by_region_provider.dart';
 import 'package:eight_barrels/provider/product/product_detail_provider.dart';
@@ -36,6 +36,7 @@ import 'package:eight_barrels/provider/splash/splash_provider.dart';
 import 'package:eight_barrels/provider/transaction/track_order_provider.dart';
 import 'package:eight_barrels/provider/transaction/transaction_detail_provider.dart';
 import 'package:eight_barrels/provider/transaction/transaction_provider.dart';
+import 'package:eight_barrels/screen/auth/guest_start_screen.dart';
 import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/auth/otp_screen.dart';
 import 'package:eight_barrels/screen/auth/register_screen.dart';
@@ -53,9 +54,11 @@ import 'package:eight_barrels/screen/discussion/add_discussion_screen.dart';
 import 'package:eight_barrels/screen/discussion/discussion_screen.dart';
 import 'package:eight_barrels/screen/home/banner_detail_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
+import 'package:eight_barrels/screen/home/guest_home_screen.dart';
 import 'package:eight_barrels/screen/home/home_screen.dart';
 import 'package:eight_barrels/screen/home/member_loyalty_screen.dart';
 import 'package:eight_barrels/screen/misc/success_screen.dart';
+import 'package:eight_barrels/screen/product/guest_product_detail_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_region_screen.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
@@ -75,7 +78,6 @@ import 'package:eight_barrels/screen/transaction/invoice_webview_screen.dart';
 import 'package:eight_barrels/screen/transaction/track_order_screen.dart';
 import 'package:eight_barrels/screen/transaction/transaction_detail_screen.dart';
 import 'package:eight_barrels/screen/transaction/transaction_screen.dart';
-import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -142,7 +144,7 @@ class _AppState extends State<App> {
     }
   }
 
-  void _incomingLinkHandler() {
+  Future _incomingLinkHandler() async {
     if (!kIsWeb) {
       _linkSubs = uriLinkStream.listen((Uri? uri) {
         if (!mounted) {
@@ -153,7 +155,6 @@ class _AppState extends State<App> {
             productId: int.parse(uri?.queryParameters['product_id'] ?? ''),
           ),);
         }
-        debugPrint('Received URI: $uri');
       }, onError: (Object err) {
         if (!mounted) {
           return;
@@ -165,15 +166,16 @@ class _AppState extends State<App> {
 
   @override
   void initState() {
-    _networkConnectionHelper.checkConnection(subscription: _connectionSubs, context: context);
-    _getLocale().then((Locale myLocale) => {
-      setState(() {
-        _localeOverrideDelegate = new SpecifiedLocalizationDelegate(myLocale);
-      })
+    Future.delayed(Duration.zero).whenComplete(() async {
+      await _networkConnectionHelper.checkConnection(subscription: _connectionSubs, context: context);
+      await _getLocale().then((Locale myLocale) => {
+        setState(() {
+          _localeOverrideDelegate = new SpecifiedLocalizationDelegate(myLocale);
+        })
+      });
+      await _initURIHandler();
+      await _incomingLinkHandler();
     });
-    _initURIHandler();
-    _incomingLinkHandler();
-    // _checkUserToken();
     super.initState();
   }
 
@@ -250,6 +252,9 @@ class _AppState extends State<App> {
                 ),
                 ChangeNotifierProvider<TransactionProvider>(
                   create: (context) => TransactionProvider(),
+                ),
+                ChangeNotifierProvider<GuestHomeProvider>(
+                  create: (context) => GuestHomeProvider(),
                 ),
               ],
               child: ShowCaseWidget(
@@ -471,6 +476,21 @@ class _AppState extends State<App> {
           GetPage(
             name: TacWebviewScreen.tag,
             page: () => TacWebviewScreen(),
+          ),
+          GetPage(
+            name: GuestHomeScreen.tag,
+            page: () => GuestHomeScreen(),
+          ),
+          GetPage(
+            name: GuestStartScreen.tag,
+            page: () => GuestStartScreen(),
+          ),
+          GetPage(
+            name: GuestProductDetailScreen.tag,
+            page: () => ChangeNotifierProvider<GuestProductDetailProvider>(
+              create: (context) => GuestProductDetailProvider(),
+              child: GuestProductDetailScreen(),
+            ),
           ),
         ],
       ),

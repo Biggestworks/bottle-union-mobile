@@ -25,6 +25,7 @@ class DiscussionService extends GetConnect {
         URLHelper.discussionUrl(productId.toString()),
         headers: await _headersAuth(),
       );
+      print(_response.body);
       _model = DiscussionListModel.fromJson(_response.body);
     } catch (e) {
       print(e);

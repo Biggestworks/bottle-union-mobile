@@ -9,6 +9,7 @@ class KeyHelper {
   static const KEY_USER_REGION_ID = 'region_id';
   static const KEY_USER_REGION_NAME = 'region_name';
   static const KEY_IS_FIRST_TIME = 'is_first_time';
+  static const KEY_IS_GUEST = 'is_guest';
 
   /// REGISTER STEP TITLE
   static const PERSONAL_DATA_KEY = 'Personal Data';

@@ -28,8 +28,8 @@ class _StartScreenState extends State<StartScreen>
 
   @override
   void initState() {
-    Future.delayed(Duration.zero)
-        .then((_) async => await _pushNotificationManager.saveFcmToken());
+    Future.delayed(Duration.zero,
+            () async => await _pushNotificationManager.saveFcmToken());
     super.initState();
   }
 
@@ -71,79 +71,108 @@ class _StartScreenState extends State<StartScreen>
         isScroll: true,
         isRounded: true,
         child: Container(
-          height: 350,
-          padding: EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Text(
-                AppLocalizations.instance.text('TXT_REGISTER_WITH'),
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+          height: MediaQuery.of(context).size.height * 0.5,
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Text(
+                  AppLocalizations.instance.text('TXT_REGISTER_WITH'),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 40,
-                child: CustomWidget.roundOutlinedBtn(
-                  label: 'Bottle Union Account',
-                  btnColor: CustomColor.MAIN,
-                  lblColor: CustomColor.MAIN,
-                  fontSize: 16,
-                  function: () => Get.toNamed(RegisterScreen.tag),
+                SizedBox(
+                  height: 20,
                 ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 40,
-                child: CustomWidget.roundIconBtn(
-                  icon: MdiIcons.google,
-                  label: 'Google',
-                  btnColor: Colors.red,
-                  lblColor: Colors.white,
-                  fontSize: 16,
-                  function: () async {
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 40,
+                  child: CustomWidget.roundOutlinedBtn(
+                    label: 'Guest Account',
+                    btnColor: Colors.blue,
+                    lblColor: Colors.blue,
+                    fontSize: 16,
+                    function: () async {
+                      Get.back();
+                      await fnGuestAccount();
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    AppLocalizations.instance.text('TXT_OR'),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 40,
+                  child: CustomWidget.roundOutlinedBtn(
+                    label: 'Bottle Union Account',
+                    btnColor: CustomColor.MAIN,
+                    lblColor: CustomColor.MAIN,
+                    fontSize: 16,
+                    function: () {
+                      Get.back();
+                      Get.toNamed(RegisterScreen.tag);
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 40,
+                  child: CustomWidget.roundIconBtn(
+                    icon: MdiIcons.google,
+                    label: 'Google',
+                    btnColor: Colors.red,
+                    lblColor: Colors.white,
+                    fontSize: 16,
+                    function: () async {
+                      Get.back();
+                      await fnAuthGoogle(context);
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 40,
+                  child: CustomWidget.roundIconBtn(
+                    icon: MdiIcons.facebook,
+                    label: 'Facebook',
+                    btnColor: Colors.blue,
+                    lblColor: Colors.white,
+                    fontSize: 16,
+                    function: () async {
+                      Get.back();
+                      await fnAuthFacebook(context);
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                if (Platform.isIOS) SignInWithAppleButton(
+                  height: 40,
+                  onPressed: () async {
                     Get.back();
-                    await fnAuthGoogle(context);
+                    await fnAuthApple(context);
                   },
+                  borderRadius: BorderRadius.circular(20),
                 ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 40,
-                child: CustomWidget.roundIconBtn(
-                  icon: MdiIcons.facebook,
-                  label: 'Facebook',
-                  btnColor: Colors.blue,
-                  lblColor: Colors.white,
-                  fontSize: 16,
-                  function: () async {
-                    Get.back();
-                    await fnAuthFacebook(context);
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              if (Platform.isIOS) SignInWithAppleButton(
-                height: 40,
-                onPressed: () async {
-                  Get.back();
-                  await fnAuthApple(context);
-                },
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );

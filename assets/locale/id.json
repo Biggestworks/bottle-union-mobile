@@ -8,6 +8,7 @@
 	"TXT_SIGN_FACEBOOK": "Masuk dengan Facebook",
 	"TXT_SIGN_APPLE": "Masuk dengan Apple ID",
 	"TXT_SIGN_UP": "Daftar",
+	"TXT_SIGN_UP_NOW": "Daftar Sekarang",
 	"TXT_JOIN": "Gabung Sekarang",
 	"TXT_CONTINUE": "Lanjutkan",
 	"TXT_AGE": "usia harus lebih dari 21 tahun",
@@ -50,6 +51,7 @@
 	"TXT_NAV_CART_INFO": "Semua produk yang Kamu letakan di keranjang ada disini.\nJangan lupa untuk checkout semua nya!",
 	"TXT_NAV_TRANSACTION": "Transaksi",
 	"TXT_NAV_TRANSACTION_INFO": "Setiap riwayat transaksi mu ada disini",
+	"TXT_NAV_ACCOUNT": "Account",
 	"TXT_HEADER_CATALOG": "Katalog Produk",
 	"TXT_HEADER_ORDER": "Pesanan Saya",
 	"TXT_HEADER_TRANSACTION": "Transaksi Saya",
@@ -228,6 +230,10 @@
 	"TXT_TERM_AND_CONDITION_INFO_4": "Sebelum mendaftar di aplikasi Bottle Union, mohon untuk membaca dan menyetujui Syarat & Ketentuan kami dibawah ini.",
 	"TXT_DELETE_ACCOUNT": "HAPUS AKUN",
 	"TXT_DELETE_ACCOUNT_INFO": "Anda yakin ingin hapus akun?\nKami akan mengirimkan email untuk melakukan verifikasi terakhir. Setelah proses tersebut akun Anda akan dihapus permanen dalam 2 hari kerja dan tidak bisa kembali.",
-	"TXT_DELETE_ACCOUNT_SUCCESS": "Permintaan penghapusan akun Anda sudah terkirim. Silahkan cek email Anda."
+	"TXT_DELETE_ACCOUNT_SUCCESS": "Permintaan penghapusan akun Anda sudah terkirim. Silahkan cek email Anda.",
+	"TXT_OR": "ATAU",
+	"TXT_GUEST_ACCOUNT_MSG": "Gabung dengan kami untuk memesan & menikmati rasa dari produk kami",
+	"TXT_GUEST_ACCOUNT_INFO": "Anda berada di akun Guest, mohon daftarkan akun Anda untuk membeli produk kami & menikmati fitur-fitur lainnya.",
+	"TXT_REGISTER_CONFIRMATION_INFO": "Oops, Anda belum masuk ke akun. Untuk melanjutkan pembelian produk kami, mohon untuk masuk ke akun Anda. Lanjutkan?"
 
 }

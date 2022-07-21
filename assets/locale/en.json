@@ -8,6 +8,7 @@
 	"TXT_SIGN_FACEBOOK": "Sign In with Facebook",
 	"TXT_SIGN_APPLE": "Sign In with Apple ID",
 	"TXT_SIGN_UP": "Sign Up",
+	"TXT_SIGN_UP_NOW": "Sign Up Now",
 	"TXT_JOIN": "Join Now",
 	"TXT_CONTINUE": "Continue",
 	"TXT_AGE": "age must be more than 21 years old",
@@ -50,6 +51,7 @@
 	"TXT_NAV_CART_INFO": "All products that you put inside cart goes here.\nDon't forget to checkout them all!",
 	"TXT_NAV_TRANSACTION": "Transaction",
 	"TXT_NAV_TRANSACTION_INFO": "Every transaction history goes here",
+	"TXT_NAV_ACCOUNT": "Account",
 	"TXT_HEADER_CATALOG": "Product Catalog",
 	"TXT_HEADER_ORDER": "My Order",
 	"TXT_HEADER_TRANSACTION": "My Transaction",
@@ -229,6 +231,9 @@
 	"TXT_TERM_AND_CONDITION_INFO_4": "Before registering to Bottle Union application, please read and agree to our Term & Condition below.",
 	"TXT_DELETE_ACCOUNT": "DELETE ACCOUNT",
 	"TXT_DELETE_ACCOUNT_INFO": "Are you sure you want to delete your account?\nWe will send you an email to do final verification. After that your account will be deleted permanently in 2 working days and cannot be undone.",
-	"TXT_DELETE_ACCOUNT_SUCCESS": "Your account deletion request has been sent. Please check your email."
-
+	"TXT_DELETE_ACCOUNT_SUCCESS": "Your account deletion request has been sent. Please check your email.",
+	"TXT_OR": "OR",
+	"TXT_GUEST_ACCOUNT_MSG": "Join us to order & enjoy the taste of our products",
+	"TXT_GUEST_ACCOUNT_INFO": "You're in guest account, please register your account for purchasing our product & enjoy other features.",
+	"TXT_REGISTER_CONFIRMATION_INFO": "Oops, you're still not signed in to your account. To continue purchasing our product, please sign in to your account. Continue?"
 }

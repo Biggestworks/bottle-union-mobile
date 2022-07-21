@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
   @override
   void initState() {
     Future.delayed(Duration.zero).then((value) {
-      Provider.of<HomeProvider>(context, listen: false).fnFetchUserInfo().then((_) {
+      Provider.of<HomeProvider>(context, listen: false).fnFetchUserInfo().whenComplete(() {
         Provider.of<HomeProvider>(context, listen: false).fnFetchRegionProductList();
         Provider.of<HomeProvider>(context, listen: false).fnFetchBannerList();
       });
@@ -794,7 +794,7 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
               Padding(
                 padding: const EdgeInsets.only(right: 15, left: 5),
                 child: GestureDetector(
-                  onTap: () async => await Get.toNamed(ProfileScreen.tag)!
+                  onTap: () async => await Get.toNamed(ProfileScreen.tag, arguments: ProfileScreen(isGuest: false,))!
                       .then((_) async => await _provider.onRefresh()),
                   child: CustomWidget.roundedAvatarImg(url: _provider.userModel.user?.avatar ?? '', size: 25, fit: BoxFit.contain),
                 ),

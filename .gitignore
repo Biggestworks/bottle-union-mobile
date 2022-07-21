@@ -12,6 +12,7 @@
 *.keystore
 .env.development
 .env.production
+.env.local
 
 # IntelliJ related
 *.iml
