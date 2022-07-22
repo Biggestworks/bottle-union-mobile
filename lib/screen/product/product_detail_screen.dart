@@ -551,8 +551,56 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                       ),
                     ),
                     Divider(
-                      thickness: 6,
-                      height: 40,
+                      thickness: 4,
+                      height: 30,
+                      color: CustomColor.GREY_BG,
+                    ),
+                  ],
+                );
+            }
+        }
+      },
+    );
+
+    Widget _descriptionContent = Consumer<ProductDetailProvider>(
+      child: CustomWidget.showShimmerProductDetail(),
+      builder: (context, provider, skeleton) {
+        switch (_isLoad) {
+          case true:
+            return skeleton!;
+          default:
+            switch (provider.product.data) {
+              case null:
+                return skeleton!;
+              default:
+                var _data = _provider.product.data!;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10,),
+                      child: ReadMoreText(provider.fnConvertHtmlString(_data.description ?? '-'),
+                        trimLines: 2,
+                        trimMode: TrimMode.Line,
+                        trimCollapsedText: 'Show more',
+                        trimExpandedText: 'Show less',
+                        lessStyle: TextStyle(
+                          fontSize: 14,
+                          color: Colors.pink,
+                        ),
+                        moreStyle: TextStyle(
+                          fontSize: 14,
+                          color: Colors.pink,
+                        ),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      thickness: 4,
+                      height: 30,
                       color: CustomColor.GREY_BG,
                     ),
                   ],
@@ -576,9 +624,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                 var _data = _provider.product.data!;
                 return GestureDetector(
                   onTap: () {
-                    if (provider.isGuest != 'true')
-                      if (_data.productRegion?.length != 0)
+                    if (provider.isGuest != 'true') {
+                      if (_data.productRegion?.length != 0) {
                         _showProductRegionSheet(_data);
+                      }
+                    } else {
+                      _showRegisterConfirmation();
+                    }
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -661,8 +713,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                           ),
                       ),
                       Divider(
-                        thickness: 6,
-                        height: 40,
+                        thickness: 4,
+                        height: 30,
                         color: CustomColor.GREY_BG,
                       ),
                     ],
@@ -686,6 +738,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
               default:
                 var _data = _provider.product.data!;
                 return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10,),
@@ -745,39 +798,39 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                             color: Colors.black,
                             fontSize: 15,
                           ),),
-                          Divider(
-                            color: CustomColor.GREY_BG,
-                            thickness: 1,
-                          ),
+                          // Divider(
+                          //   color: CustomColor.GREY_BG,
+                          //   thickness: 1,
+                          // ),
                           // SizedBox(height: 10,),
-                          Text('Description', style: TextStyle(
-                            color: CustomColor.GREY_TXT,
-                          ),),
-                          SizedBox(height: 5,),
-                          ReadMoreText(provider.fnConvertHtmlString(_data.description ?? '-'),
-                            trimLines: 3,
-                            trimMode: TrimMode.Line,
-                            trimCollapsedText: 'Show more',
-                            trimExpandedText: 'Show less',
-                            lessStyle: TextStyle(
-                              fontSize: 14,
-                              color: Colors.pink,
-                            ),
-                            moreStyle: TextStyle(
-                              fontSize: 14,
-                              color: Colors.pink,
-                            ),
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 15,
-                            ),
-                          ),
+                          // Text('Description', style: TextStyle(
+                          //   color: CustomColor.GREY_TXT,
+                          // ),),
+                          // SizedBox(height: 5,),
+                          // ReadMoreText(provider.fnConvertHtmlString(_data.description ?? '-'),
+                          //   trimLines: 3,
+                          //   trimMode: TrimMode.Line,
+                          //   trimCollapsedText: 'Show more',
+                          //   trimExpandedText: 'Show less',
+                          //   lessStyle: TextStyle(
+                          //     fontSize: 14,
+                          //     color: Colors.pink,
+                          //   ),
+                          //   moreStyle: TextStyle(
+                          //     fontSize: 14,
+                          //     color: Colors.pink,
+                          //   ),
+                          //   style: TextStyle(
+                          //     color: Colors.black,
+                          //     fontSize: 15,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
                     Divider(
-                      thickness: 6,
-                      height: 40,
+                      thickness: 4,
+                      height: 30,
                       color: CustomColor.GREY_BG,
                     ),
                   ],
@@ -1009,6 +1062,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _productHeaderContent,
+              _descriptionContent,
               _productRegionContent,
               _productDetailContent,
               if (_provider.isGuest != 'true')

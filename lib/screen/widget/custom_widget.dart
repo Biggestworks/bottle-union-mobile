@@ -11,6 +11,7 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CustomWidget {
+
   static Widget roundBtn({
     String label = 'title',
     Color btnColor = Colors.white,

@@ -6,19 +6,16 @@ import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/screen/auth/guest_start_screen.dart';
-import 'package:eight_barrels/screen/auth/start_screen.dart';
 import 'package:eight_barrels/screen/cart/cart_list_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/home/guest_home_screen.dart';
 import 'package:eight_barrels/screen/home/home_screen.dart';
 import 'package:eight_barrels/screen/product/product_list_screen.dart';
 import 'package:eight_barrels/screen/transaction/transaction_screen.dart';
-import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/cart/cart_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/route_manager.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class BaseHomeProvider extends ChangeNotifier {

@@ -242,7 +242,7 @@ class TransactionDetailProvider extends ChangeNotifier {
         await CustomWidget.showSnackBar(context: context, content: Text('Thank you for reviewing'));
       } else {
         _view!.onProgressFinish();
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message ?? '-'));
+        await CustomWidget.showSnackBar(context: context, content: Text(_res.message != null ? _res.message.toString() : ''));
       }
     } else {
       _view!.onProgressFinish();

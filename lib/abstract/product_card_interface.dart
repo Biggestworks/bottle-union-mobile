@@ -11,6 +11,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
 
 abstract class ProductCardInterface {
+
+  String _fnGetDiscount(int? regularPrice, int? salePrice) {
+    String _disc = '0%';
+    if (salePrice != null && (salePrice < (regularPrice ?? 0))) {
+      double _res = (((regularPrice ?? 0) - salePrice) / (regularPrice ?? 0)) * 100;
+      _disc = '${_res.round()}%';
+    }
+    return _disc;
+  }
+
   Widget productCard({
     required BuildContext context,
     required Data data,
@@ -93,13 +103,37 @@ abstract class ProductCardInterface {
                         ),
                       ),
                       SizedBox(height: 5,),
-                      Flexible(
-                        child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: CustomColor.MAIN_TXT,
-                        ),),
-                      ),
-                      SizedBox(height: index.isEven ? 15 : 35,),
+                      if (data.salePrice != null && ((data.salePrice ?? 0) < (data.regularPrice ?? 0)))
+                        Flexible(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(FormatterHelper.moneyFormatter(data.salePrice ?? 0), style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: CustomColor.MAIN_TXT,
+                              ),),
+                              SizedBox(height: 5,),
+                              Flexible(
+                                child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
+                                  color: CustomColor.GREY_TXT,
+                                  fontSize: 12,
+                                  decoration: TextDecoration.lineThrough,
+                                  decorationThickness: 1.5,
+                                  decorationColor: CustomColor.GREY_TXT,
+                                ),),
+                              ),
+                            ],
+                          ),
+                        )
+                      else
+                        Flexible(
+                          child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: CustomColor.MAIN_TXT,
+                          ),),
+                        ),
+                      SizedBox(height: index.isEven ? 15 : 25,),
                     ],
                   ),
                 ),
@@ -107,6 +141,27 @@ abstract class ProductCardInterface {
             ),
           ),
         ),
+        if (data.salePrice != null && ((data.salePrice ?? 0) < (data.regularPrice ?? 0)))
+          Positioned(
+            right: 0,
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(image: AssetImage('assets/images/ic_discount.png'), fit: BoxFit.fill),
+              ),
+              height: 40,
+              width: 40,
+              child: Center(
+                child: RotationTransition(
+                  turns: new AlwaysStoppedAnimation(-30 / 360),
+                  child: Text('${_fnGetDiscount(data.regularPrice, data.salePrice)}', style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),),
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }

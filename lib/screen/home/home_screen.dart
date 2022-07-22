@@ -12,7 +12,6 @@ import 'package:eight_barrels/screen/home/banner_detail_screen.dart';
 import 'package:eight_barrels/screen/home/notification_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_region_screen.dart';
-import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:eight_barrels/screen/product/wishlist_screen.dart';
 import 'package:eight_barrels/screen/profile/add_address_screen.dart';
 import 'package:eight_barrels/screen/profile/address_list_screen.dart';
@@ -21,13 +20,11 @@ import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/screen/widget/sliver_title.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:uni_links/uni_links.dart';
 
 class HomeScreen extends StatefulWidget {
   static String tag = '/home-screen';

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/abstract/product_log.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
@@ -18,7 +19,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/route_manager.dart';
 import 'package:html/parser.dart' show parse;
-import 'package:collection/collection.dart';
 
 class ProductDetailProvider extends ChangeNotifier with ProductLog {
   ProductService _productService = new ProductService();

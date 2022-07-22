@@ -11,14 +11,13 @@ import 'package:eight_barrels/screen/transaction/track_order_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class TransactionDetailScreen extends StatefulWidget {
   static String tag = '/transaction-detail-screen';
@@ -730,28 +729,28 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                           ),
                         );
                       case 6:
-                        // return skeleton!;
-                        return Container(
-                          width: MediaQuery.of(context).size.width,
-                          child: CustomWidget.roundOutlinedBtn(
-                            label: AppLocalizations.instance.text('TXT_REVIEW'),
-                            btnColor: CustomColor.MAIN,
-                            lblColor: CustomColor.MAIN,
-                            isBold: true,
-                            radius: 8,
-                            fontSize: 16,
-                            function: () async {
-                              await Future.delayed(Duration.zero, await provider.fnInitReviewValue())
-                                  .whenComplete(() {
-                                    if (provider.transactionDetail.result?.data?.length == 1) {
-                                      _showRatingSheet();
-                                    } else {
-                                      _showSelectProductSheet();
-                                    }
-                              });
-                            },
-                          ),
-                        );
+                        return skeleton!;
+                        // return Container(
+                        //   width: MediaQuery.of(context).size.width,
+                        //   child: CustomWidget.roundOutlinedBtn(
+                        //     label: AppLocalizations.instance.text('TXT_REVIEW'),
+                        //     btnColor: CustomColor.MAIN,
+                        //     lblColor: CustomColor.MAIN,
+                        //     isBold: true,
+                        //     radius: 8,
+                        //     fontSize: 16,
+                        //     function: () async {
+                        //       await Future.delayed(Duration.zero, await provider.fnInitReviewValue())
+                        //           .whenComplete(() {
+                        //             if (provider.transactionDetail.result?.data?.length == 1) {
+                        //               _showRatingSheet();
+                        //             } else {
+                        //               _showSelectProductSheet();
+                        //             }
+                        //       });
+                        //     },
+                        //   ),
+                        // );
                       default:
                         return skeleton!;
                     }

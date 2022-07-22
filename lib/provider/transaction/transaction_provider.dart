@@ -2,7 +2,6 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/abstract/pagination_interface.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/model/transaction/transaction_list_model.dart';
-import 'package:eight_barrels/screen/checkout/midtrans_webview_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/cart/cart_service.dart';

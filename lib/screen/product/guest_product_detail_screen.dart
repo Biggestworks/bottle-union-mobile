@@ -3,22 +3,13 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
-import 'package:eight_barrels/model/product/product_detail_model.dart';
-import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/product/guest_product_detail_provider.dart';
-import 'package:eight_barrels/provider/product/product_detail_provider.dart';
-import 'package:eight_barrels/screen/checkout/delivery_buy_screen.dart';
-import 'package:eight_barrels/screen/discussion/add_discussion_screen.dart';
-import 'package:eight_barrels/screen/discussion/discussion_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_share/flutter_share.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class GuestProductDetailScreen extends StatefulWidget {
   static String tag = '/guest-product-detail-screen';

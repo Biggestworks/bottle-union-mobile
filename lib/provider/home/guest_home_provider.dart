@@ -4,23 +4,14 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/abstract/pagination_interface.dart';
 import 'package:eight_barrels/abstract/product_card_interface.dart';
 import 'package:eight_barrels/abstract/product_filter_interface.dart';
-import 'package:eight_barrels/helper/key_helper.dart';
-import 'package:eight_barrels/helper/push_notification_manager.dart';
-import 'package:eight_barrels/helper/user_preferences.dart';
-import 'package:eight_barrels/model/address/address_list_model.dart' as address;
-import 'package:eight_barrels/model/auth/user_detail_model.dart';
 import 'package:eight_barrels/model/banner/banner_list_model.dart';
 import 'package:eight_barrels/model/product/brand_model.dart';
 import 'package:eight_barrels/model/product/category_model.dart';
-import 'package:eight_barrels/model/product/popular_product_list_model.dart';
 import 'package:eight_barrels/model/product/product_model.dart';
-import 'package:eight_barrels/provider/product/product_list_provider.dart';
-import 'package:eight_barrels/service/address/address_service.dart';
 import 'package:eight_barrels/service/banner/banner_service.dart';
 import 'package:eight_barrels/service/product/product_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/route_manager.dart';
 
 class GuestHomeProvider extends ChangeNotifier
