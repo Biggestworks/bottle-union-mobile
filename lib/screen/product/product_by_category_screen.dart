@@ -56,6 +56,7 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen>
                         return CustomWidget.emptyScreen(
                           image: 'assets/images/ic_empty_product.png',
                           title: AppLocalizations.instance.text('TXT_NO_PRODUCT'),
+                          size: 180,
                         );
                       default:
                         return NotificationListener<ScrollNotification>(

@@ -84,7 +84,6 @@ class ReviewService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
-      print(_response.body);
       _model = DefaultModel.fromJson(_response.body);
     } catch (e) {
       print(e);

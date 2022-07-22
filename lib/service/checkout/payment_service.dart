@@ -102,7 +102,6 @@ class PaymentService extends GetConnect {
         body: json.encode(_data),
         headers: await _headersAuth(),
       );
-      print(_response.body);
       ///GET CONNECT BUG
       // Response _response = await post(
       //   URLHelper.storeOrderUrl,

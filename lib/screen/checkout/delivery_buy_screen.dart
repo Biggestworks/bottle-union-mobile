@@ -491,7 +491,7 @@ class _DeliveryBuyScreenState extends State<DeliveryBuyScreen>
                                       width: 100,
                                       height: 100,
                                       child: ClipRRect(
-                                        child: CustomWidget.networkImg(context, _data?.image1),
+                                        child: CustomWidget.networkImg(context, _data?.image1, fit: BoxFit.cover,),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                     ),

@@ -122,7 +122,7 @@ class _CartListScreenState extends State<CartListScreen>
                                                         width: 80,
                                                         height: 80,
                                                         child: ClipRRect(
-                                                          child: CustomWidget.networkImg(context, _data.product?.image1),
+                                                          child: CustomWidget.networkImg(context, _data.product?.image1, fit: BoxFit.cover,),
                                                           borderRadius: BorderRadius.circular(10),
                                                         ),
                                                       ),
