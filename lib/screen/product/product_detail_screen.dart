@@ -489,64 +489,103 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                     SizedBox(height: 15,),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10,),
-                      child: Column(
+                      child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(
-                                flex: 2,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                          Flexible(
+                            flex: 2,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(_data.name ?? '-', style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                SizedBox(height: 5,),
+                                Text(_data.categories?.name ?? '-', style: TextStyle(
+                                  color: CustomColor.GREY_TXT,
+                                  fontSize: 16,
+                                ),),
+                                SizedBox(height: 5,),
+                                Row(
                                   children: [
-                                    Text(_data.name ?? '-', style: TextStyle(
-                                      fontSize: 18,
+                                    RatingBar.builder(
+                                      initialRating: double.parse(_data.rating ?? '0.0'),
+                                      ignoreGestures: true,
+                                      allowHalfRating: true,
+                                      direction: Axis.horizontal,
+                                      itemCount: 5,
+                                      itemPadding: EdgeInsets.zero,
+                                      itemBuilder: (context, _) => Icon(
+                                        Icons.star,
+                                        color: Colors.orange,
+                                      ),
+                                      itemSize: 16,
+                                      onRatingUpdate: (rating) {},
+                                    ),
+                                    SizedBox(width: 4,),
+                                    Text('(${_data.rating ?? '0.0'})', style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                    ), maxLines: 2, overflow: TextOverflow.ellipsis,),
-                                    SizedBox(height: 4,),
-                                    Text(_data.categories?.name ?? '-', style: TextStyle(
-                                      color: CustomColor.GREY_TXT,
                                       fontSize: 16,
                                     ),),
                                   ],
                                 ),
-                              ),
-                              SizedBox(width: 10,),
-                              Flexible(
-                                child: Text(FormatterHelper.moneyFormatter(_data.regularPrice ?? 0), style: TextStyle(
-                                  color: CustomColor.MAIN,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                          SizedBox(height: 4,),
-                          Row(
-                            children: [
-                              RatingBar.builder(
-                                initialRating: double.parse(_data.rating ?? '0.0'),
-                                ignoreGestures: true,
-                                allowHalfRating: true,
-                                direction: Axis.horizontal,
-                                itemCount: 5,
-                                itemPadding: EdgeInsets.zero,
-                                itemBuilder: (context, _) => Icon(
-                                  Icons.star,
-                                  color: Colors.orange,
-                                ),
-                                itemSize: 16,
-                                onRatingUpdate: (rating) {},
+                          if ((_data.salePrice ?? 0) < (_data.regularPrice ?? 0))
+                            Flexible(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(FormatterHelper.moneyFormatter(_data.salePrice ?? 0), style: TextStyle(
+                                    color: CustomColor.MAIN,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),),
+                                  SizedBox(height: 5,),
+                                  Flexible(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(image: AssetImage('assets/images/ic_discount.png'), fit: BoxFit.fill),
+                                          ),
+                                          height: 35,
+                                          width: 35,
+                                          child: Center(
+                                            child: Text('${provider.fnGetDiscount(_data.regularPrice, _data.salePrice)}', style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 11,
+                                            ),),
+                                          ),
+                                        ),
+                                        SizedBox(width: 5,),
+                                        Text(FormatterHelper.moneyFormatter(_data.regularPrice ?? 0), style: TextStyle(
+                                          color: CustomColor.GREY_TXT,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          decoration: TextDecoration.lineThrough,
+                                          decorationColor: CustomColor.GREY_TXT,
+                                        ),),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                              SizedBox(width: 4,),
-                              Text('(${_data.rating ?? '0.0'})', style: TextStyle(
+                            )
+                          else
+                            Flexible(
+                              child: Text(FormatterHelper.moneyFormatter(_data.regularPrice ?? 0), style: TextStyle(
+                                color: CustomColor.MAIN,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                                fontSize: 18,
                               ),),
-                            ],
-                          ),
+                            ),
                         ],
                       ),
                     ),

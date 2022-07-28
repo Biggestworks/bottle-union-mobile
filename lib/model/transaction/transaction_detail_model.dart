@@ -109,6 +109,7 @@ class Data {
   int? idRegion;
   int? idProduct;
   int? idStatusOrder;
+  int? price;
   int? qty;
   int? isSelected;
   String? statusOrder;
@@ -123,6 +124,7 @@ class Data {
         this.idRegion,
         this.idProduct,
         this.idStatusOrder,
+        this.price,
         this.qty,
         this.isSelected,
         this.statusOrder,
@@ -137,6 +139,7 @@ class Data {
     idRegion = json['id_region'];
     idProduct = json['id_product'];
     idStatusOrder = json['id_status_order'];
+    price = json['price'];
     qty = json['qty'];
     isSelected = json['is_selected'];
     statusOrder = json['status_order'];
@@ -156,6 +159,7 @@ class Data {
     data['id_region'] = this.idRegion;
     data['id_product'] = this.idProduct;
     data['id_status_order'] = this.idStatusOrder;
+    data['price'] = this.price;
     data['qty'] = this.qty;
     data['is_selected'] = this.isSelected;
     data['status_order'] = this.statusOrder;

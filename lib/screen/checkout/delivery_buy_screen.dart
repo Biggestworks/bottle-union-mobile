@@ -521,11 +521,11 @@ class _DeliveryBuyScreenState extends State<DeliveryBuyScreen>
                                               color: CustomColor.GREY_TXT,
                                             ),),
                                             SizedBox(height: 5,),
-                                            Text('${provider.productQty} x ${FormatterHelper.moneyFormatter(_data?.regularPrice ?? 0)}', style: TextStyle(
+                                            Text('${provider.productQty} x ${FormatterHelper.moneyFormatter(_data?.salePrice ?? 0)}', style: TextStyle(
                                               color: CustomColor.GREY_TXT,
                                             ),),
                                             SizedBox(height: 5,),
-                                            Text('Subtotal: ${provider.fnGetSubtotal(_data?.regularPrice ?? 0, provider.productQty)}', style: TextStyle(
+                                            Text('Subtotal: ${provider.fnGetSubtotal(_data?.salePrice ?? 0, provider.productQty)}', style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: CustomColor.MAIN_TXT,
                                             ),),

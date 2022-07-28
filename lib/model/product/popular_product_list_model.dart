@@ -96,6 +96,7 @@ class Data {
   String? name;
   String? image;
   int? regularPrice;
+  int? salePrice;
   int? stock;
   String? rating;
   String? flag;
@@ -107,6 +108,7 @@ class Data {
         this.name,
         this.image,
         this.regularPrice,
+        this.salePrice,
         this.stock,
         this.rating,
         this.flag,
@@ -118,6 +120,7 @@ class Data {
     name = json['name'];
     image = json['image'];
     regularPrice = json['regular_price'];
+    salePrice = json['sale_price'];
     stock = json['stock'];
     rating = json['rating'];
     flag = json['flag'];
@@ -131,6 +134,7 @@ class Data {
     data['name'] = this.name;
     data['image'] = this.image;
     data['regular_price'] = this.regularPrice;
+    data['sale_price'] = this.salePrice;
     data['stock'] = this.stock;
     data['rating'] = this.rating;
     data['flag'] = this.flag;

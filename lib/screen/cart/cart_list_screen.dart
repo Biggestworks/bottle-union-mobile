@@ -135,10 +135,30 @@ class _CartListScreenState extends State<CartListScreen>
                                                               color: Colors.black,
                                                             ),),
                                                             SizedBox(height: 5,),
-                                                            Text(FormatterHelper.moneyFormatter(_data.product?.regularPrice), style: TextStyle(
-                                                              fontWeight: FontWeight.bold,
-                                                              color: CustomColor.MAIN_TXT,
-                                                            ),),
+                                                            if ((_data.product?.salePrice ?? 0) < (_data.product?.regularPrice ?? 0))
+                                                              Row(
+                                                                mainAxisSize: MainAxisSize.min,
+                                                                children: [
+                                                                  Text(FormatterHelper.moneyFormatter(_data.product?.salePrice ?? 0), style: TextStyle(
+                                                                    fontWeight: FontWeight.bold,
+                                                                    color: CustomColor.MAIN_TXT,
+                                                                  ),),
+                                                                  SizedBox(width: 5,),
+                                                                  Flexible(
+                                                                    child: Text(FormatterHelper.moneyFormatter(_data.product?.regularPrice ?? 0), style: TextStyle(
+                                                                      color: CustomColor.GREY_TXT,
+                                                                      fontSize: 14,
+                                                                      decoration: TextDecoration.lineThrough,
+                                                                      decorationColor: CustomColor.GREY_TXT,
+                                                                    ),),
+                                                                  ),
+                                                                ],
+                                                              )
+                                                            else
+                                                              Text(FormatterHelper.moneyFormatter(_data.product?.regularPrice), style: TextStyle(
+                                                                fontWeight: FontWeight.bold,
+                                                                color: CustomColor.MAIN_TXT,
+                                                              ),),
                                                             SizedBox(height: 5,),
                                                             Row(
                                                               mainAxisAlignment: MainAxisAlignment.start,

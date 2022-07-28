@@ -370,11 +370,11 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                                           color: Colors.black,
                                         ), maxLines: 1, overflow: TextOverflow.ellipsis,),
                                         SizedBox(height: 5,),
-                                        Text('${_data?.order?[index].qty ?? 0} x ${FormatterHelper.moneyFormatter(_product?.regularPrice ?? 0)}', style: TextStyle(
+                                        Text('${_data?.order?[index].qty ?? 0} x ${FormatterHelper.moneyFormatter(_product?.salePrice ?? 0)}', style: TextStyle(
                                           color: CustomColor.GREY_TXT,
                                         ),),
                                         SizedBox(height: 5,),
-                                        Text('Total: ${provider.fnGetSubtotal(_data?.order?[index].price ?? 0, _data?.order?[index].qty ?? 0)}', style: TextStyle(
+                                        Text('Total: ${provider.fnGetSubtotal(_data?.order?[index].product?.salePrice ?? 0, _data?.order?[index].qty ?? 0)}', style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black,
                                         ),),
@@ -459,11 +459,11 @@ class _OrderFinishScreenState extends State<OrderFinishScreen> with LoadingView 
                                               color: Colors.black,
                                             ), maxLines: 1, overflow: TextOverflow.ellipsis,),
                                             SizedBox(height: 5,),
-                                            Text('${_data?.data?[index].qty ?? 0} x ${FormatterHelper.moneyFormatter(_product?.regularPrice ?? 0)}', style: TextStyle(
+                                            Text('${_data?.data?[index].qty ?? 0} x ${FormatterHelper.moneyFormatter(_product?.salePrice ?? 0)}', style: TextStyle(
                                               color: CustomColor.GREY_TXT,
                                             ),),
                                             SizedBox(height: 5,),
-                                            Text('Total: ${FormatterHelper.moneyFormatter(_data?.amount)}', style: TextStyle(
+                                            Text('Total: ${provider.fnGetSubtotal(_data?.data?[index].product?.salePrice ?? 0, _data?.data?[index].qty ?? 0)}', style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black,
                                             ),),

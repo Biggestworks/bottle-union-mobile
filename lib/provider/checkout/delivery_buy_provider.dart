@@ -98,7 +98,8 @@ class DeliveryBuyProvider extends ChangeNotifier {
     await Future.delayed(Duration.zero).then((value) {
       _prices.clear();
       _totalWeight = 0;
-      _prices.add((product?.data?.regularPrice ?? 0) * productQty);
+      int _price = product?.data?.salePrice ?? 0;
+      _prices.add(_price * productQty);
       _totalWeight = ((product?.data?.weight ?? 0) * productQty).toDouble();
     });
     notifyListeners();

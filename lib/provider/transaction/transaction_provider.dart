@@ -251,7 +251,7 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
       orderId: transactionList.result?.data?[index].codeTransaction ?? '',
     );
     List.generate(_detail?.result?.data?.length ?? 0,
-            (index) => _productIdList.add(_detail?.result?.data?[index].product?.id ?? 0));
+            (index) => _productIdList.add(_detail?.result?.data?[index].idProduct ?? 0));
 
     var _res = await _cartService.storeCart(
       regionIds: [transactionList.result?.data?[index].idRegion ?? 0],

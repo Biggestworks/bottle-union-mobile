@@ -191,6 +191,17 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
     notifyListeners();
   }
 
+  String fnGetDiscount(int? regularPrice, int? salePrice) {
+    int _regularPrice = regularPrice ?? 0;
+    int _salePrice = salePrice ?? 0;
+    String _disc = '0%';
+    if (_salePrice < _regularPrice) {
+      double _res = ((_regularPrice - _salePrice) / _regularPrice) * 100;
+      _disc = '${_res.round()}%';
+    }
+    return _disc;
+  }
+
 }
 
 class SelectedRegion {

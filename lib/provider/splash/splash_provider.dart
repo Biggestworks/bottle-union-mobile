@@ -15,7 +15,6 @@ class SplashProvider extends ChangeNotifier {
   Future fnAuthentication() async {
     var _res = await _userPreferences.getUserData();
     String? _isGuest = await _userPreferences.getGuestStatus();
-    print(_isGuest);
 
     if (_isGuest == 'true') {
       Future.delayed(Duration(seconds: 2)).then((_) => Get.offAndToNamed(BaseHomeScreen.tag, arguments: BaseHomeScreen()));

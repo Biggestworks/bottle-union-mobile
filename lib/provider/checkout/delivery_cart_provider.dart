@@ -97,10 +97,10 @@ class DeliveryCartProvider extends ChangeNotifier {
         var _data = cartList?.result?[i];
         List.generate(cartList?.result?[i].data?.length ?? 0, (j) {
           var _product = _data?.data?[j];
-          int _regPrice = _product?.product?.regularPrice ?? 0;
+          int _price = _product?.product?.salePrice ?? 0;
           int _weight = _product?.product?.weight ?? 0;
           int _qty = _product?.qty ?? 0;
-          int _itemPrices = _regPrice * _qty;
+          int _itemPrices = _price * _qty;
           _prices.add(_itemPrices);
           _totalWeight += _weight;
         });
