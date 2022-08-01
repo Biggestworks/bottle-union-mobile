@@ -12,9 +12,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 
 Future _loadEnv() async =>
-  // await dotenv.load(fileName: ".env.production");
+  await dotenv.load(fileName: ".env.production");
   // await dotenv.load(fileName: ".env.development");
-  await dotenv.load(fileName: ".env.local");
+  // await dotenv.load(fileName: ".env.local");
 
 Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await _loadEnv();
