@@ -135,7 +135,7 @@ class _CartListScreenState extends State<CartListScreen>
                                                               color: Colors.black,
                                                             ),),
                                                             SizedBox(height: 5,),
-                                                            if ((_data.product?.salePrice ?? 0) < (_data.product?.regularPrice ?? 0))
+                                                            if ((_data.product?.salePrice ?? 0) != (_data.product?.regularPrice ?? 0))
                                                               Row(
                                                                 mainAxisSize: MainAxisSize.min,
                                                                 children: [

@@ -1,4 +1,5 @@
 
+import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/route_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:collection/collection.dart';
 
 class ProfileProvider extends ChangeNotifier {
   AuthService _authService = new AuthService();
@@ -26,10 +28,18 @@ class ProfileProvider extends ChangeNotifier {
   String? selectedRegion;
   String? isGuest;
 
+  LoadingView? _view;
+
+  fnGetView(LoadingView view) {
+    this._view = view;
+  }
+
   Future fnFetchUserInfo() async {
+    _view!.onProgressStart();
     this.userModel = (await _userPreferences.getUserData())!;
     selectedRegionId = userModel.region?.id;
     isGuest = await _userPreferences.getGuestStatus();
+    _view!.onProgressFinish();
     notifyListeners();
   }
 
@@ -85,8 +95,8 @@ class ProfileProvider extends ChangeNotifier {
       selectedRegion = _regionName;
     } else {
       if (regionList.data != null && regionList.data?.length != 0) {
-        selectedRegionId = regionList.data?.singleWhere((i) => i.id == selectedRegionId).id;
-        selectedRegion = regionList.data?.singleWhere((i) => i.id == selectedRegionId).name;
+        selectedRegionId = regionList.data?.singleWhereOrNull((i) => i.id == selectedRegionId)?.id;
+        selectedRegion = regionList.data?.singleWhereOrNull((i) => i.id == selectedRegionId)?.name;
       }
     }
     notifyListeners();

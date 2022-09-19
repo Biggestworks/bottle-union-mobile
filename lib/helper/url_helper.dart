@@ -93,5 +93,5 @@ class URLHelper {
   ///PRODUCT REVIEW
   static final reviewUrl = baseUrl + '/reviews';
   static final storeReviewUrl = baseUrl + '/reviews/store';
-
+  static reviewDetailUrl(String id) => baseUrl + '/reviews/show/$id';
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:eight_barrels/helper/url_helper.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/model/default_model.dart';
+import 'package:eight_barrels/model/review/review_detail_model.dart';
 import 'package:eight_barrels/model/review/review_list_model.dart';
 import 'package:get/get_connect.dart';
 import 'package:http_parser/http_parser.dart';
@@ -16,7 +17,6 @@ class ReviewService extends GetConnect {
 
     return {
       "Accept": "application/json",
-      "Content-Type": "application/json",
       "Authorization": "Bearer $_token",
     };
   }
@@ -77,13 +77,12 @@ class ReviewService extends GetConnect {
         "image_3": _imageFile3 ??  null,
       });
 
-      print(_data.fields);
-
       Response _response = await post(
         URLHelper.storeReviewUrl,
         _data,
         headers: await _headersAuth(),
       );
+      print(_response.body);
       _model = DefaultModel.fromJson(_response.body);
     } catch (e) {
       print(e);
@@ -101,6 +100,22 @@ class ReviewService extends GetConnect {
         headers: await _headersAuth(),
       );
       _model = ReviewListModel.fromJson(_response.body);
+    } catch (e) {
+      print(e);
+    }
+
+    return _model;
+  }
+
+  Future<ReviewDetailModel?> getReviewDetail({required String reviewId}) async {
+    ReviewDetailModel _model = new ReviewDetailModel();
+
+    try {
+      Response _response = await get(
+        URLHelper.reviewDetailUrl(reviewId),
+        headers: await _headersAuth(),
+      );
+      _model = ReviewDetailModel.fromJson(_response.body);
     } catch (e) {
       print(e);
     }

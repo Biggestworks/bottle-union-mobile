@@ -166,7 +166,7 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
     notifyListeners();
   }
 
-  fnConvertHtmlString(String text) => parse(text).documentElement?.text;
+  fnConvertHtmlString(String text) => parse(text).body?.text;
 
   Future fnGetSelectedRegionProduct() async {
     if (isGuest != 'true') {
@@ -195,7 +195,7 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
     int _regularPrice = regularPrice ?? 0;
     int _salePrice = salePrice ?? 0;
     String _disc = '0%';
-    if (_salePrice < _regularPrice) {
+    if (_salePrice != _regularPrice) {
       double _res = ((_regularPrice - _salePrice) / _regularPrice) * 100;
       _disc = '${_res.round()}%';
     }

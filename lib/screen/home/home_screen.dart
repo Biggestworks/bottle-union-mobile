@@ -42,15 +42,19 @@ class _HomeScreenState extends State<HomeScreen> with ProductLog, SingleTickerPr
   @override
   void initState() {
     Future.delayed(Duration.zero).then((value) {
-      Provider.of<HomeProvider>(context, listen: false).fnFetchUserInfo().whenComplete(() {
-        Provider.of<HomeProvider>(context, listen: false).fnFetchRegionProductList();
-        Provider.of<HomeProvider>(context, listen: false).fnFetchBannerList();
+      Provider.of<HomeProvider>(context, listen: false).fnGetGuestStatus().then((value) {
+        if (value == 'false') {
+          Provider.of<HomeProvider>(context, listen: false).fnFetchUserInfo().whenComplete(() {
+            Provider.of<HomeProvider>(context, listen: false).fnFetchRegionProductList();
+            Provider.of<HomeProvider>(context, listen: false).fnFetchBannerList();
+          });
+          Provider.of<HomeProvider>(context, listen: false).fnFetchCategoryList();
+          Provider.of<HomeProvider>(context, listen: false).fnFetchPopularProductList();
+          Provider.of<HomeProvider>(context, listen: false).fnSaveFcmToken();
+          Provider.of<HomeProvider>(context, listen: false).fnFetchAddressList();
+          _pushNotificationManager.initFCM();
+        }
       });
-      Provider.of<HomeProvider>(context, listen: false).fnFetchCategoryList();
-      Provider.of<HomeProvider>(context, listen: false).fnFetchPopularProductList();
-      Provider.of<HomeProvider>(context, listen: false).fnSaveFcmToken();
-      Provider.of<HomeProvider>(context, listen: false).fnFetchAddressList();
-      _pushNotificationManager.initFCM();
     });
     super.initState();
   }

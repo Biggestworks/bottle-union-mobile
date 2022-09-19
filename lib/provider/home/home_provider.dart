@@ -15,7 +15,6 @@ import 'package:eight_barrels/service/banner/banner_service.dart';
 import 'package:eight_barrels/service/product/product_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-// import 'package:firebase_database/firebase_database.dart';
 
 class HomeProvider extends ChangeNotifier
     with PaginationInterface, ProductCardInterface{
@@ -60,6 +59,8 @@ class HomeProvider extends ChangeNotifier
     }
     notifyListeners();
   }
+
+  Future<String?> fnGetGuestStatus() async => await _userPreferences.getGuestStatus();
 
   fnOnBannerChanged(int value) {
     this.currBanner = value;

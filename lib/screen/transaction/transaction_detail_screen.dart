@@ -48,272 +48,278 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
   Widget build(BuildContext context) {
     final _provider = Provider.of<TransactionDetailProvider>(context, listen: false);
 
-    // _showRatingSheet() {
-    //   return CustomWidget.showSheet(
-    //     context: context,
-    //     isScroll: true,
-    //     isRounded: true,
-    //     child: ChangeNotifierProvider.value(
-    //       value: Provider.of<TransactionDetailProvider>(context, listen: false),
-    //       child: Container(
-    //         height: MediaQuery.of(context).size.height * 0.95,
-    //         decoration: BoxDecoration(
-    //           color: Colors.white,
-    //           borderRadius: BorderRadius.only(
-    //             topLeft: Radius.circular(20),
-    //             topRight: Radius.circular(20),
-    //           ),
-    //         ),
-    //         padding: EdgeInsets.all(10),
-    //         child: Scaffold(
-    //           backgroundColor: Colors.white,
-    //           appBar: AppBar(
-    //             elevation: 0,
-    //             backgroundColor: Colors.white,
-    //             centerTitle: false,
-    //             iconTheme: IconThemeData(
-    //               color: Colors.black,
-    //             ),
-    //             title: Text(AppLocalizations.instance.text('TXT_REVIEW'), style: TextStyle(
-    //               color: Colors.black,
-    //             ),),
-    //           ),
-    //           body: SingleChildScrollView(
-    //             child: Column(
-    //               children: [
-    //                 Padding(
-    //                   padding: const EdgeInsets.symmetric(vertical: 30),
-    //                   child: RatingBar.builder(
-    //                     initialRating: _provider.starRating,
-    //                     minRating: 1,
-    //                     direction: Axis.horizontal,
-    //                     itemCount: 5,
-    //                     itemPadding: EdgeInsets.symmetric(horizontal: 10),
-    //                     glow: true,
-    //                     itemBuilder: (context, _) => Icon(
-    //                       FontAwesomeIcons.solidStar,
-    //                       color: CustomColor.MAIN,
-    //                     ),
-    //                     onRatingUpdate: _provider.fnOnChangeRating,
-    //                   ),
-    //                 ),
-    //                 Consumer<TransactionDetailProvider>(
-    //                   builder: (context, provider, _) {
-    //                     return provider.fnGetRatingInfo(context);
-    //                   }
-    //                 ),
-    //                 SizedBox(height: 30,),
-    //                 Column(
-    //                   crossAxisAlignment: CrossAxisAlignment.start,
-    //                   children: [
-    //                     Text(AppLocalizations.instance.text('TXT_REVIEW_PHOTO'), style: TextStyle(
-    //                       color: CustomColor.GREY_TXT,
-    //                       fontWeight: FontWeight.bold,
-    //                       fontSize: 15,
-    //                     ),),
-    //                     SizedBox(height: 10,),
-    //                     Container(
-    //                       decoration: BoxDecoration(
-    //                         borderRadius: BorderRadius.circular(10),
-    //                         border: Border.all(color: CustomColor.GREY_BG, width: 2)
-    //                       ),
-    //                       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-    //                       child: Row(
-    //                         mainAxisAlignment: MainAxisAlignment.center,
-    //                         children: [
-    //                           Icon(Icons.camera_alt),
-    //                           SizedBox(width: 10,),
-    //                           Text(AppLocalizations.instance.text('TXT_ADD_PHOTO'), style: TextStyle(
-    //                             fontWeight: FontWeight.bold,
-    //                           ),),
-    //                         ],
-    //                       ),
-    //                     ),
-    //                   ],
-    //                 ),
-    //                 SizedBox(height: 30,),
-    //                 Column(
-    //                   crossAxisAlignment: CrossAxisAlignment.start,
-    //                   children: [
-    //                     Text(AppLocalizations.instance.text('TXT_REVIEW_COMMENT'), style: TextStyle(
-    //                       color: CustomColor.GREY_TXT,
-    //                       fontWeight: FontWeight.bold,
-    //                       fontSize: 15,
-    //                     ),),
-    //                     SizedBox(height: 10,),
-    //                     TextFormField(
-    //                       controller: _provider.commentController,
-    //                       autofocus: false,
-    //                       maxLines: 6,
-    //                       maxLength: 200,
-    //                       cursorColor: CustomColor.MAIN,
-    //                       decoration: InputDecoration(
-    //                         fillColor: Colors.white,
-    //                         filled: true,
-    //                         hintText: AppLocalizations.instance.text("TXT_REVIEW_COMMENT_INFO"),
-    //                         hintStyle: TextStyle(
-    //                           color: Colors.grey,
-    //                         ),
-    //                         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-    //                         enabledBorder: OutlineInputBorder(
-    //                           borderRadius: BorderRadius.circular(10.0),
-    //                           borderSide: BorderSide(color: CustomColor.GREY_BG, width: 2),
-    //                         ),
-    //                         focusedBorder: OutlineInputBorder(
-    //                           borderRadius: BorderRadius.circular(10.0),
-    //                           borderSide: BorderSide(color: CustomColor.GREY_BG, width: 2),
-    //                         ),
-    //                         errorBorder: OutlineInputBorder(
-    //                           borderRadius: BorderRadius.circular(10.0),
-    //                           borderSide: BorderSide(color: CustomColor.GREY_BG, width: 2),
-    //                         ),
-    //                       ),
-    //                     ),
-    //                   ],
-    //                 ),
-    //               ],
-    //             ),
-    //           ),
-    //           bottomNavigationBar: SafeArea(
-    //             child: Container(
-    //               width: MediaQuery.of(context).size.width,
-    //               // padding: EdgeInsets.symmetric(horizontal: 10),
-    //               child: CustomWidget.roundBtn(
-    //                 label: AppLocalizations.instance.text('TXT_SAVE_REVIEW'),
-    //                 btnColor: CustomColor.MAIN,
-    //                 lblColor: Colors.white,
-    //                 isBold: true,
-    //                 radius: 10,
-    //                 fontSize: 16,
-    //                 function: () async => await _provider.fnStoreReview(_provider.scaffoldKey.currentContext!),
-    //               ),
-    //             ),
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-    //   );
-    // }
+    _showRatingSheet() {
+      return CustomWidget.showSheet(
+        context: context,
+        isScroll: true,
+        isRounded: true,
+        child: ChangeNotifierProvider.value(
+          value: Provider.of<TransactionDetailProvider>(context, listen: false),
+          child: GestureDetector(
+            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.95,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              padding: EdgeInsets.all(10),
+              child: Scaffold(
+                backgroundColor: Colors.white,
+                appBar: AppBar(
+                  elevation: 0,
+                  backgroundColor: Colors.white,
+                  centerTitle: false,
+                  iconTheme: IconThemeData(
+                    color: Colors.black,
+                  ),
+                  title: Text(AppLocalizations.instance.text('TXT_REVIEW'), style: TextStyle(
+                    color: Colors.black,
+                  ),),
+                ),
+                body: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 30),
+                        child: RatingBar.builder(
+                          initialRating: _provider.starRating,
+                          minRating: 1,
+                          direction: Axis.horizontal,
+                          itemCount: 5,
+                          itemPadding: EdgeInsets.symmetric(horizontal: 10),
+                          glow: true,
+                          itemBuilder: (context, _) => Icon(
+                            FontAwesomeIcons.solidStar,
+                            color: CustomColor.MAIN,
+                          ),
+                          onRatingUpdate: _provider.fnOnChangeRating,
+                        ),
+                      ),
+                      Consumer<TransactionDetailProvider>(
+                        builder: (context, provider, _) {
+                          return provider.fnGetRatingInfo(context);
+                        }
+                      ),
+                      SizedBox(height: 30,),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(AppLocalizations.instance.text('TXT_REVIEW_PHOTO'), style: TextStyle(
+                            color: CustomColor.GREY_TXT,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),),
+                          SizedBox(height: 10,),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: CustomColor.GREY_BG, width: 2)
+                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.camera_alt),
+                                SizedBox(width: 10,),
+                                Text(AppLocalizations.instance.text('TXT_ADD_PHOTO'), style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 30,),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(AppLocalizations.instance.text('TXT_REVIEW_COMMENT'), style: TextStyle(
+                            color: CustomColor.GREY_TXT,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),),
+                          SizedBox(height: 10,),
+                          TextFormField(
+                            controller: _provider.commentController,
+                            autofocus: false,
+                            maxLines: 6,
+                            maxLength: 200,
+                            cursorColor: CustomColor.MAIN,
+                            textInputAction: TextInputAction.done,
+                            decoration: InputDecoration(
+                              fillColor: Colors.white,
+                              filled: true,
+                              hintText: AppLocalizations.instance.text("TXT_REVIEW_COMMENT_INFO"),
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+                              contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide(color: CustomColor.GREY_BG, width: 2),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide(color: CustomColor.GREY_BG, width: 2),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide(color: CustomColor.GREY_BG, width: 2),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                bottomNavigationBar: SafeArea(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: CustomWidget.roundBtn(
+                      label: AppLocalizations.instance.text('TXT_SAVE_REVIEW'),
+                      btnColor: CustomColor.MAIN,
+                      lblColor: Colors.white,
+                      isBold: true,
+                      radius: 10,
+                      fontSize: 16,
+                      function: () async {
+                        Get.back();
+                        await _provider.fnStoreReview(_provider.scaffoldKey.currentContext!);
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
 
-    // _showSelectProductSheet() {
-    //   return CustomWidget.showSheet(
-    //     context: context,
-    //     isScroll: true,
-    //     isRounded: true,
-    //     child: ChangeNotifierProvider.value(
-    //       value: Provider.of<TransactionDetailProvider>(context, listen: false),
-    //       child: Container(
-    //         height: MediaQuery.of(context).size.height * 0.4,
-    //         decoration: BoxDecoration(
-    //           color: Colors.white,
-    //           borderRadius: BorderRadius.only(
-    //             topLeft: Radius.circular(20),
-    //             topRight: Radius.circular(20),
-    //           ),
-    //         ),
-    //         padding: EdgeInsets.all(10),
-    //         child: Scaffold(
-    //           backgroundColor: Colors.white,
-    //           appBar: AppBar(
-    //             elevation: 0,
-    //             backgroundColor: Colors.white,
-    //             centerTitle: false,
-    //             iconTheme: IconThemeData(
-    //               color: Colors.black,
-    //             ),
-    //             title: Text('Select product to review...', style: TextStyle(
-    //               color: Colors.black,
-    //             ),),
-    //           ),
-    //           body: Container(
-    //             height: 110,
-    //             child: Consumer<TransactionDetailProvider>(
-    //               child: Container(),
-    //               builder: (context, provider, skeleton) {
-    //                 switch (provider.transactionDetail.result?.data) {
-    //                   case null:
-    //                     return skeleton!;
-    //                   default:
-    //                     return ListView.builder(
-    //                       scrollDirection: Axis.horizontal,
-    //                       itemCount: provider.transactionDetail.result?.data?.length,
-    //                       itemBuilder: (context, index) {
-    //                         var _data = provider.transactionDetail.result?.data?[index];
-    //                         return InkWell(
-    //                           onTap: () => provider.fnOnSelectProduct(_data?.idProduct ?? 0),
-    //                           child: Card(
-    //                             shape: RoundedRectangleBorder(
-    //                               borderRadius: BorderRadius.circular(10),
-    //                               side: provider.selectedProductId == _data?.idProduct
-    //                                   ? BorderSide(color: CustomColor.MAIN, width: 2.0) : BorderSide.none,
-    //                             ),
-    //                             child: Padding(
-    //                               padding: const EdgeInsets.all(10.0),
-    //                               child: Row(
-    //                                 crossAxisAlignment: CrossAxisAlignment.start,
-    //                                 children: [
-    //                                   Container(
-    //                                     width: 80,
-    //                                     height: 80,
-    //                                     child: ClipRRect(
-    //                                       child: CustomWidget.networkImg(context, _data?.product?.image1, fit: BoxFit.cover,),
-    //                                       borderRadius: BorderRadius.circular(10),
-    //                                     ),
-    //                                   ),
-    //                                   Padding(
-    //                                     padding: const EdgeInsets.symmetric(horizontal: 10),
-    //                                     child: Column(
-    //                                       crossAxisAlignment: CrossAxisAlignment.start,
-    //                                       children: [
-    //                                         Text(_data?.product?.name ?? '-', style: TextStyle(
-    //                                           color: Colors.black,
-    //                                         ), maxLines: 2, overflow: TextOverflow.ellipsis,),
-    //                                         SizedBox(height: 5,),
-    //                                         Text('${_data?.qty} x ${FormatterHelper.moneyFormatter(_data?.product?.salePrice ?? 0)}', style: TextStyle(
-    //                                           color: CustomColor.GREY_TXT,
-    //                                         ),),
-    //                                         SizedBox(height: 5,),
-    //                                         Text('Total: ${provider.fnGetSubtotal(_data?.product?.salePrice ?? 0, _data?.qty ?? 0)}', style: TextStyle(
-    //                                           fontWeight: FontWeight.bold,
-    //                                           color: Colors.black,
-    //                                         ),),
-    //                                       ],
-    //                                     ),
-    //                                   ),
-    //                                 ],
-    //                               ),
-    //                             ),
-    //                           ),
-    //                         );
-    //                       },
-    //                     );
-    //                 }
-    //               },
-    //             ),
-    //           ),
-    //           bottomNavigationBar: SafeArea(
-    //             child: Container(
-    //               width: MediaQuery.of(context).size.width,
-    //               child: CustomWidget.roundBtn(
-    //                 label: AppLocalizations.instance.text('TXT_CONTINUE'),
-    //                 btnColor: CustomColor.MAIN,
-    //                 lblColor: Colors.white,
-    //                 isBold: true,
-    //                 radius: 10,
-    //                 fontSize: 16,
-    //                 function: () async {
-    //                   Get.back();
-    //                   await Future.delayed(Duration(milliseconds: 500))
-    //                       .whenComplete(() => _showRatingSheet());
-    //                 },
-    //               ),
-    //             ),
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-    //   );
-    // }
+    _showSelectProductSheet() {
+      return CustomWidget.showSheet(
+        context: context,
+        isScroll: true,
+        isRounded: true,
+        child: ChangeNotifierProvider.value(
+          value: Provider.of<TransactionDetailProvider>(context, listen: false),
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.4,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            padding: EdgeInsets.all(10),
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                elevation: 0,
+                backgroundColor: Colors.white,
+                centerTitle: false,
+                iconTheme: IconThemeData(
+                  color: Colors.black,
+                ),
+                title: Text('Select product to review...', style: TextStyle(
+                  color: Colors.black,
+                ),),
+              ),
+              body: Container(
+                height: 110,
+                child: Consumer<TransactionDetailProvider>(
+                  child: Container(),
+                  builder: (context, provider, skeleton) {
+                    switch (provider.transactionDetail.result?.data) {
+                      case null:
+                        return skeleton!;
+                      default:
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: provider.transactionDetail.result?.data?.length,
+                          itemBuilder: (context, index) {
+                            var _data = provider.transactionDetail.result?.data?[index];
+                            return InkWell(
+                              onTap: () => provider.fnOnSelectProduct(_data?.idProduct ?? 0),
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  side: provider.selectedProductId == _data?.idProduct
+                                      ? BorderSide(color: CustomColor.MAIN, width: 2.0) : BorderSide.none,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: 80,
+                                        height: 80,
+                                        child: ClipRRect(
+                                          child: CustomWidget.networkImg(context, _data?.product?.image1, fit: BoxFit.cover,),
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(_data?.product?.name ?? '-', style: TextStyle(
+                                              color: Colors.black,
+                                            ), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                            SizedBox(height: 5,),
+                                            Text('${_data?.qty} x ${FormatterHelper.moneyFormatter(_data?.product?.salePrice ?? 0)}', style: TextStyle(
+                                              color: CustomColor.GREY_TXT,
+                                            ),),
+                                            SizedBox(height: 5,),
+                                            Text('Total: ${provider.fnGetSubtotal(_data?.product?.salePrice ?? 0, _data?.qty ?? 0)}', style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                    }
+                  },
+                ),
+              ),
+              bottomNavigationBar: SafeArea(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: CustomWidget.roundBtn(
+                    label: AppLocalizations.instance.text('TXT_CONTINUE'),
+                    btnColor: CustomColor.MAIN,
+                    lblColor: Colors.white,
+                    isBold: true,
+                    radius: 10,
+                    fontSize: 16,
+                    function: () async {
+                      Get.back();
+                      await Future.delayed(Duration(milliseconds: 500))
+                          .whenComplete(() => _showRatingSheet());
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
 
     Widget _orderInfoContent = Consumer<TransactionDetailProvider>(
         child: Container(),
@@ -729,28 +735,28 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> with 
                           ),
                         );
                       case 6:
-                        return skeleton!;
-                        // return Container(
-                        //   width: MediaQuery.of(context).size.width,
-                        //   child: CustomWidget.roundOutlinedBtn(
-                        //     label: AppLocalizations.instance.text('TXT_REVIEW'),
-                        //     btnColor: CustomColor.MAIN,
-                        //     lblColor: CustomColor.MAIN,
-                        //     isBold: true,
-                        //     radius: 8,
-                        //     fontSize: 16,
-                        //     function: () async {
-                        //       await Future.delayed(Duration.zero, await provider.fnInitReviewValue())
-                        //           .whenComplete(() {
-                        //             if (provider.transactionDetail.result?.data?.length == 1) {
-                        //               _showRatingSheet();
-                        //             } else {
-                        //               _showSelectProductSheet();
-                        //             }
-                        //       });
-                        //     },
-                        //   ),
-                        // );
+                        // return skeleton!;
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: CustomWidget.roundOutlinedBtn(
+                            label: AppLocalizations.instance.text('TXT_REVIEW'),
+                            btnColor: CustomColor.MAIN,
+                            lblColor: CustomColor.MAIN,
+                            isBold: true,
+                            radius: 8,
+                            fontSize: 16,
+                            function: () async {
+                              await Future.delayed(Duration.zero, await provider.fnInitReviewValue())
+                                  .whenComplete(() {
+                                    if (provider.transactionDetail.result?.data?.length == 1) {
+                                      _showRatingSheet();
+                                    } else {
+                                      _showSelectProductSheet();
+                                    }
+                              });
+                            },
+                          ),
+                        );
                       default:
                         return skeleton!;
                     }

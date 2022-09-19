@@ -25,6 +25,7 @@ class TransactionDetailProvider extends ChangeNotifier {
 
   String? locale;
   int? selectedProductId;
+  bool isReview = false;
 
   LoadingView? _view;
 
@@ -229,7 +230,6 @@ class TransactionDetailProvider extends ChangeNotifier {
 
   Future fnStoreReview(BuildContext context) async {
     _view!.onProgressStart();
-    print(selectedProductId);
     var _res = await _reviewService.storeReview(
       productId: selectedProductId ?? 0,
       rating: starRating.toInt(),
@@ -240,6 +240,28 @@ class TransactionDetailProvider extends ChangeNotifier {
       if (_res.status == true) {
         _view!.onProgressFinish();
         await CustomWidget.showSnackBar(context: context, content: Text('Thank you for reviewing'));
+      } else {
+        _view!.onProgressFinish();
+        await CustomWidget.showSnackBar(context: context, content: Text(_res.message != null ? _res.message.toString() : ''));
+      }
+    } else {
+      _view!.onProgressFinish();
+      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+    }
+    _view!.onProgressFinish();
+    notifyListeners();
+  }
+
+  Future fnGetReviewDetail(BuildContext context, int reviewId) async {
+    _view!.onProgressStart();
+    var _res = await _reviewService.getReviewDetail(
+      reviewId: reviewId.toString(),
+    );
+
+    if (_res!.status != null) {
+      if (_res.status == true) {
+        _view!.onProgressFinish();
+
       } else {
         _view!.onProgressFinish();
         await CustomWidget.showSnackBar(context: context, content: Text(_res.message != null ? _res.message.toString() : ''));

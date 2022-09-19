@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:badges/badges.dart';
+import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/key_helper.dart';
@@ -35,10 +36,19 @@ class BaseHomeProvider extends ChangeNotifier {
   String? firstTime;
   String? isGuest;
 
+  LoadingView? _view;
+
+  fnGetView(LoadingView view) {
+    this._view = view;
+  }
+
   Future fnGetArguments(BuildContext context) async {
+    _view!.onProgressStart();
     final _args = ModalRoute.of(context)!.settings.arguments as BaseHomeScreen;
     pageIndex = _args.pageIndex ?? 0;
     isGuest = await _userPreferences.getGuestStatus();
+    firstTime = await _storage.read(key: KeyHelper.KEY_IS_FIRST_TIME);
+    _view!.onProgressFinish();
     notifyListeners();
   }
 
@@ -347,11 +357,6 @@ class BaseHomeProvider extends ChangeNotifier {
 
   fnOnNavBarSelected(int val) {
     this.pageIndex = val;
-    notifyListeners();
-  }
-
-  Future fnIsFirstTime() async {
-    firstTime = await _storage.read(key: KeyHelper.KEY_IS_FIRST_TIME);
     notifyListeners();
   }
 

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/key_helper.dart' as key;
 import 'package:eight_barrels/helper/network_connection_helper.dart';
+import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/provider/auth/login_provider.dart';
 import 'package:eight_barrels/provider/auth/otp_provider.dart';
 import 'package:eight_barrels/provider/auth/register_provider.dart';
@@ -86,6 +87,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:uni_links/uni_links.dart';
 
@@ -104,8 +106,8 @@ class _AppState extends State<App> {
   SpecifiedLocalizationDelegate? _localeOverrideDelegate;
   StreamSubscription<InternetConnectionStatus>? _connectionSubs;
   bool _initialURILinkHandled = false;
-
   StreamSubscription? _linkSubs;
+  List<SingleChildWidget> _providerList = [];
 
   Future<Locale> _getLocale() async {
     final _storage = new FlutterSecureStorage();
@@ -119,6 +121,7 @@ class _AppState extends State<App> {
     }
   }
 
+  /// START DEEPLINK CONFIGURATION
   Future _initURIHandler() async {
     if (!_initialURILinkHandled) {
       _initialURILinkHandled = true;
@@ -135,11 +138,6 @@ class _AppState extends State<App> {
         }
       } on PlatformException {
         debugPrint("Failed to receive initial uri");
-      } on FormatException catch (err) {
-        if (!mounted) {
-          return;
-        }
-        debugPrint('Malformed Initial URI received');
       }
     }
   }
@@ -163,10 +161,12 @@ class _AppState extends State<App> {
       });
     }
   }
+  /// END DEEPLINK CONFIGURATION
 
   @override
   void initState() {
     Future.delayed(Duration.zero).whenComplete(() async {
+      // await getProviderList();
       await _networkConnectionHelper.checkConnection(subscription: _connectionSubs, context: context);
       await _getLocale().then((Locale myLocale) => {
         setState(() {
@@ -240,6 +240,7 @@ class _AppState extends State<App> {
           GetPage(
             name: BaseHomeScreen.tag,
             page: () => MultiProvider(
+              // providers: _providerList,
               providers: [
                 ChangeNotifierProvider<HomeProvider>(
                   create: (context) => HomeProvider(),

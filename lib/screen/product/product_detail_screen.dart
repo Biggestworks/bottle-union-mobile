@@ -534,7 +534,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> with LoadingV
                               ],
                             ),
                           ),
-                          if ((_data.salePrice ?? 0) < (_data.regularPrice ?? 0))
+                          if ((_data.salePrice ?? 0) != (_data.regularPrice ?? 0))
                             Flexible(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,

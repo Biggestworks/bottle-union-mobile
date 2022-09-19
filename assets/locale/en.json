@@ -235,5 +235,6 @@
 	"TXT_OR": "OR",
 	"TXT_GUEST_ACCOUNT_MSG": "Join us to order & enjoy the taste of our products",
 	"TXT_GUEST_ACCOUNT_INFO": "You're in guest account, please register your account for purchasing our product & enjoy other features.",
-	"TXT_REGISTER_CONFIRMATION_INFO": "Oops, you're still not signed in to your account. To continue purchasing our product, please sign in to your account. Continue?"
+	"TXT_REGISTER_CONFIRMATION_INFO": "Oops, you're still not signed in to your account. To continue purchasing our product, please sign in to your account. Continue?",
+	"TXT_LBL_REVIEW": "Review"
 }

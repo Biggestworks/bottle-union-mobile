@@ -1,3 +1,4 @@
+import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/provider/profile/profile_provider.dart';
@@ -25,11 +26,13 @@ class ProfileScreen extends StatefulWidget {
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
+  bool _isLoad = false;
 
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
+      Provider.of<ProfileProvider>(context, listen: false).fnGetView(this);
       Provider.of<ProfileProvider>(context, listen: false).fnFetchUserInfo()
           .whenComplete(() => Provider.of<ProfileProvider>(context, listen: false).fnFetchRegionList());
       Provider.of<ProfileProvider>(context, listen: false).fnFetchLocale();
@@ -233,9 +236,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: Colors.black,
                     fontSize: 15,
                   ),),
-                  subtitle: Text(AppLocalizations.instance.text('TXT_DESC_WISHLIST'), style: TextStyle(
-                    fontSize: 14,
-                  ),),
                   leading: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Icon(
@@ -250,6 +250,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     size: 15,
                   ),
                   onTap: () => Get.toNamed(WishListScreen.tag),
+                ),
+                Divider(
+                  thickness: 1,
+                ),
+                ListTile(
+                  dense: true,
+                  title: Text(AppLocalizations.instance.text('TXT_LBL_REVIEW'), style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                  ),),
+                  leading: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Icon(
+                      FontAwesomeIcons.solidStar,
+                      color: CustomColor.GREY_TXT,
+                      size: 18,
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    color: CustomColor.GREY_TXT,
+                    size: 15,
+                  ),
+                  onTap: () {},
                 ),
                 Divider(
                   thickness: 1,
@@ -654,10 +678,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
             centerTitle: true,
             title: Text(AppLocalizations.instance.text('TXT_MY_ACCOUNT')),
           ),
-          body: provider.isGuest == 'true' ? _guestMainContent : _mainContent,
+          body: Consumer<ProfileProvider>(
+            child: Container(),
+            builder: (context, provider, skeleton) {
+              switch (_isLoad) {
+                case true:
+                  return skeleton!;
+                default:
+                  switch (provider.isGuest) {
+                    case 'true':
+                      return _guestMainContent;
+                    default:
+                      return _mainContent;
+                  }
+              }
+            },
+          ),
         );
       }
     );
+  }
+
+  @override
+  void onProgressFinish() {
+    if (mounted) {
+      _isLoad = false;
+      setState(() {});
+    }
+  }
+
+  @override
+  void onProgressStart() {
+    if (mounted) {
+      _isLoad = true;
+      setState(() {});
+    }
   }
 
 }

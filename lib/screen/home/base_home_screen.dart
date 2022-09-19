@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:badges/badges.dart';
+import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/key_helper.dart';
@@ -10,7 +10,6 @@ import 'package:eight_barrels/screen/auth/start_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -25,12 +24,14 @@ class BaseHomeScreen extends StatefulWidget {
   _BaseHomeScreenState createState() => _BaseHomeScreenState();
 }
 
-class _BaseHomeScreenState extends State<BaseHomeScreen> {
-  UserPreferences _userPreferences = new UserPreferences();
-  final _storage = new FlutterSecureStorage();
+class _BaseHomeScreenState extends State<BaseHomeScreen> with LoadingView {
   var _period;
+  bool _isLoad = false;
 
   Future _fnCheckUserToken(BuildContext context, String isGuest) async {
+    UserPreferences _userPreferences = new UserPreferences();
+    FlutterSecureStorage _storage = new FlutterSecureStorage();
+
     if (isGuest != 'true') {
       _period = new Timer.periodic(Duration(seconds: 10), (timer) async {
         var _res = await _userPreferences.getUserData();
@@ -57,11 +58,11 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
-      Provider.of<BaseHomeProvider>(context, listen: false).fnGetArguments(context)
-          .whenComplete(() => _fnCheckUserToken(context, (Provider.of<BaseHomeProvider>(context, listen: false).isGuest ?? 'false')));
-      Provider.of<BaseHomeProvider>(context, listen: false).fnIsFirstTime()
-          .whenComplete(() => WidgetsBinding.instance!.addPostFrameCallback(
-              (_) => Provider.of<BaseHomeProvider>(context, listen: false).fnStartShowcase(context)));
+      Provider.of<BaseHomeProvider>(context, listen: false).fnGetView(this);
+      Provider.of<BaseHomeProvider>(context, listen: false).fnGetArguments(context).whenComplete(() {
+        _fnCheckUserToken(context, (Provider.of<BaseHomeProvider>(context, listen: false).isGuest ?? 'false'));
+        Provider.of<BaseHomeProvider>(context, listen: false).fnStartShowcase(context);
+      });
       Provider.of<BaseHomeProvider>(context, listen: false).fnGetCartCount();
     },);
     super.initState();
@@ -144,20 +145,56 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
 
     return Scaffold(
       body: Consumer<BaseHomeProvider>(
-        builder: (context, provider, _) => provider.isGuest == 'true'
-            ? provider.guestScreenList()
-            : provider.screenList(),
+        child: Container(),
+        builder: (context, provider, skeleton) {
+          switch (_isLoad) {
+            case true:
+              return skeleton!;
+            default:
+              // return provider.screenList2();
+              switch (provider.isGuest) {
+                case 'true':
+                  return provider.guestScreenList();
+                default:
+                  return provider.screenList();
+              }
+          }
+        }
       ),
       bottomNavigationBar: Consumer<BaseHomeProvider>(
-        builder: (context, provider, _) {
-          switch (provider.firstTime) {
-            case 'false':
-              return _bottomNavBar;
+        child: Container(),
+        builder: (context, provider, skeleton) {
+          switch (_isLoad) {
+            case true:
+              return skeleton!;
             default:
-              return _showcaseBottomNavBar;
+              switch (provider.firstTime) {
+                case 'false':
+                  return _bottomNavBar;
+                default:
+                  return _showcaseBottomNavBar;
+              }
           }
+
         }
       ),
     );
   }
+
+  @override
+  void onProgressFinish() {
+    if (mounted) {
+      _isLoad = false;
+      setState(() {});
+    }
+  }
+
+  @override
+  void onProgressStart() {
+    if (mounted) {
+      _isLoad = true;
+      setState(() {});
+    }
+  }
+
 }
