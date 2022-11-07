@@ -2,7 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
-import 'package:eight_barrels/model/product/popular_product_list_model.dart' as popularProduct;
+import 'package:eight_barrels/model/product/popular_product_list_model.dart'
+    as popularProduct;
 import 'package:eight_barrels/model/product/product_model.dart';
 import 'package:eight_barrels/screen/product/product_detail_screen.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
 
 abstract class ProductCardInterface {
-
   String _fnGetDiscount(int? regularPrice, int? salePrice) {
     int _regularPrice = regularPrice ?? 0;
     int _salePrice = salePrice ?? 0;
@@ -45,7 +45,9 @@ abstract class ProductCardInterface {
               await storeClickLog();
               Get.toNamed(
                 ProductDetailScreen.tag,
-                arguments: ProductDetailScreen(productId: data.id,),
+                arguments: ProductDetailScreen(
+                  productId: data.id,
+                ),
               );
             },
             child: Column(
@@ -58,15 +60,27 @@ abstract class ProductCardInterface {
                       topRight: Radius.circular(10),
                       topLeft: Radius.circular(10),
                     ),
-                    child: CachedNetworkImage(
-                      imageUrl: data.image1 ?? '',
-                      width: MediaQuery.of(context).size.width,
+                    child: Image.network(
+                      data.image1 ?? '',
                       alignment: Alignment.center,
                       fit: BoxFit.cover,
-                      placeholder: (context, url) => Center(
-                          child: CircularProgressIndicator()),
-                      errorWidget: (context, url, error) =>
-                          Center(child: Icon(Icons.no_photography, size: 50, color: CustomColor.GREY_ICON,),),
+                      cacheHeight: 200,
+                      cacheWidth: 200,
+                      loadingBuilder: (context, child, a) {
+                        if (a == null) {
+                          return child;
+                        }
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                      errorBuilder: (context, url, error) => Center(
+                        child: Icon(
+                          Icons.no_photography,
+                          size: 50,
+                          color: CustomColor.GREY_ICON,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -76,11 +90,18 @@ abstract class ProductCardInterface {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(data.name ?? '-', style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                      ), maxLines: 2, overflow: TextOverflow.ellipsis,),
-                      SizedBox(height: 5,),
+                      Text(
+                        data.name ?? '-',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
                       Flexible(
                         child: Row(
                           children: [
@@ -97,44 +118,67 @@ abstract class ProductCardInterface {
                               itemSize: 15,
                               onRatingUpdate: (rating) {},
                             ),
-                            SizedBox(width: 2,),
-                            Text('(${data.rating ?? '0.0'})', style: TextStyle(
-                              color: CustomColor.GREY_TXT,
-                            ),),
+                            SizedBox(
+                              width: 2,
+                            ),
+                            Text(
+                              '(${data.rating ?? '0.0'})',
+                              style: TextStyle(
+                                color: CustomColor.GREY_TXT,
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                      SizedBox(height: 5,),
+                      SizedBox(
+                        height: 5,
+                      ),
                       if ((data.salePrice ?? 0) != (data.regularPrice ?? 0))
                         Flexible(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(FormatterHelper.moneyFormatter(data.salePrice ?? 0), style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: CustomColor.MAIN_TXT,
-                              ),),
-                              SizedBox(height: 5,),
+                              Text(
+                                FormatterHelper.moneyFormatter(
+                                    data.salePrice ?? 0),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: CustomColor.MAIN_TXT,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
                               Flexible(
-                                child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
-                                  color: CustomColor.GREY_TXT,
-                                  fontSize: 12,
-                                  decoration: TextDecoration.lineThrough,
-                                  decorationColor: CustomColor.GREY_TXT,
-                                ),),
+                                child: Text(
+                                  FormatterHelper.moneyFormatter(
+                                      data.regularPrice ?? 0),
+                                  style: TextStyle(
+                                    color: CustomColor.GREY_TXT,
+                                    fontSize: 12,
+                                    decoration: TextDecoration.lineThrough,
+                                    decorationColor: CustomColor.GREY_TXT,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
                         )
                       else
                         Flexible(
-                          child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: CustomColor.MAIN_TXT,
-                          ),),
+                          child: Text(
+                            FormatterHelper.moneyFormatter(
+                                data.regularPrice ?? 0),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: CustomColor.MAIN_TXT,
+                            ),
+                          ),
                         ),
-                      SizedBox(height: index.isEven ? 15 : 25,),
+                      SizedBox(
+                        height: index.isEven ? 15 : 25,
+                      ),
                     ],
                   ),
                 ),
@@ -147,18 +191,23 @@ abstract class ProductCardInterface {
             right: 0,
             child: Container(
               decoration: BoxDecoration(
-                image: DecorationImage(image: AssetImage('assets/images/ic_discount.png'), fit: BoxFit.fill),
+                image: DecorationImage(
+                    image: AssetImage('assets/images/ic_discount.png'),
+                    fit: BoxFit.fill),
               ),
               height: 45,
               width: 45,
               child: Center(
                 child: RotationTransition(
                   turns: new AlwaysStoppedAnimation(-25 / 360),
-                  child: Text('${_fnGetDiscount(data.regularPrice, data.salePrice)}', style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),),
+                  child: Text(
+                    '${_fnGetDiscount(data.regularPrice, data.salePrice)}',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -186,7 +235,9 @@ abstract class ProductCardInterface {
               await storeLog();
               Get.toNamed(
                 ProductDetailScreen.tag,
-                arguments: ProductDetailScreen(productId: data.id,),
+                arguments: ProductDetailScreen(
+                  productId: data.id,
+                ),
               );
             },
             child: Column(
@@ -206,10 +257,15 @@ abstract class ProductCardInterface {
                           width: MediaQuery.of(context).size.width,
                           alignment: Alignment.center,
                           fit: BoxFit.cover,
-                          placeholder: (context, url) => Center(
-                              child: CircularProgressIndicator()),
-                          errorWidget: (context, url, error) =>
-                              Center(child: Icon(Icons.no_photography, size: 50, color: CustomColor.GREY_ICON,),),
+                          placeholder: (context, url) =>
+                              Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) => Center(
+                            child: Icon(
+                              Icons.no_photography,
+                              size: 50,
+                              color: CustomColor.GREY_ICON,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -224,11 +280,14 @@ abstract class ProductCardInterface {
                         color: CustomColor.GREY_ICON,
                       ),
                       child: Center(
-                        child: Text(AppLocalizations.instance.text('TXT_SOLD_OUT'), style: TextStyle(
-                          fontSize: 16,
-                          color: CustomColor.MAIN,
-                          fontWeight: FontWeight.bold,
-                        ),),
+                        child: Text(
+                          AppLocalizations.instance.text('TXT_SOLD_OUT'),
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: CustomColor.MAIN,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -239,11 +298,18 @@ abstract class ProductCardInterface {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(data.name ?? '-', style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                      ), maxLines: 2, overflow: TextOverflow.ellipsis,),
-                      SizedBox(height: 5,),
+                      Text(
+                        data.name ?? '-',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
                       Flexible(
                         child: Row(
                           children: [
@@ -260,44 +326,67 @@ abstract class ProductCardInterface {
                               itemSize: 15,
                               onRatingUpdate: (rating) {},
                             ),
-                            SizedBox(width: 2,),
-                            Text('(${data.rating ?? '0.0'})', style: TextStyle(
-                              color: CustomColor.GREY_TXT,
-                            ),),
+                            SizedBox(
+                              width: 2,
+                            ),
+                            Text(
+                              '(${data.rating ?? '0.0'})',
+                              style: TextStyle(
+                                color: CustomColor.GREY_TXT,
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                      SizedBox(height: 5,),
+                      SizedBox(
+                        height: 5,
+                      ),
                       if ((data.salePrice ?? 0) != (data.regularPrice ?? 0))
                         Flexible(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(FormatterHelper.moneyFormatter(data.salePrice ?? 0), style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: CustomColor.MAIN_TXT,
-                              ),),
-                              SizedBox(height: 5,),
+                              Text(
+                                FormatterHelper.moneyFormatter(
+                                    data.salePrice ?? 0),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: CustomColor.MAIN_TXT,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
                               Flexible(
-                                child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
-                                  color: CustomColor.GREY_TXT,
-                                  fontSize: 12,
-                                  decoration: TextDecoration.lineThrough,
-                                  decorationColor: CustomColor.GREY_TXT,
-                                ),),
+                                child: Text(
+                                  FormatterHelper.moneyFormatter(
+                                      data.regularPrice ?? 0),
+                                  style: TextStyle(
+                                    color: CustomColor.GREY_TXT,
+                                    fontSize: 12,
+                                    decoration: TextDecoration.lineThrough,
+                                    decorationColor: CustomColor.GREY_TXT,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
                         )
                       else
                         Flexible(
-                          child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: CustomColor.MAIN_TXT,
-                          ),),
+                          child: Text(
+                            FormatterHelper.moneyFormatter(
+                                data.regularPrice ?? 0),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: CustomColor.MAIN_TXT,
+                            ),
+                          ),
                         ),
-                      SizedBox(height: index.isEven ? 15 : 35,),
+                      SizedBox(
+                        height: index.isEven ? 15 : 35,
+                      ),
                     ],
                   ),
                 ),
@@ -310,18 +399,23 @@ abstract class ProductCardInterface {
             right: 0,
             child: Container(
               decoration: BoxDecoration(
-                image: DecorationImage(image: AssetImage('assets/images/ic_discount.png'), fit: BoxFit.fill),
+                image: DecorationImage(
+                    image: AssetImage('assets/images/ic_discount.png'),
+                    fit: BoxFit.fill),
               ),
               height: 45,
               width: 45,
               child: Center(
                 child: RotationTransition(
                   turns: new AlwaysStoppedAnimation(-25 / 360),
-                  child: Text('${_fnGetDiscount(data.regularPrice, data.salePrice)}', style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),),
+                  child: Text(
+                    '${_fnGetDiscount(data.regularPrice, data.salePrice)}',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -352,7 +446,9 @@ abstract class ProductCardInterface {
               await storeClickLog();
               Get.toNamed(
                 ProductDetailScreen.tag,
-                arguments: ProductDetailScreen(productId: data.id,),
+                arguments: ProductDetailScreen(
+                  productId: data.id,
+                ),
               );
             },
             child: Column(
@@ -370,10 +466,15 @@ abstract class ProductCardInterface {
                       width: MediaQuery.of(context).size.width,
                       alignment: Alignment.center,
                       fit: BoxFit.cover,
-                      placeholder: (context, url) => Center(
-                          child: CircularProgressIndicator()),
-                      errorWidget: (context, url, error) =>
-                          Center(child: Icon(Icons.no_photography, size: 50, color: CustomColor.GREY_ICON,),),
+                      placeholder: (context, url) =>
+                          Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) => Center(
+                        child: Icon(
+                          Icons.no_photography,
+                          size: 50,
+                          color: CustomColor.GREY_ICON,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -383,11 +484,18 @@ abstract class ProductCardInterface {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(data.name ?? '-', style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                      ), maxLines: 2, overflow: TextOverflow.ellipsis,),
-                      SizedBox(height: 5,),
+                      Text(
+                        data.name ?? '-',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
                       Flexible(
                         child: Row(
                           children: [
@@ -404,44 +512,67 @@ abstract class ProductCardInterface {
                               itemSize: 15,
                               onRatingUpdate: (rating) {},
                             ),
-                            SizedBox(width: 2,),
-                            Text('(${data.rating ?? '0.0'})', style: TextStyle(
-                              color: CustomColor.GREY_TXT,
-                            ),),
+                            SizedBox(
+                              width: 2,
+                            ),
+                            Text(
+                              '(${data.rating ?? '0.0'})',
+                              style: TextStyle(
+                                color: CustomColor.GREY_TXT,
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                      SizedBox(height: 5,),
+                      SizedBox(
+                        height: 5,
+                      ),
                       if ((data.salePrice ?? 0) < (data.regularPrice ?? 0))
                         Flexible(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(FormatterHelper.moneyFormatter(data.salePrice ?? 0), style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: CustomColor.MAIN_TXT,
-                              ),),
-                              SizedBox(height: 5,),
+                              Text(
+                                FormatterHelper.moneyFormatter(
+                                    data.salePrice ?? 0),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: CustomColor.MAIN_TXT,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
                               Flexible(
-                                child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
-                                  color: CustomColor.GREY_TXT,
-                                  fontSize: 12,
-                                  decoration: TextDecoration.lineThrough,
-                                  decorationColor: CustomColor.GREY_TXT,
-                                ),),
+                                child: Text(
+                                  FormatterHelper.moneyFormatter(
+                                      data.regularPrice ?? 0),
+                                  style: TextStyle(
+                                    color: CustomColor.GREY_TXT,
+                                    fontSize: 12,
+                                    decoration: TextDecoration.lineThrough,
+                                    decorationColor: CustomColor.GREY_TXT,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
                         )
                       else
                         Flexible(
-                          child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: CustomColor.MAIN_TXT,
-                          ),),
+                          child: Text(
+                            FormatterHelper.moneyFormatter(
+                                data.regularPrice ?? 0),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: CustomColor.MAIN_TXT,
+                            ),
+                          ),
                         ),
-                      SizedBox(height: index.isEven ? 25 : 45,),
+                      SizedBox(
+                        height: index.isEven ? 25 : 45,
+                      ),
                     ],
                   ),
                 ),
@@ -452,7 +583,9 @@ abstract class ProductCardInterface {
         if (data.flag == 'NEW PRODUCT')
           Positioned(
             right: 0,
-            child: Image.asset('assets/images/ic_new.png', ),
+            child: Image.asset(
+              'assets/images/ic_new.png',
+            ),
           ),
       ],
     );
@@ -475,7 +608,9 @@ abstract class ProductCardInterface {
           await storeLog();
           Get.toNamed(
             ProductDetailScreen.tag,
-            arguments: ProductDetailScreen(productId: data.id,),
+            arguments: ProductDetailScreen(
+              productId: data.id,
+            ),
           );
         },
         child: Column(
@@ -495,10 +630,15 @@ abstract class ProductCardInterface {
                       width: MediaQuery.of(context).size.width,
                       alignment: Alignment.center,
                       fit: BoxFit.cover,
-                      placeholder: (context, url) => Center(
-                          child: CircularProgressIndicator()),
-                      errorWidget: (context, url, error) =>
-                          Center(child: Icon(Icons.no_photography, size: 50, color: CustomColor.GREY_ICON,),),
+                      placeholder: (context, url) =>
+                          Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) => Center(
+                        child: Icon(
+                          Icons.no_photography,
+                          size: 50,
+                          color: CustomColor.GREY_ICON,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -513,11 +653,14 @@ abstract class ProductCardInterface {
                     color: CustomColor.GREY_ICON,
                   ),
                   child: Center(
-                    child: Text(AppLocalizations.instance.text('TXT_SOLD_OUT'), style: TextStyle(
-                      fontSize: 16,
-                      color: CustomColor.MAIN,
-                      fontWeight: FontWeight.bold,
-                    ),),
+                    child: Text(
+                      AppLocalizations.instance.text('TXT_SOLD_OUT'),
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: CustomColor.MAIN,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -528,11 +671,18 @@ abstract class ProductCardInterface {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(data.name ?? '-', style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                  ), maxLines: 2, overflow: TextOverflow.ellipsis,),
-                  SizedBox(height: 5,),
+                  Text(
+                    data.name ?? '-',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
                   Flexible(
                     child: Row(
                       children: [
@@ -549,52 +699,76 @@ abstract class ProductCardInterface {
                           itemSize: 15,
                           onRatingUpdate: (rating) {},
                         ),
-                        SizedBox(width: 2,),
-                        Text('(${data.rating ?? '0.0'})', style: TextStyle(
-                          color: CustomColor.GREY_TXT,
-                        ),),
+                        SizedBox(
+                          width: 2,
+                        ),
+                        Text(
+                          '(${data.rating ?? '0.0'})',
+                          style: TextStyle(
+                            color: CustomColor.GREY_TXT,
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  SizedBox(height: 5,),
+                  SizedBox(
+                    height: 5,
+                  ),
                   if ((data.salePrice ?? 0) < (data.regularPrice ?? 0))
                     Flexible(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(FormatterHelper.moneyFormatter(data.salePrice ?? 0), style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: CustomColor.MAIN_TXT,
-                          ),),
-                          SizedBox(height: 5,),
+                          Text(
+                            FormatterHelper.moneyFormatter(data.salePrice ?? 0),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: CustomColor.MAIN_TXT,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
                           Flexible(
-                            child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
-                              color: CustomColor.GREY_TXT,
-                              fontSize: 12,
-                              decoration: TextDecoration.lineThrough,
-                              decorationColor: CustomColor.GREY_TXT,
-                            ),),
+                            child: Text(
+                              FormatterHelper.moneyFormatter(
+                                  data.regularPrice ?? 0),
+                              style: TextStyle(
+                                color: CustomColor.GREY_TXT,
+                                fontSize: 12,
+                                decoration: TextDecoration.lineThrough,
+                                decorationColor: CustomColor.GREY_TXT,
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     )
                   else
                     Flexible(
-                      child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: CustomColor.MAIN_TXT,
-                      ),),
+                      child: Text(
+                        FormatterHelper.moneyFormatter(data.regularPrice ?? 0),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: CustomColor.MAIN_TXT,
+                        ),
+                      ),
                     ),
-                  SizedBox(height: index.isEven ? 25 : 45,),
+                  SizedBox(
+                    height: index.isEven ? 25 : 45,
+                  ),
                   Flexible(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
-                          child: Text('${AppLocalizations.instance.text('TXT_SOLD_OUT')}', style: TextStyle(
-                            color: Colors.red,
-                          ),),
+                          child: Text(
+                            '${AppLocalizations.instance.text('TXT_SOLD_OUT')}',
+                            style: TextStyle(
+                              color: Colors.red,
+                            ),
+                          ),
                         ),
                         Expanded(
                           child: Row(
@@ -602,12 +776,22 @@ abstract class ProductCardInterface {
                             children: [
                               GestureDetector(
                                 onTap: () {},
-                                child: Icon(FontAwesomeIcons.cartShopping, color: CustomColor.GREY_ICON, size: 18,),
+                                child: Icon(
+                                  FontAwesomeIcons.cartShopping,
+                                  color: CustomColor.GREY_ICON,
+                                  size: 18,
+                                ),
                               ),
-                              SizedBox(width: 15,),
+                              SizedBox(
+                                width: 15,
+                              ),
                               GestureDetector(
                                 onTap: () {},
-                                child: Icon(FontAwesomeIcons.heart, color: CustomColor.GREY_ICON, size: 18,),
+                                child: Icon(
+                                  FontAwesomeIcons.heart,
+                                  color: CustomColor.GREY_ICON,
+                                  size: 18,
+                                ),
                               ),
                             ],
                           ),
@@ -645,7 +829,9 @@ abstract class ProductCardInterface {
             await storeClickLog();
             Get.toNamed(
               ProductDetailScreen.tag,
-              arguments: ProductDetailScreen(productId: data.id,),
+              arguments: ProductDetailScreen(
+                productId: data.id,
+              ),
             );
           },
           child: Column(
@@ -663,10 +849,15 @@ abstract class ProductCardInterface {
                     width: MediaQuery.of(context).size.width,
                     alignment: Alignment.center,
                     fit: BoxFit.fill,
-                    placeholder: (context, url) => Center(
-                        child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) =>
-                        Center(child: Icon(Icons.no_photography, size: 50, color: CustomColor.GREY_ICON,),),
+                    placeholder: (context, url) =>
+                        Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) => Center(
+                      child: Icon(
+                        Icons.no_photography,
+                        size: 50,
+                        color: CustomColor.GREY_ICON,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -677,11 +868,18 @@ abstract class ProductCardInterface {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(data.name ?? '-', style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                      ), maxLines: 2, overflow: TextOverflow.ellipsis,),
-                      SizedBox(height: 5,),
+                      Text(
+                        data.name ?? '-',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
                       Flexible(
                         child: Row(
                           children: [
@@ -698,42 +896,63 @@ abstract class ProductCardInterface {
                               itemSize: 15,
                               onRatingUpdate: (rating) {},
                             ),
-                            SizedBox(width: 2,),
-                            Text('(${data.rating ?? '0.0'})', style: TextStyle(
-                              color: CustomColor.GREY_TXT,
-                            ),),
+                            SizedBox(
+                              width: 2,
+                            ),
+                            Text(
+                              '(${data.rating ?? '0.0'})',
+                              style: TextStyle(
+                                color: CustomColor.GREY_TXT,
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                      SizedBox(height: 5,),
+                      SizedBox(
+                        height: 5,
+                      ),
                       if ((data.salePrice ?? 0) < (data.regularPrice ?? 0))
                         Flexible(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(FormatterHelper.moneyFormatter(data.salePrice ?? 0), style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: CustomColor.MAIN_TXT,
-                              ),),
-                              SizedBox(height: 5,),
+                              Text(
+                                FormatterHelper.moneyFormatter(
+                                    data.salePrice ?? 0),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: CustomColor.MAIN_TXT,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
                               Flexible(
-                                child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
-                                  color: CustomColor.GREY_TXT,
-                                  fontSize: 12,
-                                  decoration: TextDecoration.lineThrough,
-                                  decorationColor: CustomColor.GREY_TXT,
-                                ),),
+                                child: Text(
+                                  FormatterHelper.moneyFormatter(
+                                      data.regularPrice ?? 0),
+                                  style: TextStyle(
+                                    color: CustomColor.GREY_TXT,
+                                    fontSize: 12,
+                                    decoration: TextDecoration.lineThrough,
+                                    decorationColor: CustomColor.GREY_TXT,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
                         )
                       else
                         Flexible(
-                          child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: CustomColor.MAIN_TXT,
-                          ),),
+                          child: Text(
+                            FormatterHelper.moneyFormatter(
+                                data.regularPrice ?? 0),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: CustomColor.MAIN_TXT,
+                            ),
+                          ),
                         ),
                     ],
                   ),
@@ -764,7 +983,9 @@ abstract class ProductCardInterface {
             await storeLog();
             Get.toNamed(
               ProductDetailScreen.tag,
-              arguments: ProductDetailScreen(productId: data.id,),
+              arguments: ProductDetailScreen(
+                productId: data.id,
+              ),
             );
           },
           child: Column(
@@ -784,10 +1005,15 @@ abstract class ProductCardInterface {
                         width: MediaQuery.of(context).size.width,
                         alignment: Alignment.center,
                         fit: BoxFit.cover,
-                        placeholder: (context, url) => Center(
-                            child: CircularProgressIndicator()),
-                        errorWidget: (context, url, error) =>
-                            Center(child: Icon(Icons.no_photography, size: 50, color: CustomColor.GREY_ICON,),),
+                        placeholder: (context, url) =>
+                            Center(child: CircularProgressIndicator()),
+                        errorWidget: (context, url, error) => Center(
+                          child: Icon(
+                            Icons.no_photography,
+                            size: 50,
+                            color: CustomColor.GREY_ICON,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -802,11 +1028,14 @@ abstract class ProductCardInterface {
                       color: CustomColor.GREY_ICON,
                     ),
                     child: Center(
-                      child: Text(AppLocalizations.instance.text('TXT_SOLD_OUT'), style: TextStyle(
-                        fontSize: 16,
-                        color: CustomColor.MAIN,
-                        fontWeight: FontWeight.bold,
-                      ),),
+                      child: Text(
+                        AppLocalizations.instance.text('TXT_SOLD_OUT'),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: CustomColor.MAIN,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -817,11 +1046,18 @@ abstract class ProductCardInterface {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(data.name ?? '-', style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                    ), maxLines: 2, overflow: TextOverflow.ellipsis,),
-                    SizedBox(height: 5,),
+                    Text(
+                      data.name ?? '-',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
                     Flexible(
                       child: Row(
                         children: [
@@ -838,42 +1074,63 @@ abstract class ProductCardInterface {
                             itemSize: 15,
                             onRatingUpdate: (rating) {},
                           ),
-                          SizedBox(width: 2,),
-                          Text('(${data.rating ?? '0.0'})', style: TextStyle(
-                            color: CustomColor.GREY_TXT,
-                          ),),
+                          SizedBox(
+                            width: 2,
+                          ),
+                          Text(
+                            '(${data.rating ?? '0.0'})',
+                            style: TextStyle(
+                              color: CustomColor.GREY_TXT,
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 5,),
+                    SizedBox(
+                      height: 5,
+                    ),
                     if ((data.salePrice ?? 0) < (data.regularPrice ?? 0))
                       Flexible(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(FormatterHelper.moneyFormatter(data.salePrice ?? 0), style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: CustomColor.MAIN_TXT,
-                            ),),
-                            SizedBox(height: 5,),
+                            Text(
+                              FormatterHelper.moneyFormatter(
+                                  data.salePrice ?? 0),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: CustomColor.MAIN_TXT,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
                             Flexible(
-                              child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
-                                color: CustomColor.GREY_TXT,
-                                fontSize: 12,
-                                decoration: TextDecoration.lineThrough,
-                                decorationColor: CustomColor.GREY_TXT,
-                              ),),
+                              child: Text(
+                                FormatterHelper.moneyFormatter(
+                                    data.regularPrice ?? 0),
+                                style: TextStyle(
+                                  color: CustomColor.GREY_TXT,
+                                  fontSize: 12,
+                                  decoration: TextDecoration.lineThrough,
+                                  decorationColor: CustomColor.GREY_TXT,
+                                ),
+                              ),
                             ),
                           ],
                         ),
                       )
                     else
                       Flexible(
-                        child: Text(FormatterHelper.moneyFormatter(data.regularPrice ?? 0), style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: CustomColor.MAIN_TXT,
-                        ),),
+                        child: Text(
+                          FormatterHelper.moneyFormatter(
+                              data.regularPrice ?? 0),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: CustomColor.MAIN_TXT,
+                          ),
+                        ),
                       ),
                   ],
                 ),
@@ -884,5 +1141,4 @@ abstract class ProductCardInterface {
       ),
     );
   }
-
 }

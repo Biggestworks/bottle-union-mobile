@@ -235,6 +235,8 @@
 	"TXT_GUEST_ACCOUNT_MSG": "Gabung dengan kami untuk memesan & menikmati rasa dari produk kami",
 	"TXT_GUEST_ACCOUNT_INFO": "Anda berada di akun Guest, mohon daftarkan akun Anda untuk membeli produk kami & menikmati fitur-fitur lainnya.",
 	"TXT_REGISTER_CONFIRMATION_INFO": "Oops, Anda belum masuk ke akun. Untuk melanjutkan pembelian produk kami, mohon untuk masuk ke akun Anda. Lanjutkan?",
-	"TXT_LBL_REVIEW": "Ulasan"
-
+	"TXT_LBL_REVIEW": "Ulasan",
+	"TXT_BANK_ACCOUNT": "BANK",
+	"TXT_BANK_RECEIVER_NAME": "Nama Penerima",
+	"TXT_BANK_NUMBER": "Nomor Rekening"
 }

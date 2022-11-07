@@ -65,10 +65,12 @@ class _CartListScreenState extends State<CartListScreen>
                           action: SizedBox(
                             width: 150,
                             child: CustomWidget.roundBtn(
-                              label: AppLocalizations.instance.text('TXT_SHOP_NOW'),
+                              label: AppLocalizations.instance
+                                  .text('TXT_SHOP_NOW'),
                               lblColor: Colors.white,
                               btnColor: CustomColor.MAIN,
-                              function: () => _baseProvider.fnOnNavBarSelected(1),
+                              function: () =>
+                                  _baseProvider.fnOnNavBarSelected(1),
                             ),
                           ),
                         );
@@ -82,14 +84,20 @@ class _CartListScreenState extends State<CartListScreen>
                               ListView.builder(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
-                                itemCount: provider.cartList.result!.data!.length,
+                                itemCount:
+                                    provider.cartList.result!.data!.length,
                                 itemBuilder: (context, index) {
-                                  var _data = provider.cartList.result!.data![index];
+                                  var _data =
+                                      provider.cartList.result!.data![index];
                                   return InkWell(
                                     onTap: () async => await Get.toNamed(
                                       ProductDetailScreen.tag,
-                                      arguments: ProductDetailScreen(productId: _data.idProduct,),
-                                    )!.then((_) => provider.fnFetchCartList()),
+                                      arguments: ProductDetailScreen(
+                                        productId: _data.idProduct,
+                                      ),
+                                    )!
+                                        .then(
+                                            (_) => provider.fnFetchCartList()),
                                     child: Card(
                                       elevation: 0,
                                       shape: RoundedRectangleBorder(
@@ -97,155 +105,348 @@ class _CartListScreenState extends State<CartListScreen>
                                       ),
                                       margin: EdgeInsets.symmetric(vertical: 5),
                                       child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 2),
+                                        padding: const EdgeInsets.fromLTRB(
+                                            10, 10, 10, 2),
                                         child: Row(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Checkbox(
-                                              value: _data.isSelected == 1 ? true : false,
-                                              onChanged: (value) => provider.fnSelectCart(_data.id!, value!),
+                                              value: _data.isSelected == 1
+                                                  ? true
+                                                  : false,
+                                              onChanged: (value) =>
+                                                  provider.fnSelectCart(
+                                                      _data.id!, value!),
                                               shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(5),
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
                                               ),
-                                              visualDensity: VisualDensity.compact,
+                                              visualDensity:
+                                                  VisualDensity.compact,
                                               activeColor: CustomColor.MAIN,
                                             ),
                                             Expanded(
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
                                                   Row(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
                                                       Container(
                                                         width: 80,
                                                         height: 80,
                                                         child: ClipRRect(
-                                                          child: CustomWidget.networkImg(context, _data.product?.image1, fit: BoxFit.cover,),
-                                                          borderRadius: BorderRadius.circular(10),
+                                                          child: CustomWidget
+                                                              .networkImg(
+                                                            context,
+                                                            _data.product
+                                                                ?.image1,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
                                                         ),
                                                       ),
-                                                      Padding(
-                                                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                                                        child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(_data.product?.name ?? '-', style: TextStyle(
-                                                              color: Colors.black,
-                                                            ),),
-                                                            SizedBox(height: 5,),
-                                                            if ((_data.product?.salePrice ?? 0) != (_data.product?.regularPrice ?? 0))
+                                                      Flexible(
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      10),
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                _data.product
+                                                                        ?.name ??
+                                                                    '-',
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 5,
+                                                              ),
+                                                              if ((_data.product
+                                                                          ?.salePrice ??
+                                                                      0) !=
+                                                                  (_data.product
+                                                                          ?.regularPrice ??
+                                                                      0))
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .min,
+                                                                  children: [
+                                                                    Text(
+                                                                      FormatterHelper.moneyFormatter(
+                                                                          _data.product?.salePrice ??
+                                                                              0),
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                        color: CustomColor
+                                                                            .MAIN_TXT,
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width: 5,
+                                                                    ),
+                                                                    Flexible(
+                                                                      child:
+                                                                          Text(
+                                                                        FormatterHelper.moneyFormatter(
+                                                                            _data.product?.regularPrice ??
+                                                                                0),
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color:
+                                                                              CustomColor.GREY_TXT,
+                                                                          fontSize:
+                                                                              14,
+                                                                          decoration:
+                                                                              TextDecoration.lineThrough,
+                                                                          decorationColor:
+                                                                              CustomColor.GREY_TXT,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                )
+                                                              else
+                                                                Text(
+                                                                  FormatterHelper
+                                                                      .moneyFormatter(_data
+                                                                          .product
+                                                                          ?.regularPrice),
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: CustomColor
+                                                                        .MAIN_TXT,
+                                                                  ),
+                                                                ),
+                                                              SizedBox(
+                                                                height: 5,
+                                                              ),
                                                               Row(
-                                                                mainAxisSize: MainAxisSize.min,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .end,
                                                                 children: [
-                                                                  Text(FormatterHelper.moneyFormatter(_data.product?.salePrice ?? 0), style: TextStyle(
-                                                                    fontWeight: FontWeight.bold,
-                                                                    color: CustomColor.MAIN_TXT,
-                                                                  ),),
-                                                                  SizedBox(width: 5,),
-                                                                  Flexible(
-                                                                    child: Text(FormatterHelper.moneyFormatter(_data.product?.regularPrice ?? 0), style: TextStyle(
-                                                                      color: CustomColor.GREY_TXT,
-                                                                      fontSize: 14,
-                                                                      decoration: TextDecoration.lineThrough,
-                                                                      decorationColor: CustomColor.GREY_TXT,
-                                                                    ),),
+                                                                  Icon(
+                                                                    MdiIcons
+                                                                        .storeCheck,
+                                                                    size: 20,
+                                                                    color:
+                                                                        CustomColor
+                                                                            .MAIN,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 5,
+                                                                  ),
+                                                                  Text(
+                                                                    '${_data.region?.name ?? '-'}',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: CustomColor
+                                                                          .GREY_TXT,
+                                                                    ),
+                                                                    maxLines: 2,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
                                                                   ),
                                                                 ],
-                                                              )
-                                                            else
-                                                              Text(FormatterHelper.moneyFormatter(_data.product?.regularPrice), style: TextStyle(
-                                                                fontWeight: FontWeight.bold,
-                                                                color: CustomColor.MAIN_TXT,
-                                                              ),),
-                                                            SizedBox(height: 5,),
-                                                            Row(
-                                                              mainAxisAlignment: MainAxisAlignment.start,
-                                                              crossAxisAlignment: CrossAxisAlignment.end,
-                                                              children: [
-                                                                Icon(MdiIcons.storeCheck, size: 20, color: CustomColor.MAIN,),
-                                                                SizedBox(width: 5,),
-                                                                Text('${_data.region?.name ?? '-'}', style: TextStyle(
-                                                                  color: CustomColor.GREY_TXT,
-                                                                ), maxLines: 2, overflow: TextOverflow.ellipsis,),
-                                                              ],
-                                                            ),
-                                                          ],
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
                                                     ],
                                                   ),
                                                   Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
                                                     children: [
                                                       IconButton(
                                                         onPressed: () async {
-                                                          CustomWidget.showCartConfirmationDialog(
+                                                          CustomWidget
+                                                              .showCartConfirmationDialog(
                                                             context,
-                                                            desc: AppLocalizations.instance.text('TXT_DELETE_CART_INFO'),
-                                                            fnDeleteCart: () async {
+                                                            desc: AppLocalizations
+                                                                .instance
+                                                                .text(
+                                                                    'TXT_DELETE_CART_INFO'),
+                                                            fnDeleteCart:
+                                                                () async {
                                                               Get.back();
                                                               await fnStoreLog(
-                                                                productId: [_data.id ?? 0],
-                                                                categoryId: null,
-                                                                notes: KeyHelper.REMOVE_CART_KEY,
+                                                                productId: [
+                                                                  _data.id ?? 0
+                                                                ],
+                                                                categoryId:
+                                                                    null,
+                                                                notes: KeyHelper
+                                                                    .REMOVE_CART_KEY,
                                                               );
-                                                              await provider.fnDeleteCart(_provider.scaffoldKey.currentContext!, _data.id!)
-                                                                  .then((_) async => await _baseProvider.fnGetCartCount());
+                                                              await provider
+                                                                  .fnDeleteCart(
+                                                                      _provider
+                                                                          .scaffoldKey
+                                                                          .currentContext!,
+                                                                      _data.id!)
+                                                                  .then((_) async =>
+                                                                      await _baseProvider
+                                                                          .fnGetCartCount());
                                                             },
-                                                            fnStoreWishlist: () async {
+                                                            fnStoreWishlist:
+                                                                () async {
                                                               Get.back();
                                                               await fnStoreLog(
-                                                                productId: [_data.id ?? 0],
-                                                                categoryId: null,
-                                                                notes: KeyHelper.SAVE_WISHLIST_KEY,
+                                                                productId: [
+                                                                  _data.id ?? 0
+                                                                ],
+                                                                categoryId:
+                                                                    null,
+                                                                notes: KeyHelper
+                                                                    .SAVE_WISHLIST_KEY,
                                                               );
-                                                              await provider.fnDeleteCart(_provider.scaffoldKey.currentContext!, _data.id ?? 0)
-                                                                  .then((_) async {
-                                                                await provider.fnStoreWishlist(_provider.scaffoldKey.currentContext!, _data.idProduct ?? 0, _data.idRegion ?? 0);
-                                                                await _baseProvider.fnGetCartCount();
+                                                              await provider
+                                                                  .fnDeleteCart(
+                                                                      _provider
+                                                                          .scaffoldKey
+                                                                          .currentContext!,
+                                                                      _data.id ??
+                                                                          0)
+                                                                  .then(
+                                                                      (_) async {
+                                                                await provider.fnStoreWishlist(
+                                                                    _provider
+                                                                        .scaffoldKey
+                                                                        .currentContext!,
+                                                                    _data.idProduct ??
+                                                                        0,
+                                                                    _data.idRegion ??
+                                                                        0);
+                                                                await _baseProvider
+                                                                    .fnGetCartCount();
                                                               });
                                                             },
                                                           );
                                                         },
-                                                        icon: Icon(FontAwesomeIcons.trashCan, size: 20, color: CustomColor.GREY_TXT,),
-                                                        visualDensity: VisualDensity.compact,
+                                                        icon: Icon(
+                                                          FontAwesomeIcons
+                                                              .trashCan,
+                                                          size: 20,
+                                                          color: CustomColor
+                                                              .GREY_TXT,
+                                                        ),
+                                                        visualDensity:
+                                                            VisualDensity
+                                                                .compact,
                                                       ),
-                                                      SizedBox(width: 10,),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
                                                       Container(
-                                                        decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.circular(5),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
                                                           border: Border.all(
-                                                            color: CustomColor.GREY_ICON,
+                                                            color: CustomColor
+                                                                .GREY_ICON,
                                                           ),
                                                         ),
                                                         width: 100,
                                                         child: Row(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          mainAxisSize: MainAxisSize.min,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
                                                           children: [
                                                             Expanded(
                                                               child: IconButton(
-                                                                onPressed: () async => await provider.fnUpdateCartQty(_data.id!, 'decrease')
-                                                                    .then((_) async {if (_data.qty == 1) await _baseProvider.fnGetCartCount();}),
-                                                                icon: Icon(Icons.remove, size: 18, color: _data.qty != 1
-                                                                    ? Colors.green
-                                                                    : CustomColor.GREY_ICON,
+                                                                onPressed: () async => await provider
+                                                                    .fnUpdateCartQty(
+                                                                        _data
+                                                                            .id!,
+                                                                        'decrease')
+                                                                    .then(
+                                                                        (_) async {
+                                                                  if (_data
+                                                                          .qty ==
+                                                                      1)
+                                                                    await _baseProvider
+                                                                        .fnGetCartCount();
+                                                                }),
+                                                                icon: Icon(
+                                                                  Icons.remove,
+                                                                  size: 18,
+                                                                  color: _data.qty !=
+                                                                          1
+                                                                      ? Colors
+                                                                          .green
+                                                                      : CustomColor
+                                                                          .GREY_ICON,
                                                                 ),
-                                                                padding: EdgeInsets.symmetric(vertical: 2),
-                                                                constraints: BoxConstraints(),
+                                                                padding: EdgeInsets
+                                                                    .symmetric(
+                                                                        vertical:
+                                                                            2),
+                                                                constraints:
+                                                                    BoxConstraints(),
                                                               ),
                                                             ),
-                                                            Text(_data.qty.toString(), style: TextStyle(
-                                                              fontSize: 12,
-                                                            ),),
+                                                            Text(
+                                                              _data.qty
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
                                                             Expanded(
                                                               child: IconButton(
-                                                                onPressed: () async => await provider.fnUpdateCartQty(_data.id!, 'increase'),
-                                                                icon: Icon(Icons.add, size: 18, color: Colors.green,),
-                                                                padding: EdgeInsets.symmetric(vertical: 2),
-                                                                constraints: BoxConstraints(),
+                                                                onPressed: () async =>
+                                                                    await provider.fnUpdateCartQty(
+                                                                        _data
+                                                                            .id!,
+                                                                        'increase'),
+                                                                icon: Icon(
+                                                                  Icons.add,
+                                                                  size: 18,
+                                                                  color: Colors
+                                                                      .green,
+                                                                ),
+                                                                padding: EdgeInsets
+                                                                    .symmetric(
+                                                                        vertical:
+                                                                            2),
+                                                                constraints:
+                                                                    BoxConstraints(),
                                                               ),
                                                             ),
                                                           ],
@@ -267,7 +468,11 @@ class _CartListScreenState extends State<CartListScreen>
                                 height: provider.isPaginateLoad ? 50 : 0,
                                 child: Center(
                                   child: provider.isPaginateLoad
-                                      ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(CustomColor.MAIN),)
+                                      ? CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  CustomColor.MAIN),
+                                        )
                                       : SizedBox(),
                                 ),
                               ),
@@ -277,8 +482,7 @@ class _CartListScreenState extends State<CartListScreen>
                     }
                 }
             }
-          }
-      ),
+          }),
     );
 
     Widget _mainContent = Container(
@@ -286,20 +490,31 @@ class _CartListScreenState extends State<CartListScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(AppLocalizations.instance.text('TXT_HEADER_ORDER'), style: TextStyle(
-            color: CustomColor.BROWN_TXT,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),),
-          SizedBox(height: 5,),
+          Text(
+            AppLocalizations.instance.text('TXT_HEADER_ORDER'),
+            style: TextStyle(
+              color: CustomColor.BROWN_TXT,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(
+            height: 5,
+          ),
           Consumer<CartListProvider>(
             builder: (context, provider, _) {
-              return Text(sprintf(AppLocalizations.instance.text('TXT_CART_INFO'), ['${provider.cartList.result?.data?.length} item(s)']), style: TextStyle(
-                color: CustomColor.GREY_TXT,
-              ),);
+              return Text(
+                sprintf(AppLocalizations.instance.text('TXT_CART_INFO'),
+                    ['${provider.cartList.result?.data?.length} item(s)']),
+                style: TextStyle(
+                  color: CustomColor.GREY_TXT,
+                ),
+              );
             },
           ),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           _cartListContent,
         ],
       ),
@@ -320,7 +535,8 @@ class _CartListScreenState extends State<CartListScreen>
                     elevation: 0,
                     color: CustomColor.MAIN,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -328,15 +544,25 @@ class _CartListScreenState extends State<CartListScreen>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(AppLocalizations.instance.text('TXT_TOTAL_PRICE'), style: TextStyle(
-                                color: Colors.white,
-                              ),),
-                              SizedBox(height: 5,),
-                              Text(FormatterHelper.moneyFormatter(provider.totalPay), style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),),
+                              Text(
+                                AppLocalizations.instance
+                                    .text('TXT_TOTAL_PRICE'),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                FormatterHelper.moneyFormatter(
+                                    provider.totalPay),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ],
                           ),
                           SizedBox(
@@ -344,7 +570,8 @@ class _CartListScreenState extends State<CartListScreen>
                             height: 40,
                             child: CustomWidget.roundIconBtn(
                               icon: MdiIcons.cartArrowUp,
-                              label: '${AppLocalizations.instance.text('TXT_LBL_BUY')} (${provider.totalCart})',
+                              label:
+                                  '${AppLocalizations.instance.text('TXT_LBL_BUY')} (${provider.totalCart})',
                               isBold: true,
                               fontSize: 14,
                               btnColor: provider.totalCart != 0
@@ -354,10 +581,11 @@ class _CartListScreenState extends State<CartListScreen>
                               radius: 5,
                               function: () {
                                 if (provider.totalCart != 0)
-                                  Get.toNamed(DeliveryCartScreen.tag, arguments: DeliveryCartScreen(
-                                    cartList: _provider.cartTotalList,
-                                    isCart: true,
-                                  ));
+                                  Get.toNamed(DeliveryCartScreen.tag,
+                                      arguments: DeliveryCartScreen(
+                                        cartList: _provider.cartTotalList,
+                                        isCart: true,
+                                      ));
                               },
                             ),
                           ),
@@ -367,8 +595,7 @@ class _CartListScreenState extends State<CartListScreen>
                   );
               }
           }
-        }
-    );
+        });
 
     return Scaffold(
       key: _provider.scaffoldKey,
@@ -378,10 +605,14 @@ class _CartListScreenState extends State<CartListScreen>
         elevation: 0,
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 20,),
+            padding: const EdgeInsets.only(
+              right: 20,
+            ),
             child: SizedBox(
               width: 120,
-              child: Image.asset('assets/images/ic_logo_bu.png',),
+              child: Image.asset(
+                'assets/images/ic_logo_bu.png',
+              ),
             ),
           ),
         ],

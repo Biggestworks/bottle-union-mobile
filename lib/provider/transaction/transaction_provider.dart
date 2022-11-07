@@ -29,12 +29,18 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
   int status = 1;
   bool isPaginateLoad = false;
   List<TabLabel> tabLabel = [
-    TabLabel(AppLocalizations.instance.text('TXT_LBL_PAYMENT'), 1, FontAwesomeIcons.creditCard),
-    TabLabel(AppLocalizations.instance.text('TXT_LBL_CONFIRMATION'), 2, FontAwesomeIcons.clock),
-    TabLabel(AppLocalizations.instance.text('TXT_LBL_PROCESSED'), 3, FontAwesomeIcons.circleCheck),
-    TabLabel(AppLocalizations.instance.text('TXT_LBL_DELIVERY'), 4, FontAwesomeIcons.truck),
-    TabLabel(AppLocalizations.instance.text('TXT_LBL_COMPLETE'), 6, FontAwesomeIcons.solidStar),
-    TabLabel(AppLocalizations.instance.text('TXT_LBL_CANCELED'), 7, FontAwesomeIcons.circleExclamation),
+    TabLabel(AppLocalizations.instance.text('TXT_LBL_PAYMENT'), 1,
+        FontAwesomeIcons.creditCard),
+    TabLabel(AppLocalizations.instance.text('TXT_LBL_CONFIRMATION'), 2,
+        FontAwesomeIcons.clock),
+    TabLabel(AppLocalizations.instance.text('TXT_LBL_PROCESSED'), 3,
+        FontAwesomeIcons.circleCheck),
+    TabLabel(AppLocalizations.instance.text('TXT_LBL_DELIVERY'), 4,
+        FontAwesomeIcons.truck),
+    TabLabel(AppLocalizations.instance.text('TXT_LBL_COMPLETE'), 6,
+        FontAwesomeIcons.solidStar),
+    TabLabel(AppLocalizations.instance.text('TXT_LBL_CANCELED'), 7,
+        FontAwesomeIcons.circleExclamation),
   ];
 
   List<DateFilter> dateFilter = [
@@ -64,7 +70,7 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
   bool isCustomDate = false;
 
   LoadingView? _view;
-  
+
   fnGetView(LoadingView view) {
     this._view = view;
   }
@@ -80,8 +86,12 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
     super.currentPage = 1;
 
     transactionList = (await _service.getTransactionList(
-      startDate: fromDate != null ? DateFormat('yyyy-MM-dd').format(fromDate ?? DateTime.now()) : null,
-      endDate: toDate != null ? DateFormat('yyyy-MM-dd').format(toDate ?? DateTime.now()) : null,
+      startDate: fromDate != null
+          ? DateFormat('yyyy-MM-dd').format(fromDate ?? DateTime.now())
+          : null,
+      endDate: toDate != null
+          ? DateFormat('yyyy-MM-dd').format(toDate ?? DateTime.now())
+          : null,
       status: status,
       page: super.currentPage.toString(),
     ))!;
@@ -191,7 +201,8 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
         ))!;
         _view!.onProgressFinish();
       } else {
-        CustomWidget.showSnackBar(context: context, content: Text('Invalid date'));
+        CustomWidget.showSnackBar(
+            context: context, content: Text('Invalid date'));
       }
     } else {
       Get.back();
@@ -240,7 +251,7 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
 
   Future fnOnReceiveNotification() async {
     FirebaseMessaging.onMessage.listen(
-            (RemoteMessage message) async => await fnFetchTransactionList());
+        (RemoteMessage message) async => await fnFetchTransactionList());
     notifyListeners();
   }
 
@@ -250,8 +261,10 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
       regionId: transactionList.result?.data?[index].idRegion ?? 0,
       orderId: transactionList.result?.data?[index].codeTransaction ?? '',
     );
-    List.generate(_detail?.result?.data?.length ?? 0,
-            (index) => _productIdList.add(_detail?.result?.data?[index].idProduct ?? 0));
+    List.generate(
+        _detail?.result?.data?.length ?? 0,
+        (index) =>
+            _productIdList.add(_detail?.result?.data?[index].idProduct ?? 0));
 
     var _res = await _cartService.storeCart(
       regionIds: [transactionList.result?.data?[index].idRegion ?? 0],
@@ -267,14 +280,21 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
           action: SnackBarAction(
             label: 'Go to cart',
             textColor: Colors.white,
-            onPressed: () => Get.offNamedUntil(BaseHomeScreen.tag, (route) => false, arguments: BaseHomeScreen(pageIndex: 2,)),
+            onPressed: () =>
+                Get.offNamedUntil(BaseHomeScreen.tag, (route) => false,
+                    arguments: BaseHomeScreen(
+                      pageIndex: 2,
+                    )),
           ),
         );
       } else {
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
+        await CustomWidget.showSnackBar(
+            context: context, content: Text(_res.message.toString()));
       }
     } else {
-      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+      await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
   }
 
@@ -284,8 +304,12 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
     super.currentPage++;
 
     var _list = await _service.getTransactionList(
-      startDate: fromDate != null ? DateFormat('yyyy-MM-dd').format(fromDate ?? DateTime.now()) : null,
-      endDate: toDate != null ? DateFormat('yyyy-MM-dd').format(toDate ?? DateTime.now()) : null,
+      startDate: fromDate != null
+          ? DateFormat('yyyy-MM-dd').format(fromDate ?? DateTime.now())
+          : null,
+      endDate: toDate != null
+          ? DateFormat('yyyy-MM-dd').format(toDate ?? DateTime.now())
+          : null,
       status: status,
       page: super.currentPage.toString(),
     );
@@ -309,7 +333,6 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
     isPaginateLoad = true;
     notifyListeners();
   }
-
 }
 
 class TabLabel {

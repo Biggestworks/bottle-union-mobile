@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:eight_barrels/helper/url_helper.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
@@ -41,11 +42,10 @@ class PaymentService extends GetConnect {
 
   Future<OrderCartModel?> storeOrderCart({
     required int? addressId,
-    required List<Map<String,dynamic>> deliveries,
+    required List<Map<String, dynamic>> deliveries,
     required String? paymentMethod,
   }) async {
     OrderCartModel _model = new OrderCartModel();
-
 
     final Map<String, dynamic> _data = {
       "id_address": addressId,
@@ -59,6 +59,7 @@ class PaymentService extends GetConnect {
         body: json.encode(_data),
         headers: await _headersAuth(),
       );
+
       ///GET CONNECT BUG
       // Response _response = await post(
       //   URLHelper.storeOrderUrl,
@@ -94,18 +95,23 @@ class PaymentService extends GetConnect {
       "courier_cost": courierCost
     };
 
+    // final test = await _headersAuth();
+    // log(test.toString());
+
     try {
       http.Response _response = await http.post(
         Uri.parse(URLHelper.storeOrderNowUrl),
         body: json.encode(_data),
         headers: await _headersAuth(),
       );
+
       ///GET CONNECT BUG
       // Response _response = await post(
       //   URLHelper.storeOrderUrl,
       //   _data,
       //   headers: await _headersAuth(),
       // );
+      log(_response.body.toString());
       _model = OrderNowModel.fromJson(json.decode(_response.body));
     } catch (e) {
       print(e);
@@ -136,5 +142,4 @@ class PaymentService extends GetConnect {
 
     return _model;
   }
-
 }

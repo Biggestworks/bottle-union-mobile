@@ -45,6 +45,7 @@ class TransactionService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
+
       _model = TransactionListModel.fromJson(_response.body);
     } catch (e) {
       print(e);
@@ -53,10 +54,8 @@ class TransactionService extends GetConnect {
     return _model;
   }
 
-  Future<TransactionDetailModel?> getTransactionDetail({
-    required String orderId,
-    required int regionId
-  }) async {
+  Future<TransactionDetailModel?> getTransactionDetail(
+      {required String orderId, required int regionId}) async {
     TransactionDetailModel _model = new TransactionDetailModel();
 
     final Map<String, dynamic> _data = {
@@ -70,6 +69,7 @@ class TransactionService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
+
       _model = TransactionDetailModel.fromJson(_response.body);
     } catch (e) {
       print(e);
@@ -95,10 +95,8 @@ class TransactionService extends GetConnect {
         ).type,
       );
 
-      FormData _data = new FormData({
-        "code_transaction": orderId,
-        "image": _imageFile
-      });
+      FormData _data =
+          new FormData({"code_transaction": orderId, "image": _imageFile});
 
       Response _response = await post(
         URLHelper.uploadPaymentUrl,
@@ -113,10 +111,8 @@ class TransactionService extends GetConnect {
     return _model;
   }
 
-  Future<TrackOrderModel?> getTrackOrder({
-    required String? orderId,
-    required int? regionId
-  }) async {
+  Future<TrackOrderModel?> getTrackOrder(
+      {required String? orderId, required int? regionId}) async {
     TrackOrderModel _model = new TrackOrderModel();
 
     final Map<String, dynamic> _data = {
@@ -138,10 +134,8 @@ class TransactionService extends GetConnect {
     return _model;
   }
 
-  Future<DefaultModel?> finishOrder({
-    required String? orderId,
-    required int? regionId
-  }) async {
+  Future<DefaultModel?> finishOrder(
+      {required String? orderId, required int? regionId}) async {
     DefaultModel _model = new DefaultModel();
 
     final Map<String, dynamic> _data = {
@@ -162,5 +156,4 @@ class TransactionService extends GetConnect {
 
     return _model;
   }
-
 }

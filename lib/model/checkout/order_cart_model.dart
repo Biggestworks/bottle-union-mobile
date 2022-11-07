@@ -1,3 +1,5 @@
+import 'package:eight_barrels/model/transaction/transaction_detail_model.dart';
+
 class OrderCartModel {
   bool? status;
   String? message;
@@ -42,19 +44,21 @@ class Result {
   String? createdAt;
   String? expiredAt;
   List<Data>? data;
+  ManualBank? manualBank;
 
   Result(
       {this.idRegion,
-        this.region,
-        this.codeTransaction,
-        this.vaNumber,
-        this.paymentType,
-        this.amount,
-        this.courierCost,
-        this.statusPayment,
-        this.createdAt,
-        this.expiredAt,
-        this.data});
+      this.region,
+      this.codeTransaction,
+      this.vaNumber,
+      this.paymentType,
+      this.amount,
+      this.courierCost,
+      this.statusPayment,
+      this.createdAt,
+      this.expiredAt,
+      this.data,
+      this.manualBank});
 
   Result.fromJson(Map<String, dynamic> json) {
     idRegion = json['id_region'];
@@ -73,6 +77,9 @@ class Result {
         data!.add(new Data.fromJson(v));
       });
     }
+    manualBank = json['manual_bank'] != null
+        ? new ManualBank.fromJson(json['manual_bank'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -89,6 +96,9 @@ class Result {
     data['expired_at'] = this.expiredAt;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
+    }
+    if (this.manualBank != null) {
+      data['manual_bank'] = this.manualBank!.toJson();
     }
     return data;
   }
@@ -112,26 +122,26 @@ class Data {
 
   Data(
       {this.idCart,
-        this.idUser,
-        this.idProcduct,
-        this.product,
-        this.qty,
-        this.isSelected,
-        this.statusPaid,
-        this.courierName,
-        this.courierDesc,
-        this.courierEtd,
-        this.courierCost,
-        this.shipment,
-        this.createdAt,
-        this.updatedAt});
+      this.idUser,
+      this.idProcduct,
+      this.product,
+      this.qty,
+      this.isSelected,
+      this.statusPaid,
+      this.courierName,
+      this.courierDesc,
+      this.courierEtd,
+      this.courierCost,
+      this.shipment,
+      this.createdAt,
+      this.updatedAt});
 
   Data.fromJson(Map<String, dynamic> json) {
     idCart = json['id_cart'];
     idUser = json['id_user'];
     idProcduct = json['id_procduct'];
     product =
-    json['product'] != null ? new Product.fromJson(json['product']) : null;
+        json['product'] != null ? new Product.fromJson(json['product']) : null;
     qty = json['qty'];
     isSelected = json['is_selected'];
     statusPaid = json['status_paid'];
@@ -201,32 +211,32 @@ class Product {
 
   Product(
       {this.id,
-        this.idBrand,
-        this.idCategory,
-        this.idFlag,
-        this.manufactureCountry,
-        this.originCountry,
-        this.year,
-        this.name,
-        this.price,
-        this.regularPrice,
-        this.salePrice,
-        this.description,
-        this.weight,
-        this.publish,
-        this.isPopular,
-        this.image1,
-        this.image2,
-        this.image3,
-        this.image4,
-        this.image5,
-        this.stock,
-        this.width,
-        this.height,
-        this.rating,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt});
+      this.idBrand,
+      this.idCategory,
+      this.idFlag,
+      this.manufactureCountry,
+      this.originCountry,
+      this.year,
+      this.name,
+      this.price,
+      this.regularPrice,
+      this.salePrice,
+      this.description,
+      this.weight,
+      this.publish,
+      this.isPopular,
+      this.image1,
+      this.image2,
+      this.image3,
+      this.image4,
+      this.image5,
+      this.stock,
+      this.width,
+      this.height,
+      this.rating,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt});
 
   Product.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -308,18 +318,18 @@ class Shipment {
 
   Shipment(
       {this.id,
-        this.idOrder,
-        this.receiver,
-        this.address,
-        this.phone,
-        this.provinceName,
-        this.cityName,
-        this.postalCode,
-        this.latitude,
-        this.longitude,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt});
+      this.idOrder,
+      this.receiver,
+      this.address,
+      this.phone,
+      this.provinceName,
+      this.cityName,
+      this.postalCode,
+      this.latitude,
+      this.longitude,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt});
 
   Shipment.fromJson(Map<String, dynamic> json) {
     id = json['id'];

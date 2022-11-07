@@ -1,10 +1,13 @@
+import 'package:eight_barrels/model/transaction/transaction_detail_model.dart';
+
 class OrderNowModel {
   bool? status;
   String? message;
   String? deepLink;
   List<Data>? data;
+  ManualBank? manualBank;
 
-  OrderNowModel({this.status, this.message, this.data});
+  OrderNowModel({this.status, this.message, this.data, this.manualBank});
 
   OrderNowModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -16,6 +19,9 @@ class OrderNowModel {
         data!.add(new Data.fromJson(v));
       });
     }
+    manualBank = json['manual_bank'] != null
+        ? new ManualBank.fromJson(json['manual_bank'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -25,6 +31,9 @@ class OrderNowModel {
     data['deeplink'] = this.deepLink;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
+    }
+    if (this.manualBank != null) {
+      data['manual_bank'] = this.manualBank!.toJson();
     }
     return data;
   }
@@ -60,35 +69,37 @@ class Data {
   List<Order>? order;
   EnabledPayment? enabledPayment;
 
+  /// HERE NEW
+
   Data(
       {this.id,
-        this.idOrder,
-        this.idUser,
-        this.idShipment,
-        this.idStatusPayment,
-        this.vaNumber,
-        this.statusMessage,
-        this.descriptionMessage,
-        this.statusPayment,
-        this.amount,
-        this.paymentMethod,
-        this.paymentType,
-        this.evidanceOfTransfer,
-        this.isApproved,
-        this.approvedBy,
-        this.expiredAt,
-        this.courierName,
-        this.courierDesc,
-        this.courierEtd,
-        this.courierCost,
-        this.transactionTime,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt,
-        this.user,
-        this.shipment,
-        this.order,
-        this.enabledPayment});
+      this.idOrder,
+      this.idUser,
+      this.idShipment,
+      this.idStatusPayment,
+      this.vaNumber,
+      this.statusMessage,
+      this.descriptionMessage,
+      this.statusPayment,
+      this.amount,
+      this.paymentMethod,
+      this.paymentType,
+      this.evidanceOfTransfer,
+      this.isApproved,
+      this.approvedBy,
+      this.expiredAt,
+      this.courierName,
+      this.courierDesc,
+      this.courierEtd,
+      this.courierCost,
+      this.transactionTime,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt,
+      this.user,
+      this.shipment,
+      this.order,
+      this.enabledPayment});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -194,23 +205,23 @@ class User {
 
   User(
       {this.id,
-        this.idRegion,
-        this.providerUid,
-        this.providerId,
-        this.fullname,
-        this.email,
-        this.emailVerifiedAt,
-        this.avatar,
-        this.dateOfBirth,
-        this.phone,
-        this.gender,
-        this.isAdmin,
-        this.isVerified,
-        this.isActive,
-        this.fcmToken,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt});
+      this.idRegion,
+      this.providerUid,
+      this.providerId,
+      this.fullname,
+      this.email,
+      this.emailVerifiedAt,
+      this.avatar,
+      this.dateOfBirth,
+      this.phone,
+      this.gender,
+      this.isAdmin,
+      this.isVerified,
+      this.isActive,
+      this.fcmToken,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -274,18 +285,18 @@ class Shipment {
 
   Shipment(
       {this.id,
-        this.idOrder,
-        this.receiver,
-        this.address,
-        this.phone,
-        this.provinceName,
-        this.cityName,
-        this.postalCode,
-        this.latitude,
-        this.longitude,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt});
+      this.idOrder,
+      this.receiver,
+      this.address,
+      this.phone,
+      this.provinceName,
+      this.cityName,
+      this.postalCode,
+      this.latitude,
+      this.longitude,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt});
 
   Shipment.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -341,20 +352,20 @@ class Order {
 
   Order(
       {this.id,
-        this.idShipping,
-        this.idUser,
-        this.idProduct,
-        this.qty,
-        this.price,
-        this.codeTransaction,
-        this.statusPaid,
-        this.voucherCode,
-        this.voucherAmount,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt,
-        this.product,
-        this.shipment});
+      this.idShipping,
+      this.idUser,
+      this.idProduct,
+      this.qty,
+      this.price,
+      this.codeTransaction,
+      this.statusPaid,
+      this.voucherCode,
+      this.voucherAmount,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt,
+      this.product,
+      this.shipment});
 
   Order.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -371,7 +382,7 @@ class Order {
     updatedAt = json['updated_at'];
     deletedAt = json['deleted_at'];
     product =
-    json['product'] != null ? new Product.fromJson(json['product']) : null;
+        json['product'] != null ? new Product.fromJson(json['product']) : null;
     shipment = json['shipment'] != null
         ? new Shipment.fromJson(json['shipment'])
         : null;
@@ -433,32 +444,32 @@ class Product {
 
   Product(
       {this.id,
-        this.idBrand,
-        this.idCategory,
-        this.idFlag,
-        this.manufactureCountry,
-        this.originCountry,
-        this.year,
-        this.name,
-        this.price,
-        this.regularPrice,
-        this.salePrice,
-        this.description,
-        this.weight,
-        this.publish,
-        this.isPopular,
-        this.image1,
-        this.image2,
-        this.image3,
-        this.image4,
-        this.image5,
-        this.stock,
-        this.width,
-        this.height,
-        this.rating,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt});
+      this.idBrand,
+      this.idCategory,
+      this.idFlag,
+      this.manufactureCountry,
+      this.originCountry,
+      this.year,
+      this.name,
+      this.price,
+      this.regularPrice,
+      this.salePrice,
+      this.description,
+      this.weight,
+      this.publish,
+      this.isPopular,
+      this.image1,
+      this.image2,
+      this.image3,
+      this.image4,
+      this.image5,
+      this.stock,
+      this.width,
+      this.height,
+      this.rating,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt});
 
   Product.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -534,12 +545,12 @@ class EnabledPayment {
 
   EnabledPayment(
       {this.id,
-        this.name,
-        this.description,
-        this.image,
-        this.isActive,
-        this.createdAt,
-        this.updatedAt});
+      this.name,
+      this.description,
+      this.image,
+      this.isActive,
+      this.createdAt,
+      this.updatedAt});
 
   EnabledPayment.fromJson(Map<String, dynamic> json) {
     id = json['id'];

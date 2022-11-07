@@ -1,10 +1,12 @@
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/model/checkout/delivery_courier_model.dart';
-import 'package:eight_barrels/model/checkout/order_summary_model.dart' as summary;
+import 'package:eight_barrels/model/checkout/order_summary_model.dart'
+    as summary;
 import 'package:eight_barrels/model/checkout/payment_list_model.dart';
 import 'package:eight_barrels/model/checkout/product_order_model.dart';
-import 'package:eight_barrels/model/product/product_detail_model.dart' as productDetail;
+import 'package:eight_barrels/model/product/product_detail_model.dart'
+    as productDetail;
 import 'package:eight_barrels/screen/checkout/order_finish_screen.dart';
 import 'package:eight_barrels/screen/checkout/payment_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
@@ -64,15 +66,18 @@ class PaymentProvider extends ChangeNotifier {
 
     await Future.delayed(Duration(seconds: 1));
 
-    List<Map<String,dynamic>> _courierList = [];
+    List<Map<String, dynamic>> _courierList = [];
 
-    List.generate(selectedCourierList.length, (index) => _courierList.add({
-      'id_region': selectedCourierList[index].regionId,
-      'courier_name': selectedCourierList[index].courierData?.courier,
-      'courier_desc': selectedCourierList[index].courierData?.description,
-      'courier_etd': selectedCourierList[index].courierData?.etd,
-      'courier_cost': selectedCourierList[index].courierData?.price
-    }));
+    List.generate(
+        selectedCourierList.length,
+        (index) => _courierList.add({
+              'id_region': selectedCourierList[index].regionId,
+              'courier_name': selectedCourierList[index].courierData?.courier,
+              'courier_desc':
+                  selectedCourierList[index].courierData?.description,
+              'courier_etd': selectedCourierList[index].courierData?.etd,
+              'courier_cost': selectedCourierList[index].courierData?.price
+            }));
 
     var _res = await _service.storeOrderCart(
       addressId: addressId,
@@ -83,14 +88,20 @@ class PaymentProvider extends ChangeNotifier {
     if (_res!.status != null) {
       if (_res.status == true) {
         _view!.onProgressFinish();
-        Get.offNamedUntil(OrderFinishScreen.tag, (route) => route.isFirst, arguments: OrderFinishScreen(orderCart: _res,));
+        Get.offNamedUntil(OrderFinishScreen.tag, (route) => route.isFirst,
+            arguments: OrderFinishScreen(
+              orderCart: _res,
+            ));
       } else {
         _view!.onProgressFinish();
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message ?? '-'));
+        await CustomWidget.showSnackBar(
+            context: context, content: Text(_res.message ?? '-'));
       }
     } else {
       _view!.onProgressFinish();
-      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+      await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
     _view!.onProgressFinish();
     notifyListeners();
@@ -122,17 +133,22 @@ class PaymentProvider extends ChangeNotifier {
     if (_res!.status != null) {
       if (_res.status == true) {
         _view!.onProgressFinish();
-        Get.offNamedUntil(OrderFinishScreen.tag, (route) => route.isFirst, arguments: OrderFinishScreen(orderNow: _res,));
+        Get.offNamedUntil(OrderFinishScreen.tag, (route) => route.isFirst,
+            arguments: OrderFinishScreen(
+              orderNow: _res,
+            ));
       } else {
         _view!.onProgressFinish();
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message ?? '-'));
+        await CustomWidget.showSnackBar(
+            context: context, content: Text(_res.message ?? '-'));
       }
     } else {
       _view!.onProgressFinish();
-      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+      await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
     _view!.onProgressFinish();
     notifyListeners();
   }
-
 }
