@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       Future.delayed(Duration.zero).then((value) {
         log('terpangil berapa kali');
         Provider.of<HomeProvider>(context, listen: false)
