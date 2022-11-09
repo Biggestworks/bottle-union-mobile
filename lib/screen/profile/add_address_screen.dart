@@ -22,19 +22,20 @@ class AddAddressScreen extends StatefulWidget {
 }
 
 class _AddAddressScreenState extends State<AddAddressScreen>
-    with TextValidation , LoadingView {
+    with TextValidation, LoadingView {
   bool _isLoad = false;
 
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
       Provider.of<AddAddressProvider>(context, listen: false).fnGetView(this);
-      Provider.of<AddAddressProvider>(context, listen: false).fnGetArguments(context);
-      Provider.of<AddAddressProvider>(context, listen: false).fnFetchProvinceList();
+      Provider.of<AddAddressProvider>(context, listen: false)
+          .fnGetArguments(context);
+      Provider.of<AddAddressProvider>(context, listen: false)
+          .fnFetchProvinceList();
     });
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -48,11 +49,16 @@ class _AddAddressScreenState extends State<AddAddressScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(AppLocalizations.instance.text('TXT_LBL_ADDRESS'), style: TextStyle(
-                fontSize: 16,
-                color: CustomColor.GREY_TXT,
-              ),),
-              SizedBox(height: 5,),
+              Text(
+                AppLocalizations.instance.text('TXT_LBL_ADDRESS'),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: CustomColor.GREY_TXT,
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
               GestureDetector(
                 onTap: () async => _provider.fnShowMapPicker(context),
                 child: TextFormField(
@@ -62,7 +68,11 @@ class _AddAddressScreenState extends State<AddAddressScreen>
                   validator: validateField,
                   maxLines: null,
                   decoration: InputDecoration(
-                    suffixIcon: Icon(FontAwesomeIcons.mapMarkedAlt, size: 20, color: CustomColor.MAIN,),
+                    suffixIcon: Icon(
+                      FontAwesomeIcons.mapMarkedAlt,
+                      size: 20,
+                      color: CustomColor.MAIN,
+                    ),
                     isDense: true,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -76,12 +86,19 @@ class _AddAddressScreenState extends State<AddAddressScreen>
                   ),
                 ),
               ),
-              SizedBox(height: 20,),
-              Text(AppLocalizations.instance.text('TXT_LBL_DETAIL_NOTE'), style: TextStyle(
-                fontSize: 16,
-                color: CustomColor.GREY_TXT,
-              ),),
-              SizedBox(height: 5,),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                AppLocalizations.instance.text('TXT_LBL_DETAIL_NOTE'),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: CustomColor.GREY_TXT,
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
               TextFormField(
                 controller: _provider.noteController,
                 maxLines: null,
@@ -93,21 +110,28 @@ class _AddAddressScreenState extends State<AddAddressScreen>
                     ),
                     filled: true,
                     fillColor: CustomColor.GREY_BG,
-                    hintText: '*Optional'
+                    hintText: '*Optional'),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                AppLocalizations.instance.text('TXT_REGISTER_PROVINCE'),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: CustomColor.GREY_TXT,
                 ),
               ),
-              SizedBox(height: 20,),
-              Text(AppLocalizations.instance.text('TXT_REGISTER_PROVINCE'), style: TextStyle(
-                fontSize: 16,
-                color: CustomColor.GREY_TXT,
-              ),),
-              SizedBox(height: 5,),
+              SizedBox(
+                height: 5,
+              ),
               GestureDetector(
                 onTap: () => CustomWidget.showSheet(
                   context: context,
                   isScroll: true,
                   child: ChangeNotifierProvider.value(
-                    value: Provider.of<AddAddressProvider>(context, listen: false),
+                    value:
+                        Provider.of<AddAddressProvider>(context, listen: false),
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.5,
                       child: Consumer<AddAddressProvider>(
@@ -117,15 +141,18 @@ class _AddAddressScreenState extends State<AddAddressScreen>
                             case null:
                               return skeleton!;
                             default:
-                              switch (provider.provinceList.rajaongkir?.results) {
+                              switch (
+                                  provider.provinceList.rajaongkir?.results) {
                                 case null:
                                   return skeleton!;
                                 default:
                                   return ListView.separated(
                                     shrinkWrap: true,
-                                    itemCount: provider.provinceList.rajaongkir!.results!.length,
+                                    itemCount: provider.provinceList.rajaongkir!
+                                        .results!.length,
                                     itemBuilder: (context, index) {
-                                      var _data = provider.provinceList.rajaongkir!.results![index];
+                                      var _data = provider.provinceList
+                                          .rajaongkir!.results![index];
                                       return GestureDetector(
                                         onTap: () async {
                                           Get.back();
@@ -135,10 +162,14 @@ class _AddAddressScreenState extends State<AddAddressScreen>
                                           );
                                         },
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                                          child: Text(_data.province ?? '-', style: TextStyle(
-                                            fontSize: 16,
-                                          ),),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 15),
+                                          child: Text(
+                                            _data.province ?? '-',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                            ),
+                                          ),
                                         ),
                                       );
                                     },
@@ -171,12 +202,19 @@ class _AddAddressScreenState extends State<AddAddressScreen>
                   ),
                 ),
               ),
-              SizedBox(height: 20,),
-              Text(AppLocalizations.instance.text('TXT_REGISTER_CITY'), style: TextStyle(
-                fontSize: 16,
-                color: CustomColor.GREY_TXT,
-              ),),
-              SizedBox(height: 5,),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                AppLocalizations.instance.text('TXT_REGISTER_CITY'),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: CustomColor.GREY_TXT,
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
               GestureDetector(
                 onTap: () {
                   if (_provider.provinceController.text.isNotEmpty) {
@@ -184,7 +222,8 @@ class _AddAddressScreenState extends State<AddAddressScreen>
                       context: context,
                       isScroll: true,
                       child: ChangeNotifierProvider.value(
-                        value: Provider.of<AddAddressProvider>(context, listen: false),
+                        value: Provider.of<AddAddressProvider>(context,
+                            listen: false),
                         child: Container(
                           height: MediaQuery.of(context).size.height * 0.5,
                           child: Consumer<AddAddressProvider>(
@@ -194,15 +233,18 @@ class _AddAddressScreenState extends State<AddAddressScreen>
                                 case null:
                                   return skeleton!;
                                 default:
-                                  switch (provider.cityList.rajaongkir?.results) {
+                                  switch (
+                                      provider.cityList.rajaongkir?.results) {
                                     case null:
                                       return skeleton!;
                                     default:
                                       return ListView.separated(
                                         shrinkWrap: true,
-                                        itemCount: provider.cityList.rajaongkir!.results!.length,
+                                        itemCount: provider.cityList.rajaongkir!
+                                            .results!.length,
                                         itemBuilder: (context, index) {
-                                          var _data = provider.cityList.rajaongkir!.results![index];
+                                          var _data = provider.cityList
+                                              .rajaongkir!.results![index];
                                           return GestureDetector(
                                             onTap: () async {
                                               Get.back();
@@ -212,10 +254,16 @@ class _AddAddressScreenState extends State<AddAddressScreen>
                                               );
                                             },
                                             child: Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                                              child: Text(_data.cityName ?? '-', style: TextStyle(
-                                                fontSize: 16,
-                                              ),),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10,
+                                                      vertical: 15),
+                                              child: Text(
+                                                _data.cityName ?? '-',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                ),
+                                              ),
                                             ),
                                           );
                                         },
@@ -231,7 +279,10 @@ class _AddAddressScreenState extends State<AddAddressScreen>
                       ),
                     );
                   } else {
-                    CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_REGISTER_CITY_INFO')));
+                    CustomWidget.showSnackBar(
+                        context: context,
+                        content: Text(AppLocalizations.instance
+                            .text('TXT_REGISTER_CITY_INFO')));
                   }
                 },
                 child: TextFormField(
@@ -252,12 +303,19 @@ class _AddAddressScreenState extends State<AddAddressScreen>
                   ),
                 ),
               ),
-              SizedBox(height: 20,),
-              Text(AppLocalizations.instance.text('TXT_POST_CODE'), style: TextStyle(
-                fontSize: 16,
-                color: CustomColor.GREY_TXT,
-              ),),
-              SizedBox(height: 5,),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                AppLocalizations.instance.text('TXT_POST_CODE'),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: CustomColor.GREY_TXT,
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
               TextFormField(
                 controller: _provider.posCodeController,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -273,12 +331,19 @@ class _AddAddressScreenState extends State<AddAddressScreen>
                   fillColor: CustomColor.GREY_BG,
                 ),
               ),
-              SizedBox(height: 20,),
-              Text(AppLocalizations.instance.text('TXT_LBL_ADDRESS_LABEL'), style: TextStyle(
-                fontSize: 16,
-                color: CustomColor.GREY_TXT,
-              ),),
-              SizedBox(height: 5,),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                AppLocalizations.instance.text('TXT_LBL_ADDRESS_LABEL'),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: CustomColor.GREY_TXT,
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
               TextFormField(
                 controller: _provider.labelController,
                 textInputAction: TextInputAction.next,
@@ -293,12 +358,19 @@ class _AddAddressScreenState extends State<AddAddressScreen>
                   hintText: 'e.g: Home, Office, etc',
                 ),
               ),
-              SizedBox(height: 20,),
-              Text(AppLocalizations.instance.text('TXT_LBL_RECEIVER_NAME'), style: TextStyle(
-                fontSize: 16,
-                color: CustomColor.GREY_TXT,
-              ),),
-              SizedBox(height: 5,),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                AppLocalizations.instance.text('TXT_LBL_RECEIVER_NAME'),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: CustomColor.GREY_TXT,
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
               TextFormField(
                 controller: _provider.nameController,
                 textInputAction: TextInputAction.next,
@@ -313,12 +385,19 @@ class _AddAddressScreenState extends State<AddAddressScreen>
                   fillColor: CustomColor.GREY_BG,
                 ),
               ),
-              SizedBox(height: 20,),
-              Text(AppLocalizations.instance.text('TXT_LBL_RECEIVER_PHONE'), style: TextStyle(
-                fontSize: 16,
-                color: CustomColor.GREY_TXT,
-              ),),
-              SizedBox(height: 5,),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                AppLocalizations.instance.text('TXT_LBL_RECEIVER_PHONE'),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: CustomColor.GREY_TXT,
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
               TextFormField(
                 controller: _provider.phoneController,
                 textInputAction: TextInputAction.next,
@@ -335,6 +414,9 @@ class _AddAddressScreenState extends State<AddAddressScreen>
                   fillColor: CustomColor.GREY_BG,
                 ),
               ),
+              SizedBox(
+                height: 60,
+              )
             ],
           ),
         ),
@@ -343,7 +425,7 @@ class _AddAddressScreenState extends State<AddAddressScreen>
 
     Widget _submitBtn = SafeArea(
       child: Container(
-        padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+        padding: EdgeInsets.fromLTRB(10, 0, 10, 20),
         width: MediaQuery.of(context).size.width,
         child: CustomWidget.roundBtn(
           label: AppLocalizations.instance.text('TXT_SAVE'),
@@ -355,21 +437,19 @@ class _AddAddressScreenState extends State<AddAddressScreen>
         ),
       ),
     );
-    
+
     return CustomWidget.loadingHud(
       isLoad: _isLoad,
       child: Scaffold(
         backgroundColor: CustomColor.BG,
         appBar: AppBar(
           backgroundColor: CustomColor.MAIN,
-          title: Consumer<AddAddressProvider>(
-            builder: (context, provider, _) {
-              return Text(provider.title);
-            }
-          ),
+          title: Consumer<AddAddressProvider>(builder: (context, provider, _) {
+            return Text(provider.title);
+          }),
         ),
         body: _mainContent,
-        bottomNavigationBar: _submitBtn,
+        bottomSheet: _submitBtn,
       ),
     );
   }
@@ -389,5 +469,4 @@ class _AddAddressScreenState extends State<AddAddressScreen>
       setState(() {});
     }
   }
-
 }

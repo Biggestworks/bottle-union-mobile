@@ -1,7 +1,7 @@
 name: eight_barrels
 description: 8 Barrels Mobile Application
 
-version: 1.0.2+22
+version: 1.0.3+23
 
 environment:
   sdk: ">=2.12.0 <3.0.0"

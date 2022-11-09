@@ -1127,8 +1127,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen>
                                     await LaunchUrlHelper.launchUrl(
                                         context: provider
                                             .scaffoldKey.currentContext!,
-                                        url:
-                                            'https://gojek.link/gopay/merchanttransfer?tref=0320221108084002ocilKFuYE8ID&amount=36000&activity=GP:RR&callback_url=https%3A%2F%2Fwww.bottleunion.com%2Fapi%2Fmidtrans%3Forder_id%3Dgopay-1667896802');
+                                        url: _url);
                                   }),
                             );
                           default:
