@@ -1,5 +1,5 @@
-
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:eight_barrels/helper/url_helper.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
@@ -21,9 +21,8 @@ class AuthService extends GetConnect {
     "Content-Type": "application/json",
   };
 
-  Future<UserModel?> login({
-    required String username,
-    required String password}) async {
+  Future<UserModel?> login(
+      {required String username, required String password}) async {
     UserModel _model = new UserModel();
 
     var _fcmToken = await _userPreferences.getFcmToken();
@@ -35,11 +34,14 @@ class AuthService extends GetConnect {
     };
 
     try {
+      log(URLHelper.loginUrl);
       http.Response _response = await http.post(
         Uri.parse(URLHelper.loginUrl),
         body: json.encode(_data),
         headers: _headers,
       );
+
+      log(_response.body);
       _model = UserModel.fromJson(json.decode(_response.body));
 
       if (_model.status == true) {
@@ -69,6 +71,7 @@ class AuthService extends GetConnect {
     required String gender,
     required String password,
     required String confirmPassword,
+
     ///Address
     required String address,
     required String provinceId,
@@ -142,9 +145,7 @@ class AuthService extends GetConnect {
     DefaultModel _model = new DefaultModel();
     bool _isValidate = false;
 
-    final Map<String, dynamic> _data = {
-      "date_of_birth": dob
-    };
+    final Map<String, dynamic> _data = {"date_of_birth": dob};
 
     try {
       Response _response = await post(
@@ -167,9 +168,7 @@ class AuthService extends GetConnect {
     DefaultModel _model = new DefaultModel();
     bool _isValidate = false;
 
-    final Map<String, dynamic> _data = {
-      "username": value
-    };
+    final Map<String, dynamic> _data = {"username": value};
 
     try {
       Response _response = await post(
@@ -284,7 +283,8 @@ class AuthService extends GetConnect {
 
     try {
       final GoogleSignInAccount? _googleUser = await GoogleSignIn().signIn();
-      final GoogleSignInAuthentication _googleAuth = await _googleUser!.authentication;
+      final GoogleSignInAuthentication _googleAuth =
+          await _googleUser!.authentication;
       final OAuthCredential _credential = GoogleAuthProvider.credential(
         accessToken: _googleAuth.accessToken,
         idToken: _googleAuth.idToken,
@@ -302,8 +302,10 @@ class AuthService extends GetConnect {
 
     try {
       final LoginResult _result = await FacebookAuth.instance.login();
-      final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(_result.accessToken!.token);
-      _data = await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+      final OAuthCredential facebookAuthCredential =
+          FacebookAuthProvider.credential(_result.accessToken!.token);
+      _data = await FirebaseAuth.instance
+          .signInWithCredential(facebookAuthCredential);
     } catch (e) {
       print(e);
     }
@@ -331,5 +333,4 @@ class AuthService extends GetConnect {
 
     return _data;
   }
-
 }

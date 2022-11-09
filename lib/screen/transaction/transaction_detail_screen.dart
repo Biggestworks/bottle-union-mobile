@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
@@ -1121,10 +1123,12 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen>
                                     final _url = provider.transactionDetail
                                             .result?.deepLink ??
                                         '';
+                                    log(_url);
                                     await LaunchUrlHelper.launchUrl(
                                         context: provider
                                             .scaffoldKey.currentContext!,
-                                        url: _url);
+                                        url:
+                                            'https://gojek.link/gopay/merchanttransfer?tref=0320221108084002ocilKFuYE8ID&amount=36000&activity=GP:RR&callback_url=https%3A%2F%2Fwww.bottleunion.com%2Fapi%2Fmidtrans%3Forder_id%3Dgopay-1667896802');
                                   }),
                             );
                           default:
