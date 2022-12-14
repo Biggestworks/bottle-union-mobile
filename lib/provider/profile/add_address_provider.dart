@@ -38,6 +38,8 @@ class AddAddressProvider extends ChangeNotifier with MapPickerInterface {
 
   String title = '';
 
+  LatLng? get currentLocation => _currLocation;
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   fnGetView(LoadingView view) {
@@ -46,7 +48,8 @@ class AddAddressProvider extends ChangeNotifier with MapPickerInterface {
 
   fnGetArguments(BuildContext context) {
     _view!.onProgressStart();
-    final _args = ModalRoute.of(context)!.settings.arguments as AddAddressScreen;
+    final _args =
+        ModalRoute.of(context)!.settings.arguments as AddAddressScreen;
     _addr = _args.address ?? null;
     if (_addr != null) {
       title = AppLocalizations.instance.text('TXT_UPDATE_ADDRESS');
@@ -58,7 +61,8 @@ class AddAddressProvider extends ChangeNotifier with MapPickerInterface {
       cityController.text = _addr?.cityName ?? '';
       posCodeController.text = _addr?.postCode ?? '';
       labelController.text = _addr?.label ?? '';
-      _currLocation = LatLng(double.parse(_addr?.latitude ?? '0'), double.parse(_addr?.longitude ?? '0'));
+      _currLocation = LatLng(double.parse(_addr?.latitude ?? '0'),
+          double.parse(_addr?.longitude ?? '0'));
       nameController.text = _addr?.receiver ?? '';
       phoneController.text = _addr?.phone ?? '';
     } else {
@@ -74,11 +78,15 @@ class AddAddressProvider extends ChangeNotifier with MapPickerInterface {
 
     if (_addr != null) {
       if (_currLocation != null) {
-        await super.showMapPicker(context: context, currLocation: LatLng(_currLocation!.latitude, _currLocation!.longitude));
+        await super.showMapPicker(
+            context: context,
+            currLocation:
+                LatLng(_currLocation!.latitude, _currLocation!.longitude));
       } else {
         _lat = double.parse(_addr?.latitude ?? '0');
         _lng = double.parse(_addr?.longitude ?? '0');
-        await super.showMapPicker(context: context, currLocation: LatLng(_lat, _lng));
+        await super
+            .showMapPicker(context: context, currLocation: LatLng(_lat, _lng));
       }
     } else {
       await super.showMapPicker(context: context);
@@ -89,7 +97,8 @@ class AddAddressProvider extends ChangeNotifier with MapPickerInterface {
     _view!.onProgressStart();
     provinceList = (await _service.getProvince())!;
     if (selectedProvinceId != null) {
-      cityList = (await _service.getCity(provinceId: selectedProvinceId ?? ''))!;
+      cityList =
+          (await _service.getCity(provinceId: selectedProvinceId ?? ''))!;
     }
     _view!.onProgressFinish();
     notifyListeners();
@@ -149,10 +158,13 @@ class AddAddressProvider extends ChangeNotifier with MapPickerInterface {
         if (_res.status == true) {
           Get.back(result: true);
         } else {
-          await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
+          await CustomWidget.showSnackBar(
+              context: context, content: Text(_res.message.toString()));
         }
       } else {
-        await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+        await CustomWidget.showSnackBar(
+            context: context,
+            content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
       }
     }
     notifyListeners();
@@ -161,11 +173,13 @@ class AddAddressProvider extends ChangeNotifier with MapPickerInterface {
   @override
   Future onPlacePicked(PickResult result) async {
     Get.back();
+
     addressController.text = result.formattedAddress!;
-    _currLocation = LatLng(result.geometry!.location.lat, result.geometry!.location.lng);
-    List<Placemark> _address = await placemarkFromCoordinates(_currLocation!.latitude, _currLocation!.longitude);
+    _currLocation =
+        LatLng(result.geometry!.location.lat, result.geometry!.location.lng);
+    List<Placemark> _address = await placemarkFromCoordinates(
+        _currLocation!.latitude, _currLocation!.longitude);
     posCodeController.text = _address[0].postalCode ?? '';
     notifyListeners();
   }
-
 }

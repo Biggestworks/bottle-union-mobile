@@ -7,7 +7,6 @@ import 'package:eight_barrels/provider/profile/add_address_provider.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 
@@ -39,7 +38,7 @@ class _AddAddressScreenState extends State<AddAddressScreen>
 
   @override
   Widget build(BuildContext context) {
-    final _provider = Provider.of<AddAddressProvider>(context, listen: false);
+    final _provider = Provider.of<AddAddressProvider>(context, listen: true);
 
     Widget _mainContent = SingleChildScrollView(
       child: Padding(
@@ -50,7 +49,7 @@ class _AddAddressScreenState extends State<AddAddressScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AppLocalizations.instance.text('TXT_LBL_ADDRESS'),
+                AppLocalizations.instance.text('TXT_LBL_PIN_ADDRESS'),
                 style: TextStyle(
                   fontSize: 16,
                   color: CustomColor.GREY_TXT,
@@ -61,28 +60,59 @@ class _AddAddressScreenState extends State<AddAddressScreen>
               ),
               GestureDetector(
                 onTap: () async => _provider.fnShowMapPicker(context),
-                child: TextFormField(
-                  enabled: false,
-                  controller: _provider.addressController,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: validateField,
-                  maxLines: null,
-                  decoration: InputDecoration(
-                    suffixIcon: Icon(
-                      FontAwesomeIcons.mapMarkedAlt,
-                      size: 20,
-                      color: CustomColor.MAIN,
-                    ),
-                    isDense: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none,
-                    ),
-                    filled: true,
-                    fillColor: CustomColor.GREY_BG,
-                    errorStyle: TextStyle(
-                      color: Colors.red,
-                    ),
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  height: 50,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: CustomColor.GREY_BG),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                          "${_provider.currentLocation?.latitude.toString().substring(0, 8) ?? "-"}, ${_provider.currentLocation?.longitude.toString().substring(0, 8) ?? ""}"),
+                      Icon(
+                        Icons.location_on,
+                        color: CustomColor.MAIN,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                AppLocalizations.instance.text('TXT_LBL_ADDRESS'),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: CustomColor.GREY_TXT,
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              TextFormField(
+                controller: _provider.addressController,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: validateField,
+                maxLines: null,
+                decoration: InputDecoration(
+                  // suffixIcon: Icon(
+                  //   FontAwesomeIcons.mapLocationDot,
+                  //   size: 20,
+                  //   color: CustomColor.MAIN,
+                  // ),
+                  isDense: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: CustomColor.GREY_BG,
+                  errorStyle: TextStyle(
+                    color: Colors.red,
                   ),
                 ),
               ),

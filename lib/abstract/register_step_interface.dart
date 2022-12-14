@@ -23,11 +23,14 @@ abstract class RegisterStepInterface {
   Future validateAgeValid(BuildContext context, String dob) async {
     isAgeValid = await _service.validateAge(dob: dob);
     if (isAgeValid == false) {
-      CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_AGE_ERROR')));
+      CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_AGE_ERROR')));
     }
   }
 
-  Future<bool?> validateEmailValid(BuildContext context, String value) async => await _service.validateEmailPhone(value: value);
+  Future<bool?> validateEmailValid(BuildContext context, String value) async =>
+      await _service.validateEmailPhone(value: value);
 
   void initAnimation(TickerProvider vsync) {
     animationController = AnimationController(
@@ -59,7 +62,8 @@ abstract class RegisterStepInterface {
     }
   }
 
-  Future onForwardTransition(BuildContext context, Future<void> function()) async {
+  Future onForwardTransition(
+      BuildContext context, Future<void> function()) async {
     if (stepIndex == 0) {
       if (fKeyPersonal.currentState!.validate() && isAgeValid == true) {
         fKeyPersonal.currentState!.save();
@@ -92,10 +96,12 @@ abstract class RegisterStepInterface {
         if (isTacAccepted) {
           await function();
         } else {
-          await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_TERM_AND_CONDITION_INFO_3')));
+          await CustomWidget.showSnackBar(
+              context: context,
+              content: Text(AppLocalizations.instance
+                  .text('TXT_TERM_AND_CONDITION_INFO_3')));
         }
       }
     }
   }
-
 }

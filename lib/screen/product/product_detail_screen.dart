@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
@@ -11,6 +13,7 @@ import 'package:eight_barrels/screen/discussion/add_discussion_screen.dart';
 import 'package:eight_barrels/screen/discussion/discussion_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -18,6 +21,7 @@ import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:html/parser.dart' show parse;
 
 class ProductDetailScreen extends StatefulWidget {
   static String tag = '/product-detail-screen';
@@ -715,17 +719,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                         SizedBox(
                                           width: 5,
                                         ),
-                                        Text(
-                                          FormatterHelper.moneyFormatter(
-                                              _data.regularPrice ?? 0),
-                                          style: TextStyle(
-                                            color: CustomColor.GREY_TXT,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                            decoration:
-                                                TextDecoration.lineThrough,
-                                            decorationColor:
-                                                CustomColor.GREY_TXT,
+                                        Flexible(
+                                          child: Text(
+                                            FormatterHelper.moneyFormatter(
+                                                _data.regularPrice ?? 0),
+                                            style: TextStyle(
+                                              color: CustomColor.GREY_TXT,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                              decoration:
+                                                  TextDecoration.lineThrough,
+                                              decorationColor:
+                                                  CustomColor.GREY_TXT,
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -776,30 +782,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                      ),
-                      child: ReadMoreText(
-                        provider.fnConvertHtmlString(_data.description ?? '-'),
-                        trimLines: 2,
-                        textAlign: TextAlign.justify,
-                        trimMode: TrimMode.Line,
-                        trimCollapsedText: 'Show more',
-                        trimExpandedText: 'Show less',
-                        lessStyle: TextStyle(
-                          fontSize: 14,
-                          color: Colors.pink,
-                        ),
-                        moreStyle: TextStyle(
-                          fontSize: 14,
-                          color: Colors.pink,
-                        ),
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                        ),
-                      ),
+                    ReadmoreWidget(
+                      description: _data.description ?? '-',
                     ),
                     Divider(
                       thickness: 4,
@@ -1505,5 +1489,85 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
       _isLoad = true;
       setState(() {});
     }
+  }
+}
+
+class ReadmoreWidget extends StatefulWidget {
+  const ReadmoreWidget({Key? key, required this.description}) : super(key: key);
+
+  final String description;
+
+  @override
+  State<ReadmoreWidget> createState() => _ReadmoreWidgetState();
+}
+
+class _ReadmoreWidgetState extends State<ReadmoreWidget> {
+  bool _isReadmore = false;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        if (!_isReadmore)
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10,
+            ),
+            child: ReadMoreText(
+              parse(widget.description).body?.text ?? '',
+              trimLines: 2,
+              textAlign: TextAlign.justify,
+              trimMode: TrimMode.Line,
+              trimCollapsedText: 'Show more',
+              trimExpandedText: 'Show less',
+              lessStyle: TextStyle(
+                fontSize: 14,
+                color: Colors.pink,
+              ),
+              moreStyle: TextStyle(
+                fontSize: 14,
+                color: Colors.pink,
+              ),
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 15,
+              ),
+              callback: (bool value) {
+                log(value.toString());
+                setState(() {
+                  _isReadmore = !value;
+                });
+              },
+            ),
+          ),
+        if (_isReadmore)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                ),
+                child: Html(data: widget.description),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _isReadmore = false;
+                    });
+                  },
+                  child: Text(
+                    'Show less',
+                    style: TextStyle(
+                      color: Colors.pink,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )
+      ],
+    );
   }
 }

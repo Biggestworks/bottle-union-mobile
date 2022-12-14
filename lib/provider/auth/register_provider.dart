@@ -21,7 +21,8 @@ import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:timelines/timelines.dart';
 
-class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextValidation {
+class RegisterProvider extends ChangeNotifier
+    with RegisterStepInterface, TextValidation {
   AuthService _service = new AuthService();
   AddressService _addressService = new AddressService();
 
@@ -37,9 +38,14 @@ class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextVa
   TextEditingController regionController = new TextEditingController();
 
   List<Genders> genderList = [
-    Genders(gender: 'male', title: AppLocalizations.instance.text('TXT_LBL_MALE')),
-    Genders(gender: 'female', title: AppLocalizations.instance.text('TXT_LBL_FEMALE')),
-    Genders(gender: 'other', title: AppLocalizations.instance.text('TXT_LBL_OTHER')),
+    Genders(
+        gender: 'male', title: AppLocalizations.instance.text('TXT_LBL_MALE')),
+    Genders(
+        gender: 'female',
+        title: AppLocalizations.instance.text('TXT_LBL_FEMALE')),
+    Genders(
+        gender: 'other',
+        title: AppLocalizations.instance.text('TXT_LBL_OTHER')),
   ];
   String genderValue = 'male';
 
@@ -103,13 +109,22 @@ class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextVa
     if (_res!.status != null) {
       if (_res.status == true && _res.data != null) {
         _view!.onProgressFinish();
-        await Get.offAllNamed(LoginScreen.tag, arguments: LoginScreen(isRegister: true,));
+        await Get.offAllNamed(LoginScreen.tag,
+            arguments: LoginScreen(
+              isRegister: true,
+            ));
       } else {
         _view!.onProgressFinish();
-        await CustomWidget.showSnackBar(context: context, content: Text('${_res.message != null ? _res.message.toString() : ''}'));                }
+        await CustomWidget.showSnackBar(
+            context: context,
+            content:
+                Text('${_res.message != null ? _res.message.toString() : ''}'));
+      }
     } else {
       _view!.onProgressFinish();
-      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+      await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
     _view!.onProgressFinish();
   }
@@ -138,11 +153,13 @@ class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextVa
         physics: NeverScrollableScrollPhysics(),
         builder: TimelineTileBuilder.connected(
           connectionDirection: ConnectionDirection.before,
-          itemExtentBuilder: (_, __) => MediaQuery.of(context).size.width / _stepTitle.length,
+          itemExtentBuilder: (_, __) =>
+              MediaQuery.of(context).size.width / _stepTitle.length,
           contentsBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsets.only(top: 10.0),
-              child: Text(_stepTitle[index],
+              child: Text(
+                _stepTitle[index],
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: fnGetStepColor(index),
@@ -158,10 +175,13 @@ class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextVa
             if (index == super.stepIndex) {
               color = CustomColor.SECONDARY;
               child = Center(
-                child: Text('${index+1}', style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),),
+                child: Text(
+                  '${index + 1}',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               );
             } else if (index < super.stepIndex) {
               color = CustomColor.SECONDARY;
@@ -206,20 +226,22 @@ class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextVa
                     color: color,
                     size: 25,
                     child: Center(
-                      child: Text('${index+1}', style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),),
+                      child: Text(
+                        '${index + 1}',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ],
               );
             }
           },
-          connectorBuilder: (_, index, type) =>
-              SolidLineConnector(
-                color: fnGetStepColor(index),
-              ),
+          connectorBuilder: (_, index, type) => SolidLineConnector(
+            color: fnGetStepColor(index),
+          ),
           itemCount: _stepTitle.length,
         ),
       ),
@@ -232,7 +254,8 @@ class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextVa
   }
 
   Future fnOnForwardTransition(BuildContext context) async {
-    await super.onForwardTransition(context, () async => await _fnRegister(context: scaffoldKey.currentContext!));
+    await super.onForwardTransition(context,
+        () async => await _fnRegister(context: scaffoldKey.currentContext!));
     notifyListeners();
   }
 
@@ -248,17 +271,30 @@ class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextVa
     try {
       _serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!_serviceEnabled) {
-        await CustomWidget.showSnackBar(context: context, content: Text('Location services are disabled.'));
+        await CustomWidget.showSnackBar(
+            context: context, content: Text('Location services are disabled.'));
       }
 
       _permission = await Geolocator.checkPermission();
+
       if (_permission == LocationPermission.denied) {
         _permission = await Geolocator.requestPermission();
+
         if (_permission == LocationPermission.denied) {
-          await CustomWidget.showSnackBar(context: context, content: Text('Location permissions are denied.'));
+          await CustomWidget.showSnackBar(
+              context: context,
+              content: Text('Location permissions are denied.'));
+        } else if (_permission == LocationPermission.deniedForever) {
+          await CustomWidget.showSnackBar(
+              context: context,
+              content: Text(
+                  'Location permissions are permanently denied, Bottle Union cannot request permissions.'));
         }
       } else if (_permission == LocationPermission.deniedForever) {
-        await CustomWidget.showSnackBar(context: context, content: Text('Location permissions are permanently denied, Bottle Union cannot request permissions.'));
+        await CustomWidget.showSnackBar(
+            context: context,
+            content: Text(
+                'Location permissions are permanently denied, Bottle Union cannot request permissions.'));
       }
 
       await Geolocator.getCurrentPosition().then((value) {
@@ -275,7 +311,8 @@ class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextVa
               onPlacePicked: (result) async {
                 Get.back();
                 addressController.text = result.formattedAddress!;
-                selectedLocation = LatLng(result.geometry!.location.lat, result.geometry!.location.lng);
+                selectedLocation = LatLng(result.geometry!.location.lat,
+                    result.geometry!.location.lng);
                 notifyListeners();
               },
               region: 'ID',
@@ -287,7 +324,6 @@ class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextVa
           ),
         );
       }
-
     } catch (e) {
       print(e);
     }
@@ -313,7 +349,8 @@ class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextVa
   Future fnOnSelectProvince({required String name, required String id}) async {
     provinceController.text = name;
     selectedProvinceId = id;
-    cityList = (await _addressService.getCity(provinceId: selectedProvinceId!))!;
+    cityList =
+        (await _addressService.getCity(provinceId: selectedProvinceId!))!;
     notifyListeners();
   }
 
@@ -328,7 +365,8 @@ class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextVa
     notifyListeners();
   }
 
-  Future fnOnSelectDate(DateRangePickerSelectionChangedArgs args, BuildContext context) async {
+  Future fnOnSelectDate(
+      DateRangePickerSelectionChangedArgs args, BuildContext context) async {
     fnKeyboardUnFocus(context);
     this.dobController.text = DateFormat('yyyy-MM-dd').format(args.value);
     await super.validateAgeValid(context, dobController.text);
@@ -374,7 +412,6 @@ class RegisterProvider extends ChangeNotifier with RegisterStepInterface, TextVa
     print(super.isTacAccepted);
     notifyListeners();
   }
-
 }
 
 class Genders {

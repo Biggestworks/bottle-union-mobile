@@ -238,5 +238,6 @@
 	"TXT_LBL_REVIEW": "Ulasan",
 	"TXT_BANK_ACCOUNT": "BANK",
 	"TXT_BANK_RECEIVER_NAME": "Nama Penerima",
-	"TXT_BANK_NUMBER": "Nomor Rekening"
+	"TXT_BANK_NUMBER": "Nomor Rekening",
+	"TXT_LBL_PIN_ADDRESS": "Titik Alamat"
 }

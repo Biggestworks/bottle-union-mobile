@@ -29,10 +29,12 @@ class _RegisterScreenState extends State<RegisterScreen>
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
-      Provider.of<RegisterProvider>(context, listen: false).fnInitAnimation(this);
+      Provider.of<RegisterProvider>(context, listen: false)
+          .fnInitAnimation(this);
       Provider.of<RegisterProvider>(context, listen: false).fnGetView(this);
       Provider.of<RegisterProvider>(context, listen: false).fnFetchRegionList();
-      Provider.of<RegisterProvider>(context, listen: false).fnFetchProvinceList();
+      Provider.of<RegisterProvider>(context, listen: false)
+          .fnFetchProvinceList();
     });
     super.initState();
   }
@@ -82,10 +84,13 @@ class _RegisterScreenState extends State<RegisterScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(AppLocalizations.instance.text('TXT_LBL_NAME'), style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),),
+                  Text(
+                    AppLocalizations.instance.text('TXT_LBL_NAME'),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
                   TextFormField(
                     controller: _provider.nameController,
                     textInputAction: TextInputAction.next,
@@ -107,11 +112,16 @@ class _RegisterScreenState extends State<RegisterScreen>
                       ),
                     ),
                   ),
-                  SizedBox(height: 20,),
-                  Text('${AppLocalizations.instance.text('TXT_LBL_DOB')} *', style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    '${AppLocalizations.instance.text('TXT_LBL_DOB')} *',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
                   GestureDetector(
                     onTap: () => _showDobDialog(),
                     child: TextFormField(
@@ -131,20 +141,33 @@ class _RegisterScreenState extends State<RegisterScreen>
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Consumer<RegisterProvider>(
-                                child: Container(),
-                                builder: (context, provider, skeleton) {
-                                  switch (provider.isAgeValid) {
-                                    case true:
-                                      return Icon(FontAwesomeIcons.solidCircleCheck, size: 20, color: Colors.greenAccent,);
-                                    case false:
-                                      return Icon(FontAwesomeIcons.circleExclamation, size: 20, color: Colors.amberAccent,);
-                                    default:
-                                      return skeleton!;
-                                  }
-                                }
+                                  child: Container(),
+                                  builder: (context, provider, skeleton) {
+                                    switch (provider.isAgeValid) {
+                                      case true:
+                                        return Icon(
+                                          FontAwesomeIcons.solidCircleCheck,
+                                          size: 20,
+                                          color: Colors.greenAccent,
+                                        );
+                                      case false:
+                                        return Icon(
+                                          FontAwesomeIcons.circleExclamation,
+                                          size: 20,
+                                          color: Colors.amberAccent,
+                                        );
+                                      default:
+                                        return skeleton!;
+                                    }
+                                  }),
+                              SizedBox(
+                                width: 10,
                               ),
-                              SizedBox(width: 10,),
-                              Icon(FontAwesomeIcons.calendarDays, size: 20, color: Colors.white,),
+                              Icon(
+                                FontAwesomeIcons.calendarDays,
+                                size: 20,
+                                color: Colors.white,
+                              ),
                             ],
                           ),
                         ),
@@ -161,65 +184,81 @@ class _RegisterScreenState extends State<RegisterScreen>
                       ),
                     ),
                   ),
-                  SizedBox(height: 20,),
-                  Text(AppLocalizations.instance.text('TXT_LBL_EMAIL'), style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),),
-                  Consumer<RegisterProvider>(
-                    builder: (context, provider, _) {
-                      return TextFormField(
-                        controller: provider.emailController,
-                        textInputAction: TextInputAction.next,
-                        keyboardType: TextInputType.emailAddress,
-                        onChanged: (value) async => await provider.fnValidateEmail(context, value),
-                        style: TextStyle(
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    AppLocalizations.instance.text('TXT_LBL_EMAIL'),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Consumer<RegisterProvider>(builder: (context, provider, _) {
+                    return TextFormField(
+                      controller: provider.emailController,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.emailAddress,
+                      onChanged: (value) async =>
+                          await provider.fnValidateEmail(context, value),
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      decoration: InputDecoration(
+                        errorText: provider.errEmail,
+                        contentPadding: EdgeInsets.symmetric(vertical: 10),
+                        suffixIcon: Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Consumer<RegisterProvider>(
+                                  child: Container(),
+                                  builder: (context, provider, skeleton) {
+                                    switch (provider.isEmailValid) {
+                                      case false:
+                                        return Icon(
+                                          FontAwesomeIcons.solidCircleCheck,
+                                          size: 20,
+                                          color: Colors.greenAccent,
+                                        );
+                                      case true:
+                                        return Icon(
+                                          FontAwesomeIcons.circleExclamation,
+                                          size: 20,
+                                          color: Colors.amberAccent,
+                                        );
+                                      default:
+                                        return skeleton!;
+                                    }
+                                  }),
+                            ],
+                          ),
+                        ),
+                        isDense: true,
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: CustomColor.MAIN),
+                        ),
+                        errorStyle: TextStyle(
                           color: Colors.white,
                         ),
-                        decoration: InputDecoration(
-                          errorText: provider.errEmail,
-                          contentPadding: EdgeInsets.symmetric(vertical: 10),
-                          suffixIcon: Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Consumer<RegisterProvider>(
-                                    child: Container(),
-                                    builder: (context, provider, skeleton) {
-                                      switch (provider.isEmailValid) {
-                                        case false:
-                                          return Icon(FontAwesomeIcons.solidCircleCheck, size: 20, color: Colors.greenAccent,);
-                                        case true:
-                                          return Icon(FontAwesomeIcons.circleExclamation, size: 20, color: Colors.amberAccent,);
-                                        default:
-                                          return skeleton!;
-                                      }
-                                    }
-                                ),
-                              ],
-                            ),
-                          ),
-                          isDense: true,
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: CustomColor.MAIN),
-                          ),
-                          errorStyle: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      );
-                    }
+                      ),
+                    );
+                  }),
+                  SizedBox(
+                    height: 20,
                   ),
-                  SizedBox(height: 20,),
-                  Text(AppLocalizations.instance.text('TXT_LBL_PHONE'), style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),),
+                  Text(
+                    AppLocalizations.instance.text('TXT_LBL_PHONE'),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
                   TextFormField(
                     controller: _provider.phoneController,
                     textInputAction: TextInputAction.next,
@@ -243,51 +282,62 @@ class _RegisterScreenState extends State<RegisterScreen>
                       ),
                     ),
                   ),
-                  SizedBox(height: 20,),
-                  Text(AppLocalizations.instance.text('TXT_LBL_GENDER'), style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),),
-                  Consumer<RegisterProvider>(
-                      builder: (context, provider, _) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: provider.genderList.map((item) {
-                            return Flexible(
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Radio(
-                                    value: item.gender,
-                                    groupValue: provider.genderValue,
-                                    onChanged: provider.fnOnChangeGender,
-                                    activeColor: Colors.white,
-                                    visualDensity: VisualDensity.compact,
-                                  ),
-                                  Flexible(
-                                    child: Text(item.title, style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    ),),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                        );
-                      }
+                  SizedBox(
+                    height: 20,
                   ),
+                  Text(
+                    AppLocalizations.instance.text('TXT_LBL_GENDER'),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Consumer<RegisterProvider>(builder: (context, provider, _) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: provider.genderList.map((item) {
+                        return Flexible(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Radio(
+                                value: item.gender,
+                                groupValue: provider.genderValue,
+                                onChanged: provider.fnOnChangeGender,
+                                activeColor: Colors.white,
+                                visualDensity: VisualDensity.compact,
+                              ),
+                              Flexible(
+                                child: Text(
+                                  item.title,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  }),
                 ],
               ),
             ),
           ),
         ),
-        SizedBox(height: 5,),
+        SizedBox(
+          height: 5,
+        ),
         Padding(
           padding: const EdgeInsets.only(left: 10),
-          child: Text('*${AppLocalizations.instance.text('TXT_AGE_INFO')}', style: TextStyle(
-            color: Colors.white,
-          ),),
+          child: Text(
+            '*${AppLocalizations.instance.text('TXT_AGE_INFO')}',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
         ),
       ],
     );
@@ -297,10 +347,16 @@ class _RegisterScreenState extends State<RegisterScreen>
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(AppLocalizations.instance.text('TXT_REGISTER_ADDRESS'), style: TextStyle(
-            color: Colors.white,
-          ), textAlign: TextAlign.center,),
-          SizedBox(height: 10,),
+          Text(
+            AppLocalizations.instance.text('TXT_REGISTER_ADDRESS'),
+            style: TextStyle(
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(
+            height: 10,
+          ),
           Card(
             color: Colors.white38,
             shape: RoundedRectangleBorder(
@@ -311,12 +367,16 @@ class _RegisterScreenState extends State<RegisterScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(AppLocalizations.instance.text('TXT_LBL_ADDRESS'), style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),),
+                  Text(
+                    AppLocalizations.instance.text('TXT_LBL_ADDRESS'),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
                   GestureDetector(
-                    onTap: () async => await _provider.fnShowPlacePicker(context),
+                    onTap: () async =>
+                        await _provider.fnShowPlacePicker(context),
                     child: TextFormField(
                       enabled: false,
                       controller: _provider.addressController,
@@ -327,7 +387,11 @@ class _RegisterScreenState extends State<RegisterScreen>
                       maxLines: null,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(vertical: 10),
-                        suffixIcon: Icon(FontAwesomeIcons.mapLocationDot, size: 20, color: Colors.white,),
+                        suffixIcon: Icon(
+                          FontAwesomeIcons.mapLocationDot,
+                          size: 20,
+                          color: Colors.white,
+                        ),
                         isDense: true,
                         disabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -338,17 +402,23 @@ class _RegisterScreenState extends State<RegisterScreen>
                       ),
                     ),
                   ),
-                  SizedBox(height: 20,),
-                  Text(AppLocalizations.instance.text('TXT_REGISTER_PROVINCE'), style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    AppLocalizations.instance.text('TXT_REGISTER_PROVINCE'),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
                   GestureDetector(
                     onTap: () => CustomWidget.showSheet(
                       context: context,
                       isScroll: true,
                       child: ChangeNotifierProvider.value(
-                        value: Provider.of<RegisterProvider>(context, listen: false),
+                        value: Provider.of<RegisterProvider>(context,
+                            listen: false),
                         child: Container(
                           height: MediaQuery.of(context).size.height * 0.5,
                           child: Consumer<RegisterProvider>(
@@ -358,15 +428,18 @@ class _RegisterScreenState extends State<RegisterScreen>
                                 case null:
                                   return skeleton!;
                                 default:
-                                  switch (provider.provinceList.rajaongkir?.results) {
+                                  switch (provider
+                                      .provinceList.rajaongkir?.results) {
                                     case null:
                                       return skeleton!;
                                     default:
                                       return ListView.separated(
                                         shrinkWrap: true,
-                                        itemCount: provider.provinceList.rajaongkir!.results!.length,
+                                        itemCount: provider.provinceList
+                                            .rajaongkir!.results!.length,
                                         itemBuilder: (context, index) {
-                                          var _data = provider.provinceList.rajaongkir!.results![index];
+                                          var _data = provider.provinceList
+                                              .rajaongkir!.results![index];
                                           return GestureDetector(
                                             onTap: () async {
                                               Get.back();
@@ -376,10 +449,16 @@ class _RegisterScreenState extends State<RegisterScreen>
                                               );
                                             },
                                             child: Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                                              child: Text(_data.province ?? '-', style: TextStyle(
-                                                fontSize: 16,
-                                              ),),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10,
+                                                      vertical: 15),
+                                              child: Text(
+                                                _data.province ?? '-',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                ),
+                                              ),
                                             ),
                                           );
                                         },
@@ -414,11 +493,16 @@ class _RegisterScreenState extends State<RegisterScreen>
                       ),
                     ),
                   ),
-                  SizedBox(height: 20,),
-                  Text(AppLocalizations.instance.text('TXT_REGISTER_CITY'), style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    AppLocalizations.instance.text('TXT_REGISTER_CITY'),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
                   GestureDetector(
                     onTap: () {
                       if (_provider.provinceController.text.isNotEmpty) {
@@ -426,7 +510,8 @@ class _RegisterScreenState extends State<RegisterScreen>
                           context: context,
                           isScroll: true,
                           child: ChangeNotifierProvider.value(
-                            value: Provider.of<RegisterProvider>(context, listen: false),
+                            value: Provider.of<RegisterProvider>(context,
+                                listen: false),
                             child: Container(
                               height: MediaQuery.of(context).size.height * 0.5,
                               child: Consumer<RegisterProvider>(
@@ -436,15 +521,18 @@ class _RegisterScreenState extends State<RegisterScreen>
                                     case null:
                                       return skeleton!;
                                     default:
-                                      switch (provider.cityList.rajaongkir?.results) {
+                                      switch (provider
+                                          .cityList.rajaongkir?.results) {
                                         case null:
                                           return skeleton!;
                                         default:
                                           return ListView.separated(
                                             shrinkWrap: true,
-                                            itemCount: provider.cityList.rajaongkir!.results!.length,
+                                            itemCount: provider.cityList
+                                                .rajaongkir!.results!.length,
                                             itemBuilder: (context, index) {
-                                              var _data = provider.cityList.rajaongkir!.results![index];
+                                              var _data = provider.cityList
+                                                  .rajaongkir!.results![index];
                                               return GestureDetector(
                                                 onTap: () async {
                                                   Get.back();
@@ -454,10 +542,16 @@ class _RegisterScreenState extends State<RegisterScreen>
                                                   );
                                                 },
                                                 child: Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                                                  child: Text(_data.cityName ?? '-', style: TextStyle(
-                                                    fontSize: 16,
-                                                  ),),
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 10,
+                                                      vertical: 15),
+                                                  child: Text(
+                                                    _data.cityName ?? '-',
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
                                                 ),
                                               );
                                             },
@@ -473,7 +567,10 @@ class _RegisterScreenState extends State<RegisterScreen>
                           ),
                         );
                       } else {
-                        CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_REGISTER_CITY_INFO')));
+                        CustomWidget.showSnackBar(
+                            context: context,
+                            content: Text(AppLocalizations.instance
+                                .text('TXT_REGISTER_CITY_INFO')));
                       }
                     },
                     child: TextFormField(
@@ -496,17 +593,23 @@ class _RegisterScreenState extends State<RegisterScreen>
                       ),
                     ),
                   ),
-                  SizedBox(height: 20,),
-                  Text(AppLocalizations.instance.text('TXT_REGISTER_REGION'), style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    AppLocalizations.instance.text('TXT_REGISTER_REGION'),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
                   GestureDetector(
                     onTap: () => CustomWidget.showSheet(
                       context: context,
                       isScroll: true,
                       child: ChangeNotifierProvider.value(
-                        value: Provider.of<RegisterProvider>(context, listen: false),
+                        value: Provider.of<RegisterProvider>(context,
+                            listen: false),
                         child: Container(
                           height: MediaQuery.of(context).size.height * 0.5,
                           child: Consumer<RegisterProvider>(
@@ -520,7 +623,8 @@ class _RegisterScreenState extends State<RegisterScreen>
                                     shrinkWrap: true,
                                     itemCount: provider.regionList.data!.length,
                                     itemBuilder: (context, index) {
-                                      var _data = provider.regionList.data![index];
+                                      var _data =
+                                          provider.regionList.data![index];
                                       return GestureDetector(
                                         onTap: () async {
                                           Get.back();
@@ -530,10 +634,14 @@ class _RegisterScreenState extends State<RegisterScreen>
                                           );
                                         },
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                                          child: Text(_data.name ?? '-', style: TextStyle(
-                                            fontSize: 16,
-                                          ),),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 15),
+                                          child: Text(
+                                            _data.name ?? '-',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                            ),
+                                          ),
                                         ),
                                       );
                                     },
@@ -587,10 +695,13 @@ class _RegisterScreenState extends State<RegisterScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(AppLocalizations.instance.text('TXT_LBL_PASS'), style: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-              ),),
+              Text(
+                AppLocalizations.instance.text('TXT_LBL_PASS'),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+              ),
               TextFormField(
                 controller: _provider.passController,
                 textInputAction: TextInputAction.next,
@@ -623,15 +734,21 @@ class _RegisterScreenState extends State<RegisterScreen>
                   ),
                 ),
               ),
-              SizedBox(height: 20,),
-              Text(AppLocalizations.instance.text('TXT_LBL_PASS_CONFIRM'), style: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-              ),),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                AppLocalizations.instance.text('TXT_LBL_PASS_CONFIRM'),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+              ),
               TextFormField(
                 controller: _provider.confirmPassController,
                 textInputAction: TextInputAction.next,
-                validator: (value) => validateConfirmPassword(_provider.passController.text, value),
+                validator: (value) => validateConfirmPassword(
+                    _provider.passController.text, value),
                 obscureText: _provider.isHidePassConfirm,
                 style: TextStyle(
                   color: Colors.white,
@@ -673,18 +790,19 @@ class _RegisterScreenState extends State<RegisterScreen>
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-            child: Text(AppLocalizations.instance.text('TXT_SIGN_UP'), style: TextStyle(
-              fontSize: 24,
-              color: Colors.white,
-            ),),
+            child: Text(
+              AppLocalizations.instance.text('TXT_SIGN_UP'),
+              style: TextStyle(
+                fontSize: 24,
+                color: Colors.white,
+              ),
+            ),
           ),
-          Consumer<RegisterProvider>(
-              builder: (context, provider, _) {
-                return Flexible(
-                  child: provider.stepProgressBar(context: context),
-                );
-              }
-          ),
+          Consumer<RegisterProvider>(builder: (context, provider, _) {
+            return Flexible(
+              child: provider.stepProgressBar(context: context),
+            );
+          }),
           Consumer<RegisterProvider>(
               child: Container(),
               builder: (context, provider, skeleton) {
@@ -699,90 +817,93 @@ class _RegisterScreenState extends State<RegisterScreen>
                         child: provider.stepIndex == 0
                             ? _formPersonal
                             : provider.stepIndex == 1
-                            ? _formAddress
-                            : _formPassword,
+                                ? _formAddress
+                                : _formPassword,
                       ),
                     );
                 }
-              }
-          ),
+              }),
         ],
       ),
     );
 
-    Widget _submitBtn = Consumer<RegisterProvider>(
-        builder: (context, provider, _) {
-          return SafeArea(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+    Widget _submitBtn =
+        Consumer<RegisterProvider>(builder: (context, provider, _) {
+      return SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Theme(
-                      data: ThemeData(unselectedWidgetColor: Colors.white,),
-                      child: Checkbox(
-                        value: provider.isTacAccepted,
-                        onChanged: provider.fnOnCheckTOC,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        visualDensity: VisualDensity.compact,
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        activeColor: Colors.blue,
-
-                      ),
+                Theme(
+                  data: ThemeData(
+                    unselectedWidgetColor: Colors.white,
+                  ),
+                  child: Checkbox(
+                    value: provider.isTacAccepted,
+                    onChanged: provider.fnOnCheckTOC,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                    Flexible(
-                      child: Text.rich(TextSpan(
-                        children: [
-                          TextSpan(
-                            text: AppLocalizations.instance.text('TXT_TERM_AND_CONDITION_INFO_1'),
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                          TextSpan(
-                            text: ' ${AppLocalizations.instance.text('TXT_TERM_AND_CONDITION')} ',
-                            style: TextStyle(
-                              color: Colors.orangeAccent,
-                            ),
-                            recognizer: new TapGestureRecognizer()..onTap =
-                                () => Get.toNamed(TacWebviewScreen.tag),
-                          ),
-                          TextSpan(
-                            text: AppLocalizations.instance.text('TXT_TERM_AND_CONDITION_INFO_2'),
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ]
-                      ),
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,),
-                    ),
-                  ],
+                    visualDensity: VisualDensity.compact,
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    activeColor: Colors.blue,
+                  ),
                 ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
-                  width: MediaQuery.of(context).size.width,
-                  child: CustomWidget.roundBtn(
-                    label: provider.stepIndex != 2
-                        ? AppLocalizations.instance.text('TXT_CONTINUE')
-                        : AppLocalizations.instance.text('TXT_JOIN'),
-                    btnColor: CustomColor.SECONDARY,
-                    lblColor: CustomColor.MAIN,
-                    isBold: true,
-                    fontSize: 16,
-                    function: () async => await provider.fnOnForwardTransition(context),
+                Flexible(
+                  child: Text.rich(
+                    TextSpan(children: [
+                      TextSpan(
+                        text: AppLocalizations.instance
+                            .text('TXT_TERM_AND_CONDITION_INFO_1'),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      TextSpan(
+                        text:
+                            ' ${AppLocalizations.instance.text('TXT_TERM_AND_CONDITION')} ',
+                        style: TextStyle(
+                          color: Colors.orangeAccent,
+                        ),
+                        recognizer: new TapGestureRecognizer()
+                          ..onTap = () => Get.toNamed(TacWebviewScreen.tag),
+                      ),
+                      TextSpan(
+                        text: AppLocalizations.instance
+                            .text('TXT_TERM_AND_CONDITION_INFO_2'),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ]),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
             ),
-          );
-        }
-    );
+            Container(
+              padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+              width: MediaQuery.of(context).size.width,
+              child: CustomWidget.roundBtn(
+                label: provider.stepIndex != 2
+                    ? AppLocalizations.instance.text('TXT_CONTINUE')
+                    : AppLocalizations.instance.text('TXT_JOIN'),
+                btnColor: CustomColor.SECONDARY,
+                lblColor: CustomColor.MAIN,
+                isBold: true,
+                fontSize: 16,
+                function: () async =>
+                    await provider.fnOnForwardTransition(context),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
 
     return CustomWidget.loadingHud(
       isLoad: _isLoad,
@@ -804,7 +925,9 @@ class _RegisterScreenState extends State<RegisterScreen>
                 padding: const EdgeInsets.only(right: 20),
                 child: SizedBox(
                   width: 150,
-                  child: Image.asset('assets/images/ic_logo_bu_white.png',),
+                  child: Image.asset(
+                    'assets/images/ic_logo_bu_white.png',
+                  ),
                 ),
               ),
             ],
@@ -831,5 +954,4 @@ class _RegisterScreenState extends State<RegisterScreen>
       setState(() {});
     }
   }
-
 }
