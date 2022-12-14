@@ -1,4 +1,3 @@
-
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class URLHelper {
@@ -44,6 +43,7 @@ class URLHelper {
   static final newPasswordUrl = baseUrl + '/user/password/new';
   static final resetPasswordUrl = baseUrl + '/user/password/reset';
   static final deleteAccountUrl = baseUrl + '/user/delete-account/confirmation';
+  static final updateIdCardUrl = baseUrl + '/user/upload-identity';
 
   ///OTP
   static final sendOtpUrl = baseUrl + '/verification/send';
@@ -65,7 +65,8 @@ class URLHelper {
   static final storeDiscussionUrl = baseUrl + '/discussion/store';
   static deleteDiscussionUrl(String id) => baseUrl + '/discussion/delete/$id';
   static final storeDiscussionReplyUrl = baseUrl + '/discussion/reply/store';
-  static deleteDiscussionReplyUrl(String id) => baseUrl + '/discussion/reply/delete/$id';
+  static deleteDiscussionReplyUrl(String id) =>
+      baseUrl + '/discussion/reply/delete/$id';
 
   ///DELIVERY
   static final courierUrl = baseUrl + '/courier';
@@ -87,7 +88,8 @@ class URLHelper {
   ///TRANSACTION
   static final transactionUrl = baseUrl + '/transactions';
   static final transactionDetailUrl = baseUrl + '/transactions/detail';
-  static final uploadPaymentUrl = baseUrl + '/transactions/upload-proof-transfer';
+  static final uploadPaymentUrl =
+      baseUrl + '/transactions/upload-proof-transfer';
   static final trackOrderUrl = baseUrl + '/transactions/tracking';
 
   ///PRODUCT REVIEW

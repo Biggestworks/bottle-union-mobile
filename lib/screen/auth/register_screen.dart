@@ -112,78 +112,62 @@ class _RegisterScreenState extends State<RegisterScreen>
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    '${AppLocalizations.instance.text('TXT_LBL_DOB')} *',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => _showDobDialog(),
-                    child: TextFormField(
-                      enabled: false,
-                      controller: _provider.dobController,
-                      textInputAction: TextInputAction.next,
-                      validator: validateField,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(vertical: 10),
-                        suffixIcon: Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Consumer<RegisterProvider>(
-                                  child: Container(),
-                                  builder: (context, provider, skeleton) {
-                                    switch (provider.isAgeValid) {
-                                      case true:
-                                        return Icon(
-                                          FontAwesomeIcons.solidCircleCheck,
-                                          size: 20,
-                                          color: Colors.greenAccent,
-                                        );
-                                      case false:
-                                        return Icon(
-                                          FontAwesomeIcons.circleExclamation,
-                                          size: 20,
-                                          color: Colors.amberAccent,
-                                        );
-                                      default:
-                                        return skeleton!;
-                                    }
-                                  }),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                FontAwesomeIcons.calendarDays,
-                                size: 20,
-                                color: Colors.white,
-                              ),
-                            ],
-                          ),
-                        ),
-                        isDense: true,
-                        disabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                        errorBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red),
-                        ),
-                        errorStyle: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
+                  // SizedBox(
+                  //   height: 20,
+                  // ),
+                  // Text('${AppLocalizations.instance.text('TXT_LBL_DOB')} *', style: TextStyle(
+                  //   fontSize: 16,
+                  //   color: Colors.white,
+                  // ),),
+                  // GestureDetector(
+                  //   onTap: () => _showDobDialog(),
+                  //   child: TextFormField(
+                  //     enabled: false,
+                  //     controller: _provider.dobController,
+                  //     textInputAction: TextInputAction.next,
+                  //     validator: validateField,
+                  //     style: TextStyle(
+                  //       color: Colors.white,
+                  //     ),
+                  //     decoration: InputDecoration(
+                  //       contentPadding: EdgeInsets.symmetric(vertical: 10),
+                  //       suffixIcon: Padding(
+                  //         padding: const EdgeInsets.only(bottom: 10),
+                  //         child: Row(
+                  //           mainAxisSize: MainAxisSize.min,
+                  //           mainAxisAlignment: MainAxisAlignment.end,
+                  //           children: [
+                  //             Consumer<RegisterProvider>(
+                  //               child: Container(),
+                  //               builder: (context, provider, skeleton) {
+                  //                 switch (provider.isAgeValid) {
+                  //                   case true:
+                  //                     return Icon(FontAwesomeIcons.solidCircleCheck, size: 20, color: Colors.greenAccent,);
+                  //                   case false:
+                  //                     return Icon(FontAwesomeIcons.circleExclamation, size: 20, color: Colors.amberAccent,);
+                  //                   default:
+                  //                     return skeleton!;
+                  //                 }
+                  //               }
+                  //             ),
+                  //             SizedBox(width: 10,),
+                  //             Icon(FontAwesomeIcons.calendarDays, size: 20, color: Colors.white,),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //       isDense: true,
+                  //       disabledBorder: UnderlineInputBorder(
+                  //         borderSide: BorderSide(color: Colors.white),
+                  //       ),
+                  //       errorBorder: UnderlineInputBorder(
+                  //         borderSide: BorderSide(color: Colors.red),
+                  //       ),
+                  //       errorStyle: TextStyle(
+                  //         color: Colors.white,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   SizedBox(
                     height: 20,
                   ),
@@ -813,13 +797,10 @@ class _RegisterScreenState extends State<RegisterScreen>
                     return SlideTransition(
                       position: provider.offsetAnimation!,
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 20),
-                        child: provider.stepIndex == 0
-                            ? _formPersonal
-                            : provider.stepIndex == 1
-                                ? _formAddress
-                                : _formPassword,
-                      ),
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 20),
+                          child: provider.stepIndex == 0
+                              ? _formPersonal
+                              : _formPassword),
                     );
                 }
               }),

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eight_barrels/abstract/product_log.dart';
@@ -11,6 +10,7 @@ import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
 import 'package:eight_barrels/screen/home/banner_detail_screen.dart';
 import 'package:eight_barrels/screen/home/notification_screen.dart';
+import 'package:eight_barrels/screen/id_card/id_card_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_region_screen.dart';
 import 'package:eight_barrels/screen/product/wishlist_screen.dart';
@@ -45,7 +45,6 @@ class _HomeScreenState extends State<HomeScreen>
   void initState() {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       Future.delayed(Duration.zero).then((value) {
-        log('terpangil berapa kali');
         Provider.of<HomeProvider>(context, listen: false)
             .fnGetGuestStatus()
             .then((value) {
@@ -57,6 +56,16 @@ class _HomeScreenState extends State<HomeScreen>
                   .fnFetchRegionProductList();
               Provider.of<HomeProvider>(context, listen: false)
                   .fnFetchBannerList();
+
+              if (Provider.of<HomeProvider>(context, listen: false)
+                      .userModel
+                      .user
+                      ?.idCardImage ==
+                  null) {
+                Get.offAndToNamed(
+                  IdCardScreen.tag,
+                );
+              }
             });
             Provider.of<HomeProvider>(context, listen: false)
                 .fnFetchCategoryList();
@@ -66,6 +75,8 @@ class _HomeScreenState extends State<HomeScreen>
             Provider.of<HomeProvider>(context, listen: false)
                 .fnFetchAddressList();
             _pushNotificationManager.initFCM();
+          } else {
+            Provider.of<HomeProvider>(context, listen: false).onRefresh();
           }
         });
       });

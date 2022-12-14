@@ -58,7 +58,6 @@ class RegisterProvider extends ChangeNotifier
 
   List<String> _stepTitle = [
     AppLocalizations.instance.text('TXT_STEP_PERSONAL'),
-    AppLocalizations.instance.text('TXT_STEP_ADDRESS'),
     AppLocalizations.instance.text('TXT_STEP_PASSWORD'),
   ];
 
@@ -94,16 +93,16 @@ class RegisterProvider extends ChangeNotifier
       email: emailController.text,
       phone: phoneController.text,
       gender: genderValue,
-      idRegion: selectedRegionId!,
+      idRegion: 1,
       password: passController.text,
       confirmPassword: confirmPassController.text,
       address: addressController.text,
-      provinceId: selectedProvinceId!,
+      provinceId: selectedProvinceId,
       province: provinceController.text,
-      cityId: selectedCityId!,
+      cityId: selectedCityId,
       city: cityController.text,
-      latitude: selectedLocation!.latitude.toString(),
-      longitude: selectedLocation!.longitude.toString(),
+      latitude: selectedLocation?.latitude.toString(),
+      longitude: selectedLocation?.longitude.toString(),
     );
 
     if (_res!.status != null) {
@@ -153,8 +152,7 @@ class RegisterProvider extends ChangeNotifier
         physics: NeverScrollableScrollPhysics(),
         builder: TimelineTileBuilder.connected(
           connectionDirection: ConnectionDirection.before,
-          itemExtentBuilder: (_, __) =>
-              MediaQuery.of(context).size.width / _stepTitle.length,
+          itemExtentBuilder: (_, __) => MediaQuery.of(context).size.width / 2,
           contentsBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsets.only(top: 10.0),

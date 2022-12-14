@@ -9,7 +9,7 @@ class UserDetailModel {
     status = json['status'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     region =
-    json['region'] != null ? new Region.fromJson(json['region']) : null;
+        json['region'] != null ? new Region.fromJson(json['region']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -40,6 +40,7 @@ class User {
   int? isAdmin;
   int? isVerified;
   int? isActive;
+  String? idCardImage;
   String? fcmToken;
   String? createdAt;
   String? updatedAt;
@@ -47,23 +48,24 @@ class User {
 
   User(
       {this.id,
-        this.idRegion,
-        this.providerUid,
-        this.providerId,
-        this.fullname,
-        this.email,
-        this.emailVerifiedAt,
-        this.avatar,
-        this.dateOfBirth,
-        this.phone,
-        this.gender,
-        this.isAdmin,
-        this.isVerified,
-        this.isActive,
-        this.fcmToken,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt});
+      this.idRegion,
+      this.providerUid,
+      this.providerId,
+      this.fullname,
+      this.email,
+      this.emailVerifiedAt,
+      this.avatar,
+      this.dateOfBirth,
+      this.phone,
+      this.gender,
+      this.isAdmin,
+      this.isVerified,
+      this.isActive,
+      this.fcmToken,
+      this.createdAt,
+      this.updatedAt,
+      this.idCardImage,
+      this.deletedAt});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -84,6 +86,7 @@ class User {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     deletedAt = json['deleted_at'];
+    idCardImage = json['id_card_image'];
   }
 
   Map<String, dynamic> toJson() {
@@ -106,6 +109,7 @@ class User {
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['deleted_at'] = this.deletedAt;
+    data['id_card_image'] = this.idCardImage;
     return data;
   }
 }

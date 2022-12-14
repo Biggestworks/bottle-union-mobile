@@ -2,6 +2,7 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/abstract/register_step_interface.dart';
 import 'package:eight_barrels/abstract/socmed_auth_interface.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
+import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/helper/validation.dart';
 import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/home/base_home_screen.dart';
@@ -63,14 +64,21 @@ class LoginProvider extends ChangeNotifier
       if (_res!.status != null) {
         if (_res.status == true) {
           _view!.onProgressFinish();
+          UserPreferences _userPreferences = new UserPreferences();
+          await _userPreferences.saveGuestStatus('false');
           Get.offAllNamed(BaseHomeScreen.tag, arguments: BaseHomeScreen());
         } else {
           _view!.onProgressFinish();
-          await CustomWidget.showSnackBar(context: context, content: Text('${_res.message != null ? _res.message.toString() : ''}'));
+          await CustomWidget.showSnackBar(
+              context: context,
+              content: Text(
+                  '${_res.message != null ? _res.message.toString() : ''}'));
         }
       } else {
         _view!.onProgressFinish();
-        await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+        await CustomWidget.showSnackBar(
+            context: context,
+            content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
       }
       _view!.onProgressFinish();
     }
@@ -87,5 +95,4 @@ class LoginProvider extends ChangeNotifier
     _view!.onProgressStart();
     notifyListeners();
   }
-
 }

@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class HomeProvider extends ChangeNotifier
-    with PaginationInterface, ProductCardInterface{
+    with PaginationInterface, ProductCardInterface {
   UserPreferences _userPreferences = new UserPreferences();
   UserDetailModel userModel = new UserDetailModel();
   int currBanner = 0;
@@ -34,7 +34,8 @@ class HomeProvider extends ChangeNotifier
   address.Data? selectedAddress;
 
   final _storage = new FlutterSecureStorage();
-  PushNotificationManager _pushNotificationManager = new PushNotificationManager();
+  PushNotificationManager _pushNotificationManager =
+      new PushNotificationManager();
 
   bool isPaginateLoad = false;
   int? userRegionId;
@@ -47,8 +48,10 @@ class HomeProvider extends ChangeNotifier
 
   Future fnFetchUserInfo() async {
     this.userModel = (await _userPreferences.getUserData())!;
-    var _regionId = await _storage.read(key: KeyHelper.KEY_USER_REGION_ID) ?? null;
-    var _regionName = await _storage.read(key: KeyHelper.KEY_USER_REGION_NAME) ?? null;
+    var _regionId =
+        await _storage.read(key: KeyHelper.KEY_USER_REGION_ID) ?? null;
+    var _regionName =
+        await _storage.read(key: KeyHelper.KEY_USER_REGION_NAME) ?? null;
 
     if (_regionId != null && _regionName != null) {
       userRegionId = int.parse(_regionId);
@@ -60,7 +63,8 @@ class HomeProvider extends ChangeNotifier
     notifyListeners();
   }
 
-  Future<String?> fnGetGuestStatus() async => await _userPreferences.getGuestStatus();
+  Future<String?> fnGetGuestStatus() async =>
+      await _userPreferences.getGuestStatus();
 
   fnOnBannerChanged(int value) {
     this.currBanner = value;
@@ -85,8 +89,7 @@ class HomeProvider extends ChangeNotifier
 
   Future fnFetchBannerList() async {
     bannerList = (await _bannerService.getBannerList(
-      regionId: userRegionId.toString()
-    ))!;
+        regionId: userRegionId.toString()))!;
     notifyListeners();
   }
 
@@ -109,14 +112,14 @@ class HomeProvider extends ChangeNotifier
 
   Future fnSaveFcmToken() async {
     String _token = await _storage.read(key: KeyHelper.KEY_FCM_TOKEN) ?? '';
-    if (_token.isEmpty)
-      await _pushNotificationManager.saveFcmToken();
+    if (_token.isEmpty) await _pushNotificationManager.saveFcmToken();
   }
 
   Future fnFetchAddressList() async {
     addressList = (await _addressService.getAddress())!;
     if (addressList.data != null && addressList.data?.length != 0) {
-      selectedAddress = addressList.data!.firstWhere((item) => item.isChoosed == 1, orElse: null);
+      selectedAddress = addressList.data!
+          .firstWhere((item) => item.isChoosed == 1, orElse: null);
     }
     notifyListeners();
   }
@@ -178,5 +181,4 @@ class HomeProvider extends ChangeNotifier
     isPaginateLoad = true;
     notifyListeners();
   }
-
 }

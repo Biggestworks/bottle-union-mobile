@@ -65,7 +65,7 @@ abstract class RegisterStepInterface {
   Future onForwardTransition(
       BuildContext context, Future<void> function()) async {
     if (stepIndex == 0) {
-      if (fKeyPersonal.currentState!.validate() && isAgeValid == true) {
+      if (fKeyPersonal.currentState!.validate()) {
         fKeyPersonal.currentState!.save();
         animationController!.forward();
         animationController!.addStatusListener((status) {
@@ -78,19 +78,6 @@ abstract class RegisterStepInterface {
         });
       }
     } else if (stepIndex == 1) {
-      if (fKeyAddress.currentState!.validate()) {
-        fKeyAddress.currentState!.save();
-        animationController!.forward();
-        animationController!.addStatusListener((status) {
-          if (status == AnimationStatus.completed) {
-            animationController!.reverse();
-          }
-        });
-        await Future.delayed(Duration(milliseconds: 550)).then((value) {
-          stepIndex++;
-        });
-      }
-    } else if (stepIndex == 2) {
       if (fKeyPassword.currentState!.validate()) {
         fKeyPassword.currentState!.save();
         if (isTacAccepted) {

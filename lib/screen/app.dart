@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/key_helper.dart' as key;
 import 'package:eight_barrels/helper/network_connection_helper.dart';
-import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/provider/auth/login_provider.dart';
 import 'package:eight_barrels/provider/auth/otp_provider.dart';
 import 'package:eight_barrels/provider/auth/register_provider.dart';
@@ -58,6 +57,7 @@ import 'package:eight_barrels/screen/home/base_home_screen.dart';
 import 'package:eight_barrels/screen/home/guest_home_screen.dart';
 import 'package:eight_barrels/screen/home/home_screen.dart';
 import 'package:eight_barrels/screen/home/member_loyalty_screen.dart';
+import 'package:eight_barrels/screen/id_card/id_card_screen.dart';
 import 'package:eight_barrels/screen/misc/success_screen.dart';
 import 'package:eight_barrels/screen/product/guest_product_detail_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
@@ -101,8 +101,10 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  final GlobalKey<ScaffoldMessengerState> _snackBarKey = GlobalKey<ScaffoldMessengerState>();
-  NetworkConnectionHelper _networkConnectionHelper = new NetworkConnectionHelper();
+  final GlobalKey<ScaffoldMessengerState> _snackBarKey =
+      GlobalKey<ScaffoldMessengerState>();
+  NetworkConnectionHelper _networkConnectionHelper =
+      new NetworkConnectionHelper();
   SpecifiedLocalizationDelegate? _localeOverrideDelegate;
   StreamSubscription<InternetConnectionStatus>? _connectionSubs;
   bool _initialURILinkHandled = false;
@@ -113,7 +115,8 @@ class _AppState extends State<App> {
     final _storage = new FlutterSecureStorage();
     bool _isExist = await _storage.containsKey(key: key.KeyHelper.KEY_LOCALE);
     if (_isExist) {
-      String _locale = await _storage.read(key: key.KeyHelper.KEY_LOCALE) ?? "en";
+      String _locale =
+          await _storage.read(key: key.KeyHelper.KEY_LOCALE) ?? "en";
       return Locale(_locale);
     } else {
       await _storage.write(key: key.KeyHelper.KEY_LOCALE, value: "en");
@@ -149,9 +152,12 @@ class _AppState extends State<App> {
           return;
         }
         if (uri?.queryParameters['product_id'] != null) {
-          Get.toNamed(ProductDetailScreen.tag, arguments: ProductDetailScreen(
-            productId: int.parse(uri?.queryParameters['product_id'] ?? ''),
-          ),);
+          Get.toNamed(
+            ProductDetailScreen.tag,
+            arguments: ProductDetailScreen(
+              productId: int.parse(uri?.queryParameters['product_id'] ?? ''),
+            ),
+          );
         }
       }, onError: (Object err) {
         if (!mounted) {
@@ -161,18 +167,21 @@ class _AppState extends State<App> {
       });
     }
   }
+
   /// END DEEPLINK CONFIGURATION
 
   @override
   void initState() {
     Future.delayed(Duration.zero).whenComplete(() async {
       // await getProviderList();
-      await _networkConnectionHelper.checkConnection(subscription: _connectionSubs, context: context);
+      await _networkConnectionHelper.checkConnection(
+          subscription: _connectionSubs, context: context);
       await _getLocale().then((Locale myLocale) => {
-        setState(() {
-          _localeOverrideDelegate = new SpecifiedLocalizationDelegate(myLocale);
-        })
-      });
+            setState(() {
+              _localeOverrideDelegate =
+                  new SpecifiedLocalizationDelegate(myLocale);
+            })
+          });
       await _initURIHandler();
       await _incomingLinkHandler();
     });
@@ -261,10 +270,11 @@ class _AppState extends State<App> {
               child: ShowCaseWidget(
                 onFinish: () async {
                   final _storage = new FlutterSecureStorage();
-                  await _storage.write(key: key.KeyHelper.KEY_IS_FIRST_TIME, value: 'false');
+                  await _storage.write(
+                      key: key.KeyHelper.KEY_IS_FIRST_TIME, value: 'false');
                 },
                 builder: Builder(
-                  builder: (context) =>  BaseHomeScreen(),
+                  builder: (context) => BaseHomeScreen(),
                 ),
               ),
             ),
@@ -272,6 +282,12 @@ class _AppState extends State<App> {
           GetPage(
             name: HomeScreen.tag,
             page: () => HomeScreen(),
+          ),
+
+          /// get
+          GetPage(
+            name: IdCardScreen.tag,
+            page: () => IdCardScreen(),
           ),
           GetPage(
             name: ProductListScreen.tag,

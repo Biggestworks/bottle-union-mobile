@@ -74,17 +74,17 @@ class AuthService extends GetConnect {
 
     ///Address
     required String address,
-    required String provinceId,
+    String? provinceId,
     required String province,
-    required String cityId,
+    String? cityId,
     required String city,
-    required String latitude,
-    required String longitude,
+    String? latitude,
+    String? longitude,
   }) async {
     UserModel _model = new UserModel();
 
     final Map<String, dynamic> _data = {
-      "id_region": idRegion,
+      "id_region": null,
       "fullname": fullName,
       "date_of_birth": dob,
       "email": email,
@@ -107,6 +107,9 @@ class AuthService extends GetConnect {
         body: json.encode(_data),
         headers: _headers,
       );
+
+      log(_response.body.toString());
+
       _model = UserModel.fromJson(json.decode(_response.body));
 
       /// GET CONNECT BUG
