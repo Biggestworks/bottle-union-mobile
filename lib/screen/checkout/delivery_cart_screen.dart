@@ -609,7 +609,7 @@ class _DeliveryCartScreenState extends State<DeliveryCartScreen>
                                                             height: 5,
                                                           ),
                                                           Text(
-                                                            '${(_products?.product?.weight ?? 0) * 1000} gram',
+                                                            '${_products?.product?.weight.toString()} gram',
                                                             style: TextStyle(
                                                               color: CustomColor
                                                                   .GREY_TXT,

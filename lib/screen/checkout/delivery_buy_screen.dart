@@ -695,7 +695,7 @@ class _DeliveryBuyScreenState extends State<DeliveryBuyScreen>
                                           height: 5,
                                         ),
                                         Text(
-                                          '${((_data?.weight ?? 0) * 1000)} gram',
+                                          '${_data?.weight.toString()} gram',
                                           style: TextStyle(
                                             color: CustomColor.GREY_TXT,
                                           ),

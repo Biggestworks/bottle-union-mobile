@@ -152,7 +152,7 @@ class DeliveryCartProvider extends ChangeNotifier {
     courierList = (await _deliveryService.getCourierList(
       provinceId: provinceId,
       destination: destination ?? 0,
-      weight: _totalWeight * 1000,
+      weight: _totalWeight,
     ))!;
     _view!.onProgressFinish();
     notifyListeners();
