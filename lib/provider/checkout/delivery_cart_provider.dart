@@ -3,7 +3,8 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/model/address/address_list_model.dart' as address;
 import 'package:eight_barrels/model/cart/cart_total_model.dart';
-import 'package:eight_barrels/model/checkout/courier_list_model.dart' as courier;
+import 'package:eight_barrels/model/checkout/courier_list_model.dart'
+    as courier;
 import 'package:eight_barrels/model/checkout/delivery_courier_model.dart';
 import 'package:eight_barrels/model/checkout/order_summary_model.dart';
 import 'package:eight_barrels/screen/checkout/delivery_cart_screen.dart';
@@ -40,7 +41,8 @@ class DeliveryCartProvider extends ChangeNotifier {
   }
 
   fnGetArguments(BuildContext context) {
-    final _args = ModalRoute.of(context)!.settings.arguments as DeliveryCartScreen;
+    final _args =
+        ModalRoute.of(context)!.settings.arguments as DeliveryCartScreen;
     cartList = _args.cartList;
     isCart = _args.isCart;
     notifyListeners();
@@ -48,7 +50,8 @@ class DeliveryCartProvider extends ChangeNotifier {
 
   Future fnFetchAddressList() async {
     _view!.onProgressStart();
-    addressList = (await _addressService.getAddress(search: searchController.text))!;
+    addressList =
+        (await _addressService.getAddress(search: searchController.text))!;
     _view!.onProgressFinish();
     notifyListeners();
   }
@@ -57,7 +60,8 @@ class DeliveryCartProvider extends ChangeNotifier {
     _view!.onProgressStart();
     await fnFetchAddressList();
     if (addressList.data != null && addressList.data?.length != 0) {
-      selectedAddress = addressList.data!.firstWhere((item) => item.isChoosed == 1, orElse: null);
+      selectedAddress = addressList.data!
+          .firstWhere((item) => item.isChoosed == 1, orElse: null);
       destination = selectedAddress?.cityCode;
     }
     _view!.onProgressFinish();
@@ -75,11 +79,14 @@ class DeliveryCartProvider extends ChangeNotifier {
         await fnFetchSelectedAddress();
       } else {
         _view!.onProgressFinish();
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
+        await CustomWidget.showSnackBar(
+            context: context, content: Text(_res.message.toString()));
       }
     } else {
       _view!.onProgressFinish();
-      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+      await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
     _view!.onProgressFinish();
     notifyListeners();
@@ -112,8 +119,10 @@ class DeliveryCartProvider extends ChangeNotifier {
   Future fnGetOrderSummary() async {
     List<int> _deliveryCostList = [];
     if (selectedCourierList.isNotEmpty) {
-      List.generate(selectedCourierList.length,
-              (index) => _deliveryCostList.add(selectedCourierList[index].courierData?.price ?? 0));
+      List.generate(
+          selectedCourierList.length,
+          (index) => _deliveryCostList
+              .add(selectedCourierList[index].courierData?.price ?? 0));
     }
     orderSummary = (await _deliveryService.getOrderSummary(
       itemPrices: _prices,
@@ -126,13 +135,14 @@ class DeliveryCartProvider extends ChangeNotifier {
     await fnCalculateOrder().then((_) async => await fnGetOrderSummary());
     notifyListeners();
   }
-  
+
   fnInitCourierList() {
     selectedCourierList.clear();
     if (cartList?.result != null) {
       List.generate(cartList?.result?.length ?? 0, (index) {
-        selectedCourierList.add(DeliveryCourier(cartList?.result?[index].idRegion ?? 0, null));
-      }) ;
+        selectedCourierList
+            .add(DeliveryCourier(cartList?.result?[index].idRegion ?? 0, null));
+      });
     }
     notifyListeners();
   }
@@ -142,13 +152,14 @@ class DeliveryCartProvider extends ChangeNotifier {
     courierList = (await _deliveryService.getCourierList(
       provinceId: provinceId,
       destination: destination ?? 0,
-      weight: _totalWeight,
+      weight: _totalWeight * 1000,
     ))!;
     _view!.onProgressFinish();
     notifyListeners();
   }
 
-  Future fnOnSelectCourier({required int regionId, required courier.Data value}) async {
+  Future fnOnSelectCourier(
+      {required int regionId, required courier.Data value}) async {
     _view!.onProgressStart();
     Get.back();
     final _item = selectedCourierList.firstWhere((i) => i.regionId == regionId);
@@ -157,5 +168,4 @@ class DeliveryCartProvider extends ChangeNotifier {
     _view!.onProgressFinish();
     notifyListeners();
   }
-
 }

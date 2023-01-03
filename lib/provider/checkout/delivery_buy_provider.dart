@@ -2,7 +2,8 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/model/address/address_list_model.dart' as address;
-import 'package:eight_barrels/model/checkout/courier_list_model.dart' as courier;
+import 'package:eight_barrels/model/checkout/courier_list_model.dart'
+    as courier;
 import 'package:eight_barrels/model/checkout/delivery_courier_model.dart';
 import 'package:eight_barrels/model/checkout/order_summary_model.dart';
 import 'package:eight_barrels/model/product/product_detail_model.dart';
@@ -43,7 +44,8 @@ class DeliveryBuyProvider extends ChangeNotifier {
   }
 
   fnGetArguments(BuildContext context) {
-    final _args = ModalRoute.of(context)!.settings.arguments as DeliveryBuyScreen;
+    final _args =
+        ModalRoute.of(context)!.settings.arguments as DeliveryBuyScreen;
     product = _args.product;
     isCart = _args.isCart;
     selectedRegionId = _args.selectedRegionId;
@@ -53,7 +55,8 @@ class DeliveryBuyProvider extends ChangeNotifier {
 
   Future fnFetchAddressList() async {
     _view!.onProgressStart();
-    addressList = (await _addressService.getAddress(search: searchController.text))!;
+    addressList =
+        (await _addressService.getAddress(search: searchController.text))!;
     _view!.onProgressFinish();
     notifyListeners();
   }
@@ -62,7 +65,8 @@ class DeliveryBuyProvider extends ChangeNotifier {
     _view!.onProgressStart();
     await fnFetchAddressList();
     if (addressList.data != null && addressList.data?.length != 0) {
-      selectedAddress = addressList.data!.firstWhere((item) => item.isChoosed == 1, orElse: null);
+      selectedAddress = addressList.data!
+          .firstWhere((item) => item.isChoosed == 1, orElse: null);
       destination = selectedAddress?.cityCode;
     }
     _view!.onProgressFinish();
@@ -80,11 +84,14 @@ class DeliveryBuyProvider extends ChangeNotifier {
         await fnFetchSelectedAddress();
       } else {
         _view!.onProgressFinish();
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
+        await CustomWidget.showSnackBar(
+            context: context, content: Text(_res.message.toString()));
       }
     } else {
       _view!.onProgressFinish();
-      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+      await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
     _view!.onProgressFinish();
     notifyListeners();
@@ -121,10 +128,11 @@ class DeliveryBuyProvider extends ChangeNotifier {
 
   Future fnFetchCourierList() async {
     _view!.onProgressStart();
+
     courierList = (await _deliveryService.getCourierList(
       provinceId: selectedProvinceId ?? 0,
       destination: destination ?? 0,
-      weight: _totalWeight,
+      weight: _totalWeight * 1000,
     ))!;
     _view!.onProgressFinish();
     notifyListeners();
@@ -151,5 +159,4 @@ class DeliveryBuyProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
-
 }
