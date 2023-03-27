@@ -96,4 +96,10 @@ class URLHelper {
   static final reviewUrl = baseUrl + '/reviews';
   static final storeReviewUrl = baseUrl + '/reviews/store';
   static reviewDetailUrl(String id) => baseUrl + '/reviews/show/$id';
+
+  ///XENDIT URL
+  static final xenditUrl = baseUrl + '/xendit';
+  static final tokenIdUrl = xenditUrl + '/getTokenId';
+  static final authorizationIdUrl = xenditUrl + '/getAuthorized';
+  static final chargeV2Url = xenditUrl + '/v2/charge';
 }

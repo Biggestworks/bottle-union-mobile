@@ -5,6 +5,7 @@ import 'package:eight_barrels/model/checkout/order_summary_model.dart'
     as summary;
 import 'package:eight_barrels/model/checkout/payment_list_model.dart';
 import 'package:eight_barrels/model/checkout/product_order_model.dart';
+import 'package:eight_barrels/model/checkout/xendit_token_id.dart';
 import 'package:eight_barrels/model/product/product_detail_model.dart'
     as productDetail;
 import 'package:eight_barrels/screen/checkout/order_finish_screen.dart';
@@ -13,6 +14,7 @@ import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:eight_barrels/service/checkout/payment_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PaymentProvider extends ChangeNotifier {
   PaymentService _service = new PaymentService();
@@ -26,6 +28,12 @@ class PaymentProvider extends ChangeNotifier {
   List<DeliveryCourier> selectedCourierList = [];
   bool? isCart;
   ProductOrderModel productOrder = new ProductOrderModel();
+
+  /// CC ENV
+  String? tokenId;
+  String? amount;
+  String? cvn;
+  String? webViewUrl;
 
   LoadingView? _view;
 
@@ -79,30 +87,46 @@ class PaymentProvider extends ChangeNotifier {
               'courier_cost': selectedCourierList[index].courierData?.price
             }));
 
-    var _res = await _service.storeOrderCart(
-      addressId: addressId,
-      deliveries: _courierList,
-      paymentMethod: selectedPayment?.name,
-    );
+    if (selectedPayment!.name == "CREDIT") {
+      var _auth = await _service.fetchCreditCardAuthorizationId(
+          amount: amount.toString(),
+          cvn: cvn.toString(),
+          tokenId: tokenId.toString());
+      print(_auth);
+      if (_auth['data']['status'] == "IN_REVIEW") {
+        webViewUrl = _auth['data']['payer_authentication_url'];
+        // launchUrl(
+        //     Uri.parse(_auth['data']['payer_authentication_url'].toString()));
+      } else {
+        print('test');
+      }
+    } else {
+      var _res = await _service.storeOrderCart(
+        addressId: addressId,
+        deliveries: _courierList,
+        paymentMethod: selectedPayment?.name,
+      );
 
-    if (_res!.status != null) {
-      if (_res.status == true) {
-        _view!.onProgressFinish();
-        Get.offNamedUntil(OrderFinishScreen.tag, (route) => route.isFirst,
-            arguments: OrderFinishScreen(
-              orderCart: _res,
-            ));
+      if (_res!.status != null) {
+        if (_res.status == true) {
+          _view!.onProgressFinish();
+          Get.offNamedUntil(OrderFinishScreen.tag, (route) => route.isFirst,
+              arguments: OrderFinishScreen(
+                orderCart: _res,
+              ));
+        } else {
+          _view!.onProgressFinish();
+          await CustomWidget.showSnackBar(
+              context: context, content: Text(_res.message ?? '-'));
+        }
       } else {
         _view!.onProgressFinish();
         await CustomWidget.showSnackBar(
-            context: context, content: Text(_res.message ?? '-'));
+            context: context,
+            content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
       }
-    } else {
-      _view!.onProgressFinish();
-      await CustomWidget.showSnackBar(
-          context: context,
-          content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
+
     _view!.onProgressFinish();
     notifyListeners();
   }
@@ -150,5 +174,59 @@ class PaymentProvider extends ChangeNotifier {
     }
     _view!.onProgressFinish();
     notifyListeners();
+  }
+
+  fnFetchXenditTokenId(
+    BuildContext context, {
+    required String card_number,
+    required String expiry_month,
+    required String expiry_year,
+    required String cvv,
+  }) async {
+    try {
+      // Get.back();
+      _view!.onProgressStart();
+
+      final response = await _service.fetchCreditCardTokenId(
+          cardNumber: card_number,
+          expiryMonth: expiry_month,
+          expiryYear: expiry_year,
+          cvv: cvv);
+
+      if (!response['status']) {
+        await CustomWidget.showSnackBar(
+            context: context, content: Text('Failure'));
+      }
+      print(response);
+
+      var data = XenditTokenId.fromJson(response);
+
+      tokenId = data.data.card.cardInformation.tokenId;
+      cvn = cvv;
+
+      selectedPayment = Data(
+        id: 10,
+        name: data.data.card.cardInformation.type,
+        description: data.data.card.cardInformation.network +
+            ' ' +
+            data.data.card.cardInformation.issuer +
+            ' ' +
+            data.data.card.cardInformation.cardholderName,
+      );
+      notifyListeners();
+
+      _view!.onProgressFinish();
+    } catch (e) {
+      await CustomWidget.showSnackBar(
+          context: context, content: Text('Failed to validate credit card.'));
+      _view!.onProgressFinish();
+    }
+  }
+
+  fnWebViewOtpVerified() {
+    _view!.onProgressStart();
+    webViewUrl = null;
+    notifyListeners();
+    _view!.onProgressFinish();
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as BadgeWidget;
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
@@ -105,14 +105,17 @@ class BaseHomeProvider extends ChangeNotifier {
       BottomNavigationBarItem(
         icon: Padding(
           padding: const EdgeInsets.only(bottom: 2),
-          child: Badge(
-            badgeContent: Text(cartCount.toString(), style: TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-            ),),
-            badgeColor: CustomColor.BROWN_TXT,
-            padding: EdgeInsets.all(6),
-            position: BadgePosition.topEnd(top: -12, end: -15),
+          child: BadgeWidget.Badge(
+            badgeContent: Text(
+              cartCount.toString(),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+              ),
+            ),
+            // badgeColor: CustomColor.BROWN_TXT,
+            // padding: EdgeInsets.all(6),
+            position: BadgeWidget.BadgePosition.topEnd(top: -12, end: -15),
             child: Icon(FontAwesomeIcons.cartShopping),
           ),
         ),
@@ -154,7 +157,7 @@ class BaseHomeProvider extends ChangeNotifier {
           key: showHome,
           height: 200,
           width: 300,
-          overlayPadding: EdgeInsets.all(20),
+          // overlayPadding: EdgeInsets.all(20),
           container: Card(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -186,7 +189,7 @@ class BaseHomeProvider extends ChangeNotifier {
           key: showProduct,
           height: 200,
           width: 300,
-          overlayPadding: EdgeInsets.all(10),
+          // overlayPadding: EdgeInsets.all(10),
           container: Card(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -218,7 +221,7 @@ class BaseHomeProvider extends ChangeNotifier {
           key: showCart,
           height: 200,
           width: 300,
-          overlayPadding: EdgeInsets.all(15),
+          // overlayPadding: EdgeInsets.all(15),
           container: Card(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -239,13 +242,16 @@ class BaseHomeProvider extends ChangeNotifier {
           ),
           child: Padding(
             padding: const EdgeInsets.only(bottom: 2),
-            child: Badge(
-              badgeContent: Text(cartCount.toString(), style: TextStyle(
-                color: Colors.white,
-                fontSize: 10,
-              ),),
-              badgeColor: CustomColor.BROWN_TXT,
-              padding: EdgeInsets.all(6),
+            child: BadgeWidget.Badge(
+              badgeContent: Text(
+                cartCount.toString(),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 10,
+                ),
+              ),
+              // badgeColor: CustomColor.BROWN_TXT,
+              // padding: EdgeInsets.all(6),
               child: Icon(FontAwesomeIcons.cartShopping),
             ),
           ),
@@ -257,7 +263,7 @@ class BaseHomeProvider extends ChangeNotifier {
           key: showTransaction,
           height: 200,
           width: 300,
-          overlayPadding: EdgeInsets.all(10),
+          // overlayPadding: EdgeInsets.all(10),
           container: Card(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -293,7 +299,7 @@ class BaseHomeProvider extends ChangeNotifier {
           key: showHome,
           height: 200,
           width: 300,
-          overlayPadding: EdgeInsets.all(20),
+          // overlayPadding: EdgeInsets.all(20),
           container: Card(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -325,7 +331,7 @@ class BaseHomeProvider extends ChangeNotifier {
           key: showProduct,
           height: 200,
           width: 300,
-          overlayPadding: EdgeInsets.all(10),
+          // overlayPadding: EdgeInsets.all(10),
           container: Card(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -362,8 +368,8 @@ class BaseHomeProvider extends ChangeNotifier {
 
   fnStartShowcase(BuildContext context) async {
     if (firstTime != 'false')
-      ShowCaseWidget.of(context)?.startShowCase([showIntro, showHome, showProduct, showCart, showTransaction]);
+      ShowCaseWidget.of(context)?.startShowCase(
+          [showIntro, showHome, showProduct, showCart, showTransaction]);
     notifyListeners();
   }
-
 }

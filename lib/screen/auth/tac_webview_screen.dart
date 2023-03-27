@@ -15,16 +15,38 @@ class TacWebviewScreen extends StatefulWidget {
 }
 
 class _TacWebviewScreenState extends State<TacWebviewScreen> {
+  WebViewController webViewController = WebViewController();
 
   @override
   void initState() {
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    setState(() {
+      webViewController = WebViewController()
+        ..setJavaScriptMode(JavaScriptMode.unrestricted)
+        ..setBackgroundColor(const Color(0x00000000))
+        ..setNavigationDelegate(
+          NavigationDelegate(
+            onProgress: (int progress) {
+              // Update loading bar.
+            },
+            onPageStarted: (String url) {},
+            onPageFinished: (String url) {},
+            onWebResourceError: (WebResourceError error) {},
+            onNavigationRequest: (NavigationRequest request) {
+              if (request.url.startsWith(dotenv.get('TOC_URL').toString())) {
+                return NavigationDecision.prevent;
+              }
+              return NavigationDecision.navigate;
+            },
+          ),
+        )
+        ..loadRequest(Uri.parse(dotenv.get('TOC_URL').toString()));
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: CustomColor.MAIN,
@@ -32,9 +54,8 @@ class _TacWebviewScreenState extends State<TacWebviewScreen> {
         title: Text('Term & Condition'),
       ),
       body: SafeArea(
-        child: WebView(
-          initialUrl: dotenv.get('TOC_URL'),
-          javascriptMode: JavascriptMode.unrestricted,
+        child: WebViewWidget(
+          controller: webViewController,
         ),
       ),
     );

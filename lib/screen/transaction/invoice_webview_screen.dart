@@ -16,9 +16,10 @@ class InvoiceWebviewScreen extends StatefulWidget {
 }
 
 class _InvoiceWebviewScreenState extends State<InvoiceWebviewScreen> {
+  WebViewController webViewController = WebViewController();
   @override
   void initState() {
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    // if (Platform.isAndroid) WebViewWidget.fromPlatform(platform: PlatformWeb) = SurfaceAndroidWebView();
     super.initState();
   }
 
@@ -26,6 +27,27 @@ class _InvoiceWebviewScreenState extends State<InvoiceWebviewScreen> {
   Widget build(BuildContext context) {
     final _args =
         ModalRoute.of(context)!.settings.arguments as InvoiceWebviewScreen;
+
+    webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {
+            // Update loading bar.
+          },
+          onPageStarted: (String url) {},
+          onPageFinished: (String url) {},
+          onWebResourceError: (WebResourceError error) {},
+          onNavigationRequest: (NavigationRequest request) {
+            if (request.url.startsWith(_args.url.toString())) {
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(_args.url.toString()));
 
     return Scaffold(
       appBar: AppBar(
@@ -44,13 +66,8 @@ class _InvoiceWebviewScreenState extends State<InvoiceWebviewScreen> {
         // ],
       ),
       body: SafeArea(
-        child: WebView(
-          initialUrl: _args.url,
-          navigationDelegate: (a) async {
-            await LaunchUrlHelper.launchUrl(context: context, url: a.url);
-            return NavigationDecision.prevent;
-          },
-          javascriptMode: JavascriptMode.unrestricted,
+        child: WebViewWidget(
+          controller: webViewController,
         ),
       ),
     );

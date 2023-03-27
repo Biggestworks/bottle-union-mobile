@@ -3,13 +3,16 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/model/checkout/delivery_courier_model.dart';
-import 'package:eight_barrels/model/checkout/order_summary_model.dart' as summary;
+import 'package:eight_barrels/model/checkout/order_summary_model.dart'
+    as summary;
 import 'package:eight_barrels/model/product/product_detail_model.dart';
 import 'package:eight_barrels/provider/checkout/payment_provider.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class PaymentScreen extends StatefulWidget {
   static String tag = '/payment-screen';
@@ -20,28 +23,217 @@ class PaymentScreen extends StatefulWidget {
   final List<DeliveryCourier>? selectedCourierList;
   final bool? isCart;
 
-  const PaymentScreen({Key? key, this.orderSummary, this.addressId, this.product, this.productQty, this.selectedCourierList, this.isCart}) : super(key: key);
+  const PaymentScreen(
+      {Key? key,
+      this.orderSummary,
+      this.addressId,
+      this.product,
+      this.productQty,
+      this.selectedCourierList,
+      this.isCart})
+      : super(key: key);
 
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
 }
 
 class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
+  WebViewController webViewController = WebViewController();
+
+  TextEditingController cardNumberController = TextEditingController();
+  TextEditingController expiryDateController = TextEditingController();
+  TextEditingController cvvController = TextEditingController();
+
   bool _isLoad = false;
 
   @override
   void initState() {
-    Future.delayed(Duration.zero, () {
-      Provider.of<PaymentProvider>(context, listen: false).fnGetView(this);
-      Provider.of<PaymentProvider>(context, listen: false).fnGetArguments(context);
-      Provider.of<PaymentProvider>(context, listen: false).fnFetchPaymentList();
-    },);
+    Future.delayed(
+      Duration.zero,
+      () {
+        Provider.of<PaymentProvider>(context, listen: false).fnGetView(this);
+        Provider.of<PaymentProvider>(context, listen: false)
+            .fnGetArguments(context);
+        Provider.of<PaymentProvider>(context, listen: false)
+            .fnFetchPaymentList();
+      },
+    );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final _provider = Provider.of<PaymentProvider>(context, listen: false);
+
+    showCreditCardSheet() {
+      return CustomWidget.showSheet(
+        context: context,
+        isScroll: true,
+        child: Container(
+          height: MediaQuery.of(context).size.height / 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 10),
+                    child: Text(
+                      "Tambahkan Kartu Kredit ",
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    child: TextFormField(
+                      controller: cardNumberController,
+                      keyboardType: TextInputType.number,
+                      validator: (val) {
+                        validateCardNumWithLuhnAlgorithm(val.toString());
+                      },
+                      onChanged: (val) {
+                        if (RegExp('^3[47][0-9]{13}\$').hasMatch(val)) {
+                          print('Amex Card');
+                        } else if (RegExp('^(6541|6556)[0-9]{12}\$')
+                            .hasMatch(val)) {
+                          print('BCGlobal');
+                        } else if (RegExp('^389[0-9]{11}\$').hasMatch(val)) {
+                          print('Carte Blanche Card');
+                        } else if (RegExp('^3(?:0[0-5]|[68][0-9])[0-9]{11}\$')
+                            .hasMatch(val)) {
+                          print('Diners Club Card');
+                        } else if (RegExp('^4[0-9]{12}(?:[0-9]{3})?\$')
+                            .hasMatch(val)) {
+                          print('visa');
+                        } else if (RegExp(
+                                '^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14})\$')
+                            .hasMatch(val)) {
+                          print('visa master card');
+                        } else if (RegExp('^(62[0-9]{14,17})\$')
+                            .hasMatch(val)) {
+                          print('union pay');
+                        } else {
+                          print('engga kesini');
+                        }
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Number',
+                        labelStyle: TextStyle(
+                          color: Colors.black,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                            color: Colors.black,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                            width: MediaQuery.of(context).size.width / 2.3,
+                            child: TextFormField(
+                              controller: expiryDateController,
+                              decoration: InputDecoration(
+                                labelText: 'Expired Date',
+                                labelStyle: TextStyle(
+                                  color: Colors.black,
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            )),
+                        Container(
+                            width: MediaQuery.of(context).size.width / 2.3,
+                            child: TextFormField(
+                              controller: cvvController,
+                              decoration: InputDecoration(
+                                labelText: 'CVV',
+                                labelStyle: TextStyle(
+                                  color: Colors.black,
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Center(
+                child: Column(
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        minimumSize:
+                            Size(MediaQuery.of(context).size.width - 16, 50),
+                        backgroundColor: CustomColor.MAIN,
+                      ),
+                      onPressed: () {
+                        _provider.fnFetchXenditTokenId(context,
+                            card_number: cardNumberController.text,
+                            expiry_month:
+                                expiryDateController.text.split("/").first,
+                            expiry_year:
+                                expiryDateController.text.split("/").last,
+                            cvv: cvvController.text);
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Validate",
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
+              ),
+
+              // TextFormField(),
+            ],
+          ),
+        ),
+      );
+    }
 
     _showPaymentSheet() {
       return CustomWidget.showSheet(
@@ -74,7 +266,9 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                     ],
                   )),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 Flexible(
                   child: Consumer<PaymentProvider>(
                     child: CustomWidget.showShimmerListView(height: 200),
@@ -87,27 +281,32 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                             case 0:
                               return CustomWidget.emptyScreen(
                                 image: 'assets/images/ic_no_data.png',
-                                title: AppLocalizations.instance.text('TXT_NO_DATA'),
+                                title: AppLocalizations.instance
+                                    .text('TXT_NO_DATA'),
                                 size: 180,
                                 icColor: CustomColor.GREY_TXT,
                               );
                             default:
                               return ListView.separated(
                                 shrinkWrap: true,
-                                itemCount: provider.paymentList.data?.length ?? 0,
+                                itemCount:
+                                    provider.paymentList.data?.length ?? 0,
                                 separatorBuilder: (context, index) {
                                   return Divider();
                                 },
                                 itemBuilder: (context, index) {
                                   var _data = provider.paymentList.data?[index];
                                   return GestureDetector(
-                                    onTap: () => provider.fnOnSelectPayment(_data!),
+                                    onTap: () =>
+                                        provider.fnOnSelectPayment(_data!),
                                     child: ListTile(
                                       title: Text(_data?.description ?? '-'),
                                       leading: Container(
                                         height: 50,
                                         width: 80,
-                                        child: CustomWidget.networkImg(context, _data?.image, fit: BoxFit.contain),
+                                        child: CustomWidget.networkImg(
+                                            context, _data?.image,
+                                            fit: BoxFit.contain),
                                       ),
                                     ),
                                   );
@@ -118,6 +317,15 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                     },
                   ),
                 ),
+                ListTile(
+                  onTap: () {
+                    Navigator.pop(context);
+                    showCreditCardSheet();
+                  },
+                  title: Text(
+                    "Credit CARD",
+                  ),
+                )
               ],
             ),
           ),
@@ -136,7 +344,8 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
               return Container(
                 width: MediaQuery.of(context).size.width,
                 color: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -150,37 +359,56 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                             border: Border.all(color: CustomColor.MAIN),
                           ),
                           child: Center(
-                            child: Text('2', style: TextStyle(
-                              fontSize: 15,
-                              color: CustomColor.MAIN,
-                            ), textAlign: TextAlign.center,),
+                            child: Text(
+                              '2',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: CustomColor.MAIN,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                        SizedBox(width: 10,),
-                        Text(AppLocalizations.instance.text('TXT_ORDER_SUMMARY'), style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          AppLocalizations.instance.text('TXT_ORDER_SUMMARY'),
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ],
                     ),
-                    Divider(height: 20, thickness: 1,),
+                    Divider(
+                      height: 20,
+                      thickness: 1,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(AppLocalizations.instance.text('TXT_TOTAL_PRICE')),
-                        Flexible(child: Text(FormatterHelper.moneyFormatter(_data?.totalPrice ?? 0))),
+                        Flexible(
+                            child: Text(FormatterHelper.moneyFormatter(
+                                _data?.totalPrice ?? 0))),
                       ],
                     ),
                     if (_data?.deliveryCost != null)
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(AppLocalizations.instance.text('TXT_DELIVERY_COST')),
-                              Flexible(child: Text(FormatterHelper.moneyFormatter(_data?.deliveryCost ?? 0))),
+                              Text(AppLocalizations.instance
+                                  .text('TXT_DELIVERY_COST')),
+                              Flexible(
+                                  child: Text(FormatterHelper.moneyFormatter(
+                                      _data?.deliveryCost ?? 0))),
                             ],
                           ),
                         ],
@@ -189,8 +417,7 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                 ),
               );
           }
-        }
-    );
+        });
 
     Widget _paymentContent = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -212,26 +439,40 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                       border: Border.all(color: CustomColor.MAIN),
                     ),
                     child: Center(
-                      child: Text('1', style: TextStyle(
-                        fontSize: 15,
-                        color: CustomColor.MAIN,
-                      ), textAlign: TextAlign.center,),
+                      child: Text(
+                        '1',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: CustomColor.MAIN,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
-                  SizedBox(width: 10,),
-                  Text(AppLocalizations.instance.text('TXT_PAYMENT_INFORMATION'), style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    AppLocalizations.instance.text('TXT_PAYMENT_INFORMATION'),
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(AppLocalizations.instance.text('TXT_PAYMENT_METHOD'), style: TextStyle(
-                    fontSize: 15,
-                  ),),
+                  Text(
+                    AppLocalizations.instance.text('TXT_PAYMENT_METHOD'),
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
+                  ),
                   Flexible(
                     child: TextButton(
                       style: TextButton.styleFrom(
@@ -239,19 +480,29 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       onPressed: () => _showPaymentSheet(),
-                      child: Text(AppLocalizations.instance.text('TXT_CHOOSE_PAYMENT_METHOD'), style: TextStyle(
-                        color: CustomColor.BROWN_TXT,
-                      ),),
+                      child: Text(
+                        AppLocalizations.instance
+                            .text('TXT_CHOOSE_PAYMENT_METHOD'),
+                        style: TextStyle(
+                          color: CustomColor.BROWN_TXT,
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
-              Divider(height: 20, thickness: 1,),
+              Divider(
+                height: 20,
+                thickness: 1,
+              ),
               Consumer<PaymentProvider>(
                 child: Center(
-                  child: Text('no selected payment method', style: TextStyle(
-                    color: CustomColor.GREY_TXT,
-                  ),),
+                  child: Text(
+                    'no selected payment method',
+                    style: TextStyle(
+                      color: CustomColor.GREY_TXT,
+                    ),
+                  ),
                 ),
                 builder: (context, provider, skeleton) {
                   switch (provider.selectedPayment) {
@@ -263,14 +514,18 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                         dense: true,
                         visualDensity: VisualDensity.compact,
                         contentPadding: EdgeInsets.zero,
-                        title: Text(_data?.description ?? '-', style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                        ),),
+                        title: Text(
+                          _data?.description ?? '-',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                          ),
+                        ),
                         leading: Container(
                           height: 50,
                           width: 80,
-                          child: CustomWidget.networkImg(context, _data?.image, fit: BoxFit.contain),
+                          child: CustomWidget.networkImg(context, _data?.image,
+                              fit: BoxFit.contain),
                         ),
                       );
                   }
@@ -286,7 +541,9 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
       child: Column(
         children: [
           _paymentContent,
-          SizedBox(height: 5,),
+          SizedBox(
+            height: 5,
+          ),
           _orderSummaryContent,
         ],
       ),
@@ -311,15 +568,24 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(AppLocalizations.instance.text('TXT_TOTAL_PAY'), style: TextStyle(
-                            color: Colors.white,
-                          ),),
-                          SizedBox(height: 5,),
-                          Text(FormatterHelper.moneyFormatter(_data?.totalPay ?? 0), style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),),
+                          Text(
+                            AppLocalizations.instance.text('TXT_TOTAL_PAY'),
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            FormatterHelper.moneyFormatter(
+                                _data?.totalPay ?? 0),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(
@@ -336,9 +602,11 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                           radius: 8,
                           function: () async {
                             if (provider.isCart == true) {
-                              await _provider.fnStoreOrderCart(_provider.scaffoldKey.currentContext!);
+                              await _provider.fnStoreOrderCart(
+                                  _provider.scaffoldKey.currentContext!);
                             } else {
-                              await _provider.fnStoreOrderBuyNow(_provider.scaffoldKey.currentContext!);
+                              await _provider.fnStoreOrderBuyNow(
+                                  _provider.scaffoldKey.currentContext!);
                             }
                           },
                         ),
@@ -346,12 +614,11 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                     ],
                   );
               }
-            }
-        ),
+            }),
       ),
     );
 
-    switch(_isLoad) {
+    switch (_isLoad) {
       case true:
         return CustomWidget.checkoutLoadingPage(_provider.scaffoldKey);
       default:
@@ -362,49 +629,89 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
             backgroundColor: CustomColor.BG,
             centerTitle: true,
             titleSpacing: 0,
-            title: RichText(text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: AppLocalizations.instance.text('TXT_DELIVERY'),
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: CustomColor.GREY_TXT,
-                    ),
+            title: RichText(
+                text: TextSpan(children: [
+              TextSpan(
+                text: AppLocalizations.instance.text('TXT_DELIVERY'),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: CustomColor.GREY_TXT,
+                ),
+              ),
+              WidgetSpan(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 18,
                   ),
-                  WidgetSpan(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
-                      child: Icon(Icons.arrow_forward_ios, size: 18,),
-                    ),
+                ),
+              ),
+              TextSpan(
+                text: AppLocalizations.instance.text('TXT_PAYMENT'),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: CustomColor.BROWN_TXT,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              WidgetSpan(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 18,
                   ),
-                  TextSpan(
-                    text: AppLocalizations.instance.text('TXT_PAYMENT'),
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: CustomColor.BROWN_TXT,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  WidgetSpan(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
-                      child: Icon(Icons.arrow_forward_ios, size: 18,),
-                    ),
-                  ),
-                  TextSpan(
-                    text: AppLocalizations.instance.text('TXT_FINISH'),
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: CustomColor.GREY_TXT,
-                    ),
-                  ),
-                ]
-            )),
+                ),
+              ),
+              TextSpan(
+                text: AppLocalizations.instance.text('TXT_FINISH'),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: CustomColor.GREY_TXT,
+                ),
+              ),
+            ])),
             iconTheme: IconThemeData(
               color: Colors.black,
             ),
           ),
-          body: _mainContent,
+          body: _provider.webViewUrl != null
+              ? WebViewWidget(
+                  controller: WebViewController()
+                    ..addJavaScriptChannel("Print", onMessageReceived: (msg) {
+                      print(msg);
+                      _provider.fnWebViewOtpVerified();
+                    })
+                    ..setJavaScriptMode(JavaScriptMode.unrestricted)
+                    ..setBackgroundColor(const Color(0x00000000))
+                    ..setNavigationDelegate(
+                      NavigationDelegate(
+                        onProgress: (int progress) {
+                          // Update loading bar.
+                        },
+                        onPageStarted: (String url) {},
+                        onPageFinished: (String url) {},
+                        onWebResourceError: (WebResourceError error) {},
+                        onNavigationRequest: (NavigationRequest request) {
+                          print(request.url);
+                          request.printInfo();
+                          if (request.url
+                              .toString()
+                              .contains("verification_redirect")) {
+                            _provider.fnWebViewOtpVerified();
+                          }
+                          return NavigationDecision.navigate;
+                        },
+                      ),
+                    )
+                    ..loadRequest(
+                      Uri.parse(
+                        _provider.webViewUrl.toString(),
+                      ),
+                    ),
+                )
+              : _mainContent,
           bottomNavigationBar: _bottomMenuContent,
         );
     }
@@ -425,5 +732,34 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
       setState(() {});
     }
   }
+}
 
+String validateCardNumWithLuhnAlgorithm(String input) {
+  if (input.isEmpty) {
+    return "Field cant be empty";
+  }
+
+  if (input.trim().length < 8) {
+    // No need to even proceed with the validation if it's less than 8 characters
+    return 'Number is invalid';
+  }
+
+  int sum = 0;
+  int length = input.length;
+  for (var i = 0; i < length; i++) {
+    // get digits in reverse order
+    int digit = int.parse(input[length - i - 1]);
+
+    // every 2nd number multiply with 2
+    if (i % 2 == 1) {
+      digit *= 2;
+    }
+    sum += digit > 9 ? (digit - 9) : digit;
+  }
+
+  if (sum % 10 == 0) {
+    return '';
+  }
+
+  return 'number is invalid';
 }

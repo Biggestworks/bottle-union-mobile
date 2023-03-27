@@ -17,12 +17,15 @@ class BannerDetailScreen extends StatefulWidget {
 }
 
 class _BannerDetailScreenState extends State<BannerDetailScreen> {
-
   @override
   void initState() {
-    Future.delayed(Duration.zero, () {
-      Provider.of<BannerDetailProvider>(context, listen: false).fnGetArguments(context);
-    },);
+    Future.delayed(
+      Duration.zero,
+      () {
+        Provider.of<BannerDetailProvider>(context, listen: false)
+            .fnGetArguments(context);
+      },
+    );
     super.initState();
   }
 
@@ -53,19 +56,30 @@ class _BannerDetailScreenState extends State<BannerDetailScreen> {
                       flexibleSpace: FlexibleSpaceBar(
                         background: Stack(
                           children: [
-                            CustomWidget.networkImg(context, provider.banner?.banner?[0].image),
+                            CustomWidget.networkImg(
+                                context, provider.banner?.banner?[0].image),
                             Positioned(
                               bottom: 0,
                               right: 0,
                               child: Container(
                                 color: CustomColor.GREY_TXT,
-                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
                                 child: Row(
                                   children: [
-                                    Icon(Icons.access_time_outlined, color: Colors.white, size: 20,),
-                                    SizedBox(width: 5,),
-                                    Text(DateFormat('dd MMMM yyyy')
-                                        .format(DateTime.parse(provider.banner?.createdAt ?? '')),
+                                    Icon(
+                                      Icons.access_time_outlined,
+                                      color: Colors.white,
+                                      size: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      DateFormat('dd MMMM yyyy').format(
+                                          DateTime.parse(
+                                              provider.banner?.createdAt ??
+                                                  '')),
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -87,13 +101,21 @@ class _BannerDetailScreenState extends State<BannerDetailScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(provider.banner?.banner?[0].title ?? '-', style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),),
+                          Text(
+                            provider.banner?.banner?[0].title ?? '-',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           Html(
-                            data: provider.banner?.banner?[0].description ?? '-',
-                            style: {"body": Style(padding: EdgeInsets.zero, margin: EdgeInsets.zero)},
+                            data:
+                                provider.banner?.banner?[0].description ?? '-',
+                            style: {
+                              "body": Style(
+                                  padding: EdgeInsets.zero,
+                                  margin: Margins.zero)
+                            },
                           ),
                         ],
                       ),

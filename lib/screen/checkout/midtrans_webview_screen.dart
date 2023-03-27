@@ -17,20 +17,44 @@ class MidtransWebviewScreen extends StatefulWidget {
 }
 
 class _MidtransWebviewScreenState extends State<MidtransWebviewScreen> {
+  var webViewController = WebViewController();
 
   @override
   void initState() {
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final _args = ModalRoute.of(context)!.settings.arguments as MidtransWebviewScreen;
+    final _args =
+        ModalRoute.of(context)!.settings.arguments as MidtransWebviewScreen;
+
+    webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {
+            // Update loading bar.
+          },
+          onPageStarted: (String url) {},
+          onPageFinished: (String url) {},
+          onWebResourceError: (WebResourceError error) {},
+          onNavigationRequest: (NavigationRequest request) {
+            if (request.url.startsWith(_args.url.toString())) {
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(_args.url.toString()));
 
     return WillPopScope(
       onWillPop: () async {
-        Get.offNamedUntil(BaseHomeScreen.tag, (route) => false, arguments: BaseHomeScreen(pageIndex: 3));
+        Get.offNamedUntil(BaseHomeScreen.tag, (route) => false,
+            arguments: BaseHomeScreen(pageIndex: 3));
         return false;
       },
       child: Scaffold(
@@ -38,9 +62,8 @@ class _MidtransWebviewScreenState extends State<MidtransWebviewScreen> {
           backgroundColor: CustomColor.MAIN,
         ),
         body: SafeArea(
-          child: WebView(
-            initialUrl: _args.url,
-            javascriptMode: JavascriptMode.unrestricted,
+          child: WebViewWidget(
+            controller: webViewController,
           ),
         ),
       ),

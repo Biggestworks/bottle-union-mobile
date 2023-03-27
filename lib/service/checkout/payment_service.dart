@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:eight_barrels/helper/url_helper.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
@@ -141,5 +142,83 @@ class PaymentService extends GetConnect {
     }
 
     return _model;
+  }
+
+  Future<Map<String, dynamic>> fetchCreditCardTokenId({
+    required String cardNumber,
+    required String expiryMonth,
+    required String expiryYear,
+    required String cvv,
+  }) async {
+    try {
+      var _token = await _userPreferences.getUserToken();
+      final Map<String, dynamic> payload = {
+        "card_number": cardNumber,
+        "expiry_month": expiryMonth,
+        "expiry_year": expiryYear,
+        "cvv": cvv,
+      };
+
+      print(json.encode(payload));
+
+      print(URLHelper.tokenIdUrl);
+
+      final response = await http.post(
+        Uri.parse(URLHelper.tokenIdUrl),
+        body: payload,
+      );
+
+      return json.decode(response.body);
+    } on SocketException {
+      rethrow;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchCreditCardAuthorizationId({
+    required String amount,
+    required String cvn,
+    required String tokenId,
+  }) async {
+    try {
+      final response =
+          await http.post(Uri.parse(URLHelper.authorizationIdUrl), body: {
+        "amount": 100000.toString(),
+        "card_cvn": cvn,
+        "currency": "IDR",
+        "token_id": tokenId,
+      });
+
+      return json.decode(response.body) as Map<String, dynamic>;
+    } on SocketException {
+      rethrow;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>> creditCardCharge({
+    required String tokenId,
+    required String authenticationId,
+    required String identifier,
+    required String cvv,
+  }) async {
+    try {
+      final response = await http.post(Uri.parse(URLHelper.chargeV2Url), body: {
+        "token_id": tokenId,
+        "external_id": "123asd",
+        "authentication_id": authenticationId,
+        "amount": 100000,
+        "email": identifier,
+        "card_cvn": cvv,
+      });
+
+      return json.decode(response.body) as Map<String, dynamic>;
+    } on SocketException {
+      rethrow;
+    } catch (e) {
+      rethrow;
+    }
   }
 }
