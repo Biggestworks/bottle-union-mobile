@@ -1,6 +1,8 @@
 name: eight_barrels
 description: 8 Barrels Mobile Application
 
+publish_to: 'none' 
+
 version: 1.0.5+25
 
 environment:
@@ -20,12 +22,11 @@ dependencies:
   image_picker: ^0.8.7
   timelines: ^0.1.0
   location: ^4.3.0
-  geolocator: ^7.0.1
+  geolocator: ^9.0.2
   geocoding: ^2.0.2
+  permission_handler: ^10.2.0
   google_maps_place_picker:
-    git:
-      url: https://github.com/fysoul17/google_maps_place_picker.git
-      ref: 22bd2674fc648a69ceefe7c99afeece282a6f711
+    git: https://github.com/ERAKOMP-IT/google_maps_place_picker.git
 #  google_maps_place_picker: ^2.1.0-nullsafety.3
 
   syncfusion_flutter_datepicker: ^21.1.35
@@ -64,9 +65,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   flutter_jailbreak_detection: ^1.8.0
   url_launcher: ^6.0.10
-
-dependency_overrides: 
-  firebase_core_platform_interface: ^4.5.1
+  flutter_inappwebview: ^5.7.2+3
 
 dev_dependencies:
   flutter_test:

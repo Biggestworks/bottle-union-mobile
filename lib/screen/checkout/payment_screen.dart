@@ -8,7 +8,10 @@ import 'package:eight_barrels/model/checkout/order_summary_model.dart'
 import 'package:eight_barrels/model/product/product_detail_model.dart';
 import 'package:eight_barrels/provider/checkout/payment_provider.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
@@ -44,6 +47,9 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
   TextEditingController expiryDateController = TextEditingController();
   TextEditingController cvvController = TextEditingController();
 
+  final Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers = {
+    Factory(() => EagerGestureRecognizer())
+  };
   bool _isLoad = false;
 
   @override
@@ -58,6 +64,7 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
             .fnFetchPaymentList();
       },
     );
+
     super.initState();
   }
 
@@ -677,39 +684,37 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
             ),
           ),
           body: _provider.webViewUrl != null
-              ? WebViewWidget(
-                  controller: WebViewController()
-                    ..addJavaScriptChannel("Print", onMessageReceived: (msg) {
-                      print(msg);
+              ? InAppWebView(
+                  initialOptions: InAppWebViewGroupOptions(
+                    crossPlatform: InAppWebViewOptions(
+                        supportZoom: false, // zoom support
+                        preferredContentMode: UserPreferredContentMode
+                            .MOBILE), // here you change the mode
+                  ),
+                  onWebViewCreated: (controller) {
+                    controller.addJavaScriptHandler(
+                        handlerName: 'parent',
+                        callback: (cal) {
+                          print(cal);
+                        });
+                    controller.addJavaScriptHandler(
+                        handlerName: 'load',
+                        callback: (cal) {
+                          print(cal);
+                        });
+                  },
+                  onLoadStart: (controller, url) {
+                    if (url.toString().contains('verification_redirect')) {
                       _provider.fnWebViewOtpVerified();
-                    })
-                    ..setJavaScriptMode(JavaScriptMode.unrestricted)
-                    ..setBackgroundColor(const Color(0x00000000))
-                    ..setNavigationDelegate(
-                      NavigationDelegate(
-                        onProgress: (int progress) {
-                          // Update loading bar.
-                        },
-                        onPageStarted: (String url) {},
-                        onPageFinished: (String url) {},
-                        onWebResourceError: (WebResourceError error) {},
-                        onNavigationRequest: (NavigationRequest request) {
-                          print(request.url);
-                          request.printInfo();
-                          if (request.url
-                              .toString()
-                              .contains("verification_redirect")) {
-                            _provider.fnWebViewOtpVerified();
-                          }
-                          return NavigationDecision.navigate;
-                        },
-                      ),
-                    )
-                    ..loadRequest(
-                      Uri.parse(
-                        _provider.webViewUrl.toString(),
-                      ),
-                    ),
+                    }
+                  },
+                  onLoadStop: (controller, url) {
+                    if (url.toString().contains('verification_redirect')) {
+                      _provider.fnWebViewOtpVerified();
+                    }
+                  },
+                  initialUrlRequest: URLRequest(
+                      url: Uri.parse(_provider.webViewUrl.toString())),
                 )
               : _mainContent,
           bottomNavigationBar: _bottomMenuContent,
