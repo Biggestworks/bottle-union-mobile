@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -12,8 +14,8 @@ class AppLocalizations {
   Map<dynamic, dynamic> _localisedValues = new Map<dynamic, dynamic>();
 
   Future<AppLocalizations> load(Locale locale) async {
-    String jsonContent =
-        await rootBundle.loadString("assets/locale/${locale.languageCode}.json");
+    String jsonContent = await rootBundle
+        .loadString("assets/locale/${locale.languageCode}.json");
     _localisedValues = json.decode(jsonContent);
     return this;
   }

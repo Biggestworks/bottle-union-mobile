@@ -1,3 +1,5 @@
+// ignore_for_file: body_might_complete_normally_nullable
+
 import 'package:eight_barrels/service/auth/auth_service.dart';
 
 class TextValidation {
@@ -60,9 +62,11 @@ class TextValidation {
     }
   }
 
-  Future<bool?> validateAge(String dob) async => await _service.validateAge(dob: dob);
+  Future<bool?> validateAge(String dob) async =>
+      await _service.validateAge(dob: dob);
 
-  Future<bool?> validateEmailExist(String value) async => await _service.validateEmailPhone(value: value);
+  Future<bool?> validateEmailExist(String value) async =>
+      await _service.validateEmailPhone(value: value);
 
   String? validateYear(String? value) {
     if ((value?.length ?? 0) > 0 && (value?.length ?? 0) < 4) {

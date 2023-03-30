@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
@@ -10,7 +12,7 @@ import 'package:eight_barrels/screen/profile/contact_us_screen.dart';
 import 'package:eight_barrels/screen/profile/update_profile_screen.dart';
 import 'package:eight_barrels/screen/splash/splash_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
@@ -31,13 +33,20 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
 
   @override
   void initState() {
-    Future.delayed(Duration.zero, () {
-      Provider.of<ProfileProvider>(context, listen: false).fnGetView(this);
-      Provider.of<ProfileProvider>(context, listen: false).fnFetchUserInfo()
-          .whenComplete(() => Provider.of<ProfileProvider>(context, listen: false).fnFetchRegionList());
-      Provider.of<ProfileProvider>(context, listen: false).fnFetchLocale();
-      Provider.of<ProfileProvider>(context, listen: false).fnFetchAppVersion();
-    },);
+    Future.delayed(
+      Duration.zero,
+      () {
+        Provider.of<ProfileProvider>(context, listen: false).fnGetView(this);
+        Provider.of<ProfileProvider>(context, listen: false)
+            .fnFetchUserInfo()
+            .whenComplete(() =>
+                Provider.of<ProfileProvider>(context, listen: false)
+                    .fnFetchRegionList());
+        Provider.of<ProfileProvider>(context, listen: false).fnFetchLocale();
+        Provider.of<ProfileProvider>(context, listen: false)
+            .fnFetchAppVersion();
+      },
+    );
     super.initState();
   }
 
@@ -74,7 +83,8 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
                             return GridView.builder(
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3,
                                 crossAxisSpacing: 4,
                                 mainAxisSpacing: 4,
@@ -84,27 +94,40 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
                               itemBuilder: (context, index) {
                                 var _data = provider.regionList.data?[index];
                                 return GestureDetector(
-                                  onTap: () async => await provider.fnOnSelectRegion(_data?.id)
-                                      .then((_) => CustomWidget.showSuccessDialog(
-                                    context,
-                                    desc: AppLocalizations.instance.text('TXT_REGION_PREFERENCE_SUCCESS'),
-                                    function: () => Get.offNamedUntil(SplashScreen.tag, (route) => false),
-                                  )),
+                                  onTap: () async => await provider
+                                      .fnOnSelectRegion(_data?.id)
+                                      .then((_) =>
+                                          CustomWidget.showSuccessDialog(
+                                            context,
+                                            desc: AppLocalizations.instance.text(
+                                                'TXT_REGION_PREFERENCE_SUCCESS'),
+                                            function: () => Get.offNamedUntil(
+                                                SplashScreen.tag,
+                                                (route) => false),
+                                          )),
                                   child: Card(
-                                    color: _data?.id == provider.selectedRegionId ? CustomColor.MAIN : Colors.white,
+                                    color:
+                                        _data?.id == provider.selectedRegionId
+                                            ? CustomColor.MAIN
+                                            : Colors.white,
                                     child: Center(
-                                      child: Text(_data?.name ?? '-', style: TextStyle(
-                                          fontSize: 14,
-                                          color: _data?.id == _provider.selectedRegionId ? Colors.white : Colors.black
-                                      ), textAlign: TextAlign.center,),
+                                      child: Text(
+                                        _data?.name ?? '-',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: _data?.id ==
+                                                    _provider.selectedRegionId
+                                                ? Colors.white
+                                                : Colors.black),
+                                        textAlign: TextAlign.center,
+                                      ),
                                     ),
                                   ),
                                 );
                               },
                             );
                         }
-                      }
-                  ),
+                      }),
                 ),
               ),
             ),
@@ -119,7 +142,9 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
       decoration: BoxDecoration(
         color: CustomColor.MAIN,
         image: DecorationImage(
-          image: AssetImage('assets/images/bg_marron_lg.png',),
+          image: AssetImage(
+            'assets/images/bg_marron_lg.png',
+          ),
           fit: BoxFit.fill,
         ),
       ),
@@ -130,14 +155,12 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
             onTap: () => Get.toNamed(UpdateProfileScreen.tag),
             child: Stack(
               children: [
-                Consumer<ProfileProvider>(
-                  builder: (context, provider, _) {
-                    return CustomWidget.roundedAvatarImg(
-                      url: provider.userModel.user?.avatar ?? '',
-                      size: 130,
-                    );
-                  }
-                ),
+                Consumer<ProfileProvider>(builder: (context, provider, _) {
+                  return CustomWidget.roundedAvatarImg(
+                    url: provider.userModel.user?.avatar ?? '',
+                    size: 130,
+                  );
+                }),
                 Positioned(
                   bottom: 5,
                   right: 0,
@@ -174,13 +197,19 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
               children: [
                 ListTile(
                   dense: true,
-                  title: Text(AppLocalizations.instance.text('TXT_LBL_CHANGE_PASSWORD'), style: TextStyle(
+                  title: Text(
+                    AppLocalizations.instance.text('TXT_LBL_CHANGE_PASSWORD'),
+                    style: TextStyle(
                       color: Colors.black,
                       fontSize: 15,
-                  ),),
-                  subtitle: Text(AppLocalizations.instance.text('TXT_DESC_CHANGE_PASSWORD'), style: TextStyle(
+                    ),
+                  ),
+                  subtitle: Text(
+                    AppLocalizations.instance.text('TXT_DESC_CHANGE_PASSWORD'),
+                    style: TextStyle(
                       fontSize: 14,
-                  ),),
+                    ),
+                  ),
                   leading: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Icon(
@@ -194,9 +223,15 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
                     color: CustomColor.GREY_TXT,
                     size: 15,
                   ),
-                  onTap: () async => await Get.toNamed(ChangePasswordScreen.tag, arguments: ChangePasswordScreen(token: null,))!.then((value) async {
+                  onTap: () async => await Get.toNamed(ChangePasswordScreen.tag,
+                          arguments: ChangePasswordScreen(
+                            token: null,
+                          ))!
+                      .then((value) async {
                     if (value == true) {
-                      await CustomWidget.showSnackBar(context: context, content: Text('Success update password'));
+                      await CustomWidget.showSnackBar(
+                          context: context,
+                          content: Text('Success update password'));
                     }
                   }),
                 ),
@@ -205,13 +240,19 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
                 ),
                 ListTile(
                   dense: true,
-                  title: Text(AppLocalizations.instance.text('TXT_LBL_MY_ADDRESS'), style: TextStyle(
+                  title: Text(
+                    AppLocalizations.instance.text('TXT_LBL_MY_ADDRESS'),
+                    style: TextStyle(
                       color: Colors.black,
                       fontSize: 15,
-                  ),),
-                  subtitle: Text(AppLocalizations.instance.text('TXT_DESC_MY_ADDRESS'), style: TextStyle(
+                    ),
+                  ),
+                  subtitle: Text(
+                    AppLocalizations.instance.text('TXT_DESC_MY_ADDRESS'),
+                    style: TextStyle(
                       fontSize: 14,
-                  ),),
+                    ),
+                  ),
                   leading: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Icon(
@@ -232,10 +273,13 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
                 ),
                 ListTile(
                   dense: true,
-                  title: Text(AppLocalizations.instance.text('TXT_LBL_WISHLIST'), style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                  ),),
+                  title: Text(
+                    AppLocalizations.instance.text('TXT_LBL_WISHLIST'),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                    ),
+                  ),
                   leading: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Icon(
@@ -256,10 +300,13 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
                 ),
                 ListTile(
                   dense: true,
-                  title: Text(AppLocalizations.instance.text('TXT_LBL_REVIEW'), style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                  ),),
+                  title: Text(
+                    AppLocalizations.instance.text('TXT_LBL_REVIEW'),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                    ),
+                  ),
                   leading: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Icon(
@@ -287,75 +334,96 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
                       size: 20,
                     ),
                   ),
-                  title: Text(AppLocalizations.instance.text("TXT_LBL_LANGUAGE")),
-                  subtitle: Text(AppLocalizations.instance.text("TXT_LBL_LANG_LOCALE")),
+                  title:
+                      Text(AppLocalizations.instance.text("TXT_LBL_LANGUAGE")),
+                  subtitle: Text(
+                      AppLocalizations.instance.text("TXT_LBL_LANG_LOCALE")),
                   trailing: Consumer<ProfileProvider>(
-                    builder: (context, provider, _) {
-                      return Transform.scale(
-                        scale: 1.4,
-                        child: Switch(
-                          value: provider.switchVal,
-                          onChanged: (value) => CustomWidget.showConfirmationDialog(
-                            context,
-                            desc: '${AppLocalizations.instance.text('TXT_LANGUAGE_INFO')}${provider.language} ?',
-                            function: () async {
-                              await provider.fnOnSwitchLanguage(value)
-                                  .then((_) => CustomWidget.showSuccessDialog(
-                                context,
-                                desc: AppLocalizations.instance.text('TXT_LANGUAGE_SUCCESS'),
-                                function: () => Get.offNamedUntil(SplashScreen.tag, (route) => false),
-                              ));
-                            },
-                          ),
-                          activeThumbImage: AssetImage('assets/images/ic_england.png'),
-                          inactiveThumbImage: AssetImage('assets/images/ic_indonesia.png'),
-                          activeColor: Colors.grey,
-                          inactiveTrackColor: Colors.grey,
+                      builder: (context, provider, _) {
+                    return Transform.scale(
+                      scale: 1.4,
+                      child: Switch(
+                        value: provider.switchVal,
+                        onChanged: (value) =>
+                            CustomWidget.showConfirmationDialog(
+                          context,
+                          desc:
+                              '${AppLocalizations.instance.text('TXT_LANGUAGE_INFO')}${provider.language} ?',
+                          function: () async {
+                            await provider
+                                .fnOnSwitchLanguage(value)
+                                .then((_) => CustomWidget.showSuccessDialog(
+                                      context,
+                                      desc: AppLocalizations.instance
+                                          .text('TXT_LANGUAGE_SUCCESS'),
+                                      function: () => Get.offNamedUntil(
+                                          SplashScreen.tag, (route) => false),
+                                    ));
+                          },
                         ),
-                      );
-                    }
-                  ),
+                        activeThumbImage:
+                            AssetImage('assets/images/ic_england.png'),
+                        inactiveThumbImage:
+                            AssetImage('assets/images/ic_indonesia.png'),
+                        activeColor: Colors.grey,
+                        inactiveTrackColor: Colors.grey,
+                      ),
+                    );
+                  }),
                 ),
                 Divider(
                   thickness: 1,
                 ),
-                Consumer<ProfileProvider>(
-                  builder: (context, provider, _) {
-                    return ListTile(
-                      dense: true,
-                      title: Row(
-                        children: [
-                          Text(AppLocalizations.instance.text('TXT_LBL_REGION_PREFERENCE'), style: TextStyle(
+                Consumer<ProfileProvider>(builder: (context, provider, _) {
+                  return ListTile(
+                    dense: true,
+                    title: Row(
+                      children: [
+                        Text(
+                          AppLocalizations.instance
+                              .text('TXT_LBL_REGION_PREFERENCE'),
+                          style: TextStyle(
                             color: Colors.black,
                             fontSize: 15,
-                          ),),
-                          SizedBox(width: 5,),
-                          GestureDetector(
-                            onTap: () => CustomWidget.showInfoPopup(context, desc: AppLocalizations.instance.text('TXT_REGION_PREFERENCE_INFO')),
-                            child: Icon(FontAwesomeIcons.questionCircle, size: 18, color: CustomColor.GREY_TXT,),
                           ),
-                        ],
-                      ),
-                      subtitle: Text(provider.selectedRegion ?? '-', style: TextStyle(
-                        fontSize: 14,
-                      ),),
-                      leading: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Icon(
-                          FontAwesomeIcons.mapMarkedAlt,
-                          color: CustomColor.GREY_TXT,
-                          size: 18,
                         ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        GestureDetector(
+                          onTap: () => CustomWidget.showInfoPopup(context,
+                              desc: AppLocalizations.instance
+                                  .text('TXT_REGION_PREFERENCE_INFO')),
+                          child: Icon(
+                            FontAwesomeIcons.questionCircle,
+                            size: 18,
+                            color: CustomColor.GREY_TXT,
+                          ),
+                        ),
+                      ],
+                    ),
+                    subtitle: Text(
+                      provider.selectedRegion ?? '-',
+                      style: TextStyle(
+                        fontSize: 14,
                       ),
-                      trailing: Icon(
-                        Icons.arrow_forward_ios,
+                    ),
+                    leading: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Icon(
+                        FontAwesomeIcons.mapMarkedAlt,
                         color: CustomColor.GREY_TXT,
-                        size: 15,
+                        size: 18,
                       ),
-                      onTap: () => _showRegionDialog(),
-                    );
-                  }
-                ),
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: CustomColor.GREY_TXT,
+                      size: 15,
+                    ),
+                    onTap: () => _showRegionDialog(),
+                  );
+                }),
               ],
             ),
           ),
@@ -368,7 +436,9 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
               children: [
                 ListTile(
                   dense: true,
-                  title: Text(AppLocalizations.instance.text('TXT_LBL_CONTACT_US'), style: TextStyle(
+                  title: Text(
+                    AppLocalizations.instance.text('TXT_LBL_CONTACT_US'),
+                    style: TextStyle(
                       color: Colors.black,
                       fontSize: 15,
                     ),
@@ -393,7 +463,9 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
                 ),
                 ListTile(
                   dense: true,
-                  title: Text('Privacy Policy', style: TextStyle(
+                  title: Text(
+                    'Privacy Policy',
+                    style: TextStyle(
                       color: Colors.black,
                       fontSize: 15,
                     ),
@@ -423,10 +495,13 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
             elevation: 2,
             child: ListTile(
               dense: true,
-              title: Text(AppLocalizations.instance.text('TXT_SIGN_OUT'), style: TextStyle(
-                color: CustomColor.MAIN,
-                fontSize: 15,
-              ),),
+              title: Text(
+                AppLocalizations.instance.text('TXT_SIGN_OUT'),
+                style: TextStyle(
+                  color: CustomColor.MAIN,
+                  fontSize: 15,
+                ),
+              ),
               leading: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Icon(
@@ -449,18 +524,21 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
               },
             ),
           ),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Consumer<ProfileProvider>(
-                  builder: (context, provider, _) {
-                    return Text("App Version ${provider.fullVersion}", style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: CustomColor.GREY_TXT,
-                    ),);
-                  }
-              ),
+              Consumer<ProfileProvider>(builder: (context, provider, _) {
+                return Text(
+                  "App Version ${provider.fullVersion}",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: CustomColor.GREY_TXT,
+                  ),
+                );
+              }),
             ],
           ),
         ],
@@ -473,7 +551,9 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
         children: [
           _headerContent,
           _menuContent,
-          SizedBox(height: 20,),
+          SizedBox(
+            height: 20,
+          ),
         ],
       ),
     );
@@ -490,13 +570,22 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
           padding: const EdgeInsets.all(10),
           child: Row(
             children: [
-              Icon(FontAwesomeIcons.circleInfo, color: CustomColor.BROWN_TXT,),
-              SizedBox(width: 10,),
+              Icon(
+                FontAwesomeIcons.circleInfo,
+                color: CustomColor.BROWN_TXT,
+              ),
+              SizedBox(
+                width: 10,
+              ),
               Flexible(
-                child: Text(AppLocalizations.instance.text('TXT_GUEST_ACCOUNT_INFO'), style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 14,
-                ), textAlign: TextAlign.left,),
+                child: Text(
+                  AppLocalizations.instance.text('TXT_GUEST_ACCOUNT_INFO'),
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
               ),
             ],
           ),
@@ -524,44 +613,54 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
                       size: 20,
                     ),
                   ),
-                  title: Text(AppLocalizations.instance.text("TXT_LBL_LANGUAGE")),
-                  subtitle: Text(AppLocalizations.instance.text("TXT_LBL_LANG_LOCALE")),
+                  title:
+                      Text(AppLocalizations.instance.text("TXT_LBL_LANGUAGE")),
+                  subtitle: Text(
+                      AppLocalizations.instance.text("TXT_LBL_LANG_LOCALE")),
                   trailing: Consumer<ProfileProvider>(
                       builder: (context, provider, _) {
-                        return Transform.scale(
-                          scale: 1.4,
-                          child: Switch(
-                            value: provider.switchVal,
-                            onChanged: (value) => CustomWidget.showConfirmationDialog(
-                              context,
-                              desc: '${AppLocalizations.instance.text('TXT_LANGUAGE_INFO')}${provider.language} ?',
-                              function: () async {
-                                await provider.fnOnSwitchLanguage(value)
-                                    .then((_) => CustomWidget.showSuccessDialog(
-                                  context,
-                                  desc: AppLocalizations.instance.text('TXT_LANGUAGE_SUCCESS'),
-                                  function: () => Get.offNamedUntil(SplashScreen.tag, (route) => false),
-                                ));
-                              },
-                            ),
-                            activeThumbImage: AssetImage('assets/images/ic_england.png'),
-                            inactiveThumbImage: AssetImage('assets/images/ic_indonesia.png'),
-                            activeColor: Colors.grey,
-                            inactiveTrackColor: Colors.grey,
-                          ),
-                        );
-                      }
-                  ),
+                    return Transform.scale(
+                      scale: 1.4,
+                      child: Switch(
+                        value: provider.switchVal,
+                        onChanged: (value) =>
+                            CustomWidget.showConfirmationDialog(
+                          context,
+                          desc:
+                              '${AppLocalizations.instance.text('TXT_LANGUAGE_INFO')}${provider.language} ?',
+                          function: () async {
+                            await provider
+                                .fnOnSwitchLanguage(value)
+                                .then((_) => CustomWidget.showSuccessDialog(
+                                      context,
+                                      desc: AppLocalizations.instance
+                                          .text('TXT_LANGUAGE_SUCCESS'),
+                                      function: () => Get.offNamedUntil(
+                                          SplashScreen.tag, (route) => false),
+                                    ));
+                          },
+                        ),
+                        activeThumbImage:
+                            AssetImage('assets/images/ic_england.png'),
+                        inactiveThumbImage:
+                            AssetImage('assets/images/ic_indonesia.png'),
+                        activeColor: Colors.grey,
+                        inactiveTrackColor: Colors.grey,
+                      ),
+                    );
+                  }),
                 ),
                 Divider(
                   thickness: 1,
                 ),
                 ListTile(
                   dense: true,
-                  title: Text(AppLocalizations.instance.text('TXT_LBL_CONTACT_US'), style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                  ),
+                  title: Text(
+                    AppLocalizations.instance.text('TXT_LBL_CONTACT_US'),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                    ),
                   ),
                   leading: Padding(
                     padding: const EdgeInsets.all(10.0),
@@ -583,10 +682,12 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
                 ),
                 ListTile(
                   dense: true,
-                  title: Text('Privacy Policy', style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                  ),
+                  title: Text(
+                    'Privacy Policy',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                    ),
                   ),
                   leading: Padding(
                     padding: const EdgeInsets.all(10.0),
@@ -613,10 +714,13 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
             elevation: 2,
             child: ListTile(
               dense: true,
-              title: Text(AppLocalizations.instance.text('TXT_SIGN_OUT'), style: TextStyle(
-                color: CustomColor.MAIN,
-                fontSize: 15,
-              ),),
+              title: Text(
+                AppLocalizations.instance.text('TXT_SIGN_OUT'),
+                style: TextStyle(
+                  color: CustomColor.MAIN,
+                  fontSize: 15,
+                ),
+              ),
               leading: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Icon(
@@ -639,18 +743,21 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
               },
             ),
           ),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Consumer<ProfileProvider>(
-                  builder: (context, provider, _) {
-                    return Text("App Version ${provider.fullVersion}", style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: CustomColor.GREY_TXT,
-                    ),);
-                  }
-              ),
+              Consumer<ProfileProvider>(builder: (context, provider, _) {
+                return Text(
+                  "App Version ${provider.fullVersion}",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: CustomColor.GREY_TXT,
+                  ),
+                );
+              }),
             ],
           ),
         ],
@@ -667,36 +774,37 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
       ),
     );
 
-    return Consumer<ProfileProvider>(
-      builder: (context, provider, _) {
-        return Scaffold(
-          backgroundColor: CustomColor.BG,
-          extendBodyBehindAppBar: provider.isGuest == 'false' ? true : false,
-          appBar: AppBar(
-            elevation: 0,
-            flexibleSpace: Image.asset('assets/images/bg_marron_lg.png', fit: BoxFit.cover,),
-            centerTitle: true,
-            title: Text(AppLocalizations.instance.text('TXT_MY_ACCOUNT')),
+    return Consumer<ProfileProvider>(builder: (context, provider, _) {
+      return Scaffold(
+        backgroundColor: CustomColor.BG,
+        extendBodyBehindAppBar: provider.isGuest == 'false' ? true : false,
+        appBar: AppBar(
+          elevation: 0,
+          flexibleSpace: Image.asset(
+            'assets/images/bg_marron_lg.png',
+            fit: BoxFit.cover,
           ),
-          body: Consumer<ProfileProvider>(
-            child: Container(),
-            builder: (context, provider, skeleton) {
-              switch (_isLoad) {
-                case true:
-                  return skeleton!;
-                default:
-                  switch (provider.isGuest) {
-                    case 'true':
-                      return _guestMainContent;
-                    default:
-                      return _mainContent;
-                  }
-              }
-            },
-          ),
-        );
-      }
-    );
+          centerTitle: true,
+          title: Text(AppLocalizations.instance.text('TXT_MY_ACCOUNT')),
+        ),
+        body: Consumer<ProfileProvider>(
+          child: Container(),
+          builder: (context, provider, skeleton) {
+            switch (_isLoad) {
+              case true:
+                return skeleton!;
+              default:
+                switch (provider.isGuest) {
+                  case 'true':
+                    return _guestMainContent;
+                  default:
+                    return _mainContent;
+                }
+            }
+          },
+        ),
+      );
+    });
   }
 
   @override
@@ -714,5 +822,4 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
       setState(() {});
     }
   }
-
 }

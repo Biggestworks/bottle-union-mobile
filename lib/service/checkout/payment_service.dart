@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -61,6 +63,50 @@ class PaymentService extends GetConnect {
         headers: await _headersAuth(),
       );
 
+      print(URLHelper.storeOrderCartUrl);
+
+      print(_response.body);
+
+      ///GET CONNECT BUG
+      // Response _response = await post(
+      //   URLHelper.storeOrderUrl,
+      //   _data,
+      //   headers: await _headersAuth(),
+      // );
+      _model = OrderCartModel.fromJson(json.decode(_response.body));
+    } catch (e) {
+      print(e);
+    }
+
+    return _model;
+  }
+
+  Future<OrderCartModel?> storeOrderCreditCardCart({
+    required int? addressId,
+    required List<Map<String, dynamic>> deliveries,
+    required String tokenId,
+    required String authenticationId,
+    required String? paymentMethod,
+    required String cvn,
+  }) async {
+    OrderCartModel _model = new OrderCartModel();
+
+    final Map<String, dynamic> _data = {
+      "id_address": addressId,
+      "deliveries": deliveries,
+      "payment_method": paymentMethod,
+      "token_id": tokenId,
+      "authentication_id": authenticationId,
+      "card_cvn": cvn,
+    };
+
+    try {
+      http.Response _response = await http.post(
+        Uri.parse(URLHelper.storeOrderCartUrl),
+        body: json.encode(_data),
+        headers: await _headersAuth(),
+      );
+
       ///GET CONNECT BUG
       // Response _response = await post(
       //   URLHelper.storeOrderUrl,
@@ -94,6 +140,57 @@ class PaymentService extends GetConnect {
       "courier_desc": courierDesc,
       "courier_etd": courierEtd,
       "courier_cost": courierCost
+    };
+
+    // final test = await _headersAuth();
+    // log(test.toString());
+
+    try {
+      http.Response _response = await http.post(
+        Uri.parse(URLHelper.storeOrderNowUrl),
+        body: json.encode(_data),
+        headers: await _headersAuth(),
+      );
+
+      ///GET CONNECT BUG
+      // Response _response = await post(
+      //   URLHelper.storeOrderUrl,
+      //   _data,
+      //   headers: await _headersAuth(),
+      // );
+      log(_response.body.toString());
+      _model = OrderNowModel.fromJson(json.decode(_response.body));
+    } catch (e) {
+      print(e);
+    }
+
+    return _model;
+  }
+
+  Future<OrderNowModel?> storeOrderBuyNowCreditCard(
+      {required int? addressId,
+      required ProductOrderModel? product,
+      required String? paymentMethod,
+      required String? courierName,
+      required String? courierDesc,
+      required String? courierEtd,
+      required int? courierCost,
+      required String tokenId,
+      required String authenticationId,
+      required String card_cvn}) async {
+    OrderNowModel _model = new OrderNowModel();
+
+    final Map<String, dynamic> _data = {
+      "id_address": addressId,
+      "products": product?.toJson(),
+      "payment_method": paymentMethod,
+      "courier_name": courierName,
+      "courier_desc": courierDesc,
+      "courier_etd": courierEtd,
+      "courier_cost": courierCost,
+      "token_id": tokenId,
+      "authentication_id": authenticationId,
+      "card_cvn": card_cvn
     };
 
     // final test = await _headersAuth();
@@ -182,14 +279,16 @@ class PaymentService extends GetConnect {
     required String tokenId,
   }) async {
     try {
+      print(amount);
       final response =
           await http.post(Uri.parse(URLHelper.authorizationIdUrl), body: {
-        "amount": 100000.toString(),
+        "amount": amount,
         "card_cvn": cvn,
         "currency": "IDR",
         "token_id": tokenId,
       });
 
+      print("token id == " + response.body.toString());
       return json.decode(response.body) as Map<String, dynamic>;
     } on SocketException {
       rethrow;
@@ -207,7 +306,6 @@ class PaymentService extends GetConnect {
     try {
       final response = await http.post(Uri.parse(URLHelper.chargeV2Url), body: {
         "token_id": tokenId,
-        "external_id": "123asd",
         "authentication_id": authenticationId,
         "amount": 100000,
         "email": identifier,

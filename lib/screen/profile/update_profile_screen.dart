@@ -5,7 +5,7 @@ import 'package:eight_barrels/helper/validation.dart';
 import 'package:eight_barrels/provider/profile/update_profile_provider.dart';
 import 'package:eight_barrels/screen/profile/profile_input_screen.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/route_manager.dart';
@@ -26,17 +26,25 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
 
   @override
   void initState() {
-    Future.delayed(Duration.zero, () {
-      Provider.of<UpdateProfileProvider>(context, listen: false).fnGetView(this);
-      Provider.of<UpdateProfileProvider>(context, listen: false).fnFetchUserData()
-          .then((_) => Provider.of<UpdateProfileProvider>(context, listen: false).fnFetchRegionList());
-    },);
+    Future.delayed(
+      Duration.zero,
+      () {
+        Provider.of<UpdateProfileProvider>(context, listen: false)
+            .fnGetView(this);
+        Provider.of<UpdateProfileProvider>(context, listen: false)
+            .fnFetchUserData()
+            .then((_) =>
+                Provider.of<UpdateProfileProvider>(context, listen: false)
+                    .fnFetchRegionList());
+      },
+    );
     super.initState();
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    final _provider = Provider.of<UpdateProfileProvider>(context, listen: false);
+    final _provider =
+        Provider.of<UpdateProfileProvider>(context, listen: false);
 
     _showDobDialog() {
       return showDialog(
@@ -53,10 +61,14 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
               height: 300,
               padding: EdgeInsets.all(10),
               child: SfDateRangePicker(
-                initialDisplayDate: _provider.userModel.user?.dateOfBirth != null
-                    ? DateTime.parse('${_provider.userModel.user?.dateOfBirth} 00:00:00')
-                    : DateTime.now(),
-                onSelectionChanged: (value) async => await _provider.fnOnSelectDate(value, _provider.scaffoldKey.currentContext!),
+                initialDisplayDate:
+                    _provider.userModel.user?.dateOfBirth != null
+                        ? DateTime.parse(
+                            '${_provider.userModel.user?.dateOfBirth} 00:00:00')
+                        : DateTime.now(),
+                onSelectionChanged: (value) async =>
+                    await _provider.fnOnSelectDate(
+                        value, _provider.scaffoldKey.currentContext!),
               ),
             ),
           );
@@ -91,13 +103,17 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                               Radio(
                                 value: item.gender,
                                 groupValue: _provider.genderController.text,
-                                onChanged: (value) => _provider.fnOnChangeGender(value as String, context),
+                                onChanged: (value) => _provider
+                                    .fnOnChangeGender(value as String, context),
                                 activeColor: CustomColor.MAIN,
                               ),
-                              Text(item.title, style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                              ),),
+                              Text(
+                                item.title,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                              ),
                             ],
                           ),
                         );
@@ -184,45 +200,55 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                   width: MediaQuery.of(context).size.width * 0.95,
                   padding: EdgeInsets.all(10),
                   child: Consumer<UpdateProfileProvider>(
-                    child: Center(
-                      child: Container(
-                        child: Text('No Data'),
+                      child: Center(
+                        child: Container(
+                          child: Text('No Data'),
+                        ),
                       ),
-                    ),
-                    builder: (context, provider, skeleton) {
-                      switch (provider.regionList.data) {
-                        case null:
-                          return skeleton!;
-                        default:
-                          return GridView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              crossAxisSpacing: 4,
-                              mainAxisSpacing: 4,
-                              childAspectRatio: 2,
-                            ),
-                            itemCount: provider.regionList.data?.length,
-                            itemBuilder: (context, index) {
-                              var _data = provider.regionList.data?[index];
-                              return GestureDetector(
-                                onTap: () async => await provider.fnOnSelectRegion(_data?.id, provider.scaffoldKey.currentContext!),
-                                child: Card(
-                                  color: _data?.id == provider.regionId ? CustomColor.MAIN : Colors.white,
-                                  child: Center(
-                                    child: Text(_data?.name ?? '-', style: TextStyle(
-                                        fontSize: 14,
-                                        color: _data?.id == _provider.regionId ? Colors.white : Colors.black
-                                    ), textAlign: TextAlign.center,),
+                      builder: (context, provider, skeleton) {
+                        switch (provider.regionList.data) {
+                          case null:
+                            return skeleton!;
+                          default:
+                            return GridView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                crossAxisSpacing: 4,
+                                mainAxisSpacing: 4,
+                                childAspectRatio: 2,
+                              ),
+                              itemCount: provider.regionList.data?.length,
+                              itemBuilder: (context, index) {
+                                var _data = provider.regionList.data?[index];
+                                return GestureDetector(
+                                  onTap: () async =>
+                                      await provider.fnOnSelectRegion(_data?.id,
+                                          provider.scaffoldKey.currentContext!),
+                                  child: Card(
+                                    color: _data?.id == provider.regionId
+                                        ? CustomColor.MAIN
+                                        : Colors.white,
+                                    child: Center(
+                                      child: Text(
+                                        _data?.name ?? '-',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color:
+                                                _data?.id == _provider.regionId
+                                                    ? Colors.white
+                                                    : Colors.black),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                          );
-                      }
-                    }
-                  ),
+                                );
+                              },
+                            );
+                        }
+                      }),
                 ),
               ),
             ),
@@ -244,7 +270,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
           desc: AppLocalizations.instance.text('TXT_DELETE_ACCOUNT_INFO'),
           function: () async {
             Get.back();
-            await _provider.fnDeleteAccount(_provider.scaffoldKey.currentContext!);
+            await _provider
+                .fnDeleteAccount(_provider.scaffoldKey.currentContext!);
           },
         ),
       ),
@@ -267,7 +294,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                     return Column(
                       children: [
                         GestureDetector(
-                          onTap: () async => await provider.fnUpdateAvatar(provider.scaffoldKey.currentContext!),
+                          onTap: () async => await provider.fnUpdateAvatar(
+                              provider.scaffoldKey.currentContext!),
                           child: Stack(
                             children: [
                               CustomWidget.roundedAvatarImg(
@@ -296,11 +324,16 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(AppLocalizations.instance.text('TXT_LBL_NAME'), style: TextStyle(
-                              fontSize: 16,
-                              color: CustomColor.GREY_TXT,
-                            ),),
-                            SizedBox(height: 5,),
+                            Text(
+                              AppLocalizations.instance.text('TXT_LBL_NAME'),
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: CustomColor.GREY_TXT,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
                             Row(
                               children: [
                                 Expanded(
@@ -311,39 +344,60 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                                       isDense: true,
                                       disabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide(color: CustomColor.GREY_BG,),
+                                        borderSide: BorderSide(
+                                          color: CustomColor.GREY_BG,
+                                        ),
                                       ),
                                       filled: true,
                                       fillColor: CustomColor.GREY_BG,
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 10,),
+                                SizedBox(
+                                  width: 10,
+                                ),
                                 GestureDetector(
-                                  onTap: () async => await Get.toNamed(ProfileInputScreen.tag, arguments: ProfileInputScreen(
-                                    flag: AppLocalizations.instance.text('TXT_LBL_NAME'),
-                                    data: provider.fullNameController.text,
-                                  ))!.then((value) async {
+                                  onTap: () async =>
+                                      await Get.toNamed(ProfileInputScreen.tag,
+                                              arguments: ProfileInputScreen(
+                                                flag: AppLocalizations.instance
+                                                    .text('TXT_LBL_NAME'),
+                                                data: provider
+                                                    .fullNameController.text,
+                                              ))!
+                                          .then((value) async {
                                     if (value == true) {
                                       await provider.fnFetchUserData();
-                                      await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text('Success'));
+                                      await CustomWidget.showSnackBar(
+                                          context: provider
+                                              .scaffoldKey.currentContext!,
+                                          content: Text('Success'));
                                     }
                                   }),
-                                  child: Text(AppLocalizations.instance.text('TXT_CHANGE'), style: TextStyle(
-                                    color: CustomColor.BROWN_TXT,
-                                    fontSize: 14,
-                                  ),),
+                                  child: Text(
+                                    AppLocalizations.instance
+                                        .text('TXT_CHANGE'),
+                                    style: TextStyle(
+                                      color: CustomColor.BROWN_TXT,
+                                      fontSize: 14,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
                             SizedBox(
                               height: 20.0,
                             ),
-                            Text(AppLocalizations.instance.text('TXT_LBL_DOB'), style: TextStyle(
-                              fontSize: 16,
-                              color: CustomColor.GREY_TXT,
-                            ),),
-                            SizedBox(height: 5,),
+                            Text(
+                              AppLocalizations.instance.text('TXT_LBL_DOB'),
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: CustomColor.GREY_TXT,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
                             Row(
                               children: [
                                 Expanded(
@@ -351,47 +405,71 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                                     enabled: false,
                                     controller: provider.dobController,
                                     decoration: InputDecoration(
-                                      suffixIcon: Consumer<UpdateProfileProvider>(
-                                          child: SizedBox(),
-                                          builder: (context, provider, skeleton) {
-                                            switch (provider.isAgeValid) {
-                                              case true:
-                                                return Icon(FontAwesomeIcons.solidCircleCheck, size: 24, color: Colors.green,);
-                                              case false:
-                                                return Icon(FontAwesomeIcons.circleExclamation, size: 24, color: Colors.red,);
-                                              default:
-                                                return skeleton!;
-                                            }
-                                          }
-                                      ),
+                                      suffixIcon:
+                                          Consumer<UpdateProfileProvider>(
+                                              child: SizedBox(),
+                                              builder: (context, provider,
+                                                  skeleton) {
+                                                switch (provider.isAgeValid) {
+                                                  case true:
+                                                    return Icon(
+                                                      FontAwesomeIcons
+                                                          .solidCircleCheck,
+                                                      size: 24,
+                                                      color: Colors.green,
+                                                    );
+                                                  case false:
+                                                    return Icon(
+                                                      FontAwesomeIcons
+                                                          .circleExclamation,
+                                                      size: 24,
+                                                      color: Colors.red,
+                                                    );
+                                                  default:
+                                                    return skeleton!;
+                                                }
+                                              }),
                                       isDense: true,
                                       disabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide(color: CustomColor.GREY_BG,),
+                                        borderSide: BorderSide(
+                                          color: CustomColor.GREY_BG,
+                                        ),
                                       ),
                                       filled: true,
                                       fillColor: CustomColor.GREY_BG,
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 10,),
+                                SizedBox(
+                                  width: 10,
+                                ),
                                 GestureDetector(
                                   onTap: () => _showDobDialog(),
-                                  child: Text(AppLocalizations.instance.text('TXT_CHANGE'), style: TextStyle(
-                                    color: CustomColor.BROWN_TXT,
-                                    fontSize: 14,
-                                  ),),
+                                  child: Text(
+                                    AppLocalizations.instance
+                                        .text('TXT_CHANGE'),
+                                    style: TextStyle(
+                                      color: CustomColor.BROWN_TXT,
+                                      fontSize: 14,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
                             SizedBox(
                               height: 20.0,
                             ),
-                            Text(AppLocalizations.instance.text('TXT_LBL_GENDER'), style: TextStyle(
-                              fontSize: 16,
-                              color: CustomColor.GREY_TXT,
-                            ),),
-                            SizedBox(height: 5,),
+                            Text(
+                              AppLocalizations.instance.text('TXT_LBL_GENDER'),
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: CustomColor.GREY_TXT,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
                             Row(
                               children: [
                                 Expanded(
@@ -402,20 +480,28 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                                       isDense: true,
                                       disabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide(color: CustomColor.GREY_BG,),
+                                        borderSide: BorderSide(
+                                          color: CustomColor.GREY_BG,
+                                        ),
                                       ),
                                       filled: true,
                                       fillColor: CustomColor.GREY_BG,
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 10,),
+                                SizedBox(
+                                  width: 10,
+                                ),
                                 GestureDetector(
                                   onTap: () => _showGenderDialog(),
-                                  child: Text(AppLocalizations.instance.text('TXT_CHANGE'), style: TextStyle(
-                                    color: CustomColor.BROWN_TXT,
-                                    fontSize: 14,
-                                  ),),
+                                  child: Text(
+                                    AppLocalizations.instance
+                                        .text('TXT_CHANGE'),
+                                    style: TextStyle(
+                                      color: CustomColor.BROWN_TXT,
+                                      fontSize: 14,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -424,27 +510,46 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                             ),
                             Row(
                               children: [
-                                Text(AppLocalizations.instance.text('TXT_LBL_EMAIL'), style: TextStyle(
-                                  fontSize: 16,
-                                  color: CustomColor.GREY_TXT,
-                                ),),
-                                SizedBox(width: 10,),
+                                Text(
+                                  AppLocalizations.instance
+                                      .text('TXT_LBL_EMAIL'),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: CustomColor.GREY_TXT,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
                                 Row(
                                   children: [
-                                    Text(provider.isVerified!
-                                        ? AppLocalizations.instance.text('TXT_VERIFIED')
-                                        : AppLocalizations.instance.text('TXT_NOT_VERIFIED'), style: TextStyle(
-                                      fontSize: 16,
-                                      color: provider.isVerified! ? Colors.green : Colors.red,
-                                    ),),
+                                    Text(
+                                      provider.isVerified!
+                                          ? AppLocalizations.instance
+                                              .text('TXT_VERIFIED')
+                                          : AppLocalizations.instance
+                                              .text('TXT_NOT_VERIFIED'),
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: provider.isVerified!
+                                            ? Colors.green
+                                            : Colors.red,
+                                      ),
+                                    ),
                                     provider.isVerified!
-                                        ? Icon(Icons.check, color: Colors.green, size: 20,)
+                                        ? Icon(
+                                            Icons.check,
+                                            color: Colors.green,
+                                            size: 20,
+                                          )
                                         : SizedBox(),
                                   ],
                                 ),
                               ],
                             ),
-                            SizedBox(height: 5,),
+                            SizedBox(
+                              height: 5,
+                            ),
                             Row(
                               children: [
                                 Expanded(
@@ -455,39 +560,61 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                                       isDense: true,
                                       disabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide(color: CustomColor.GREY_BG,),
+                                        borderSide: BorderSide(
+                                          color: CustomColor.GREY_BG,
+                                        ),
                                       ),
                                       filled: true,
                                       fillColor: CustomColor.GREY_BG,
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 10,),
+                                SizedBox(
+                                  width: 10,
+                                ),
                                 GestureDetector(
-                                  onTap: () async => await Get.toNamed(ProfileInputScreen.tag, arguments: ProfileInputScreen(
-                                    flag: AppLocalizations.instance.text('TXT_LBL_EMAIL'),
-                                    data: provider.emailController.text,
-                                  ))!.then((value) async {
+                                  onTap: () async =>
+                                      await Get.toNamed(ProfileInputScreen.tag,
+                                              arguments: ProfileInputScreen(
+                                                flag: AppLocalizations.instance
+                                                    .text('TXT_LBL_EMAIL'),
+                                                data: provider
+                                                    .emailController.text,
+                                              ))!
+                                          .then((value) async {
                                     if (value == true) {
                                       await provider.fnFetchUserData();
-                                      await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text('Success update profile'));
+                                      await CustomWidget.showSnackBar(
+                                          context: provider
+                                              .scaffoldKey.currentContext!,
+                                          content:
+                                              Text('Success update profile'));
                                     }
                                   }),
-                                  child: Text(AppLocalizations.instance.text('TXT_CHANGE'), style: TextStyle(
-                                    color: CustomColor.BROWN_TXT,
-                                    fontSize: 14,
-                                  ),),
+                                  child: Text(
+                                    AppLocalizations.instance
+                                        .text('TXT_CHANGE'),
+                                    style: TextStyle(
+                                      color: CustomColor.BROWN_TXT,
+                                      fontSize: 14,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
                             SizedBox(
                               height: 20.0,
                             ),
-                            Text(AppLocalizations.instance.text('TXT_LBL_PHONE'), style: TextStyle(
-                              fontSize: 16,
-                              color: CustomColor.GREY_TXT,
-                            ),),
-                            SizedBox(height: 5,),
+                            Text(
+                              AppLocalizations.instance.text('TXT_LBL_PHONE'),
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: CustomColor.GREY_TXT,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
                             Row(
                               children: [
                                 Expanded(
@@ -499,71 +626,104 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
                                       isDense: true,
                                       disabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide(color: CustomColor.GREY_BG,),
+                                        borderSide: BorderSide(
+                                          color: CustomColor.GREY_BG,
+                                        ),
                                       ),
                                       filled: true,
                                       fillColor: CustomColor.GREY_BG,
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 10,),
+                                SizedBox(
+                                  width: 10,
+                                ),
                                 GestureDetector(
-                                  onTap: () async => await Get.toNamed(ProfileInputScreen.tag, arguments: ProfileInputScreen(
-                                    flag: AppLocalizations.instance.text('TXT_LBL_PHONE'),
-                                    data: provider.phoneController.text,
-                                  ))!.then((value) async {
+                                  onTap: () async =>
+                                      await Get.toNamed(ProfileInputScreen.tag,
+                                              arguments: ProfileInputScreen(
+                                                flag: AppLocalizations.instance
+                                                    .text('TXT_LBL_PHONE'),
+                                                data: provider
+                                                    .phoneController.text,
+                                              ))!
+                                          .then((value) async {
                                     if (value == true) {
                                       await provider.fnFetchUserData();
-                                      await CustomWidget.showSnackBar(context: provider.scaffoldKey.currentContext!, content: Text('Success'));
+                                      await CustomWidget.showSnackBar(
+                                          context: provider
+                                              .scaffoldKey.currentContext!,
+                                          content: Text('Success'));
                                     }
                                   }),
-                                  child: Text(AppLocalizations.instance.text('TXT_CHANGE'), style: TextStyle(
-                                    color: CustomColor.BROWN_TXT,
-                                    fontSize: 14,
-                                  ),),
+                                  child: Text(
+                                    AppLocalizations.instance
+                                        .text('TXT_CHANGE'),
+                                    style: TextStyle(
+                                      color: CustomColor.BROWN_TXT,
+                                      fontSize: 14,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
-                            SizedBox(height: 20,),
-                            Text(AppLocalizations.instance.text('TXT_LBL_REGION'), style: TextStyle(
-                              fontSize: 16,
-                              color: CustomColor.GREY_TXT,
-                            ),),
-                            SizedBox(height: 10,),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              AppLocalizations.instance.text('TXT_LBL_REGION'),
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: CustomColor.GREY_TXT,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
                             Consumer<UpdateProfileProvider>(
                                 builder: (context, provider, _) {
-                                  return Row(
-                                    children: [
-                                      Expanded(
-                                        child: TextFormField(
-                                          enabled: false,
-                                          controller: provider.regionController,
-                                          decoration: InputDecoration(
-                                            isDense: true,
-                                            disabledBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(10),
-                                              borderSide: BorderSide(color: CustomColor.GREY_BG,),
-                                            ),
-                                            filled: true,
-                                            fillColor: CustomColor.GREY_BG,
+                              return Row(
+                                children: [
+                                  Expanded(
+                                    child: TextFormField(
+                                      enabled: false,
+                                      controller: provider.regionController,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        disabledBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          borderSide: BorderSide(
+                                            color: CustomColor.GREY_BG,
                                           ),
                                         ),
+                                        filled: true,
+                                        fillColor: CustomColor.GREY_BG,
                                       ),
-                                      SizedBox(width: 10,),
-                                      GestureDetector(
-                                        onTap: () => _showRegionDialog(),
-                                        child: Text(AppLocalizations.instance.text('TXT_CHANGE'), style: TextStyle(
-                                          color: CustomColor.BROWN_TXT,
-                                          fontSize: 14,
-                                        ),),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () => _showRegionDialog(),
+                                    child: Text(
+                                      AppLocalizations.instance
+                                          .text('TXT_CHANGE'),
+                                      style: TextStyle(
+                                        color: CustomColor.BROWN_TXT,
+                                        fontSize: 14,
                                       ),
-                                    ],
-                                  );
-                                }
-                            ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }),
                           ],
                         ),
-                        SizedBox(height: 20,),
+                        SizedBox(
+                          height: 20,
+                        ),
                         _deleteAccBtn,
                       ],
                     );
@@ -605,5 +765,4 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen>
       setState(() {});
     }
   }
-
 }

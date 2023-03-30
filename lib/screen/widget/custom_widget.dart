@@ -11,7 +11,6 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CustomWidget {
-
   static Widget roundBtn({
     String label = 'title',
     Color btnColor = Colors.white,
@@ -25,15 +24,21 @@ class CustomWidget {
       style: ElevatedButton.styleFrom(
         shape: radius == null
             ? StadiumBorder()
-            : RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius),),
-        primary: btnColor,
+            : RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(radius),
+              ),
+        backgroundColor: btnColor,
       ),
       onPressed: () => function(),
-      child: Text(label, style: TextStyle(
-        color: lblColor,
-        fontWeight: isBold ? FontWeight.bold : null,
-        fontSize: fontSize,
-      ), textAlign: TextAlign.center,),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: lblColor,
+          fontWeight: isBold ? FontWeight.bold : null,
+          fontSize: fontSize,
+        ),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
@@ -50,17 +55,23 @@ class CustomWidget {
       style: OutlinedButton.styleFrom(
         shape: radius == null
             ? StadiumBorder()
-            : RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius),),
+            : RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(radius),
+              ),
         side: BorderSide(
           color: btnColor,
         ),
       ),
       onPressed: () => function(),
-      child: Text(label, style: TextStyle(
-        color: lblColor,
-        fontWeight: isBold ? FontWeight.bold : null,
-        fontSize: fontSize,
-      ), textAlign: TextAlign.center,),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: lblColor,
+          fontWeight: isBold ? FontWeight.bold : null,
+          fontSize: fontSize,
+        ),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
@@ -80,16 +91,26 @@ class CustomWidget {
       style: ElevatedButton.styleFrom(
         shape: radius == null
             ? StadiumBorder()
-            : RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius),),
-        primary: btnColor,
+            : RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(radius),
+              ),
+        backgroundColor: btnColor,
       ),
       onPressed: () => function(),
-      icon: Icon(icon, color: icColor, size: icSize,),
-      label: Text(label, style: TextStyle(
-        color: lblColor,
-        fontWeight: isBold ? FontWeight.bold : null,
-        fontSize: fontSize,
-      ), textAlign: TextAlign.center,),
+      icon: Icon(
+        icon,
+        color: icColor,
+        size: icSize,
+      ),
+      label: Text(
+        label,
+        style: TextStyle(
+          color: lblColor,
+          fontWeight: isBold ? FontWeight.bold : null,
+          fontSize: fontSize,
+        ),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
@@ -109,12 +130,20 @@ class CustomWidget {
         padding: EdgeInsets.zero,
       ),
       onPressed: () => function(),
-      icon: Icon(icon, color: icColor, size: icSize,),
-      label: Text(label, style: TextStyle(
-        color: lblColor,
-        fontWeight: isBold ? FontWeight.bold : null,
-        fontSize: fontSize,
-      ), textAlign: TextAlign.center,),
+      icon: Icon(
+        icon,
+        color: icColor,
+        size: icSize,
+      ),
+      label: Text(
+        label,
+        style: TextStyle(
+          color: lblColor,
+          fontWeight: isBold ? FontWeight.bold : null,
+          fontSize: fontSize,
+        ),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
@@ -122,16 +151,19 @@ class CustomWidget {
     required BuildContext context,
     required Widget child,
     bool isScroll = false,
-    bool isRounded = false,}) {
+    bool isRounded = false,
+  }) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: isScroll,
       enableDrag: true,
-      shape: isRounded ? RoundedRectangleBorder(
-        borderRadius: new BorderRadius.only(
-            topLeft: const Radius.circular(15.0),
-            topRight: const Radius.circular(15.0)),
-      ) : null,
+      shape: isRounded
+          ? RoundedRectangleBorder(
+              borderRadius: new BorderRadius.only(
+                  topLeft: const Radius.circular(15.0),
+                  topRight: const Radius.circular(15.0)),
+            )
+          : null,
       builder: (BuildContext bc) {
         return child;
       },
@@ -148,14 +180,18 @@ class CustomWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         shape: CircleBorder(),
-        primary: btnColor,
+        backgroundColor: btnColor,
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         padding: EdgeInsets.zero,
       ),
       onPressed: () => function(),
       child: Padding(
         padding: const EdgeInsets.all(10),
-        child: Icon(icon, color: icColor, size: 20,),
+        child: Icon(
+          icon,
+          color: icColor,
+          size: 20,
+        ),
       ),
     );
   }
@@ -177,10 +213,10 @@ class CustomWidget {
   }
 
   static showConfirmationDialog(
-      BuildContext context, {
-        String desc = '',
-        required void function(),
-      }) {
+    BuildContext context, {
+    String desc = '',
+    required void function(),
+  }) {
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
@@ -196,23 +232,28 @@ class CustomWidget {
             backgroundColor: Colors.white,
             insetPadding: EdgeInsets.symmetric(horizontal: 10),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10))
-            ),
+                borderRadius: BorderRadius.all(Radius.circular(10))),
             content: new Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    Icon(FontAwesomeIcons.circleInfo, color: CustomColor.MAIN,),
+                    Icon(
+                      FontAwesomeIcons.circleInfo,
+                      color: CustomColor.MAIN,
+                    ),
                     SizedBox(
                       width: 10,
                     ),
                     Flexible(
-                      child: Text(AppLocalizations.instance.text('TXT_CONFIRMATION'), style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,),
+                      child: Text(
+                        AppLocalizations.instance.text('TXT_CONFIRMATION'),
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ],
@@ -223,22 +264,30 @@ class CustomWidget {
                   height: 30,
                 ),
                 Flexible(
-                  child: Text(desc, style: TextStyle(
-                    fontSize: 16.0,
-                    color: Colors.black,
-                  ),
+                  child: Text(
+                    desc,
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ],
             ),
             actions: [
               TextButton(
-                child: Text(AppLocalizations.instance.text('TXT_CANCEL'), style: TextStyle(color: Colors.red,),
+                child: Text(
+                  AppLocalizations.instance.text('TXT_CANCEL'),
+                  style: TextStyle(
+                    color: Colors.red,
+                  ),
                 ),
                 onPressed: () => Get.back(),
               ),
               TextButton(
-                child: Text(AppLocalizations.instance.text('TXT_YES'), style: TextStyle(color: Colors.green),
+                child: Text(
+                  AppLocalizations.instance.text('TXT_YES'),
+                  style: TextStyle(color: Colors.green),
                 ),
                 onPressed: () {
                   Get.back();
@@ -254,11 +303,11 @@ class CustomWidget {
   }
 
   static showSuccessDialog(
-      BuildContext context, {
-        String title = 'SUCCESS!',
-        String desc = '',
-        required void function(),
-      }) {
+    BuildContext context, {
+    String title = 'SUCCESS!',
+    String desc = '',
+    required void function(),
+  }) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -268,8 +317,7 @@ class CustomWidget {
           contentPadding: EdgeInsets.zero,
           insetPadding: EdgeInsets.symmetric(horizontal: 10),
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10))
-          ),
+              borderRadius: BorderRadius.all(Radius.circular(10))),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -279,7 +327,8 @@ class CustomWidget {
                 decoration: BoxDecoration(
                   color: CustomColor.MAIN,
                   borderRadius: BorderRadius.vertical(
-                    bottom: Radius.elliptical(MediaQuery.of(context).size.width, 200.0),
+                    bottom: Radius.elliptical(
+                        MediaQuery.of(context).size.width, 200.0),
                     top: Radius.circular(20),
                   ),
                 ),
@@ -292,16 +341,23 @@ class CustomWidget {
               ),
               Flexible(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Text(desc, textAlign: TextAlign.center,),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Text(
+                    desc,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
             ],
           ),
           actions: [
             TextButton(
-              child: Text(AppLocalizations.instance.text('TXT_UNDERSTAND'), style: TextStyle(
-                color: CustomColor.MAIN,),
+              child: Text(
+                AppLocalizations.instance.text('TXT_UNDERSTAND'),
+                style: TextStyle(
+                  color: CustomColor.MAIN,
+                ),
               ),
               onPressed: () {
                 Get.back();
@@ -383,8 +439,7 @@ class CustomWidget {
               child: Container(
                 height: 300,
                 color: Colors.white,
-              )
-          ),
+              )),
           Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -394,27 +449,37 @@ class CustomWidget {
                   color: Colors.white,
                   height: 20,
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
                 Container(
                   color: Colors.white,
                   height: 20,
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
                 Container(
                   color: Colors.white,
                   height: 20,
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
                 Container(
                   color: Colors.white,
                   height: 20,
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
                 Container(
                   color: Colors.white,
                   height: 20,
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
                 Container(
                   color: Colors.white,
                   height: 100,
@@ -427,21 +492,30 @@ class CustomWidget {
     );
   }
 
-  static Widget networkImg(BuildContext context, String? url, {BoxFit? fit = BoxFit.fill}) {
+  static Widget networkImg(BuildContext context, String? url,
+      {BoxFit? fit = BoxFit.fill}) {
     return CachedNetworkImage(
       imageUrl: url ?? '',
       width: double.infinity,
       height: double.infinity,
       alignment: Alignment.center,
       fit: fit,
-      placeholder: (context, url) => Center(
-          child: CircularProgressIndicator()),
-      errorWidget: (context, url, error) =>
-          Center(child: Icon(Icons.no_photography, size: 50, color: CustomColor.GREY_ICON,),),
+      placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+      errorWidget: (context, url, error) => Center(
+        child: Icon(
+          Icons.no_photography,
+          size: 50,
+          color: CustomColor.GREY_ICON,
+        ),
+      ),
     );
   }
 
-  static Widget roundedAvatarImg({required String url, double? size, Color borderColor = Colors.white, BoxFit fit = BoxFit.cover}) {
+  static Widget roundedAvatarImg(
+      {required String url,
+      double? size,
+      Color borderColor = Colors.white,
+      BoxFit fit = BoxFit.cover}) {
     return CachedNetworkImage(
       imageUrl: url,
       imageBuilder: (context, imageProvider) {
@@ -459,22 +533,20 @@ class CustomWidget {
           ),
         );
       },
-      placeholder: (context, url) => Center(
-          child: CircularProgressIndicator()),
-      errorWidget: (context, url, error) =>
-          Container(
-            width: size ?? 150,
-            height: size ?? 150,
-            decoration: new BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white),
-              color: Colors.white,
-              image: new DecorationImage(
-                fit: BoxFit.contain,
-                image: AssetImage("assets/images/ic_profile.png"),
-              ),
-            ),
+      placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+      errorWidget: (context, url, error) => Container(
+        width: size ?? 150,
+        height: size ?? 150,
+        decoration: new BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.white),
+          color: Colors.white,
+          image: new DecorationImage(
+            fit: BoxFit.contain,
+            image: AssetImage("assets/images/ic_profile.png"),
           ),
+        ),
+      ),
     );
   }
 
@@ -494,15 +566,23 @@ class CustomWidget {
             SizedBox(
               height: size,
               width: size,
-              child: Image.asset(image, color: icColor,),
+              child: Image.asset(
+                image,
+                color: icColor,
+              ),
             ),
-            Text(title, style: TextStyle(
-              color: CustomColor.GREY_TXT,
-            ),),
+            Text(
+              title,
+              style: TextStyle(
+                color: CustomColor.GREY_TXT,
+              ),
+            ),
             if (action != null)
               Column(
                 children: [
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   action,
                 ],
               )
@@ -523,10 +603,15 @@ class CustomWidget {
             height: 200,
             child: Image.asset('assets/images/ic_under_construction.jpg'),
           ),
-          SizedBox(height: 10,),
-          Text('Under Construction ...', style: TextStyle(
-            fontSize: 20,
-          ),),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            'Under Construction ...',
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
         ],
       ),
     );
@@ -535,13 +620,19 @@ class CustomWidget {
   static Widget loadingHud({required bool isLoad, required Widget child}) {
     return ModalProgressHUD(
       inAsyncCall: isLoad,
-      progressIndicator: SpinKitFadingCube(color: CustomColor.MAIN, size: 40,),
+      progressIndicator: SpinKitFadingCube(
+        color: CustomColor.MAIN,
+        size: 40,
+      ),
       opacity: 0.5,
       child: child,
     );
   }
 
-  static showInfoPopup(BuildContext context, {String desc = '',}) {
+  static showInfoPopup(
+    BuildContext context, {
+    String desc = '',
+  }) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -551,8 +642,7 @@ class CustomWidget {
           titlePadding: EdgeInsets.all(10),
           insetPadding: EdgeInsets.symmetric(horizontal: 20),
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10))
-          ),
+              borderRadius: BorderRadius.all(Radius.circular(10))),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -572,13 +662,19 @@ class CustomWidget {
             clipBehavior: Clip.none,
             alignment: Alignment.topCenter,
             children: [
-              Text(desc, textAlign: TextAlign.center,),
+              Text(
+                desc,
+                textAlign: TextAlign.center,
+              ),
               Positioned(
                 top: -80,
                 child: CircleAvatar(
                   backgroundColor: CustomColor.MAIN,
                   radius: 30,
-                  child: Icon(FontAwesomeIcons.info, color: Colors.white,),
+                  child: Icon(
+                    FontAwesomeIcons.info,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
@@ -589,11 +685,11 @@ class CustomWidget {
   }
 
   static showCartConfirmationDialog(
-      BuildContext context, {
-        String desc = '',
-        required void fnDeleteCart(),
-        required void fnStoreWishlist(),
-      }) {
+    BuildContext context, {
+    String desc = '',
+    required void fnDeleteCart(),
+    required void fnStoreWishlist(),
+  }) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -602,51 +698,69 @@ class CustomWidget {
           insetPadding: EdgeInsets.symmetric(horizontal: 10),
           contentPadding: EdgeInsets.fromLTRB(15, 20, 15, 5),
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10))
-          ),
+              borderRadius: BorderRadius.all(Radius.circular(10))),
           content: new Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Flexible(
-                child: Text(desc, style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                ),),
+                child: Text(
+                  desc,
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black,
+                  ),
+                ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: OutlinedButton(
                       style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         side: BorderSide(
                           color: CustomColor.MAIN,
                         ),
                       ),
                       onPressed: () => fnStoreWishlist(),
-                      child: Text(AppLocalizations.instance.text('TXT_GOTO_WISHLIST'), style: TextStyle(
-                        color: CustomColor.MAIN,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ), textAlign: TextAlign.center,),
+                      child: Text(
+                        AppLocalizations.instance.text('TXT_GOTO_WISHLIST'),
+                        style: TextStyle(
+                          color: CustomColor.MAIN,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
-                  SizedBox(width: 10,),
+                  SizedBox(
+                    width: 10,
+                  ),
                   Expanded(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),),
-                        primary: CustomColor.MAIN,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        backgroundColor: CustomColor.MAIN,
                       ),
                       onPressed: () => fnDeleteCart(),
-                      child: Text(AppLocalizations.instance.text('TXT_DELETE'), style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ), textAlign: TextAlign.center,),
+                      child: Text(
+                        AppLocalizations.instance.text('TXT_DELETE'),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 ],
@@ -668,21 +782,26 @@ class CustomWidget {
           SpinKitChasingDots(
             color: Colors.white,
           ),
-          SizedBox(height: 20,),
-          Text('Placing Order...', style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-          ),),
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            'Placing Order...',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+            ),
+          ),
         ],
       ),
     );
   }
 
   static showTacDialog(
-      BuildContext context, {
-        bool isTacAccepted = false,
-        required void fnOnCheckTac(value),
-      }) {
+    BuildContext context, {
+    bool isTacAccepted = false,
+    required void fnOnCheckTac(value),
+  }) {
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
@@ -698,16 +817,18 @@ class CustomWidget {
             backgroundColor: Colors.white,
             insetPadding: EdgeInsets.symmetric(horizontal: 10),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10))
-            ),
+                borderRadius: BorderRadius.all(Radius.circular(10))),
             content: new Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(AppLocalizations.instance.text('TXT_TERM_AND_CONDITION'), style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,),
+                Text(
+                  AppLocalizations.instance.text('TXT_TERM_AND_CONDITION'),
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
                 Divider(
                   color: CustomColor.MAIN,
@@ -715,10 +836,13 @@ class CustomWidget {
                   height: 30,
                 ),
                 Flexible(
-                  child: Text(AppLocalizations.instance.text('TXT_TERM_AND_CONDITION_INFO_4'), style: TextStyle(
-                    fontSize: 16.0,
-                    color: Colors.black,
-                  ),
+                  child: Text(
+                    AppLocalizations.instance
+                        .text('TXT_TERM_AND_CONDITION_INFO_4'),
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ],
@@ -738,33 +862,36 @@ class CustomWidget {
                     activeColor: Colors.blue,
                   ),
                   Flexible(
-                    child: Text.rich(TextSpan(
-                        children: [
-                          TextSpan(
-                            text: AppLocalizations.instance.text('TXT_TERM_AND_CONDITION_INFO_1'),
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
+                    child: Text.rich(
+                      TextSpan(children: [
+                        TextSpan(
+                          text: AppLocalizations.instance
+                              .text('TXT_TERM_AND_CONDITION_INFO_1'),
+                          style: TextStyle(
+                            color: Colors.black,
                           ),
-                          TextSpan(
-                            text: ' ${AppLocalizations.instance.text('TXT_TERM_AND_CONDITION')} ',
-                            style: TextStyle(
-                              color: Colors.blue,
-                            ),
-                            recognizer: new TapGestureRecognizer()..onTap =
-                                () => Get.toNamed(TacWebviewScreen.tag),
+                        ),
+                        TextSpan(
+                          text:
+                              ' ${AppLocalizations.instance.text('TXT_TERM_AND_CONDITION')} ',
+                          style: TextStyle(
+                            color: Colors.blue,
                           ),
-                          TextSpan(
-                            text: AppLocalizations.instance.text('TXT_TERM_AND_CONDITION_INFO_2'),
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
+                          recognizer: new TapGestureRecognizer()
+                            ..onTap = () => Get.toNamed(TacWebviewScreen.tag),
+                        ),
+                        TextSpan(
+                          text: AppLocalizations.instance
+                              .text('TXT_TERM_AND_CONDITION_INFO_2'),
+                          style: TextStyle(
+                            color: Colors.black,
                           ),
-                        ]
-                    ),
+                        ),
+                      ]),
                       textAlign: TextAlign.center,
                       maxLines: 2,
-                      overflow: TextOverflow.ellipsis,),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ],
               ),
@@ -777,10 +904,10 @@ class CustomWidget {
   }
 
   static showDeleteAccountDialog(
-      BuildContext context, {
-        String desc = '',
-        required void function(),
-      }) {
+    BuildContext context, {
+    String desc = '',
+    required void function(),
+  }) {
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
@@ -797,12 +924,14 @@ class CustomWidget {
             insetPadding: EdgeInsets.symmetric(horizontal: 10),
             contentPadding: EdgeInsets.fromLTRB(15, 20, 15, 5),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10))
+                borderRadius: BorderRadius.all(Radius.circular(10))),
+            title: Text(
+              'Warning',
+              style: TextStyle(
+                color: CustomColor.MAIN,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            title: Text('Warning', style: TextStyle(
-              color: CustomColor.MAIN,
-              fontWeight: FontWeight.bold,
-            ),),
             titlePadding: EdgeInsets.fromLTRB(15, 20, 15, 0),
             content: Stack(
               clipBehavior: Clip.none,
@@ -813,44 +942,64 @@ class CustomWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Flexible(
-                      child: Text(desc, style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),),
+                      child: Text(
+                        desc,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                      ),
                     ),
-                    SizedBox(height: 20,),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                           child: OutlinedButton(
                             style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                               side: BorderSide(
                                 color: CustomColor.MAIN,
                               ),
                             ),
                             onPressed: () => Get.back(),
-                            child: Text(AppLocalizations.instance.text('TXT_CANCEL'), style: TextStyle(
-                              color: CustomColor.MAIN,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ), textAlign: TextAlign.center,),
+                            child: Text(
+                              AppLocalizations.instance.text('TXT_CANCEL'),
+                              style: TextStyle(
+                                color: CustomColor.MAIN,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                        SizedBox(width: 10,),
+                        SizedBox(
+                          width: 10,
+                        ),
                         Expanded(
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),),
-                              primary: CustomColor.MAIN,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              backgroundColor: CustomColor.MAIN,
                             ),
                             onPressed: () => function(),
-                            child: Text(AppLocalizations.instance.text('TXT_DELETE_ACCOUNT'), style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ), textAlign: TextAlign.center,),
+                            child: Text(
+                              AppLocalizations.instance
+                                  .text('TXT_DELETE_ACCOUNT'),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
                       ],
@@ -863,7 +1012,10 @@ class CustomWidget {
                   child: CircleAvatar(
                     backgroundColor: CustomColor.MAIN,
                     radius: 30,
-                    child: Icon(FontAwesomeIcons.info, color: Colors.white,),
+                    child: Icon(
+                      FontAwesomeIcons.info,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ],
@@ -874,5 +1026,4 @@ class CustomWidget {
       transitionDuration: const Duration(milliseconds: 300),
     );
   }
-
 }

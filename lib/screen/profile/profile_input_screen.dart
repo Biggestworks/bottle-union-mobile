@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/validation.dart';
@@ -18,14 +20,19 @@ class ProfileInputScreen extends StatefulWidget {
   _ProfileInputScreenState createState() => _ProfileInputScreenState();
 }
 
-class _ProfileInputScreenState extends State<ProfileInputScreen> with TextValidation {
-
+class _ProfileInputScreenState extends State<ProfileInputScreen>
+    with TextValidation {
   @override
   void initState() {
-    Future.delayed(Duration.zero, () {
-      Provider.of<ProfileInputProvider>(context, listen: false).fnGetArguments(context);
-      Provider.of<ProfileInputProvider>(context, listen: false).fnGetTextFormField();
-    },);
+    Future.delayed(
+      Duration.zero,
+      () {
+        Provider.of<ProfileInputProvider>(context, listen: false)
+            .fnGetArguments(context);
+        Provider.of<ProfileInputProvider>(context, listen: false)
+            .fnGetTextFormField();
+      },
+    );
     super.initState();
   }
 
@@ -33,55 +40,72 @@ class _ProfileInputScreenState extends State<ProfileInputScreen> with TextValida
   Widget build(BuildContext context) {
     final _provider = Provider.of<ProfileInputProvider>(context, listen: false);
 
-    Widget _mainContent = Consumer<ProfileInputProvider>(
-      builder: (context, provider, _) {
-        return Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (provider.flag == AppLocalizations.instance.text('TXT_LBL_EMAIL'))
-                Card(
-                  elevation: 0,
-                  color: CustomColor.SECONDARY,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      children: [
-                        Icon(FontAwesomeIcons.infoCircle, color: CustomColor.BROWN_TXT,),
-                        SizedBox(width: 10,),
-                        Flexible(
-                          child: Text(AppLocalizations.instance.text('TXT_VERIFY_EMAIL_INFO'), style: TextStyle(
+    Widget _mainContent =
+        Consumer<ProfileInputProvider>(builder: (context, provider, _) {
+      return Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (provider.flag ==
+                AppLocalizations.instance.text('TXT_LBL_EMAIL'))
+              Card(
+                elevation: 0,
+                color: CustomColor.SECONDARY,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Icon(
+                        FontAwesomeIcons.infoCircle,
+                        color: CustomColor.BROWN_TXT,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Flexible(
+                        child: Text(
+                          AppLocalizations.instance
+                              .text('TXT_VERIFY_EMAIL_INFO'),
+                          style: TextStyle(
                             color: Colors.black,
                             fontSize: 16,
-                          ), textAlign: TextAlign.left,),
+                          ),
+                          textAlign: TextAlign.left,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              SizedBox(height: 10,),
-              Row(
-                children: [
-                  Text(provider.flag ?? '-', style: TextStyle(
+              ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                Text(
+                  provider.flag ?? '-',
+                  style: TextStyle(
                     fontSize: 16,
                     color: CustomColor.GREY_TXT,
-                  ),),
-                ],
-              ),
-              SizedBox(height: 5,),
-              Form(
-                key: provider.formKey,
-                child: provider.textField ?? Container(),
-              ),
-            ],
-          ),
-        );
-      }
-    );
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Form(
+              key: provider.formKey,
+              child: provider.textField ?? Container(),
+            ),
+          ],
+        ),
+      );
+    });
 
     Widget _submitBtn = SafeArea(
       child: Container(
@@ -103,11 +127,9 @@ class _ProfileInputScreenState extends State<ProfileInputScreen> with TextValida
       appBar: AppBar(
         backgroundColor: CustomColor.MAIN,
         centerTitle: true,
-        title: Consumer<ProfileInputProvider>(
-          builder: (context, provider, _) {
-            return Text('Change ${provider.flag}');
-          }
-        ),
+        title: Consumer<ProfileInputProvider>(builder: (context, provider, _) {
+          return Text('Change ${provider.flag}');
+        }),
       ),
       body: _mainContent,
       bottomNavigationBar: _submitBtn,

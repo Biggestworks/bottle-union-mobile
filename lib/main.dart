@@ -11,10 +11,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 
-Future _loadEnv() async =>
-  await dotenv.load(fileName: ".env.production");
-  // await dotenv.load(fileName: ".env.development");
-  // await dotenv.load(fileName: ".env.local");
+Future _loadEnv() async => await dotenv.load(fileName: ".env.production");
+// await dotenv.load(fileName: ".env.development");
+// await dotenv.load(fileName: ".env.local");
 
 Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await _loadEnv();
@@ -25,16 +24,18 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
   var _user = await _userPreferences.getUserData();
 
-  await _dbHelper.insertNotification(items: NotificationModel(
-    userId: _user?.user?.id,
-    title: message.data['title'] ?? '',
-    body: message.data['body'] ?? '',
-    type: message.data['type'] ?? '',
-    codeTransaction: message.data['code_transaction'] ?? '',
-    regionId: message.data['id_region'] ?? '',
-    isNew: 1,
-    createdAt: DateTime.now().toString(),
-  ),);
+  await _dbHelper.insertNotification(
+    items: NotificationModel(
+      userId: _user?.user?.id,
+      title: message.data['title'] ?? '',
+      body: message.data['body'] ?? '',
+      type: message.data['type'] ?? '',
+      codeTransaction: message.data['code_transaction'] ?? '',
+      regionId: message.data['id_region'] ?? '',
+      isNew: 1,
+      createdAt: DateTime.now().toString(),
+    ),
+  );
 }
 
 Future _checkAppSecurity() async {

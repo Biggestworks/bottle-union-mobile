@@ -215,6 +215,7 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                         backgroundColor: CustomColor.MAIN,
                       ),
                       onPressed: () {
+                        print(_provider.selectedPayment?.name);
                         _provider.fnFetchXenditTokenId(context,
                             card_number: cardNumberController.text,
                             expiry_month:
@@ -304,8 +305,15 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                                 itemBuilder: (context, index) {
                                   var _data = provider.paymentList.data?[index];
                                   return GestureDetector(
-                                    onTap: () =>
-                                        provider.fnOnSelectPayment(_data!),
+                                    onTap: () {
+                                      if (_data?.name == "credit-card") {
+                                        Navigator.pop(context);
+                                        provider.fnOnSelectPayment(_data!);
+                                        showCreditCardSheet();
+                                      } else {
+                                        provider.fnOnSelectPayment(_data!);
+                                      }
+                                    },
                                     child: ListTile(
                                       title: Text(_data?.description ?? '-'),
                                       leading: Container(
@@ -324,15 +332,6 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                     },
                   ),
                 ),
-                ListTile(
-                  onTap: () {
-                    Navigator.pop(context);
-                    showCreditCardSheet();
-                  },
-                  title: Text(
-                    "Credit CARD",
-                  ),
-                )
               ],
             ),
           ),
@@ -569,7 +568,9 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                 default:
                   var _data = provider.orderSummary;
                   return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: _provider.webViewUrl == null
+                        ? MainAxisAlignment.spaceBetween
+                        : MainAxisAlignment.start,
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -595,29 +596,31 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                           ),
                         ],
                       ),
-                      SizedBox(
-                        width: 120,
-                        height: 40,
-                        child: CustomWidget.roundIconBtn(
-                          icon: MdiIcons.shieldCheck,
-                          label: '${AppLocalizations.instance.text('TXT_PAY')}',
-                          isBold: true,
-                          fontSize: 14,
-                          btnColor: Colors.green,
-                          lblColor: Colors.white,
-                          icColor: Colors.white,
-                          radius: 8,
-                          function: () async {
-                            if (provider.isCart == true) {
-                              await _provider.fnStoreOrderCart(
-                                  _provider.scaffoldKey.currentContext!);
-                            } else {
-                              await _provider.fnStoreOrderBuyNow(
-                                  _provider.scaffoldKey.currentContext!);
-                            }
-                          },
+                      if (_provider.webViewUrl == null)
+                        SizedBox(
+                          width: 120,
+                          height: 40,
+                          child: CustomWidget.roundIconBtn(
+                            icon: MdiIcons.shieldCheck,
+                            label:
+                                '${AppLocalizations.instance.text('TXT_PAY')}',
+                            isBold: true,
+                            fontSize: 14,
+                            btnColor: Colors.green,
+                            lblColor: Colors.white,
+                            icColor: Colors.white,
+                            radius: 8,
+                            function: () async {
+                              if (provider.isCart == true) {
+                                await _provider.fnStoreOrderCart(
+                                    _provider.scaffoldKey.currentContext!);
+                              } else {
+                                await _provider.fnStoreOrderBuyNow(
+                                    _provider.scaffoldKey.currentContext!);
+                              }
+                            },
+                          ),
                         ),
-                      ),
                     ],
                   );
               }
@@ -704,13 +707,15 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                         });
                   },
                   onLoadStart: (controller, url) {
+                    print(url);
                     if (url.toString().contains('verification_redirect')) {
-                      _provider.fnWebViewOtpVerified();
+                      _provider.fnWebViewOtpVerified(context);
                     }
                   },
                   onLoadStop: (controller, url) {
+                    print(url);
                     if (url.toString().contains('verification_redirect')) {
-                      _provider.fnWebViewOtpVerified();
+                      _provider.fnWebViewOtpVerified(context);
                     }
                   },
                   initialUrlRequest: URLRequest(

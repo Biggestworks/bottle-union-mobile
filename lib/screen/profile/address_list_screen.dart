@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use, unused_field
+
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
@@ -17,14 +19,16 @@ class AddressListScreen extends StatefulWidget {
   _AddressListScreenState createState() => _AddressListScreenState();
 }
 
-class _AddressListScreenState extends State<AddressListScreen> with LoadingView {
+class _AddressListScreenState extends State<AddressListScreen>
+    with LoadingView {
   bool _isLoad = false;
 
   @override
   void initState() {
     Future.delayed(Duration.zero).then((value) async {
       Provider.of<AddressListProvider>(context, listen: false).fnGetView(this);
-      Provider.of<AddressListProvider>(context, listen: false).fnFetchAddressList();
+      Provider.of<AddressListProvider>(context, listen: false)
+          .fnFetchAddressList();
     });
     super.initState();
   }
@@ -38,7 +42,7 @@ class _AddressListScreenState extends State<AddressListScreen> with LoadingView 
         context: context,
         isScroll: true,
         child: ChangeNotifierProvider.value(
-          value : Provider.of<AddressListProvider>(context, listen: false),
+          value: Provider.of<AddressListProvider>(context, listen: false),
           child: Container(
             height: 250,
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
@@ -52,41 +56,60 @@ class _AddressListScreenState extends State<AddressListScreen> with LoadingView 
                       onPressed: () => Get.back(),
                       iconSize: 30,
                     ),
-                    Text('Other options', style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),),
-                  ],
-                ),
-                SizedBox(height: 10,),
-                if (data?.isChoosed == 0) Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextButton(
-                      onPressed: () async {
-                        Get.back();
-                        await _provider.fnSelectAddress(_provider.scaffoldKey.currentContext!, data!.id!);
-                      },
-                      child: Text("Choose as main address", style: TextStyle(
+                    Text(
+                      'Other options',
+                      style: TextStyle(
                         color: Colors.black,
-                        fontSize: 16,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
-                      ),),
+                      ),
                     ),
-                    Divider(height: 10, indent: 5, endIndent: 5, color: Colors.black,),
                   ],
                 ),
+                SizedBox(
+                  height: 10,
+                ),
+                if (data?.isChoosed == 0)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextButton(
+                        onPressed: () async {
+                          Get.back();
+                          await _provider.fnSelectAddress(
+                              _provider.scaffoldKey.currentContext!, data!.id!);
+                        },
+                        child: Text(
+                          "Choose as main address",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Divider(
+                        height: 10,
+                        indent: 5,
+                        endIndent: 5,
+                        color: Colors.black,
+                      ),
+                    ],
+                  ),
                 TextButton(
                   onPressed: () async {
                     Get.back();
-                    await _provider.fnDeleteAddress(_provider.scaffoldKey.currentContext!, data!.id!);
+                    await _provider.fnDeleteAddress(
+                        _provider.scaffoldKey.currentContext!, data!.id!);
                   },
-                  child: Text("Delete address", style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),),
+                  child: Text(
+                    "Delete address",
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -114,7 +137,9 @@ class _AddressListScreenState extends State<AddressListScreen> with LoadingView 
             ),
             onChanged: (value) async => await _provider.fnOnSearchAddress(),
           ),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           Flexible(
             child: Consumer<AddressListProvider>(
               child: CustomWidget.showShimmerListView(height: 200),
@@ -127,7 +152,8 @@ class _AddressListScreenState extends State<AddressListScreen> with LoadingView 
                       case 0:
                         return CustomWidget.emptyScreen(
                           image: 'assets/images/ic_no_data.png',
-                          title: AppLocalizations.instance.text('TXT_NO_ADDRESS'),
+                          title:
+                              AppLocalizations.instance.text('TXT_NO_ADDRESS'),
                           size: 150,
                           icColor: CustomColor.GREY_TXT,
                         );
@@ -140,7 +166,8 @@ class _AddressListScreenState extends State<AddressListScreen> with LoadingView 
                             return Card(
                               elevation: 0,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadiusDirectional.circular(10),
+                                borderRadius:
+                                    BorderRadiusDirectional.circular(10),
                               ),
                               margin: EdgeInsets.symmetric(vertical: 5),
                               child: Padding(
@@ -148,43 +175,75 @@ class _AddressListScreenState extends State<AddressListScreen> with LoadingView 
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    if (_data?.isChoosed == 1) Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.blue,
-                                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                                    if (_data?.isChoosed == 1)
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5)),
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 4),
+                                        child: Text(
+                                          'Main',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                       ),
-                                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                      child: Text('Main', style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),),
+                                    SizedBox(
+                                      height: 5,
                                     ),
-                                    SizedBox(height: 5,),
                                     Row(
                                       children: [
                                         Text(_data?.receiver ?? '-'),
                                         if (_data?.label != null)
-                                          Text(' (${_data?.label})', style: TextStyle(
-                                            color: CustomColor.MAIN,
-                                            fontWeight: FontWeight.bold,
-                                          ),),
+                                          Text(
+                                            ' (${_data?.label})',
+                                            style: TextStyle(
+                                              color: CustomColor.MAIN,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                       ],
                                     ),
-                                    SizedBox(height: 5,),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
                                     Text(_data?.phone ?? '-'),
-                                    SizedBox(height: 5,),
-                                    Text(_data?.address ?? '-', style: TextStyle(
-                                      color: CustomColor.GREY_TXT,
-                                    ), maxLines: 2, overflow: TextOverflow.ellipsis,),
-                                    SizedBox(height: 5,),
-                                    Text(_data?.cityName ?? '-', style: TextStyle(
-                                      color: CustomColor.GREY_TXT,
-                                    ),),
-                                    SizedBox(height: 5,),
-                                    Text(_data?.provinceName ?? '-', style: TextStyle(
-                                      color: CustomColor.GREY_TXT,
-                                    ),),
-                                    SizedBox(height: 10,),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      _data?.address ?? '-',
+                                      style: TextStyle(
+                                        color: CustomColor.GREY_TXT,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      _data?.cityName ?? '-',
+                                      style: TextStyle(
+                                        color: CustomColor.GREY_TXT,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      _data?.provinceName ?? '-',
+                                      style: TextStyle(
+                                        color: CustomColor.GREY_TXT,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
                                     Row(
                                       children: [
                                         Expanded(
@@ -194,40 +253,62 @@ class _AddressListScreenState extends State<AddressListScreen> with LoadingView 
                                               side: BorderSide(
                                                 color: CustomColor.GREY_TXT,
                                               ),
-                                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              tapTargetSize:
+                                                  MaterialTapTargetSize
+                                                      .shrinkWrap,
                                               shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(Radius.circular(10),),
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(10),
+                                                ),
                                               ),
                                             ),
-                                            onPressed: () async => await Get.toNamed(AddAddressScreen.tag, arguments: AddAddressScreen(
-                                              address: _data,
-                                            ))!.then((value) async {
+                                            onPressed: () async =>
+                                                await Get.toNamed(
+                                                        AddAddressScreen.tag,
+                                                        arguments:
+                                                            AddAddressScreen(
+                                                          address: _data,
+                                                        ))!
+                                                    .then((value) async {
                                               if (value == true) {
-                                                await _provider.fnFetchAddressList();
-                                                await CustomWidget.showSnackBar(context: context, content: Text('Success'));
+                                                await _provider
+                                                    .fnFetchAddressList();
+                                                await CustomWidget.showSnackBar(
+                                                    context: context,
+                                                    content: Text('Success'));
                                               }
                                             }),
-                                            child: Text('Edit Address', style: TextStyle(
-                                              color: CustomColor.GREY_TXT,
-                                              fontWeight: FontWeight.bold,
-                                            ),),
+                                            child: Text(
+                                              'Edit Address',
+                                              style: TextStyle(
+                                                color: CustomColor.GREY_TXT,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                        SizedBox(width: 10,),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
                                         OutlinedButton(
                                           style: OutlinedButton.styleFrom(
                                             primary: Colors.white,
                                             side: BorderSide(
                                               color: CustomColor.GREY_TXT,
                                             ),
-                                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                            tapTargetSize: MaterialTapTargetSize
+                                                .shrinkWrap,
                                             shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(Radius.circular(10)
-                                              ),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10)),
                                             ),
                                           ),
-                                          onPressed: () => _showOptionSheet(_data),
-                                          child: Icon(Icons.more_horiz, color: CustomColor.GREY_TXT,),
+                                          onPressed: () =>
+                                              _showOptionSheet(_data),
+                                          child: Icon(
+                                            Icons.more_horiz,
+                                            color: CustomColor.GREY_TXT,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -257,13 +338,19 @@ class _AddressListScreenState extends State<AddressListScreen> with LoadingView 
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
-              onPressed: () async => await Get.toNamed(AddAddressScreen.tag, arguments: AddAddressScreen())!.then((value) async {
+              onPressed: () async => await Get.toNamed(AddAddressScreen.tag,
+                      arguments: AddAddressScreen())!
+                  .then((value) async {
                 if (value == true) {
                   await _provider.fnFetchAddressList();
-                  await CustomWidget.showSnackBar(context: context, content: Text('Success'));
+                  await CustomWidget.showSnackBar(
+                      context: context, content: Text('Success'));
                 }
               }),
-              icon: Icon(Icons.add, size: 28,),
+              icon: Icon(
+                Icons.add,
+                size: 28,
+              ),
               visualDensity: VisualDensity.compact,
             ),
           ),
@@ -288,5 +375,4 @@ class _AddressListScreenState extends State<AddressListScreen> with LoadingView 
       setState(() {});
     }
   }
-
 }

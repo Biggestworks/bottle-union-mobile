@@ -1,5 +1,3 @@
-import 'package:eight_barrels/model/product/product_model.dart';
-import 'package:eight_barrels/provider/product/product_list_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

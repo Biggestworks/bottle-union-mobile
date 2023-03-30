@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import, deprecated_member_use
+
 import 'dart:async';
 
 import 'package:badges/badges.dart' as BadgeWidget;
@@ -368,7 +370,7 @@ class BaseHomeProvider extends ChangeNotifier {
 
   fnStartShowcase(BuildContext context) async {
     if (firstTime != 'false')
-      ShowCaseWidget.of(context)?.startShowCase(
+      ShowCaseWidget.of(context).startShowCase(
           [showIntro, showHome, showProduct, showCart, showTransaction]);
     notifyListeners();
   }

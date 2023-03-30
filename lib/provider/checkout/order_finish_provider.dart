@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/model/checkout/order_cart_model.dart';
@@ -19,7 +21,8 @@ class OrderFinishProvider extends ChangeNotifier {
   }
 
   fnGetArguments(BuildContext context) {
-    final _args = ModalRoute.of(context)!.settings.arguments as OrderFinishScreen;
+    final _args =
+        ModalRoute.of(context)!.settings.arguments as OrderFinishScreen;
     orderNow = _args.orderNow;
     orderCart = _args.orderCart;
     notifyListeners();
@@ -45,7 +48,8 @@ class OrderFinishProvider extends ChangeNotifier {
   //   notifyListeners();
   // }
 
-  String fnGetSubtotal(int price, int qty) => FormatterHelper.moneyFormatter((price * qty));
+  String fnGetSubtotal(int price, int qty) =>
+      FormatterHelper.moneyFormatter((price * qty));
 
   String fnGetTotalCourierCost() {
     int _total = 0;
@@ -70,6 +74,4 @@ class OrderFinishProvider extends ChangeNotifier {
     }
     return _total.toString();
   }
-
-
 }
