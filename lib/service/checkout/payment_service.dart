@@ -142,6 +142,8 @@ class PaymentService extends GetConnect {
       "courier_cost": courierCost
     };
 
+    print(_data);
+
     // final test = await _headersAuth();
     // log(test.toString());
 
@@ -287,8 +289,6 @@ class PaymentService extends GetConnect {
         "currency": "IDR",
         "token_id": tokenId,
       });
-
-      print("token id == " + response.body.toString());
       return json.decode(response.body) as Map<String, dynamic>;
     } on SocketException {
       rethrow;
@@ -297,26 +297,6 @@ class PaymentService extends GetConnect {
     }
   }
 
-  Future<Map<String, dynamic>> creditCardCharge({
-    required String tokenId,
-    required String authenticationId,
-    required String identifier,
-    required String cvv,
-  }) async {
-    try {
-      final response = await http.post(Uri.parse(URLHelper.chargeV2Url), body: {
-        "token_id": tokenId,
-        "authentication_id": authenticationId,
-        "amount": 100000,
-        "email": identifier,
-        "card_cvn": cvv,
-      });
-
-      return json.decode(response.body) as Map<String, dynamic>;
-    } on SocketException {
-      rethrow;
-    } catch (e) {
-      rethrow;
-    }
-  }
+  // Future<Map<String,dynamic>> purchaseOvo({
+  // }){}
 }

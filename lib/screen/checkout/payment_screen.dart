@@ -243,6 +243,90 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
       );
     }
 
+    showOvoPayload() {
+      return CustomWidget.showSheet(
+          context: context,
+          child: Container(
+            height: MediaQuery.of(context).size.height / 2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
+                      child: Text(
+                        "Masukan Nomor OVO ",
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 16),
+                      width: MediaQuery.of(context).size.width / 1.2,
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        controller: cvvController,
+                        decoration: InputDecoration(
+                          labelText: 'Phone Number',
+                          labelStyle: TextStyle(
+                            color: Colors.black,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Center(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          minimumSize:
+                              Size(MediaQuery.of(context).size.width - 16, 50),
+                          backgroundColor: CustomColor.MAIN,
+                        ),
+                        onPressed: () {
+                          _provider.fnFetchXenditTokenId(context,
+                              card_number: cardNumberController.text,
+                              expiry_month:
+                                  expiryDateController.text.split("/").first,
+                              expiry_year:
+                                  expiryDateController.text.split("/").last,
+                              cvv: cvvController.text);
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          "Validate",
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ));
+    }
+
     _showPaymentSheet() {
       return CustomWidget.showSheet(
         context: context,
@@ -307,9 +391,11 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                                   return GestureDetector(
                                     onTap: () {
                                       if (_data?.name == "credit-card") {
-                                        Navigator.pop(context);
                                         provider.fnOnSelectPayment(_data!);
                                         showCreditCardSheet();
+                                      } else if (_data?.name == "ovo") {
+                                        provider.fnOnSelectPayment(_data!);
+                                        showOvoPayload();
                                       } else {
                                         provider.fnOnSelectPayment(_data!);
                                       }
