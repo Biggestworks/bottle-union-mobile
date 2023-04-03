@@ -47,6 +47,8 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
   TextEditingController expiryDateController = TextEditingController();
   TextEditingController cvvController = TextEditingController();
 
+  TextEditingController targetController = TextEditingController();
+
   final Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers = {
     Factory(() => EagerGestureRecognizer())
   };
@@ -126,10 +128,11 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                         }
                       },
                       decoration: InputDecoration(
-                        labelText: 'Number',
+                        labelText: 'Card Number',
                         labelStyle: TextStyle(
                           color: Colors.black,
                         ),
+                        hintText: '5XXXXXX',
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
@@ -160,6 +163,7 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                                 labelStyle: TextStyle(
                                   color: Colors.black,
                                 ),
+                                hintText: 'XX/XX',
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide: BorderSide(
@@ -180,6 +184,7 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                               controller: cvvController,
                               decoration: InputDecoration(
                                 labelText: 'CVV',
+                                hintText: 'XXX',
                                 labelStyle: TextStyle(
                                   color: Colors.black,
                                 ),
@@ -215,7 +220,6 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                         backgroundColor: CustomColor.MAIN,
                       ),
                       onPressed: () {
-                        print(_provider.selectedPayment?.name);
                         _provider.fnFetchXenditTokenId(context,
                             card_number: cardNumberController.text,
                             expiry_month:
@@ -223,7 +227,6 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                             expiry_year:
                                 expiryDateController.text.split("/").last,
                             cvv: cvvController.text);
-                        Navigator.pop(context);
                       },
                       child: Text(
                         "Validate",
@@ -267,12 +270,13 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                       width: MediaQuery.of(context).size.width / 1.2,
                       child: TextFormField(
                         keyboardType: TextInputType.number,
-                        controller: cvvController,
+                        controller: targetController,
                         decoration: InputDecoration(
                           labelText: 'Phone Number',
                           labelStyle: TextStyle(
                             color: Colors.black,
                           ),
+                          hintText: '8XXXXXXX',
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(
@@ -303,13 +307,15 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                           backgroundColor: CustomColor.MAIN,
                         ),
                         onPressed: () {
-                          _provider.fnFetchXenditTokenId(context,
-                              card_number: cardNumberController.text,
-                              expiry_month:
-                                  expiryDateController.text.split("/").first,
-                              expiry_year:
-                                  expiryDateController.text.split("/").last,
-                              cvv: cvvController.text);
+                          if (_provider.isCart == true) {
+                            print('ini');
+                            _provider.fnEwalletOrderCart(context,
+                                phone: targetController.text);
+                          } else {
+                            _provider.fnEwalletOrderNow(context,
+                                phone_number: targetController.text);
+                          }
+
                           Navigator.pop(context);
                         },
                         child: Text(
@@ -349,12 +355,12 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                           color: Colors.black,
                         ),
                       ),
-                      WidgetSpan(
-                        child: Container(
-                          width: 100,
-                          child: Image.asset('assets/images/midtrans_logo.png'),
-                        ),
-                      ),
+                      // WidgetSpan(
+                      //   child: Container(
+                      //     width: 100,
+                      //     child: Image.asset('assets/images/midtrans_logo.png'),
+                      //   ),
+                      // ),
                     ],
                   )),
                 ),
@@ -682,7 +688,8 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                           ),
                         ],
                       ),
-                      if (_provider.webViewUrl == null)
+                      if (_provider.webViewUrl == null &&
+                          _provider.selectedPayment?.name != "ovo")
                         SizedBox(
                           width: 120,
                           height: 40,
@@ -797,11 +804,17 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                     if (url.toString().contains('verification_redirect')) {
                       _provider.fnWebViewOtpVerified(context);
                     }
+                    if (url.toString().contains('success')) {
+                      _provider.fnDataPaymentVerified(context);
+                    }
                   },
                   onLoadStop: (controller, url) {
-                    print(url);
                     if (url.toString().contains('verification_redirect')) {
                       _provider.fnWebViewOtpVerified(context);
+                    }
+
+                    if (url.toString().contains('success')) {
+                      _provider.fnDataPaymentVerified(context);
                     }
                   },
                   initialUrlRequest: URLRequest(

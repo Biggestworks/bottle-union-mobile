@@ -1,4 +1,4 @@
-// ignore_for_file: unused_local_variable
+// ignore_for_file: unused_local_variable, non_constant_identifier_names
 
 import 'dart:convert';
 import 'dart:developer';
@@ -142,8 +142,6 @@ class PaymentService extends GetConnect {
       "courier_cost": courierCost
     };
 
-    print(_data);
-
     // final test = await _headersAuth();
     // log(test.toString());
 
@@ -264,8 +262,11 @@ class PaymentService extends GetConnect {
 
       final response = await http.post(
         Uri.parse(URLHelper.tokenIdUrl),
-        body: payload,
+        headers: await _headersAuth(),
+        body: json.encode(payload),
       );
+
+      print(response.body);
 
       return json.decode(response.body);
     } on SocketException {
@@ -282,13 +283,14 @@ class PaymentService extends GetConnect {
   }) async {
     try {
       print(amount);
-      final response =
-          await http.post(Uri.parse(URLHelper.authorizationIdUrl), body: {
-        "amount": amount,
-        "card_cvn": cvn,
-        "currency": "IDR",
-        "token_id": tokenId,
-      });
+      final response = await http.post(Uri.parse(URLHelper.authorizationIdUrl),
+          headers: await _headersAuth(),
+          body: json.encode({
+            "amount": amount,
+            "card_cvn": cvn,
+            "currency": "IDR",
+            "token_id": tokenId,
+          }));
       return json.decode(response.body) as Map<String, dynamic>;
     } on SocketException {
       rethrow;
@@ -297,6 +299,69 @@ class PaymentService extends GetConnect {
     }
   }
 
-  // Future<Map<String,dynamic>> purchaseOvo({
-  // }){}
+  Future<Map<String, dynamic>> purchaseEwallet({
+    required String idAddress,
+    required ProductOrderModel product,
+    required String payment_method,
+    required String courier_name,
+    required String courier_etd,
+    required String courier_desc,
+    required int courier_cost,
+    required String channel_code,
+    required String phone,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse(URLHelper.storeOrderNowUrl),
+        headers: await _headersAuth(),
+        body: json.encode({
+          "id_address": idAddress,
+          "products": product.toJson(),
+          "payment_method": payment_method,
+          "courier_name": courier_name,
+          "courier_desc": courier_desc,
+          "courier_etd": courier_etd,
+          "courier_cost": courier_cost,
+          "channel_code": channel_code,
+          "phone": phone.toString()
+        }),
+      );
+
+      return json.decode(response.body);
+    } on SocketException {
+      rethrow;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>> purchaseEwalletCart({
+    required String idAddress,
+    required List<Map<String, dynamic>> deliveries,
+    required String payment_method,
+    required String channel_code,
+    required String phone,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse(URLHelper.storeOrderCartUrl),
+        headers: await _headersAuth(),
+        body: json.encode({
+          "deliveries": deliveries,
+          "id_address": idAddress,
+          "payment_method": payment_method,
+          "channel_code": channel_code,
+          "phone": phone.toString()
+        }),
+      );
+
+      print(response.body);
+
+      return json.decode(response.body);
+    } on SocketException {
+      rethrow;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

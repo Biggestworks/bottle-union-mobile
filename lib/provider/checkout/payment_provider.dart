@@ -1,6 +1,9 @@
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/model/checkout/delivery_courier_model.dart';
+import 'package:eight_barrels/model/checkout/order_cart_model.dart'
+    as orderCart;
+import 'package:eight_barrels/model/checkout/order_now_model.dart' as order;
 import 'package:eight_barrels/model/checkout/order_summary_model.dart'
     as summary;
 import 'package:eight_barrels/model/checkout/payment_list_model.dart';
@@ -27,6 +30,9 @@ class PaymentProvider extends ChangeNotifier {
   List<DeliveryCourier> selectedCourierList = [];
   bool? isCart;
   ProductOrderModel productOrder = new ProductOrderModel();
+
+  order.OrderNowModel? orderNowModel;
+  orderCart.OrderCartModel? orderCartModel;
 
   /// CC ENV
   String? tokenId;
@@ -64,9 +70,7 @@ class PaymentProvider extends ChangeNotifier {
   }
 
   fnOnSelectPayment(Data value) {
-    if (value.name != "credit-card") {
-      Get.back();
-    }
+    Get.back();
     selectedPayment = value;
     notifyListeners();
   }
@@ -89,8 +93,6 @@ class PaymentProvider extends ChangeNotifier {
               'courier_cost': selectedCourierList[index].courierData?.price
             }));
 
-    print(selectedPayment!.name);
-
     if (selectedPayment!.name == "credit-card" ||
         selectedPayment?.name == "CREDIT") {
       var _auth = await _service.fetchCreditCardAuthorizationId(
@@ -98,8 +100,55 @@ class PaymentProvider extends ChangeNotifier {
           cvn: cvn.toString(),
           tokenId: tokenId.toString());
 
+      print(_auth);
+
       webViewUrl = _auth['data']['payer_authentication_url'];
       authenticationId = _auth['data']['id'];
+    } else if (selectedPayment!.name.toString().contains("dana")) {
+      var _res = await _service.purchaseEwalletCart(
+          idAddress: addressId.toString(),
+          deliveries: _courierList,
+          payment_method: "${selectedPayment?.name}",
+          channel_code: "${selectedPayment?.name}",
+          phone: '');
+
+      if (_res['status']) {
+        orderCartModel = orderCart.OrderCartModel.fromJson(_res);
+
+        print(_res['result_dana']['actions']['mobile_web_checkout_url']
+            .toString());
+        webViewUrl = _res['result_dana']['actions']['mobile_web_checkout_url']
+            .toString();
+        notifyListeners();
+      } else {
+        _view!.onProgressFinish();
+        await CustomWidget.showSnackBar(
+            context: context,
+            content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+      }
+    } else if (selectedPayment?.name == "shopee-pay") {
+      var _res = await _service.purchaseEwalletCart(
+          idAddress: addressId.toString(),
+          deliveries: _courierList,
+          payment_method: "${selectedPayment?.name}",
+          channel_code: "${selectedPayment?.name}",
+          phone: '');
+
+      print(_res);
+
+      if (_res['status']) {
+        orderCartModel = orderCart.OrderCartModel.fromJson(_res);
+
+        webViewUrl = _res['result_shopee']['actions']
+                ['mobile_deeplink_checkout_url']
+            .toString();
+        notifyListeners();
+      } else {
+        _view!.onProgressFinish();
+        await CustomWidget.showSnackBar(
+            context: context,
+            content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+      }
     } else {
       var _res = await _service.storeOrderCart(
         addressId: addressId,
@@ -191,6 +240,43 @@ class PaymentProvider extends ChangeNotifier {
 
       webViewUrl = _auth['data']['payer_authentication_url'];
       authenticationId = _auth['data']['id'];
+    } else if (selectedPayment?.name == "dana") {
+      var res = await _service.purchaseEwallet(
+          idAddress: addressId.toString(),
+          product: productOrder,
+          payment_method: "${selectedPayment?.name}",
+          courier_name: "${selectedCourierList[0].courierData?.courier}",
+          courier_desc: "${selectedCourierList[0].courierData?.description}",
+          courier_etd: "${selectedCourierList[0].courierData?.etd}",
+          courier_cost:
+              int.parse("${selectedCourierList[0].courierData?.price}"),
+          channel_code: "${selectedPayment?.name}",
+          phone: "");
+
+      orderNowModel = order.OrderNowModel.fromJson(res);
+
+      webViewUrl =
+          res['result_dana']['actions']['mobile_web_checkout_url'].toString();
+      notifyListeners();
+    } else if (selectedPayment?.name == "shopee-pay") {
+      var res = await _service.purchaseEwallet(
+          idAddress: addressId.toString(),
+          product: productOrder,
+          payment_method: "${selectedPayment?.name}",
+          courier_name: "${selectedCourierList[0].courierData?.courier}",
+          courier_desc: "${selectedCourierList[0].courierData?.description}",
+          courier_etd: "${selectedCourierList[0].courierData?.etd}",
+          courier_cost:
+              int.parse("${selectedCourierList[0].courierData?.price}"),
+          channel_code: "${selectedPayment?.name}",
+          phone: "");
+
+      orderNowModel = order.OrderNowModel.fromJson(res);
+
+      webViewUrl = res['result_shopee']['actions']
+              ['mobile_deeplink_checkout_url']
+          .toString();
+      notifyListeners();
     } else {
       var _res = await _service.storeOrderBuyNow(
         addressId: addressId,
@@ -261,8 +347,6 @@ class PaymentProvider extends ChangeNotifier {
       tokenId: tokenId.toString(),
     );
 
-    print(_res);
-
     if (_res!.status != null) {
       if (_res.status == true) {
         authenticationId = null;
@@ -298,7 +382,7 @@ class PaymentProvider extends ChangeNotifier {
     required String cvv,
   }) async {
     try {
-      // Get.back();
+      Get.back();
       _view!.onProgressStart();
 
       final response = await _service.fetchCreditCardTokenId(
@@ -306,6 +390,8 @@ class PaymentProvider extends ChangeNotifier {
           expiryMonth: expiry_month,
           expiryYear: expiry_year,
           cvv: cvv);
+
+      print(response);
 
       if (!response['status']) {
         await CustomWidget.showSnackBar(
@@ -331,9 +417,114 @@ class PaymentProvider extends ChangeNotifier {
 
       _view!.onProgressFinish();
     } catch (e) {
+      print(e);
       await CustomWidget.showSnackBar(
           context: context, content: Text('Failed to validate credit card.'));
       _view!.onProgressFinish();
+    }
+  }
+
+  fnEwalletOrderNow(
+    context, {
+    required String phone_number,
+  }) async {
+    _view!.onProgressStart();
+
+    await Future.delayed(Duration(seconds: 1));
+
+    if (product != null) {
+      productOrder = ProductOrderModel(
+        idProduct: product?.data?.id,
+        idRegion: selectedCourierList[0].regionId,
+        qty: productQty,
+      );
+    }
+
+    var _res = await _service.purchaseEwallet(
+        idAddress: "$addressId",
+        product: productOrder,
+        payment_method: "${selectedPayment?.name}",
+        courier_name: "${selectedCourierList[0].courierData?.courier}",
+        courier_desc: "${selectedCourierList[0].courierData?.description}",
+        courier_etd: "${selectedCourierList[0].courierData?.etd}",
+        courier_cost: int.parse("${selectedCourierList[0].courierData?.price}"),
+        channel_code: "${selectedPayment?.name}",
+        phone: phone_number);
+
+    if (_res['status'] != null) {
+      if (_res['status'] == true) {
+        print(_res);
+        _view!.onProgressFinish();
+        Get.offNamedUntil(OrderFinishScreen.tag, (route) => route.isFirst,
+            arguments: OrderFinishScreen(
+              orderNow: order.OrderNowModel.fromJson(_res),
+            ));
+      } else {
+        _view!.onProgressFinish();
+        await CustomWidget.showSnackBar(
+            context: context, content: Text(_res['message'] ?? '-'));
+      }
+    } else {
+      _view!.onProgressFinish();
+      await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+    }
+
+    _view!.onProgressFinish();
+    notifyListeners();
+  }
+
+  fnEwalletOrderCart(
+    context, {
+    required String phone,
+  }) async {
+    _view!.onProgressStart();
+
+    await Future.delayed(Duration(seconds: 1));
+
+    List<Map<String, dynamic>> _courierList = [];
+
+    List.generate(
+      selectedCourierList.length,
+      (index) => _courierList.add(
+        {
+          'id_region': selectedCourierList[index].regionId,
+          'courier_name': selectedCourierList[index].courierData?.courier,
+          'courier_desc': selectedCourierList[index].courierData?.description,
+          'courier_etd': selectedCourierList[index].courierData?.etd,
+          'courier_cost': selectedCourierList[index].courierData?.price
+        },
+      ),
+    );
+
+    var _res = await _service.purchaseEwalletCart(
+      idAddress: addressId.toString(),
+      deliveries: _courierList,
+      payment_method: "${selectedPayment?.name}",
+      channel_code: "${selectedPayment?.name}",
+      phone: phone,
+    );
+
+    print(_res);
+
+    if (_res['status'] != null) {
+      if (_res['status'] == true) {
+        _view!.onProgressFinish();
+        Get.offNamedUntil(OrderFinishScreen.tag, (route) => route.isFirst,
+            arguments: OrderFinishScreen(
+              orderCart: orderCart.OrderCartModel.fromJson(_res),
+            ));
+      } else {
+        _view!.onProgressFinish();
+        await CustomWidget.showSnackBar(
+            context: context, content: Text(_res['message'] ?? '-'));
+      }
+    } else {
+      _view!.onProgressFinish();
+      await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
   }
 
@@ -345,5 +536,19 @@ class PaymentProvider extends ChangeNotifier {
     } else {
       fnStoreOrderCreditCardChart(context);
     }
+  }
+
+  fnDataPaymentVerified(context) {
+    _view!.onProgressStart();
+
+    webViewUrl = null;
+
+    Get.offNamedUntil(OrderFinishScreen.tag, (route) => route.isFirst,
+        arguments: OrderFinishScreen(
+          orderNow: orderNowModel,
+          orderCart: orderCartModel,
+        ));
+    notifyListeners();
+    _view!.onProgressFinish();
   }
 }
