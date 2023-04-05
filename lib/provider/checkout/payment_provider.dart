@@ -98,7 +98,9 @@ class PaymentProvider extends ChangeNotifier {
       var _auth = await _service.fetchCreditCardAuthorizationId(
           amount: orderSummary!.totalPay.toString(),
           cvn: cvn.toString(),
-          tokenId: tokenId.toString());
+          tokenId: selectedPayment!.name == 'CREDIT'
+              ? selectedPayment!.card_token.toString()
+              : tokenId.toString());
 
       print(_auth);
 
@@ -111,6 +113,8 @@ class PaymentProvider extends ChangeNotifier {
           payment_method: "${selectedPayment?.name}",
           channel_code: "${selectedPayment?.name}",
           phone: '');
+
+      print(_res);
 
       if (_res['status']) {
         orderCartModel = orderCart.OrderCartModel.fromJson(_res);
@@ -133,8 +137,6 @@ class PaymentProvider extends ChangeNotifier {
           payment_method: "${selectedPayment?.name}",
           channel_code: "${selectedPayment?.name}",
           phone: '');
-
-      print(_res);
 
       if (_res['status']) {
         orderCartModel = orderCart.OrderCartModel.fromJson(_res);
@@ -191,7 +193,9 @@ class PaymentProvider extends ChangeNotifier {
       courierCost: selectedCourierList[0].courierData?.price,
       tokenId: tokenId.toString(),
       authenticationId: authenticationId.toString(),
-      card_cvn: cvn.toString(),
+      card_cvn: selectedPayment!.name == "CREDIT"
+          ? selectedPayment!.cvv.toString()
+          : cvn.toString(),
     );
 
     if (_res!.status != null) {
@@ -343,9 +347,15 @@ class PaymentProvider extends ChangeNotifier {
       deliveries: _courierList,
       paymentMethod: 'credit-card',
       authenticationId: authenticationId.toString(),
-      cvn: cvn.toString(),
-      tokenId: tokenId.toString(),
+      cvn: selectedPayment!.name == "CREDIT"
+          ? selectedPayment!.cvv.toString()
+          : cvn.toString(),
+      tokenId: selectedPayment!.name == "CREDIT"
+          ? selectedPayment!.card_token.toString()
+          : tokenId.toString(),
     );
+
+    print(_res!.result);
 
     if (_res!.status != null) {
       if (_res.status == true) {
@@ -376,6 +386,7 @@ class PaymentProvider extends ChangeNotifier {
 
   fnFetchXenditTokenId(
     BuildContext context, {
+    required String card_holder,
     required String card_number,
     required String expiry_month,
     required String expiry_year,
@@ -383,37 +394,50 @@ class PaymentProvider extends ChangeNotifier {
   }) async {
     try {
       Get.back();
-      _view!.onProgressStart();
+      if (card_number.isNotEmpty &&
+          expiry_month.isNotEmpty &&
+          expiry_year.isNotEmpty &&
+          card_holder.isNotEmpty) {
+        _view!.onProgressStart();
 
-      final response = await _service.fetchCreditCardTokenId(
+        final response = await _service.fetchCreditCardTokenId(
+            cardNumber: card_number,
+            expiryMonth: expiry_month,
+            expiryYear: expiry_year,
+            cvv: cvv);
+
+        final res = await _service.fetchCreditCardMultipleUse(
           cardNumber: card_number,
-          expiryMonth: expiry_month,
-          expiryYear: expiry_year,
-          cvv: cvv);
+          cvv: cvv,
+          expMonth: expiry_month,
+          expYear: expiry_year,
+          holderName: card_holder,
+        );
 
-      print(response);
+        if (!res['status']) {
+          await CustomWidget.showSnackBar(
+              context: context, content: Text(res['message']));
+        }
 
-      if (!response['status']) {
+        var data = XenditTokenId.fromJson(response);
+
+        tokenId = data.data.card.cardInformation.tokenId;
+        cvn = cvv;
+
+        selectedPayment = Data(
+          id: 10,
+          name: data.data.card.cardInformation.type,
+          description: data.data.card.cardInformation.network +
+              ' ' +
+              data.data.card.cardInformation.issuer +
+              ' ' +
+              data.data.card.cardInformation.cardholderName,
+        );
+        notifyListeners();
+      } else {
         await CustomWidget.showSnackBar(
-            context: context, content: Text('Failure'));
+            context: context, content: Text('Form must be completed'));
       }
-      print(response);
-
-      var data = XenditTokenId.fromJson(response);
-
-      tokenId = data.data.card.cardInformation.tokenId;
-      cvn = cvv;
-
-      selectedPayment = Data(
-        id: 10,
-        name: data.data.card.cardInformation.type,
-        description: data.data.card.cardInformation.network +
-            ' ' +
-            data.data.card.cardInformation.issuer +
-            ' ' +
-            data.data.card.cardInformation.cardholderName,
-      );
-      notifyListeners();
 
       _view!.onProgressFinish();
     } catch (e) {
@@ -528,8 +552,9 @@ class PaymentProvider extends ChangeNotifier {
     }
   }
 
-  fnWebViewOtpVerified(context) {
+  fnWebViewOtpVerified(context) async {
     _view!.onProgressStart();
+    await Future.delayed(Duration(seconds: 2));
     webViewUrl = null;
     if (product != null) {
       fnStoreOrderBuyNowCreditCard(context);

@@ -88,6 +88,7 @@ class URLHelper {
 
   ///TRANSACTION
   static final transactionUrl = baseUrl + '/transactions';
+  static final ccMultipleUrl = transactionUrl + '/credit_multiple_use';
   static final transactionDetailUrl = baseUrl + '/transactions/detail';
   static final uploadPaymentUrl =
       baseUrl + '/transactions/upload-proof-transfer';

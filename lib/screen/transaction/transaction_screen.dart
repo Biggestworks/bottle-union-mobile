@@ -624,73 +624,49 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                               )),
                                                         ),
                                                       )
-                                                    else if (_data
-                                                            ?.paymentMethod ==
-                                                        'gopay')
+                                                    else
 
                                                       /// Gopay
-                                                      Container(
-                                                        height: 30,
-                                                        child: CustomWidget
-                                                            .roundIconBtn(
-                                                                icon: MdiIcons
-                                                                    .shieldCheck,
-                                                                label: AppLocalizations
-                                                                    .instance
-                                                                    .text(
-                                                                        'TXT_FINISH_PAYMENT'),
-                                                                lblColor: Colors
-                                                                    .white,
-                                                                btnColor: Colors
-                                                                    .green,
-                                                                fontSize: 12,
-                                                                radius: 5,
-                                                                isBold: true,
-                                                                function:
-                                                                    () async {
-                                                                  final _url = provider
-                                                                          .transactionList
-                                                                          .result
-                                                                          ?.data?[
-                                                                              0]
-                                                                          .deepLink ??
-                                                                      '';
-                                                                  await LaunchUrlHelper.launchUrl(
-                                                                      context:
-                                                                          _scaffoldKey!
-                                                                              .currentContext!,
-                                                                      url:
-                                                                          _url);
-                                                                }),
-                                                      )
-                                                    else
-                                                      Container(
-                                                        height: 30,
-                                                        child: CustomWidget
-                                                            .roundBtn(
-                                                          label: AppLocalizations
-                                                              .instance
-                                                              .text(
-                                                                  'TXT_TRACK_ORDER'),
-                                                          lblColor:
-                                                              Colors.white,
-                                                          btnColor:
-                                                              Colors.green,
-                                                          fontSize: 12,
-                                                          radius: 5,
-                                                          isBold: true,
-                                                          function: () => Get.toNamed(
-                                                              TrackOrderScreen
-                                                                  .tag,
-                                                              arguments:
-                                                                  TrackOrderScreen(
-                                                                orderId: _data
-                                                                    ?.codeTransaction,
-                                                                regionId: _data
-                                                                    ?.idRegion,
-                                                              )),
-                                                        ),
-                                                      )
+                                                      /// provider
+                                                      provider
+                                                                  .transactionList
+                                                                  .result
+                                                                  ?.data?[index]
+                                                                  .deepLink !=
+                                                              null
+                                                          ? Container(
+                                                              height: 30,
+                                                              child: CustomWidget
+                                                                  .roundIconBtn(
+                                                                      icon: MdiIcons
+                                                                          .shieldCheck,
+                                                                      label: AppLocalizations
+                                                                          .instance
+                                                                          .text(
+                                                                              'TXT_FINISH_PAYMENT'),
+                                                                      lblColor:
+                                                                          Colors
+                                                                              .white,
+                                                                      btnColor:
+                                                                          Colors
+                                                                              .green,
+                                                                      fontSize:
+                                                                          12,
+                                                                      radius: 5,
+                                                                      isBold:
+                                                                          true,
+                                                                      function:
+                                                                          () async {
+                                                                        final _url =
+                                                                            provider.transactionList.result?.data?[index].deepLink ??
+                                                                                '';
+                                                                        await LaunchUrlHelper.launchUrl(
+                                                                            context:
+                                                                                _scaffoldKey!.currentContext!,
+                                                                            url: _url);
+                                                                      }),
+                                                            )
+                                                          : const SizedBox()
                                                   else if (_data
                                                           ?.idStatusPayment ==
                                                       6)

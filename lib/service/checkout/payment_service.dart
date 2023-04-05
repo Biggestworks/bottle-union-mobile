@@ -97,7 +97,7 @@ class PaymentService extends GetConnect {
       "payment_method": paymentMethod,
       "token_id": tokenId,
       "authentication_id": authenticationId,
-      "card_cvn": cvn,
+      "card_cvn": '123',
     };
 
     try {
@@ -106,6 +106,10 @@ class PaymentService extends GetConnect {
         body: json.encode(_data),
         headers: await _headersAuth(),
       );
+
+      print(_data);
+
+      print(_response.body);
 
       ///GET CONNECT BUG
       // Response _response = await post(
@@ -167,17 +171,18 @@ class PaymentService extends GetConnect {
     return _model;
   }
 
-  Future<OrderNowModel?> storeOrderBuyNowCreditCard(
-      {required int? addressId,
-      required ProductOrderModel? product,
-      required String? paymentMethod,
-      required String? courierName,
-      required String? courierDesc,
-      required String? courierEtd,
-      required int? courierCost,
-      required String tokenId,
-      required String authenticationId,
-      required String card_cvn}) async {
+  Future<OrderNowModel?> storeOrderBuyNowCreditCard({
+    required int? addressId,
+    required ProductOrderModel? product,
+    required String? paymentMethod,
+    required String? courierName,
+    required String? courierDesc,
+    required String? courierEtd,
+    required int? courierCost,
+    required String tokenId,
+    required String authenticationId,
+    required String card_cvn,
+  }) async {
     OrderNowModel _model = new OrderNowModel();
 
     final Map<String, dynamic> _data = {
@@ -192,6 +197,8 @@ class PaymentService extends GetConnect {
       "authentication_id": authenticationId,
       "card_cvn": card_cvn
     };
+
+    print(json.encode(_data));
 
     // final test = await _headersAuth();
     // log(test.toString());
@@ -256,19 +263,39 @@ class PaymentService extends GetConnect {
         "cvv": cvv,
       };
 
-      print(json.encode(payload));
-
-      print(URLHelper.tokenIdUrl);
-
       final response = await http.post(
         Uri.parse(URLHelper.tokenIdUrl),
         headers: await _headersAuth(),
         body: json.encode(payload),
       );
 
-      print(response.body);
-
       return json.decode(response.body);
+    } on SocketException {
+      rethrow;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchCreditCardMultipleUse({
+    required String cardNumber,
+    required String expYear,
+    required String expMonth,
+    required String cvv,
+    required String holderName,
+  }) async {
+    try {
+      final response = await http.post(Uri.parse(URLHelper.ccMultipleUrl),
+          headers: await _headersAuth(),
+          body: json.encode({
+            "card_number": cardNumber,
+            "exp_year": expYear,
+            "exp_month": expMonth,
+            "cvv": cvv,
+            "holder_name": holderName
+          }));
+
+      return json.decode(response.body) as Map<String, dynamic>;
     } on SocketException {
       rethrow;
     } catch (e) {
@@ -282,7 +309,6 @@ class PaymentService extends GetConnect {
     required String tokenId,
   }) async {
     try {
-      print(amount);
       final response = await http.post(Uri.parse(URLHelper.authorizationIdUrl),
           headers: await _headersAuth(),
           body: json.encode({
@@ -354,8 +380,6 @@ class PaymentService extends GetConnect {
           "phone": phone.toString()
         }),
       );
-
-      print(response.body);
 
       return json.decode(response.body);
     } on SocketException {

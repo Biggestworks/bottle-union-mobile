@@ -1149,11 +1149,18 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen>
                 isBold: true,
                 radius: 8,
                 fontSize: 16,
-                function: () => Get.toNamed(TrackOrderScreen.tag,
-                    arguments: TrackOrderScreen(
-                      orderId: _provider.orderId,
-                      regionId: _provider.regionId,
-                    )),
+                function: () {
+                  if (_provider.transactionDetail.result!.courierName!
+                      .toLowerCase()
+                      .contains("gosend")) {
+                  } else {
+                    Get.toNamed(TrackOrderScreen.tag,
+                        arguments: TrackOrderScreen(
+                          orderId: _provider.orderId,
+                          regionId: _provider.regionId,
+                        ));
+                  }
+                },
               ),
             ),
           ],

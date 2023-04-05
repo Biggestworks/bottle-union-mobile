@@ -70,6 +70,7 @@ class DeliveryCartProvider extends ChangeNotifier {
 
   Future fnOnSelectAddress(BuildContext context, int id) async {
     _view!.onProgressStart();
+    print(id);
     var _res = (await _addressService.selectAddress(id: id))!;
 
     if (_res.status != null) {
@@ -152,6 +153,7 @@ class DeliveryCartProvider extends ChangeNotifier {
     courierList = (await _deliveryService.getCourierList(
       provinceId: provinceId,
       destination: destination ?? 0,
+      idAddress: int.parse(selectedAddress!.id.toString()),
       weight: _totalWeight,
     ))!;
     _view!.onProgressFinish();

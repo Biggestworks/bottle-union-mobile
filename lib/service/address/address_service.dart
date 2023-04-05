@@ -12,6 +12,8 @@ class AddressService extends GetConnect {
   Future<Map<String, String>?> _headersAuth() async {
     var _token = await _userPreferences.getUserToken();
 
+    print(_token);
+
     return {
       "Accept": "application/json",
       "Content-Type": "application/json",
@@ -69,7 +71,7 @@ class AddressService extends GetConnect {
     required String longitude,
     required String receiver,
     required String phone,
-}) async {
+  }) async {
     DefaultModel _model = new DefaultModel();
 
     final Map<String, dynamic> _data = {
@@ -210,5 +212,4 @@ class AddressService extends GetConnect {
 
     return _model;
   }
-
 }

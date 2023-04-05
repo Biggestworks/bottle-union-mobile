@@ -3,7 +3,7 @@ description: 8 Barrels Mobile Application
 
 publish_to: 'none' 
 
-version: 1.0.5+27
+version: 1.0.8+29
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -25,6 +25,7 @@ dependencies:
   geolocator: ^9.0.2
   geocoding: ^2.0.2
   permission_handler: ^10.2.0
+  keyboard_actions: ^4.1.0
   google_maps_place_picker:
     git: https://github.com/ERAKOMP-IT/google_maps_place_picker.git
 #  google_maps_place_picker: ^2.1.0-nullsafety.3

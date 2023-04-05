@@ -133,7 +133,7 @@ class AddAddressProvider extends ChangeNotifier with MapPickerInterface {
           postCode: posCodeController.text,
           label: labelController.text,
           latitude: _currLocation!.latitude.toString(),
-          longitude: _currLocation!.latitude.toString(),
+          longitude: _currLocation!.longitude.toString(),
           receiver: nameController.text,
           phone: phoneController.text,
         );
@@ -148,7 +148,7 @@ class AddAddressProvider extends ChangeNotifier with MapPickerInterface {
           postCode: posCodeController.text,
           label: labelController.text,
           latitude: _currLocation!.latitude.toString(),
-          longitude: _currLocation!.latitude.toString(),
+          longitude: _currLocation!.longitude.toString(),
           receiver: nameController.text,
           phone: phoneController.text,
         );

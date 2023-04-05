@@ -1,5 +1,6 @@
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
+import 'package:eight_barrels/helper/card_number_formatter.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/formatter_helper.dart';
 import 'package:eight_barrels/model/checkout/delivery_courier_model.dart';
@@ -11,8 +12,10 @@ import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -44,10 +47,16 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
   WebViewController webViewController = WebViewController();
 
   TextEditingController cardNumberController = TextEditingController();
+  FocusNode cardNumberFocusNode = FocusNode();
   TextEditingController expiryDateController = TextEditingController();
+  FocusNode expiryDateFocusNode = FocusNode();
   TextEditingController cvvController = TextEditingController();
+  FocusNode cvvFocusNode = FocusNode();
+  TextEditingController holderNameController = TextEditingController();
+  FocusNode holderNameFocusNode = FocusNode();
 
   TextEditingController targetController = TextEditingController();
+  FocusNode targetFocusNode = FocusNode();
 
   final Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers = {
     Factory(() => EagerGestureRecognizer())
@@ -79,7 +88,7 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
         context: context,
         isScroll: true,
         child: Container(
-          height: MediaQuery.of(context).size.height / 2,
+          height: MediaQuery.of(context).size.height / 1.5,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -92,57 +101,64 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                         horizontal: 16, vertical: 10),
                     child: Text(
                       "Tambahkan Kartu Kredit ",
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
                     ),
                   ),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   Container(
+                    height: 70,
+                    width: MediaQuery.of(context).size.width,
                     margin: const EdgeInsets.symmetric(horizontal: 16),
-                    child: TextFormField(
-                      controller: cardNumberController,
-                      keyboardType: TextInputType.number,
-                      validator: (val) {
-                        validateCardNumWithLuhnAlgorithm(val.toString());
-                      },
-                      onChanged: (val) {
-                        if (RegExp('^3[47][0-9]{13}\$').hasMatch(val)) {
-                          print('Amex Card');
-                        } else if (RegExp('^(6541|6556)[0-9]{12}\$')
-                            .hasMatch(val)) {
-                          print('BCGlobal');
-                        } else if (RegExp('^389[0-9]{11}\$').hasMatch(val)) {
-                          print('Carte Blanche Card');
-                        } else if (RegExp('^3(?:0[0-5]|[68][0-9])[0-9]{11}\$')
-                            .hasMatch(val)) {
-                          print('Diners Club Card');
-                        } else if (RegExp('^4[0-9]{12}(?:[0-9]{3})?\$')
-                            .hasMatch(val)) {
-                          print('visa');
-                        } else if (RegExp(
-                                '^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14})\$')
-                            .hasMatch(val)) {
-                          print('visa master card');
-                        } else if (RegExp('^(62[0-9]{14,17})\$')
-                            .hasMatch(val)) {
-                          print('union pay');
-                        } else {
-                          print('engga kesini');
-                        }
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Card Number',
-                        labelStyle: TextStyle(
-                          color: Colors.black,
-                        ),
-                        hintText: '5XXXXXX',
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
+                    child: KeyboardActions(
+                      config: KeyboardActionsConfig(
+                        keyboardActionsPlatform: KeyboardActionsPlatform.IOS,
+                        actions: [
+                          KeyboardActionsItem(
+                            focusNode: cardNumberFocusNode,
+                            displayDoneButton: false,
+                            displayActionBar: false,
+                          ),
+                        ],
+                      ),
+                      tapOutsideBehavior: TapOutsideBehavior.opaqueDismiss,
+                      child: TextFormField(
+                        focusNode: cardNumberFocusNode,
+                        controller: cardNumberController,
+                        keyboardType: TextInputType.number,
+                        validator: (val) {
+                          validateCardNumWithLuhnAlgorithm(val.toString());
+                        },
+                        onChanged: (val) {
+                          if (RegExp('^4[0-9]{12}(?:[0-9]{3})?\$')
+                              .hasMatch(val)) {
+                            print('visa');
+                          } else if (RegExp(
+                                  '^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14})\$')
+                              .hasMatch(val)) {
+                            print('visa master card');
+                          }
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Card Number',
+                          labelStyle: TextStyle(
                             color: Colors.black,
                           ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                            color: Colors.black,
+                          hintText: '5XXXXXX',
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                            ),
                           ),
                         ),
                       ),
@@ -150,59 +166,178 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                   ),
                   Container(
                     margin: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 10),
+                        horizontal: 16, vertical: 20),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
                             width: MediaQuery.of(context).size.width / 2.3,
-                            child: TextFormField(
-                              controller: expiryDateController,
-                              decoration: InputDecoration(
-                                labelText: 'Expired Date',
-                                labelStyle: TextStyle(
-                                  color: Colors.black,
-                                ),
-                                hintText: 'XX/XX',
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
+                            height: 70,
+                            child: KeyboardActions(
+                              config: KeyboardActionsConfig(
+                                keyboardActionsPlatform:
+                                    KeyboardActionsPlatform.IOS,
+                                actions: [
+                                  KeyboardActionsItem(
+                                    focusNode: expiryDateFocusNode,
+                                    displayDoneButton: false,
+                                    displayActionBar: false,
+                                  ),
+                                ],
+                              ),
+                              tapOutsideBehavior:
+                                  TapOutsideBehavior.opaqueDismiss,
+                              child: TextFormField(
+                                focusNode: expiryDateFocusNode,
+                                controller: expiryDateController,
+                                onChanged: (value) {
+                                  setState(() {
+                                    value = value.replaceAll(RegExp(r"\D"), "");
+                                    switch (value.length) {
+                                      case 0:
+                                        expiryDateController.text = "MM/YY";
+                                        expiryDateController.selection =
+                                            TextSelection.collapsed(offset: 0);
+                                        break;
+                                      case 1:
+                                        expiryDateController.text =
+                                            "${value}M/YY";
+                                        expiryDateController.selection =
+                                            TextSelection.collapsed(offset: 1);
+                                        break;
+                                      case 2:
+                                        expiryDateController.text = "$value/YY";
+                                        expiryDateController.selection =
+                                            TextSelection.collapsed(offset: 2);
+                                        break;
+                                      case 3:
+                                        expiryDateController.text =
+                                            "${value.substring(0, 2)}/${value.substring(2)}Y";
+                                        expiryDateController.selection =
+                                            TextSelection.collapsed(offset: 4);
+                                        break;
+                                      case 4:
+                                        expiryDateController.text =
+                                            "${value.substring(0, 2)}/${value.substring(2, 4)}";
+                                        expiryDateController.selection =
+                                            TextSelection.collapsed(offset: 5);
+                                        break;
+                                    }
+                                    if (value.length > 4) {
+                                      expiryDateController.text =
+                                          "${value.substring(0, 2)}/${value.substring(2, 4)}";
+                                      expiryDateController.selection =
+                                          TextSelection.collapsed(offset: 5);
+                                    }
+                                  });
+                                },
+                                decoration: InputDecoration(
+                                  labelText: 'Expired Date',
+                                  labelStyle: TextStyle(
                                     color: Colors.black,
                                   ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                    color: Colors.black,
+                                  hintText: 'XX/XX',
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                    ),
                                   ),
                                 ),
                               ),
                             )),
                         Container(
                             width: MediaQuery.of(context).size.width / 2.3,
-                            child: TextFormField(
-                              controller: cvvController,
-                              decoration: InputDecoration(
-                                labelText: 'CVV',
-                                hintText: 'XXX',
-                                labelStyle: TextStyle(
-                                  color: Colors.black,
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
+                            height: 70,
+                            child: KeyboardActions(
+                              config: KeyboardActionsConfig(
+                                keyboardActionsPlatform:
+                                    KeyboardActionsPlatform.IOS,
+                                actions: [
+                                  KeyboardActionsItem(
+                                    focusNode: cvvFocusNode,
+                                    displayDoneButton: false,
+                                    displayActionBar: false,
+                                  ),
+                                ],
+                              ),
+                              tapOutsideBehavior:
+                                  TapOutsideBehavior.opaqueDismiss,
+                              child: TextFormField(
+                                focusNode: cvvFocusNode,
+                                maxLength: 3,
+                                controller: cvvController,
+                                decoration: InputDecoration(
+                                  labelText: 'CVV',
+                                  hintText: 'XXX',
+                                  labelStyle: TextStyle(
                                     color: Colors.black,
                                   ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                    color: Colors.black,
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                    ),
                                   ),
                                 ),
                               ),
                             )),
                       ],
+                    ),
+                  ),
+                  Container(
+                    height: 70,
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    child: KeyboardActions(
+                      config: KeyboardActionsConfig(
+                        keyboardActionsPlatform: KeyboardActionsPlatform.IOS,
+                        actions: [
+                          KeyboardActionsItem(
+                            focusNode: cardNumberFocusNode,
+                            displayDoneButton: false,
+                            displayActionBar: false,
+                          ),
+                        ],
+                      ),
+                      tapOutsideBehavior: TapOutsideBehavior.opaqueDismiss,
+                      child: TextFormField(
+                        focusNode: holderNameFocusNode,
+                        controller: holderNameController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: 'Card Holder',
+                          labelStyle: TextStyle(
+                            color: Colors.black,
+                          ),
+                          hintText: 'John Doe',
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -221,6 +356,7 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                       ),
                       onPressed: () {
                         _provider.fnFetchXenditTokenId(context,
+                            card_holder: holderNameController.text,
                             card_number: cardNumberController.text,
                             expiry_month:
                                 expiryDateController.text.split("/").first,
@@ -263,30 +399,47 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                           horizontal: 16, vertical: 10),
                       child: Text(
                         "Masukan Nomor OVO ",
+                        style: TextStyle(fontSize: 16),
                       ),
                     ),
                     Container(
+                      height: 70,
                       margin: const EdgeInsets.symmetric(horizontal: 16),
                       width: MediaQuery.of(context).size.width / 1.2,
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        controller: targetController,
-                        decoration: InputDecoration(
-                          labelText: 'Phone Number',
-                          labelStyle: TextStyle(
-                            color: Colors.black,
-                          ),
-                          hintText: '8XXXXXXX',
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
+                      child: KeyboardActions(
+                        config: KeyboardActionsConfig(
+                          keyboardActionsPlatform: KeyboardActionsPlatform.IOS,
+                          actions: [
+                            KeyboardActionsItem(
+                              focusNode: targetFocusNode,
+                              displayDoneButton: false,
+                              displayActionBar: false,
+                            ),
+                          ],
+                        ),
+                        tapOutsideBehavior: TapOutsideBehavior.opaqueDismiss,
+                        child: TextFormField(
+                          focusNode: targetFocusNode,
+                          keyboardType: TextInputType.number,
+                          controller: targetController,
+                          decoration: InputDecoration(
+                            prefixText: '+62 ',
+                            labelText: 'Phone Number',
+                            labelStyle: TextStyle(
                               color: Colors.black,
                             ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.black,
+                            hintText: '8XXXXXXX',
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.black,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.black,
+                              ),
                             ),
                           ),
                         ),
@@ -308,7 +461,6 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                         ),
                         onPressed: () {
                           if (_provider.isCart == true) {
-                            print('ini');
                             _provider.fnEwalletOrderCart(context,
                                 phone: targetController.text);
                           } else {

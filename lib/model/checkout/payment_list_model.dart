@@ -32,16 +32,37 @@ class Data {
   String? name;
   String? description;
   String? image;
+  int? cvv;
+  String? card_token;
+  int? user_id;
+  String? card_number;
+  String? cardholder_name;
   String? createdAt;
   String? updatedAt;
 
-  Data({this.id, this.name, this.description, this.image, this.createdAt, this.updatedAt});
+  Data(
+      {this.id,
+      this.name,
+      this.description,
+      this.image,
+      this.cvv,
+      this.card_token,
+      this.user_id,
+      this.card_number,
+      this.cardholder_name,
+      this.createdAt,
+      this.updatedAt});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
+    cvv = json['cvv'];
     description = json['description'];
     image = json['image'];
+    card_token = json['card_token'];
+    user_id = json['user_id'];
+    card_number = json['card_number'];
+    cardholder_name = json['cardholder_name'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
@@ -52,6 +73,11 @@ class Data {
     data['name'] = this.name;
     data['description'] = this.description;
     data['image'] = this.image;
+    data['cvv'] = this.cvv;
+    data['card_token'] = this.card_token;
+    data['user_id'] = this.user_id;
+    data['card_number'] = this.card_number;
+    data['cardholder_name'] = this.cardholder_name;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     return data;
