@@ -1,4 +1,4 @@
-import 'dart:ui';
+// ignore_for_file: deprecated_member_use
 
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/abstract/product_log.dart';
@@ -9,7 +9,7 @@ import 'package:eight_barrels/helper/validation.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/product/product_list_provider.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
@@ -17,7 +17,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/route_manager.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
-
 
 class ProductListScreen extends StatefulWidget {
   static String tag = '/product-list-screen';
@@ -36,7 +35,8 @@ class _ProductListScreenState extends State<ProductListScreen>
   void initState() {
     Future.delayed(Duration.zero).then((value) async {
       Provider.of<ProductListProvider>(context, listen: false).fnGetView(this);
-      Provider.of<ProductListProvider>(context, listen: false).fnFetchProductList();
+      Provider.of<ProductListProvider>(context, listen: false)
+          .fnFetchProductList();
     });
     super.initState();
   }
@@ -50,7 +50,7 @@ class _ProductListScreenState extends State<ProductListScreen>
         context: context,
         isScroll: true,
         child: ChangeNotifierProvider.value(
-          value : Provider.of<ProductListProvider>(context, listen: false),
+          value: Provider.of<ProductListProvider>(context, listen: false),
           child: Container(
             height: MediaQuery.of(context).size.height * 0.85,
             child: Scaffold(
@@ -67,25 +67,34 @@ class _ProductListScreenState extends State<ProductListScreen>
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(AppLocalizations.instance.text('TXT_LBL_FILTER'), style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),),
+                              Text(
+                                AppLocalizations.instance
+                                    .text('TXT_LBL_FILTER'),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                               TextButton(
                                 onPressed: () async {
                                   Get.back();
                                   await _provider.fnOnResetFilter();
                                 },
-                                child: Text('Reset Filter', style: TextStyle(
-                                  color: CustomColor.MAIN,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),),
+                                child: Text(
+                                  'Reset Filter',
+                                  style: TextStyle(
+                                    color: CustomColor.MAIN,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Flexible(
                           child: Card(
                             color: CustomColor.GREY_LIGHT_BG,
@@ -98,52 +107,72 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text(AppLocalizations.instance.text('TXT_LBL_BRAND'), style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),),
-                                  SizedBox(height: 10,),
+                                  Text(
+                                    AppLocalizations.instance
+                                        .text('TXT_LBL_BRAND'),
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
                                   Flexible(
                                     child: Consumer<ProductListProvider>(
-                                      child: Container(),
-                                      builder: (context, provider, skeleton) {
-                                        switch (provider.brandList.data) {
-                                          case null:
-                                            return skeleton!;
-                                          default:
-                                            return GridView.builder(
-                                              physics: NeverScrollableScrollPhysics(),
-                                              shrinkWrap: true,
-                                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                                crossAxisCount: 4,
-                                                childAspectRatio: 2,
-                                              ),
-                                              itemCount: provider.brandList.data!.length,
-                                              itemBuilder: (context, index) {
-                                                var _data = provider.brandList.data![index];
-                                                return FilterChip(
-                                                  label: Text(_data.name!),
-                                                  labelStyle: TextStyle(color: Colors.white),
-                                                  backgroundColor: CustomColor.GREY_ICON,
-                                                  selectedColor: CustomColor.MAIN,
-                                                  selected: provider.selectedBrandIndex == index && provider.isBrandSelected,
-                                                  checkmarkColor: Colors.white,
-                                                  onSelected: (_) {
-                                                    provider.fnOnSelectBrand(index);
-                                                  },
-                                                );
-                                              },
-                                            );
-                                        }
-                                      }
-                                    ),
+                                        child: Container(),
+                                        builder: (context, provider, skeleton) {
+                                          switch (provider.brandList.data) {
+                                            case null:
+                                              return skeleton!;
+                                            default:
+                                              return GridView.builder(
+                                                physics:
+                                                    NeverScrollableScrollPhysics(),
+                                                shrinkWrap: true,
+                                                gridDelegate:
+                                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                                  crossAxisCount: 4,
+                                                  childAspectRatio: 2,
+                                                ),
+                                                itemCount: provider
+                                                    .brandList.data!.length,
+                                                itemBuilder: (context, index) {
+                                                  var _data = provider
+                                                      .brandList.data![index];
+                                                  return FilterChip(
+                                                    label: Text(_data.name!),
+                                                    labelStyle: TextStyle(
+                                                        color: Colors.white),
+                                                    backgroundColor:
+                                                        CustomColor.GREY_ICON,
+                                                    selectedColor:
+                                                        CustomColor.MAIN,
+                                                    selected: provider
+                                                                .selectedBrandIndex ==
+                                                            index &&
+                                                        provider
+                                                            .isBrandSelected,
+                                                    checkmarkColor:
+                                                        Colors.white,
+                                                    onSelected: (_) {
+                                                      provider.fnOnSelectBrand(
+                                                          index);
+                                                    },
+                                                  );
+                                                },
+                                              );
+                                          }
+                                        }),
                                   ),
                                 ],
                               ),
                             ),
                           ),
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Flexible(
                           child: Card(
                             color: CustomColor.GREY_LIGHT_BG,
@@ -156,11 +185,17 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text(AppLocalizations.instance.text('TXT_LBL_CATEGORY'), style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),),
-                                  SizedBox(height: 10,),
+                                  Text(
+                                    AppLocalizations.instance
+                                        .text('TXT_LBL_CATEGORY'),
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
                                   Flexible(
                                     child: Consumer<ProductListProvider>(
                                       child: Container(),
@@ -170,24 +205,36 @@ class _ProductListScreenState extends State<ProductListScreen>
                                             return skeleton!;
                                           default:
                                             return GridView.builder(
-                                              physics: NeverScrollableScrollPhysics(),
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
                                               shrinkWrap: true,
-                                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                              gridDelegate:
+                                                  SliverGridDelegateWithFixedCrossAxisCount(
                                                 crossAxisCount: 4,
                                                 childAspectRatio: 2,
                                               ),
-                                              itemCount: provider.categoryList.data!.length,
+                                              itemCount: provider
+                                                  .categoryList.data!.length,
                                               itemBuilder: (context, index) {
-                                                var _data = provider.categoryList.data![index];
+                                                var _data = provider
+                                                    .categoryList.data![index];
                                                 return FilterChip(
                                                   label: Text(_data.name!),
-                                                  labelStyle: TextStyle(color: Colors.white),
-                                                  backgroundColor: CustomColor.GREY_ICON,
-                                                  selectedColor: CustomColor.MAIN,
-                                                  selected: provider.selectedCategoryIndex == index && provider.isCategorySelected,
+                                                  labelStyle: TextStyle(
+                                                      color: Colors.white),
+                                                  backgroundColor:
+                                                      CustomColor.GREY_ICON,
+                                                  selectedColor:
+                                                      CustomColor.MAIN,
+                                                  selected: provider
+                                                              .selectedCategoryIndex ==
+                                                          index &&
+                                                      provider
+                                                          .isCategorySelected,
                                                   checkmarkColor: Colors.white,
                                                   onSelected: (_) {
-                                                    provider.fnOnSelectCategory(index);
+                                                    provider.fnOnSelectCategory(
+                                                        index);
                                                   },
                                                 );
                                               },
@@ -201,7 +248,9 @@ class _ProductListScreenState extends State<ProductListScreen>
                             ),
                           ),
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Flexible(
                           child: Card(
                             color: CustomColor.GREY_LIGHT_BG,
@@ -214,21 +263,30 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text(AppLocalizations.instance.text('TXT_LBL_YEAR'), style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),),
-                                  SizedBox(height: 10,),
+                                  Text(
+                                    AppLocalizations.instance
+                                        .text('TXT_LBL_YEAR'),
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
                                   TextFormField(
                                     controller: _provider.yearController,
                                     keyboardType: TextInputType.number,
                                     textInputAction: TextInputAction.next,
                                     maxLength: 4,
-                                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
                                     validator: validateYear,
                                     decoration: InputDecoration(
                                       counter: Offstage(),
-                                      hintText: AppLocalizations.instance.text('TXT_LBL_YEAR'),
+                                      hintText: AppLocalizations.instance
+                                          .text('TXT_LBL_YEAR'),
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: BorderSide.none,
@@ -244,7 +302,9 @@ class _ProductListScreenState extends State<ProductListScreen>
                             ),
                           ),
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Flexible(
                           child: Card(
                             color: CustomColor.GREY_LIGHT_BG,
@@ -257,78 +317,99 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text(AppLocalizations.instance.text('TXT_LBL_PRICE'), style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),),
-                                  SizedBox(height: 10,),
+                                  Text(
+                                    AppLocalizations.instance
+                                        .text('TXT_LBL_PRICE'),
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Expanded(
                                         child: TextFormField(
-                                          controller: _provider.minPriceController,
+                                          controller:
+                                              _provider.minPriceController,
                                           keyboardType: TextInputType.number,
                                           textInputAction: TextInputAction.next,
                                           inputFormatters: [
                                             MoneyInputFormatter(
-                                              thousandSeparator: ThousandSeparator.Period,
+                                              thousandSeparator:
+                                                  ThousandSeparator.Period,
                                               useSymbolPadding: false,
                                               mantissaLength: 0,
                                             ),
                                           ],
                                           decoration: InputDecoration(
-                                            hintText: AppLocalizations.instance.text('TXT_LBL_MIN_PRICE'),
+                                            hintText: AppLocalizations.instance
+                                                .text('TXT_LBL_MIN_PRICE'),
                                             border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(10),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
                                               borderSide: BorderSide.none,
                                             ),
                                             isDense: true,
                                             filled: true,
                                             fillColor: CustomColor.GREY_BG,
                                             prefixIcon: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Text('Rp'),
                                               ],
                                             ),
                                           ),
-                                          onChanged: (_) => _provider.fnOnFiltered(),
+                                          onChanged: (_) =>
+                                              _provider.fnOnFiltered(),
                                         ),
                                       ),
-                                      SizedBox(width: 10,),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
                                       Expanded(
                                         child: TextFormField(
-                                          controller: _provider.maxPriceController,
+                                          controller:
+                                              _provider.maxPriceController,
                                           keyboardType: TextInputType.number,
                                           textInputAction: TextInputAction.next,
                                           inputFormatters: [
                                             MoneyInputFormatter(
-                                              thousandSeparator: ThousandSeparator.Period,
+                                              thousandSeparator:
+                                                  ThousandSeparator.Period,
                                               useSymbolPadding: false,
                                               mantissaLength: 0,
                                             ),
                                           ],
                                           decoration: InputDecoration(
-                                            hintText: AppLocalizations.instance.text('TXT_LBL_MAX_PRICE'),
+                                            hintText: AppLocalizations.instance
+                                                .text('TXT_LBL_MAX_PRICE'),
                                             border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(10),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
                                               borderSide: BorderSide.none,
                                             ),
                                             isDense: true,
                                             filled: true,
                                             fillColor: CustomColor.GREY_BG,
                                             prefixIcon: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Text('Rp'),
                                               ],
                                             ),
                                           ),
-                                          onChanged: (_) => _provider.fnOnFiltered(),
+                                          onChanged: (_) =>
+                                              _provider.fnOnFiltered(),
                                         ),
                                       ),
                                     ],
@@ -344,27 +425,27 @@ class _ProductListScreenState extends State<ProductListScreen>
                 ),
               ),
               bottomNavigationBar: Consumer<ProductListProvider>(
-                child: SizedBox(),
-                builder: (context, provider, skeleton) {
-                  switch (provider.isFiltered) {
-                    case true:
-                      return SafeArea(
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.all(10),
-                          child: CustomWidget.roundBtn(
-                            label: 'Submit Filter',
-                            btnColor: CustomColor.MAIN,
-                            lblColor: Colors.white,
-                            function: () async => await provider.fnOnSubmitFilter(),
+                  child: SizedBox(),
+                  builder: (context, provider, skeleton) {
+                    switch (provider.isFiltered) {
+                      case true:
+                        return SafeArea(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.all(10),
+                            child: CustomWidget.roundBtn(
+                              label: 'Submit Filter',
+                              btnColor: CustomColor.MAIN,
+                              lblColor: Colors.white,
+                              function: () async =>
+                                  await provider.fnOnSubmitFilter(),
+                            ),
                           ),
-                        ),
-                      );
-                    default:
-                      return skeleton!;
-                  }
-                }
-              ),
+                        );
+                      default:
+                        return skeleton!;
+                    }
+                  }),
             ),
           ),
         ),
@@ -387,7 +468,8 @@ class _ProductListScreenState extends State<ProductListScreen>
                       case 0:
                         return CustomWidget.emptyScreen(
                           image: 'assets/images/ic_empty_product.png',
-                          title: AppLocalizations.instance.text('TXT_NO_PRODUCT'),
+                          title:
+                              AppLocalizations.instance.text('TXT_NO_PRODUCT'),
                         );
                       default:
                         return NotificationListener<ScrollNotification>(
@@ -402,9 +484,11 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 2,
                                 mainAxisSpacing: 4,
-                                itemCount: provider.productList.result?.data?.length,
+                                itemCount:
+                                    provider.productList.result?.data?.length,
                                 itemBuilder: (context, index) {
-                                  var _data = provider.productList.result?.data?[index];
+                                  var _data =
+                                      provider.productList.result?.data?[index];
                                   switch (_data?.stock) {
                                     case 0:
                                       return provider.emptyProductCard(
@@ -414,7 +498,8 @@ class _ProductListScreenState extends State<ProductListScreen>
                                         storeLog: () async => await fnStoreLog(
                                           productId: [_data.id ?? 0],
                                           categoryId: null,
-                                          notes: key.KeyHelper.CLICK_PRODUCT_KEY,
+                                          notes:
+                                              key.KeyHelper.CLICK_PRODUCT_KEY,
                                         ),
                                       );
                                     default:
@@ -424,22 +509,30 @@ class _ProductListScreenState extends State<ProductListScreen>
                                             context: context,
                                             data: _data!,
                                             index: index,
-                                            storeClickLog: () async => await fnStoreLog(
+                                            storeClickLog: () async =>
+                                                await fnStoreLog(
                                               productId: [_data.id ?? 0],
                                               categoryId: null,
-                                              notes: key.KeyHelper.CLICK_PRODUCT_KEY,
+                                              notes: key
+                                                  .KeyHelper.CLICK_PRODUCT_KEY,
                                             ),
-                                            storeCartLog: () async => await fnStoreLog(
+                                            storeCartLog: () async =>
+                                                await fnStoreLog(
                                               productId: [_data.id ?? 0],
                                               categoryId: null,
-                                              notes: key.KeyHelper.SAVE_CART_KEY,
+                                              notes:
+                                                  key.KeyHelper.SAVE_CART_KEY,
                                             ),
-                                            storeWishlistLog: () async => await fnStoreLog(
+                                            storeWishlistLog: () async =>
+                                                await fnStoreLog(
                                               productId: [_data.id ?? 0],
                                               categoryId: null,
-                                              notes: key.KeyHelper.SAVE_WISHLIST_KEY,
+                                              notes: key
+                                                  .KeyHelper.SAVE_WISHLIST_KEY,
                                             ),
-                                            onUpdateCart: () async => await baseProvider.fnGetCartCount(),
+                                            onUpdateCart: () async =>
+                                                await baseProvider
+                                                    .fnGetCartCount(),
                                           );
                                         },
                                       );
@@ -450,7 +543,11 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 height: provider.isPaginateLoad ? 50 : 0,
                                 child: Center(
                                   child: provider.isPaginateLoad
-                                      ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(CustomColor.MAIN),)
+                                      ? CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  CustomColor.MAIN),
+                                        )
                                       : SizedBox(),
                                 ),
                               ),
@@ -460,8 +557,7 @@ class _ProductListScreenState extends State<ProductListScreen>
                     }
                 }
             }
-          }
-      ),
+          }),
     );
 
     Widget _mainContent = Container(
@@ -472,11 +568,14 @@ class _ProductListScreenState extends State<ProductListScreen>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(AppLocalizations.instance.text('TXT_HEADER_CATALOG'), style: TextStyle(
-                color: CustomColor.BROWN_TXT,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),),
+              Text(
+                AppLocalizations.instance.text('TXT_HEADER_CATALOG'),
+                style: TextStyle(
+                  color: CustomColor.BROWN_TXT,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               CustomWidget.textIconBtn(
                 icon: MdiIcons.filterVariant,
                 label: 'Sort/Filter',
@@ -484,27 +583,35 @@ class _ProductListScreenState extends State<ProductListScreen>
                 icColor: CustomColor.BROWN_TXT,
                 icSize: 22,
                 fontSize: 16,
-                function: () async => await _provider.fnInitFilter()
+                function: () async => await _provider
+                    .fnInitFilter()
                     .whenComplete(() => _showFilterSheet()),
               ),
             ],
           ),
-          SizedBox(height: 5,),
+          SizedBox(
+            height: 5,
+          ),
           TextFormField(
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(50),
                 borderSide: BorderSide.none,
               ),
-              contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               hintText: AppLocalizations.instance.text('TXT_SEARCH_PRODUCT'),
               isDense: true,
               filled: true,
-              suffixIcon: Icon(Icons.search, size: 24,),
+              suffixIcon: Icon(
+                Icons.search,
+                size: 24,
+              ),
               fillColor: CustomColor.GREY_BG,
             ),
             cursorColor: CustomColor.MAIN,
-            onChanged: (value) async => await _provider.fnOnSearchProduct(value),
+            onChanged: (value) async =>
+                await _provider.fnOnSearchProduct(value),
           ),
           Consumer<ProductListProvider>(
             child: SizedBox(),
@@ -525,9 +632,12 @@ class _ProductListScreenState extends State<ProductListScreen>
                           padding: const EdgeInsets.symmetric(horizontal: 5),
                           child: Chip(
                             backgroundColor: CustomColor.BROWN_TXT,
-                            label: Text(_data.value, style: TextStyle(
-                              color: Colors.white,
-                            ),),
+                            label: Text(
+                              _data.value,
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                         );
                       },
@@ -536,7 +646,9 @@ class _ProductListScreenState extends State<ProductListScreen>
               }
             },
           ),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           _productListContent,
         ],
       ),
@@ -551,10 +663,14 @@ class _ProductListScreenState extends State<ProductListScreen>
           elevation: 0,
           actions: [
             Padding(
-              padding: const EdgeInsets.only(right: 20,),
+              padding: const EdgeInsets.only(
+                right: 20,
+              ),
               child: SizedBox(
                 width: 120,
-                child: Image.asset('assets/images/ic_logo_bu.png',),
+                child: Image.asset(
+                  'assets/images/ic_logo_bu.png',
+                ),
               ),
             ),
           ],

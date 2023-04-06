@@ -183,6 +183,7 @@ class PaymentProvider extends ChangeNotifier {
   }
 
   Future fnStoreOrderBuyNowCreditCard(context) async {
+    print('now');
     var _res = await _service.storeOrderBuyNowCreditCard(
       addressId: addressId,
       product: productOrder,
@@ -320,7 +321,7 @@ class PaymentProvider extends ChangeNotifier {
     _view!.onProgressStart();
 
     await Future.delayed(Duration(seconds: 1));
-
+    print('ini');
     if (product != null) {
       productOrder = ProductOrderModel(
         idProduct: product?.data?.id,
@@ -357,7 +358,7 @@ class PaymentProvider extends ChangeNotifier {
 
     print(_res!.result);
 
-    if (_res!.status != null) {
+    if (_res.status != null) {
       if (_res.status == true) {
         authenticationId = null;
         tokenId = null;

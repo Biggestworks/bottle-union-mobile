@@ -269,6 +269,8 @@ class PaymentService extends GetConnect {
         body: json.encode(payload),
       );
 
+      print(response.body);
+
       return json.decode(response.body);
     } on SocketException {
       rethrow;
@@ -317,10 +319,14 @@ class PaymentService extends GetConnect {
             "currency": "IDR",
             "token_id": tokenId,
           }));
+
+      print(response.body);
       return json.decode(response.body) as Map<String, dynamic>;
     } on SocketException {
+      print('exception');
       rethrow;
     } catch (e) {
+      print(e.toString());
       rethrow;
     }
   }
@@ -369,6 +375,7 @@ class PaymentService extends GetConnect {
     required String phone,
   }) async {
     try {
+      print(URLHelper.storeOrderCartUrl);
       final response = await http.post(
         Uri.parse(URLHelper.storeOrderCartUrl),
         headers: await _headersAuth(),
