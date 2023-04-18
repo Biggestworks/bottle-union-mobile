@@ -18,7 +18,7 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
   TransactionService _service = new TransactionService();
   PaymentService _paymentService = new PaymentService();
   CartService _cartService = new CartService();
-  TransactionListModel transactionList = new TransactionListModel();
+  TransactionListModel? transactionList;
   TextEditingController fromDateController = new TextEditingController();
   TextEditingController toDateController = new TextEditingController();
 
@@ -258,8 +258,8 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
   Future fnStoreCart(BuildContext context, int index) async {
     List<int> _productIdList = [];
     var _detail = await _service.getTransactionDetail(
-      regionId: transactionList.result?.data?[index].idRegion ?? 0,
-      orderId: transactionList.result?.data?[index].codeTransaction ?? '',
+      regionId: transactionList!.result?.data?[index].idRegion ?? 0,
+      orderId: transactionList!.result?.data?[index].codeTransaction ?? '',
     );
     List.generate(
         _detail?.result?.data?.length ?? 0,
@@ -267,7 +267,7 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
             _productIdList.add(_detail?.result?.data?[index].idProduct ?? 0));
 
     var _res = await _cartService.storeCart(
-      regionIds: [transactionList.result?.data?[index].idRegion ?? 0],
+      regionIds: [transactionList!.result?.data?[index].idRegion ?? 0],
       productIds: _productIdList,
     );
 
@@ -314,7 +314,7 @@ class TransactionProvider extends ChangeNotifier with PaginationInterface {
       page: super.currentPage.toString(),
     );
 
-    transactionList.result!.data!.addAll(_list!.result!.data!);
+    transactionList!.result!.data!.addAll(_list!.result!.data!);
 
     if (_list.result!.data!.length == 0) {
       onPaginationLoadFinish();

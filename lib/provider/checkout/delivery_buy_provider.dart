@@ -130,9 +130,10 @@ class DeliveryBuyProvider extends ChangeNotifier {
     _view!.onProgressStart();
 
     courierList = (await _deliveryService.getCourierList(
-      provinceId: selectedProvinceId ?? 0,
+      idRegion: selectedRegionId ?? 0,
+      idAddress: selectedAddress != null ? selectedAddress!.id! : 0,
       destination: destination ?? 0,
-      idAddress: int.parse(selectedAddress!.id.toString()),
+      provinceId: int.parse(selectedAddress!.provinceCode.toString()),
       weight: _totalWeight,
     ))!;
     _view!.onProgressFinish();

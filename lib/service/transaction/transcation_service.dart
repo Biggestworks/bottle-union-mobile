@@ -29,7 +29,7 @@ class TransactionService extends GetConnect {
     required int? status,
     required String? page,
   }) async {
-    TransactionListModel _model = new TransactionListModel();
+    TransactionListModel _model;
 
     final Map<String, dynamic> _data = {
       "start_date_buy": startDate ?? null,
@@ -46,12 +46,14 @@ class TransactionService extends GetConnect {
         headers: await _headersAuth(),
       );
 
-      _model = TransactionListModel.fromJson(_response.body);
+      print(_response.body);
+
+      return TransactionListModel.fromJson(_response.body);
     } catch (e) {
-      print(e);
+      rethrow;
     }
 
-    return _model;
+    // return _model;
   }
 
   Future<TransactionDetailModel?> getTransactionDetail(
@@ -69,6 +71,8 @@ class TransactionService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
+
+      print(_response.body);
 
       _model = TransactionDetailModel.fromJson(_response.body);
     } catch (e) {

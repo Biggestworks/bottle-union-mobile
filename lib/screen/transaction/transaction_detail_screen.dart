@@ -20,6 +20,7 @@ import 'package:get/route_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TransactionDetailScreen extends StatefulWidget {
   static String tag = '/transaction-detail-screen';
@@ -861,6 +862,170 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen>
                   ),
                 ),
               ),
+              const SizedBox(
+                height: 10,
+              ),
+              if (_data!.gosend != null && _data.gosend!.isNotEmpty)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Gosend Information",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Card(
+                      color: CustomColor.GREY_LIGHT_BG,
+                      elevation: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  width: 130,
+                                  child: Text("Type "),
+                                ),
+                                Flexible(
+                                  child: Text(
+                                      _data.gosend!.first.bookingType
+                                          .toString(),
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                      )),
+                                ),
+                              ],
+                            ),
+                            Divider(
+                              height: 20,
+                              thickness: 1,
+                            ),
+                            if (_data.gosend != null &&
+                                _data.gosend!.first.status != null)
+                              Row(
+                                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    width: 130,
+                                    child: Text("Order Status"),
+                                  ),
+                                  Flexible(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          _data.gosend!.first.status.toString(),
+                                          style: TextStyle(
+                                            color: _data.gosend!.first.status ==
+                                                    "Completed"
+                                                ? Colors.green
+                                                : _data.gosend!.first.status ==
+                                                        "Cancelled"
+                                                    ? Colors.red
+                                                    : Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            if (_data.gosend != null &&
+                                _data.gosend!.first.driverName != null)
+                              Row(
+                                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    width: 130,
+                                    child: Text("Driver Name"),
+                                  ),
+                                  Flexible(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          _data.gosend!.first.driverName
+                                              .toString(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            if (_data.gosend != null &&
+                                _data.gosend!.first.driverPhone != null)
+                              Container(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: Row(
+                                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      width: 130,
+                                      child: Text("Phone Number"),
+                                    ),
+                                    Flexible(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            _data.gosend!.first.driverPhone
+                                                .toString(),
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            if (_data.gosend != null &&
+                                _data.gosend!.first.vehicleNumber != null)
+                              Row(
+                                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    width: 130,
+                                    child: Text("Vehicle Number"),
+                                  ),
+                                  Flexible(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          _data.gosend!.first.vehicleNumber
+                                              .toString(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
             ],
           );
         },
@@ -1150,9 +1315,10 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen>
                 radius: 8,
                 fontSize: 16,
                 function: () {
-                  if (_provider.transactionDetail.result!.courierName!
-                      .toLowerCase()
-                      .contains("gosend")) {
+                  if (_provider.transactionDetail.result!.gosend != null) {
+                    launchUrl(Uri.parse(_provider
+                        .transactionDetail.result!.gosend!.first.liveTrackingUrl
+                        .toString()));
                   } else {
                     Get.toNamed(TrackOrderScreen.tag,
                         arguments: TrackOrderScreen(

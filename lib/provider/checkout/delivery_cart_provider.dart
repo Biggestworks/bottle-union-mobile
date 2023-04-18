@@ -148,12 +148,13 @@ class DeliveryCartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future fnFetchCourierList(int provinceId) async {
+  Future fnFetchCourierList(int regionId) async {
     _view!.onProgressStart();
     courierList = (await _deliveryService.getCourierList(
-      provinceId: provinceId,
+      idRegion: regionId,
+      idAddress: selectedAddress != null ? selectedAddress!.id! : 0,
       destination: destination ?? 0,
-      idAddress: int.parse(selectedAddress!.id.toString()),
+      provinceId: int.parse(selectedAddress!.provinceCode.toString()),
       weight: _totalWeight,
     ))!;
     _view!.onProgressFinish();

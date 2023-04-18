@@ -50,6 +50,7 @@ class DeliveryService extends GetConnect {
     required int provinceId,
     required int destination,
     required int idAddress,
+    required int idRegion,
     required double weight,
   }) async {
     CourierListModel _model = new CourierListModel();
@@ -58,9 +59,11 @@ class DeliveryService extends GetConnect {
       "id_province": provinceId.toString(),
       "destination": destination.toString(),
       "id_address": idAddress.toString(),
+      "id_region": idRegion.toString(),
       "weight": weight
     };
-    print(json.encode(_data));
+
+    print(_data);
 
     try {
       http.Response _response = await http.post(

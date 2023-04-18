@@ -76,106 +76,139 @@ class _DeliveryBuyScreenState extends State<DeliveryBuyScreen>
       return CustomWidget.showSheet(
         context: context,
         isScroll: true,
-        child: ChangeNotifierProvider.value(
-          value: Provider.of<DeliveryBuyProvider>(context, listen: false),
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.6,
-            padding: EdgeInsets.symmetric(vertical: 10),
-            child: Consumer<DeliveryBuyProvider>(
-              child: CustomWidget.showShimmerListView(height: 200),
-              builder: (context, provider, skeleton) {
-                switch (provider.addressList.data) {
-                  case null:
-                    return skeleton!;
-                  default:
-                    switch (provider.addressList.data?.length) {
-                      case 0:
-                        return CustomWidget.emptyScreen(
-                          image: 'assets/images/ic_no_data.png',
-                          title:
-                              AppLocalizations.instance.text('TXT_NO_ADDRESS'),
-                          size: 180,
-                          icColor: CustomColor.GREY_TXT,
-                        );
-                      default:
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: provider.addressList.data?.length,
-                          itemBuilder: (context, index) {
-                            var _data = provider.addressList.data?[index];
-                            return GestureDetector(
-                              onTap: () async => await provider
-                                  .fnOnSelectAddress(context, _data!.id!),
-                              child: Card(
-                                elevation: 4,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadiusDirectional.circular(10),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(_data?.receiver ?? '-'),
-                                          if (_data?.label != null)
-                                            Text(
-                                              ' (${_data?.label})',
-                                              style: TextStyle(
-                                                color: CustomColor.MAIN,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(_data?.phone ?? '-'),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        _data?.address ?? '-',
-                                        style: TextStyle(
-                                          color: CustomColor.GREY_TXT,
-                                        ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        _data?.cityName ?? '-',
-                                        style: TextStyle(
-                                          color: CustomColor.GREY_TXT,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        _data?.provinceName ?? '-',
-                                        style: TextStyle(
-                                          color: CustomColor.GREY_TXT,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                    }
-                }
-              },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(
+              height: 10,
             ),
-          ),
+            Container(
+              margin: const EdgeInsets.only(right: 10),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blueAccent,
+                ),
+                onPressed: () async => await Get.toNamed(AddAddressScreen.tag,
+                        arguments: AddAddressScreen())!
+                    .then((value) async {
+                  if (value == true) await _provider.fnFetchAddressList();
+                }),
+                child: Text(
+                  "Add +",
+                ),
+              ),
+            ),
+            ChangeNotifierProvider.value(
+              value: Provider.of<DeliveryBuyProvider>(context, listen: false),
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.6,
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                child: Consumer<DeliveryBuyProvider>(
+                  child: CustomWidget.showShimmerListView(height: 200),
+                  builder: (context, provider, skeleton) {
+                    switch (provider.addressList.data) {
+                      case null:
+                        return skeleton!;
+                      default:
+                        switch (provider.addressList.data?.length) {
+                          case 0:
+                            return CustomWidget.emptyScreen(
+                              image: 'assets/images/ic_no_data.png',
+                              title: AppLocalizations.instance
+                                  .text('TXT_NO_ADDRESS'),
+                              size: 180,
+                              icColor: CustomColor.GREY_TXT,
+                            );
+                          default:
+                            return Column(
+                              children: [
+                                ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: provider.addressList.data?.length,
+                                  itemBuilder: (context, index) {
+                                    var _data =
+                                        provider.addressList.data?[index];
+                                    return GestureDetector(
+                                      onTap: () async =>
+                                          await provider.fnOnSelectAddress(
+                                              context, _data!.id!),
+                                      child: Card(
+                                        elevation: 4,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadiusDirectional.circular(
+                                                  10),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(_data?.receiver ?? '-'),
+                                                  if (_data?.label != null)
+                                                    Text(
+                                                      ' (${_data?.label})',
+                                                      style: TextStyle(
+                                                        color: CustomColor.MAIN,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(_data?.phone ?? '-'),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(
+                                                _data?.address ?? '-',
+                                                style: TextStyle(
+                                                  color: CustomColor.GREY_TXT,
+                                                ),
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(
+                                                _data?.cityName ?? '-',
+                                                style: TextStyle(
+                                                  color: CustomColor.GREY_TXT,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(
+                                                _data?.provinceName ?? '-',
+                                                style: TextStyle(
+                                                  color: CustomColor.GREY_TXT,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            );
+                        }
+                    }
+                  },
+                ),
+              ),
+            ),
+          ],
         ),
       );
     }

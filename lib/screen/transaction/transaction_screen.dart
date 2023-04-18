@@ -17,6 +17,7 @@ import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TransactionScreen extends StatefulWidget {
   static String tag = '/transaction-screen';
@@ -357,11 +358,11 @@ class _TransactionScreenState extends State<TransactionScreen>
               case true:
                 return skeleton!;
               default:
-                switch (provider.transactionList.result) {
+                switch (provider.transactionList!.result) {
                   case null:
                     return skeleton!;
                   default:
-                    switch (provider.transactionList.result?.data?.length) {
+                    switch (provider.transactionList!.result?.data?.length) {
                       case 0:
                         return CustomWidget.emptyScreen(
                           image: 'assets/images/ic_empty_2.png',
@@ -382,10 +383,10 @@ class _TransactionScreenState extends State<TransactionScreen>
                                   physics: NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   itemCount: provider
-                                      .transactionList.result?.data?.length,
+                                      .transactionList!.result?.data?.length,
                                   itemBuilder: (context, index) {
                                     var _data = provider
-                                        .transactionList.result?.data?[index];
+                                        .transactionList!.result?.data?[index];
                                     return InkWell(
                                       onTap: () => Get.toNamed(
                                           TransactionDetailScreen.tag,
@@ -446,11 +447,14 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                             ),
                                                           ),
                                                           Text(
-                                                            DateFormat(
-                                                                    'dd MMMM yyyy')
-                                                                .format(DateTime.parse(_data
-                                                                        ?.orderedAt ??
-                                                                    DateTime.now()
+                                                            DateFormat('dd MMMM yyyy').format(DateTime
+                                                                .parse(_data !=
+                                                                        null
+                                                                    ? _data!
+                                                                        .orderedAt
+                                                                        .toString()
+                                                                    : DateTime
+                                                                            .now()
                                                                         .toString())),
                                                             style: TextStyle(
                                                               color: CustomColor
@@ -613,9 +617,12 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                                     ?.codeTransaction,
                                                                 orderDate: DateFormat(
                                                                         'dd MMMM yyyy')
-                                                                    .format(DateTime.parse(_data
-                                                                            ?.orderedAt ??
-                                                                        DateTime.now()
+                                                                    .format(DateTime.parse(_data !=
+                                                                            null
+                                                                        ? _data!
+                                                                            .orderedAt
+                                                                            .toString()
+                                                                        : DateTime.now()
                                                                             .toString())),
                                                                 totalPay: FormatterHelper
                                                                     .moneyFormatter(
@@ -624,15 +631,21 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                               )),
                                                         ),
                                                       )
+                                                    else if (_data
+                                                            ?.paymentMethod ==
+                                                        'ovo')
+                                                      Container(
+                                                        child: Text(''),
+                                                      )
                                                     else
 
                                                       /// Gopay
                                                       /// provider
                                                       provider
-                                                                  .transactionList
+                                                                  .transactionList!
                                                                   .result
                                                                   ?.data?[index]
-                                                                  .deepLink !=
+                                                                  .deeplink !=
                                                               null
                                                           ? Container(
                                                               height: 30,
@@ -658,7 +671,7 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                                       function:
                                                                           () async {
                                                                         final _url =
-                                                                            provider.transactionList.result?.data?[index].deepLink ??
+                                                                            provider.transactionList!.result?.data?[index].deeplink ??
                                                                                 '';
                                                                         await LaunchUrlHelper.launchUrl(
                                                                             context:
@@ -667,8 +680,8 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                                       }),
                                                             )
                                                           : const SizedBox()
-                                                  else if (_data
-                                                          ?.idStatusPayment ==
+                                                  else if (_data!
+                                                          .idStatusPayment ==
                                                       6)
 
                                                     /// Complete
@@ -712,16 +725,29 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                         fontSize: 12,
                                                         radius: 5,
                                                         isBold: true,
-                                                        function: () => Get.toNamed(
-                                                            TrackOrderScreen
-                                                                .tag,
-                                                            arguments:
-                                                                TrackOrderScreen(
-                                                              orderId: _data
-                                                                  ?.codeTransaction,
-                                                              regionId: _data
-                                                                  ?.idRegion,
-                                                            )),
+                                                        function: () {
+                                                          if (_data.gosend !=
+                                                                  null &&
+                                                              _data.gosend!
+                                                                  .isNotEmpty) {
+                                                            launchUrl(Uri.parse(_data
+                                                                .gosend!
+                                                                .first
+                                                                .liveTrackingUrl
+                                                                .toString()));
+                                                          } else {
+                                                            Get.toNamed(
+                                                                TrackOrderScreen
+                                                                    .tag,
+                                                                arguments:
+                                                                    TrackOrderScreen(
+                                                                  orderId: _data
+                                                                      .codeTransaction,
+                                                                  regionId: _data
+                                                                      .idRegion,
+                                                                ));
+                                                          }
+                                                        },
                                                       ),
                                                     ),
                                                 ],

@@ -25,6 +25,7 @@ class TransactionDetailModel {
 
 class Result {
   int? idRegion;
+  List<Gosend>? gosend;
   String? region;
   String? codeTransaction;
   String? vaNumber;
@@ -62,6 +63,7 @@ class Result {
   Result.fromJson(Map<String, dynamic> json) {
     idRegion = json['id_region'];
     region = json['region'];
+    gosend = List<Gosend>.from(json["gosend"].map((x) => Gosend.fromJson(x)));
     codeTransaction = json['code_transaction'];
     vaNumber = json['va_number'];
     deepLink = json['deeplink'];
@@ -109,6 +111,127 @@ class Result {
     }
     return data;
   }
+}
+
+class Gosend {
+  Gosend({
+    this.id,
+    this.orderNo,
+    this.status,
+    this.driverId,
+    this.driverName,
+    this.driverPhone,
+    this.driverPhoto,
+    this.vehicleNumber,
+    this.totalDiscount,
+    this.totalPrice,
+    this.receiverName,
+    this.orderCreatedTime,
+    this.orderDispatchTime,
+    this.orderArrivalTime,
+    this.orderClosedTime,
+    this.orderCancelledTime,
+    this.sellerAddressName,
+    this.sellerAddressDetail,
+    this.buyerAddressName,
+    this.buyerAddressDetail,
+    this.bookingType,
+    this.cancelDescription,
+    this.storeOrderId,
+    this.liveTrackingUrl,
+    this.bookingStatus,
+  });
+
+  int? id;
+  String? orderNo;
+  String? status;
+  int? driverId;
+  String? driverName;
+  String? driverPhone;
+  String? driverPhoto;
+  String? vehicleNumber;
+  int? totalDiscount;
+  int? totalPrice;
+  String? receiverName;
+  DateTime? orderCreatedTime;
+  DateTime? orderDispatchTime;
+  DateTime? orderArrivalTime;
+  DateTime? orderClosedTime;
+  dynamic? orderCancelledTime;
+  String? sellerAddressName;
+  String? sellerAddressDetail;
+  String? buyerAddressName;
+  String? buyerAddressDetail;
+  String? bookingType;
+  dynamic? cancelDescription;
+  String? storeOrderId;
+  String? liveTrackingUrl;
+
+  String? bookingStatus;
+
+  factory Gosend.fromJson(Map<String, dynamic> json) => Gosend(
+        id: json["id"],
+        orderNo: json["orderNo"],
+        status: json["status"],
+        driverId: json["driverId"],
+        driverName: json["driverName"],
+        driverPhone: json["driverPhone"],
+        driverPhoto: json["driverPhoto"],
+        vehicleNumber: json["vehicleNumber"],
+        totalDiscount: json["totalDiscount"],
+        totalPrice: json["totalPrice"],
+        receiverName: json["receiverName"],
+        orderCreatedTime: DateTime.parse(json["orderCreatedTime"]),
+        orderDispatchTime: json["orderDispatchTime"] == null
+            ? null
+            : DateTime.parse(json["orderDispatchTime"]),
+        orderArrivalTime: json["orderArrivalTime"] == null
+            ? null
+            : DateTime.parse(json["orderArrivalTime"]),
+        orderClosedTime: json["orderClosedTime"] == null
+            ? null
+            : DateTime.parse(json["orderClosedTime"]),
+        orderCancelledTime: json["orderCancelledTime"],
+        sellerAddressName: json["sellerAddressName"],
+        sellerAddressDetail: json["sellerAddressDetail"],
+        buyerAddressName: json["buyerAddressName"],
+        buyerAddressDetail: json["buyerAddressDetail"],
+        bookingType: json["bookingType"],
+        cancelDescription: json["cancelDescription"],
+        storeOrderId: json["storeOrderId"],
+        liveTrackingUrl: json["liveTrackingUrl"],
+        bookingStatus: json["bookingStatus"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "orderNo": orderNo,
+        "status": status,
+        "driverId": driverId,
+        "driverName": driverName,
+        "driverPhone": driverPhone,
+        "driverPhoto": driverPhoto,
+        "vehicleNumber": vehicleNumber,
+        "totalDiscount": totalDiscount,
+        "totalPrice": totalPrice,
+        "receiverName": receiverName,
+        "orderCreatedTime": orderCreatedTime != null
+            ? orderCreatedTime!.toIso8601String()
+            : null,
+        "orderDispatchTime": orderDispatchTime?.toIso8601String(),
+        "orderArrivalTime": orderArrivalTime?.toIso8601String(),
+        "orderClosedTime": orderClosedTime?.toIso8601String(),
+        "orderCancelledTime": orderCancelledTime,
+        "sellerAddressName": sellerAddressName,
+        "sellerAddressDetail": sellerAddressDetail,
+        "buyerAddressName": buyerAddressName,
+        "buyerAddressDetail": buyerAddressDetail,
+        "bookingType": bookingType,
+        "cancelDescription": cancelDescription,
+        "storeOrderId": storeOrderId,
+        "liveTrackingUrl": liveTrackingUrl,
+        "bookingStatus": bookingStatus,
+      };
 }
 
 class Data {

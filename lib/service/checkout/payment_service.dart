@@ -97,7 +97,7 @@ class PaymentService extends GetConnect {
       "payment_method": paymentMethod,
       "token_id": tokenId,
       "authentication_id": authenticationId,
-      "card_cvn": '123',
+      "card_cvn": cvn,
     };
 
     try {
@@ -375,6 +375,7 @@ class PaymentService extends GetConnect {
     required String phone,
   }) async {
     try {
+      print(deliveries);
       print(URLHelper.storeOrderCartUrl);
       final response = await http.post(
         Uri.parse(URLHelper.storeOrderCartUrl),
