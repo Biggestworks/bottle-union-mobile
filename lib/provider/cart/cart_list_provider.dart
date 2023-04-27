@@ -15,7 +15,7 @@ class CartListProvider extends ChangeNotifier with PaginationInterface {
   WishlistService _wishlistService = new WishlistService();
   CartListModel cartList = new CartListModel();
   CartTotalModel cartTotalList = new CartTotalModel();
-  
+
   LoadingView? _view;
 
   bool isPaginateLoad = false;
@@ -28,7 +28,7 @@ class CartListProvider extends ChangeNotifier with PaginationInterface {
   fnGetView(LoadingView view) {
     this._view = view;
   }
-  
+
   Future fnFetchCartList() async {
     _view!.onProgressStart();
 
@@ -43,9 +43,7 @@ class CartListProvider extends ChangeNotifier with PaginationInterface {
   }
 
   Future fnDeleteCart(BuildContext context, int id) async {
-    var _res = await _service.deleteCart(
-        idList: [id]
-    );
+    var _res = await _service.deleteCart(idList: [id]);
 
     if (_res!.status != null) {
       if (_res.status == true) {
@@ -53,7 +51,8 @@ class CartListProvider extends ChangeNotifier with PaginationInterface {
         await fnGetTotalPay();
         await CustomWidget.showSnackBar(
           context: context,
-          content: Text(AppLocalizations.instance.text('TXT_CART_DELETE_SUCCESS')),
+          content:
+              Text(AppLocalizations.instance.text('TXT_CART_DELETE_SUCCESS')),
         );
       } else {
         await CustomWidget.showSnackBar(
@@ -75,7 +74,8 @@ class CartListProvider extends ChangeNotifier with PaginationInterface {
     if (cartTotalList.status != null) {
       if (cartTotalList.status == true) {
         totalPay = cartTotalList.total ?? 0;
-        totalCart = (cartTotalList.result != null ? cartTotalList.result?.length : 0)!;
+        totalCart =
+            (cartTotalList.result != null ? cartTotalList.result!.length : 0)!;
       }
     }
     notifyListeners();
@@ -104,11 +104,10 @@ class CartListProvider extends ChangeNotifier with PaginationInterface {
     notifyListeners();
   }
 
-  Future fnStoreWishlist(BuildContext context, int productId, int regionId) async {
+  Future fnStoreWishlist(
+      BuildContext context, int productId, int regionId) async {
     var _res = await _wishlistService.storeWishlist(
-      productId: productId,
-      regionId: regionId
-    );
+        productId: productId, regionId: regionId);
 
     if (_res!.status != null) {
       if (_res.status == true && _res.message == 'Save Success') {
@@ -122,13 +121,20 @@ class CartListProvider extends ChangeNotifier with PaginationInterface {
             onPressed: () => Get.toNamed(WishListScreen.tag),
           ),
         );
-      } else if (_res.status == true && _res.message == 'Success remove wishlist') {
-        await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_WISHLIST_DELETE_SUCCESS')));
+      } else if (_res.status == true &&
+          _res.message == 'Success remove wishlist') {
+        await CustomWidget.showSnackBar(
+            context: context,
+            content: Text(
+                AppLocalizations.instance.text('TXT_WISHLIST_DELETE_SUCCESS')));
       } else {
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
+        await CustomWidget.showSnackBar(
+            context: context, content: Text(_res.message.toString()));
       }
     } else {
-      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+      await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
   }
 
@@ -160,5 +166,4 @@ class CartListProvider extends ChangeNotifier with PaginationInterface {
     isPaginateLoad = true;
     notifyListeners();
   }
-
 }
