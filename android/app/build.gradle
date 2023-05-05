@@ -73,18 +73,9 @@ flutter {
     source '../..'
 }
 
-// repositories {
-//     maven {
-//         url "https://cardinalcommerce.bintray.com/android"
-//         credentials {
-//             username 'cards@cardinalcommerce'
-//             password 'd2358b841891b65b0610f7d51361c13bf4915350'
-//         }
-//     }
-// }
 
 dependencies {
-    implementation 'com.xendit:xendit-android:3.0.0-beta'
+
     implementation platform('com.google.firebase:firebase-bom:29.0.4')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
