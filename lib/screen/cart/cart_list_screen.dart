@@ -77,406 +77,424 @@ class _CartListScreenState extends State<CartListScreen>
                       default:
                         return NotificationListener<ScrollNotification>(
                           onNotification: provider.fnOnNotification,
-                          child: ListView(
-                            shrinkWrap: true,
-                            physics: BouncingScrollPhysics(),
-                            children: [
-                              ListView.builder(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount:
-                                    provider.cartList.result!.data!.length,
-                                itemBuilder: (context, index) {
-                                  var _data =
-                                      provider.cartList.result!.data![index];
-                                  return InkWell(
-                                    onTap: () async => await Get.toNamed(
-                                      ProductDetailScreen.tag,
-                                      arguments: ProductDetailScreen(
-                                        productId: _data.idProduct,
-                                      ),
-                                    )!
-                                        .then(
-                                            (_) => provider.fnFetchCartList()),
-                                    child: Card(
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      margin: EdgeInsets.symmetric(vertical: 5),
-                                      child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            10, 10, 10, 2),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Checkbox(
-                                              value: _data.isSelected == 1
-                                                  ? true
-                                                  : false,
-                                              onChanged: (value) =>
-                                                  provider.fnSelectCart(
-                                                      _data.id!, value!),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
+                          child: RefreshIndicator(
+                            onRefresh: () async {
+                              provider.fnGetView(this);
+                              provider.fnFetchCartList();
+                              provider.fnGetTotalPay();
+                            },
+                            child: ListView(
+                              shrinkWrap: true,
+                              physics: BouncingScrollPhysics(),
+                              children: [
+                                ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount:
+                                      provider.cartList.result!.data!.length,
+                                  itemBuilder: (context, index) {
+                                    var _data =
+                                        provider.cartList.result!.data![index];
+                                    return InkWell(
+                                      onTap: () async => await Get.toNamed(
+                                        ProductDetailScreen.tag,
+                                        arguments: ProductDetailScreen(
+                                          productId: _data.idProduct,
+                                        ),
+                                      )!
+                                          .then((_) =>
+                                              provider.fnFetchCartList()),
+                                      child: Card(
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        margin:
+                                            EdgeInsets.symmetric(vertical: 5),
+                                        child: Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              10, 10, 10, 2),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Checkbox(
+                                                value: _data.isSelected == 1
+                                                    ? true
+                                                    : false,
+                                                onChanged: (value) =>
+                                                    provider.fnSelectCart(
+                                                        _data.id!, value!),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                ),
+                                                visualDensity:
+                                                    VisualDensity.compact,
+                                                activeColor: CustomColor.MAIN,
                                               ),
-                                              visualDensity:
-                                                  VisualDensity.compact,
-                                              activeColor: CustomColor.MAIN,
-                                            ),
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Container(
-                                                        width: 80,
-                                                        height: 80,
-                                                        child: ClipRRect(
-                                                          child: CustomWidget
-                                                              .networkImg(
-                                                            context,
-                                                            _data.product
-                                                                ?.image1,
-                                                            fit: BoxFit.cover,
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                          width: 80,
+                                                          height: 80,
+                                                          child: ClipRRect(
+                                                            child: CustomWidget
+                                                                .networkImg(
+                                                              context,
+                                                              _data.product
+                                                                  ?.image1,
+                                                              fit: BoxFit.cover,
+                                                            ),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
                                                           ),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
                                                         ),
-                                                      ),
-                                                      Flexible(
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  horizontal:
-                                                                      10),
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Text(
-                                                                _data.product
-                                                                        ?.name ??
-                                                                    '-',
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis),
-                                                              ),
-                                                              SizedBox(
-                                                                height: 5,
-                                                              ),
-                                                              if ((_data.product
-                                                                          ?.salePrice ??
-                                                                      0) !=
-                                                                  (_data.product
-                                                                          ?.regularPrice ??
-                                                                      0))
-                                                                Row(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  children: [
-                                                                    Text(
-                                                                      FormatterHelper.moneyFormatter(
-                                                                          _data.product?.salePrice ??
-                                                                              0),
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
-                                                                        color: CustomColor
-                                                                            .MAIN_TXT,
+                                                        Flexible(
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        10),
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  _data.product
+                                                                          ?.name ??
+                                                                      '-',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 5,
+                                                                ),
+                                                                if ((_data.product
+                                                                            ?.salePrice ??
+                                                                        0) !=
+                                                                    (_data.product
+                                                                            ?.regularPrice ??
+                                                                        0))
+                                                                  Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
+                                                                    children: [
+                                                                      Text(
+                                                                        FormatterHelper.moneyFormatter(
+                                                                            _data.product?.salePrice ??
+                                                                                0),
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          color:
+                                                                              CustomColor.MAIN_TXT,
+                                                                        ),
                                                                       ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            5,
+                                                                      ),
+                                                                      Flexible(
+                                                                        child:
+                                                                            Text(
+                                                                          FormatterHelper.moneyFormatter(_data.product?.regularPrice ??
+                                                                              0),
+                                                                          style:
+                                                                              TextStyle(
+                                                                            color:
+                                                                                CustomColor.GREY_TXT,
+                                                                            fontSize:
+                                                                                14,
+                                                                            decoration:
+                                                                                TextDecoration.lineThrough,
+                                                                            decorationColor:
+                                                                                CustomColor.GREY_TXT,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  )
+                                                                else
+                                                                  Text(
+                                                                    FormatterHelper.moneyFormatter(_data
+                                                                        .product
+                                                                        ?.regularPrice),
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color: CustomColor
+                                                                          .MAIN_TXT,
+                                                                    ),
+                                                                  ),
+                                                                SizedBox(
+                                                                  height: 5,
+                                                                ),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .end,
+                                                                  children: [
+                                                                    Icon(
+                                                                      MdiIcons
+                                                                          .storeCheck,
+                                                                      size: 20,
+                                                                      color: CustomColor
+                                                                          .MAIN,
                                                                     ),
                                                                     SizedBox(
                                                                       width: 5,
                                                                     ),
-                                                                    Flexible(
-                                                                      child:
-                                                                          Text(
-                                                                        FormatterHelper.moneyFormatter(
-                                                                            _data.product?.regularPrice ??
-                                                                                0),
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color:
-                                                                              CustomColor.GREY_TXT,
-                                                                          fontSize:
-                                                                              14,
-                                                                          decoration:
-                                                                              TextDecoration.lineThrough,
-                                                                          decorationColor:
-                                                                              CustomColor.GREY_TXT,
-                                                                        ),
+                                                                    Text(
+                                                                      '${_data.region?.name ?? '-'}',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: CustomColor
+                                                                            .GREY_TXT,
                                                                       ),
+                                                                      maxLines:
+                                                                          2,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
                                                                     ),
                                                                   ],
-                                                                )
-                                                              else
-                                                                Text(
-                                                                  FormatterHelper
-                                                                      .moneyFormatter(_data
-                                                                          .product
-                                                                          ?.regularPrice),
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: CustomColor
-                                                                        .MAIN_TXT,
-                                                                  ),
                                                                 ),
-                                                              SizedBox(
-                                                                height: 5,
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        IconButton(
+                                                          onPressed: () async {
+                                                            CustomWidget
+                                                                .showCartConfirmationDialog(
+                                                              context,
+                                                              desc: AppLocalizations
+                                                                  .instance
+                                                                  .text(
+                                                                      'TXT_DELETE_CART_INFO'),
+                                                              fnDeleteCart:
+                                                                  () async {
+                                                                Get.back();
+                                                                await fnStoreLog(
+                                                                  productId: [
+                                                                    _data.id ??
+                                                                        0
+                                                                  ],
+                                                                  categoryId:
+                                                                      null,
+                                                                  notes: KeyHelper
+                                                                      .REMOVE_CART_KEY,
+                                                                );
+                                                                await provider
+                                                                    .fnDeleteCart(
+                                                                        _provider
+                                                                            .scaffoldKey
+                                                                            .currentContext!,
+                                                                        _data
+                                                                            .id!)
+                                                                    .then((_) async =>
+                                                                        await _baseProvider
+                                                                            .fnGetCartCount());
+                                                              },
+                                                              fnStoreWishlist:
+                                                                  () async {
+                                                                Get.back();
+                                                                await fnStoreLog(
+                                                                  productId: [
+                                                                    _data.id ??
+                                                                        0
+                                                                  ],
+                                                                  categoryId:
+                                                                      null,
+                                                                  notes: KeyHelper
+                                                                      .SAVE_WISHLIST_KEY,
+                                                                );
+                                                                await provider
+                                                                    .fnDeleteCart(
+                                                                        _provider
+                                                                            .scaffoldKey
+                                                                            .currentContext!,
+                                                                        _data.id ??
+                                                                            0)
+                                                                    .then(
+                                                                        (_) async {
+                                                                  await provider.fnStoreWishlist(
+                                                                      _provider
+                                                                          .scaffoldKey
+                                                                          .currentContext!,
+                                                                      _data.idProduct ??
+                                                                          0,
+                                                                      _data.idRegion ??
+                                                                          0);
+                                                                  await _baseProvider
+                                                                      .fnGetCartCount();
+                                                                });
+                                                              },
+                                                            );
+                                                          },
+                                                          icon: Icon(
+                                                            FontAwesomeIcons
+                                                                .trashCan,
+                                                            size: 20,
+                                                            color: CustomColor
+                                                                .GREY_TXT,
+                                                          ),
+                                                          visualDensity:
+                                                              VisualDensity
+                                                                  .compact,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5),
+                                                            border: Border.all(
+                                                              color: CustomColor
+                                                                  .GREY_ICON,
+                                                            ),
+                                                          ),
+                                                          width: 100,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              Expanded(
+                                                                child:
+                                                                    IconButton(
+                                                                  onPressed: () async => await provider
+                                                                      .fnUpdateCartQty(
+                                                                          _data
+                                                                              .id!,
+                                                                          'decrease')
+                                                                      .then(
+                                                                          (_) async {
+                                                                    if (_data
+                                                                            .qty ==
+                                                                        1)
+                                                                      await _baseProvider
+                                                                          .fnGetCartCount();
+                                                                  }),
+                                                                  icon: Icon(
+                                                                    Icons
+                                                                        .remove,
+                                                                    size: 18,
+                                                                    color: _data.qty !=
+                                                                            1
+                                                                        ? Colors
+                                                                            .green
+                                                                        : CustomColor
+                                                                            .GREY_ICON,
+                                                                  ),
+                                                                  padding: EdgeInsets
+                                                                      .symmetric(
+                                                                          vertical:
+                                                                              2),
+                                                                  constraints:
+                                                                      BoxConstraints(),
+                                                                ),
                                                               ),
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .start,
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .end,
-                                                                children: [
-                                                                  Icon(
-                                                                    MdiIcons
-                                                                        .storeCheck,
-                                                                    size: 20,
-                                                                    color:
-                                                                        CustomColor
-                                                                            .MAIN,
+                                                              Text(
+                                                                _data.qty
+                                                                    .toString(),
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 12,
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                child:
+                                                                    IconButton(
+                                                                  onPressed: () async =>
+                                                                      await provider.fnUpdateCartQty(
+                                                                          _data
+                                                                              .id!,
+                                                                          'increase'),
+                                                                  icon: Icon(
+                                                                    Icons.add,
+                                                                    size: 18,
+                                                                    color: Colors
+                                                                        .green,
                                                                   ),
-                                                                  SizedBox(
-                                                                    width: 5,
-                                                                  ),
-                                                                  Text(
-                                                                    '${_data.region?.name ?? '-'}',
-                                                                    style:
-                                                                        TextStyle(
-                                                                      color: CustomColor
-                                                                          .GREY_TXT,
-                                                                    ),
-                                                                    maxLines: 2,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                  ),
-                                                                ],
+                                                                  padding: EdgeInsets
+                                                                      .symmetric(
+                                                                          vertical:
+                                                                              2),
+                                                                  constraints:
+                                                                      BoxConstraints(),
+                                                                ),
                                                               ),
                                                             ],
                                                           ),
                                                         ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: [
-                                                      IconButton(
-                                                        onPressed: () async {
-                                                          CustomWidget
-                                                              .showCartConfirmationDialog(
-                                                            context,
-                                                            desc: AppLocalizations
-                                                                .instance
-                                                                .text(
-                                                                    'TXT_DELETE_CART_INFO'),
-                                                            fnDeleteCart:
-                                                                () async {
-                                                              Get.back();
-                                                              await fnStoreLog(
-                                                                productId: [
-                                                                  _data.id ?? 0
-                                                                ],
-                                                                categoryId:
-                                                                    null,
-                                                                notes: KeyHelper
-                                                                    .REMOVE_CART_KEY,
-                                                              );
-                                                              await provider
-                                                                  .fnDeleteCart(
-                                                                      _provider
-                                                                          .scaffoldKey
-                                                                          .currentContext!,
-                                                                      _data.id!)
-                                                                  .then((_) async =>
-                                                                      await _baseProvider
-                                                                          .fnGetCartCount());
-                                                            },
-                                                            fnStoreWishlist:
-                                                                () async {
-                                                              Get.back();
-                                                              await fnStoreLog(
-                                                                productId: [
-                                                                  _data.id ?? 0
-                                                                ],
-                                                                categoryId:
-                                                                    null,
-                                                                notes: KeyHelper
-                                                                    .SAVE_WISHLIST_KEY,
-                                                              );
-                                                              await provider
-                                                                  .fnDeleteCart(
-                                                                      _provider
-                                                                          .scaffoldKey
-                                                                          .currentContext!,
-                                                                      _data.id ??
-                                                                          0)
-                                                                  .then(
-                                                                      (_) async {
-                                                                await provider.fnStoreWishlist(
-                                                                    _provider
-                                                                        .scaffoldKey
-                                                                        .currentContext!,
-                                                                    _data.idProduct ??
-                                                                        0,
-                                                                    _data.idRegion ??
-                                                                        0);
-                                                                await _baseProvider
-                                                                    .fnGetCartCount();
-                                                              });
-                                                            },
-                                                          );
-                                                        },
-                                                        icon: Icon(
-                                                          FontAwesomeIcons
-                                                              .trashCan,
-                                                          size: 20,
-                                                          color: CustomColor
-                                                              .GREY_TXT,
-                                                        ),
-                                                        visualDensity:
-                                                            VisualDensity
-                                                                .compact,
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(5),
-                                                          border: Border.all(
-                                                            color: CustomColor
-                                                                .GREY_ICON,
-                                                          ),
-                                                        ),
-                                                        width: 100,
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Expanded(
-                                                              child: IconButton(
-                                                                onPressed: () async => await provider
-                                                                    .fnUpdateCartQty(
-                                                                        _data
-                                                                            .id!,
-                                                                        'decrease')
-                                                                    .then(
-                                                                        (_) async {
-                                                                  if (_data
-                                                                          .qty ==
-                                                                      1)
-                                                                    await _baseProvider
-                                                                        .fnGetCartCount();
-                                                                }),
-                                                                icon: Icon(
-                                                                  Icons.remove,
-                                                                  size: 18,
-                                                                  color: _data.qty !=
-                                                                          1
-                                                                      ? Colors
-                                                                          .green
-                                                                      : CustomColor
-                                                                          .GREY_ICON,
-                                                                ),
-                                                                padding: EdgeInsets
-                                                                    .symmetric(
-                                                                        vertical:
-                                                                            2),
-                                                                constraints:
-                                                                    BoxConstraints(),
-                                                              ),
-                                                            ),
-                                                            Text(
-                                                              _data.qty
-                                                                  .toString(),
-                                                              style: TextStyle(
-                                                                fontSize: 12,
-                                                              ),
-                                                            ),
-                                                            Expanded(
-                                                              child: IconButton(
-                                                                onPressed: () async =>
-                                                                    await provider.fnUpdateCartQty(
-                                                                        _data
-                                                                            .id!,
-                                                                        'increase'),
-                                                                icon: Icon(
-                                                                  Icons.add,
-                                                                  size: 18,
-                                                                  color: Colors
-                                                                      .green,
-                                                                ),
-                                                                padding: EdgeInsets
-                                                                    .symmetric(
-                                                                        vertical:
-                                                                            2),
-                                                                constraints:
-                                                                    BoxConstraints(),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                },
-                              ),
-                              Container(
-                                height: provider.isPaginateLoad ? 50 : 0,
-                                child: Center(
-                                  child: provider.isPaginateLoad
-                                      ? CircularProgressIndicator(
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                  CustomColor.MAIN),
-                                        )
-                                      : SizedBox(),
+                                    );
+                                  },
                                 ),
-                              ),
-                            ],
+                                Container(
+                                  height: provider.isPaginateLoad ? 50 : 0,
+                                  child: Center(
+                                    child: provider.isPaginateLoad
+                                        ? CircularProgressIndicator(
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                    CustomColor.MAIN),
+                                          )
+                                        : SizedBox(),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                     }
@@ -504,8 +522,10 @@ class _CartListScreenState extends State<CartListScreen>
           Consumer<CartListProvider>(
             builder: (context, provider, _) {
               return Text(
-                sprintf(AppLocalizations.instance.text('TXT_CART_INFO'),
-                    ['${provider.cartList.result?.data?.length} item(s)']),
+                sprintf(
+                  AppLocalizations.instance.text('TXT_CART_INFO'),
+                  ['${provider.cartList.result?.data?.length} item(s)'],
+                ),
                 style: TextStyle(
                   color: CustomColor.GREY_TXT,
                 ),

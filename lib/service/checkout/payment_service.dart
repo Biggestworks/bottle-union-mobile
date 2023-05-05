@@ -109,7 +109,7 @@ class PaymentService extends GetConnect {
 
       print(_data);
 
-      print(_response.body);
+      print("ini nih == " + _response.body.toString());
 
       ///GET CONNECT BUG
       // Response _response = await post(
@@ -197,8 +197,6 @@ class PaymentService extends GetConnect {
       "authentication_id": authenticationId,
       "card_cvn": card_cvn
     };
-
-    print(json.encode(_data));
 
     // final test = await _headersAuth();
     // log(test.toString());
@@ -307,20 +305,17 @@ class PaymentService extends GetConnect {
 
   Future<Map<String, dynamic>> fetchCreditCardAuthorizationId({
     required String amount,
-    required String cvn,
-    required String tokenId,
+    required String paymentId,
   }) async {
     try {
       final response = await http.post(Uri.parse(URLHelper.authorizationIdUrl),
           headers: await _headersAuth(),
           body: json.encode({
+            "payment_id": paymentId,
             "amount": amount,
-            "card_cvn": cvn,
             "currency": "IDR",
-            "token_id": tokenId,
           }));
 
-      print(response.body);
       return json.decode(response.body) as Map<String, dynamic>;
     } on SocketException {
       print('exception');

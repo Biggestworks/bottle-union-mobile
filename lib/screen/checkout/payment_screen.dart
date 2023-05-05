@@ -317,7 +317,6 @@ class _PaymentScreenState extends State<PaymentScreen> with LoadingView {
                       child: TextFormField(
                         focusNode: holderNameFocusNode,
                         controller: holderNameController,
-                        keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           labelText: 'Card Holder',
                           labelStyle: TextStyle(

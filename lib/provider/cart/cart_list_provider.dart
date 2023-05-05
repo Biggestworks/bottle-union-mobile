@@ -147,6 +147,8 @@ class CartListProvider extends ChangeNotifier with PaginationInterface {
       page: super.currentPage.toString(),
     );
 
+    print(_carts!.result!.data);
+
     cartList.result!.data!.addAll(_carts!.result!.data!);
 
     if (_carts.result!.data!.length == 0) {

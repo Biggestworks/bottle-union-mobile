@@ -35,6 +35,8 @@ class Data {
   int? cvv;
   String? card_token;
   int? user_id;
+  String? exp_month;
+  String? exp_year;
   String? card_number;
   String? cardholder_name;
   String? createdAt;
@@ -46,6 +48,8 @@ class Data {
       this.description,
       this.image,
       this.cvv,
+      this.exp_month,
+      this.exp_year,
       this.card_token,
       this.user_id,
       this.card_number,
@@ -59,6 +63,8 @@ class Data {
     cvv = json['cvv'];
     description = json['description'];
     image = json['image'];
+    exp_month = json['exp_month'];
+    exp_year = json['exp_year'];
     card_token = json['card_token'];
     user_id = json['user_id'];
     card_number = json['card_number'];

@@ -11,7 +11,7 @@ class CartService extends GetConnect {
 
   Future<Map<String, String>?> _headersAuth() async {
     var _token = await _userPreferences.getUserToken();
-
+    print(_token);
     return {
       "Accept": "application/json",
       "Content-Type": "application/json",
@@ -154,5 +154,4 @@ class CartService extends GetConnect {
 
     return _model;
   }
-
 }

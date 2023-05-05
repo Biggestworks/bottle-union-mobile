@@ -6,6 +6,7 @@ import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/helper/key_helper.dart' as key;
 import 'package:eight_barrels/helper/push_notification_manager.dart';
+import 'package:eight_barrels/helper/xendit_method.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
 import 'package:eight_barrels/screen/home/banner_detail_screen.dart';

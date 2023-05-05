@@ -162,6 +162,7 @@ PODS:
     - Flutter
   - webview_flutter_wkwebview (0.0.1):
     - Flutter
+  - Xendit (2.1.8)
 
 DEPENDENCIES:
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
@@ -191,6 +192,7 @@ DEPENDENCIES:
   - uni_links (from `.symlinks/plugins/uni_links/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
+  - Xendit (~> 2.0)
 
 SPEC REPOS:
   trunk:
@@ -217,6 +219,7 @@ SPEC REPOS:
     - OrderedSet
     - PromisesObjC
     - Reachability
+    - Xendit
 
 EXTERNAL SOURCES:
   connectivity:
@@ -325,7 +328,8 @@ SPEC CHECKSUMS:
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
   webview_flutter_wkwebview: 2e2d318f21a5e036e2c3f26171342e95908bd60a
+  Xendit: 8dbd80a352ce1c55c3c48413155cb84cf112e775
 
-PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048
+PODFILE CHECKSUM: 7c3eb7b0cd90e9cf8424f6a9dc9627fefc94fd4d
 
 COCOAPODS: 1.12.0

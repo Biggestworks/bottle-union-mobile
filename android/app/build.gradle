@@ -43,7 +43,7 @@ android {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.toras.eight_barrels"
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
@@ -53,7 +53,7 @@ android {
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storeFile file(keystoreProperties['storeFile'])
             storePassword keystoreProperties['storePassword']
         }
     }
@@ -73,7 +73,18 @@ flutter {
     source '../..'
 }
 
+// repositories {
+//     maven {
+//         url "https://cardinalcommerce.bintray.com/android"
+//         credentials {
+//             username 'cards@cardinalcommerce'
+//             password 'd2358b841891b65b0610f7d51361c13bf4915350'
+//         }
+//     }
+// }
+
 dependencies {
+    implementation 'com.xendit:xendit-android:3.0.0-beta'
     implementation platform('com.google.firebase:firebase-bom:29.0.4')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

@@ -294,6 +294,7 @@ class AuthService extends GetConnect {
       );
       _data = await FirebaseAuth.instance.signInWithCredential(_credential);
     } catch (e) {
+      print('ini');
       print(e);
     }
 

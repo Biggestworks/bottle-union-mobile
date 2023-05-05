@@ -1,5 +1,6 @@
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
+import 'package:eight_barrels/helper/xendit_method.dart';
 import 'package:eight_barrels/model/checkout/delivery_courier_model.dart';
 import 'package:eight_barrels/model/checkout/order_cart_model.dart'
     as orderCart;
@@ -95,17 +96,35 @@ class PaymentProvider extends ChangeNotifier {
 
     if (selectedPayment!.name == "credit-card" ||
         selectedPayment?.name == "CREDIT") {
-      var _auth = await _service.fetchCreditCardAuthorizationId(
-          amount: orderSummary!.totalPay.toString(),
-          cvn: cvn.toString(),
-          tokenId: selectedPayment!.name == 'CREDIT'
-              ? selectedPayment!.card_token.toString()
-              : tokenId.toString());
+      // var _auth = await _service.fetchCreditCardAuthorizationId(
+      //   paymentId: selectedPayment!.id.toString(),
+      //   amount: orderSummary!.totalPay.toString(),
+      // );
 
-      print(_auth);
-
-      webViewUrl = _auth['data']['payer_authentication_url'];
-      authenticationId = _auth['data']['id'];
+      await XenditMethod.xenditCreateToken(
+              cardNumber: selectedPayment!.card_number!,
+              cvn: selectedPayment!.cvv.toString(),
+              expMonth: selectedPayment!.exp_month.toString(),
+              expYear: "20" + selectedPayment!.exp_year.toString())
+          .then((value) async {
+        tokenId = value;
+        notifyListeners();
+        await XenditMethod.xenditCreateAuthentication(
+                tokenId: value, amount: orderSummary!.totalPay ?? 0)
+            .then((val) async {
+          _view!.onProgressStart();
+          authenticationId = val;
+          notifyListeners();
+          await Future.delayed(Duration(seconds: 2));
+          webViewUrl = null;
+          notifyListeners();
+          if (product != null) {
+            fnStoreOrderBuyNowCreditCard(context);
+          } else {
+            fnStoreOrderCreditCardChart(context);
+          }
+        });
+      });
     } else if (selectedPayment!.name.toString().contains("dana")) {
       var _res = await _service.purchaseEwalletCart(
           idAddress: addressId.toString(),
@@ -238,13 +257,30 @@ class PaymentProvider extends ChangeNotifier {
 
     if (selectedPayment?.name == "credit-card" ||
         selectedPayment?.name == "CREDIT") {
-      var _auth = await _service.fetchCreditCardAuthorizationId(
-          amount: orderSummary!.totalPay.toString(),
-          cvn: cvn.toString(),
-          tokenId: tokenId.toString());
-
-      webViewUrl = _auth['data']['payer_authentication_url'];
-      authenticationId = _auth['data']['id'];
+      await XenditMethod.xenditCreateToken(
+              cardNumber: selectedPayment!.card_number!,
+              cvn: selectedPayment!.cvv.toString(),
+              expMonth: selectedPayment!.exp_month.toString(),
+              expYear: "20" + selectedPayment!.exp_year.toString())
+          .then((value) async {
+        tokenId = value;
+        notifyListeners();
+        await XenditMethod.xenditCreateAuthentication(
+                tokenId: value, amount: orderSummary!.totalPay ?? 0)
+            .then((val) async {
+          _view!.onProgressStart();
+          authenticationId = val;
+          notifyListeners();
+          await Future.delayed(Duration(seconds: 2));
+          webViewUrl = null;
+          notifyListeners();
+          if (product != null) {
+            fnStoreOrderBuyNowCreditCard(context);
+          } else {
+            fnStoreOrderCreditCardChart(context);
+          }
+        });
+      });
     } else if (selectedPayment?.name == "dana") {
       var res = await _service.purchaseEwallet(
           idAddress: addressId.toString(),
@@ -417,7 +453,7 @@ class PaymentProvider extends ChangeNotifier {
 
         if (!res['status']) {
           await CustomWidget.showSnackBar(
-              context: context, content: Text(res['message']));
+              context: context, content: Text(response['message']));
         }
 
         var data = XenditTokenId.fromJson(response);
