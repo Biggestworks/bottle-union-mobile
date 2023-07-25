@@ -36,6 +36,7 @@ import 'package:eight_barrels/provider/splash/splash_provider.dart';
 import 'package:eight_barrels/provider/transaction/track_order_provider.dart';
 import 'package:eight_barrels/provider/transaction/transaction_detail_provider.dart';
 import 'package:eight_barrels/provider/transaction/transaction_provider.dart';
+import 'package:eight_barrels/screen/auth/fp_webview_screen.dart';
 import 'package:eight_barrels/screen/auth/guest_start_screen.dart';
 import 'package:eight_barrels/screen/auth/login_screen.dart';
 import 'package:eight_barrels/screen/auth/otp_screen.dart';
@@ -494,6 +495,7 @@ class _AppState extends State<App> {
             name: TacWebviewScreen.tag,
             page: () => TacWebviewScreen(),
           ),
+          GetPage(name: FbWebviewScreen.tag, page: () => FbWebviewScreen()),
           GetPage(
             name: GuestHomeScreen.tag,
             page: () => GuestHomeScreen(),

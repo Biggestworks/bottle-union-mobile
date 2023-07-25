@@ -82,6 +82,7 @@ class DeliveryBuyProvider extends ChangeNotifier {
         _view!.onProgressFinish();
         Get.back();
         await fnFetchSelectedAddress();
+        selectedCourier = null;
       } else {
         _view!.onProgressFinish();
         await CustomWidget.showSnackBar(

@@ -101,29 +101,35 @@ class PaymentProvider extends ChangeNotifier {
       //   amount: orderSummary!.totalPay.toString(),
       // );
 
-      await XenditMethod.xenditCreateToken(
+      PaymentService()
+          .fetchCreditCardTokenId(
               cardNumber: selectedPayment!.card_number!,
-              cvn: selectedPayment!.cvv.toString(),
-              expMonth: selectedPayment!.exp_month.toString(),
-              expYear: "20" + selectedPayment!.exp_year.toString())
+              expiryMonth: selectedPayment!.exp_month.toString(),
+              expiryYear: selectedPayment!.exp_year.toString(),
+              cvv: selectedPayment!.cvv.toString())
           .then((value) async {
-        tokenId = value;
-        notifyListeners();
-        await XenditMethod.xenditCreateAuthentication(
-                tokenId: value, amount: orderSummary!.totalPay ?? 0)
-            .then((val) async {
-          _view!.onProgressStart();
-          authenticationId = val;
+        if (value['status']) {
+          tokenId = value['data']['card']['card_information']['token_id'];
           notifyListeners();
-          await Future.delayed(Duration(seconds: 2));
-          webViewUrl = null;
-          notifyListeners();
-          if (product != null) {
-            fnStoreOrderBuyNowCreditCard(context);
-          } else {
-            fnStoreOrderCreditCardChart(context);
-          }
-        });
+          await XenditMethod.xenditCreateAuthentication(
+                  tokenId: value['data']['card']['card_information']
+                      ['token_id'],
+                  amount: orderSummary!.totalPay ?? 0)
+              .then((val) async {
+            _view!.onProgressStart();
+            authenticationId = val;
+            notifyListeners();
+            await Future.delayed(Duration(seconds: 2));
+            webViewUrl = null;
+            notifyListeners();
+            if (product != null) {
+              fnStoreOrderBuyNowCreditCard(context);
+            } else {
+              fnStoreOrderCreditCardChart(context);
+            }
+          });
+        }
+        print(value);
       });
     } else if (selectedPayment!.name.toString().contains("dana")) {
       var _res = await _service.purchaseEwalletCart(
@@ -202,7 +208,6 @@ class PaymentProvider extends ChangeNotifier {
   }
 
   Future fnStoreOrderBuyNowCreditCard(context) async {
-    print('now');
     var _res = await _service.storeOrderBuyNowCreditCard(
       addressId: addressId,
       product: productOrder,
@@ -257,30 +262,46 @@ class PaymentProvider extends ChangeNotifier {
 
     if (selectedPayment?.name == "credit-card" ||
         selectedPayment?.name == "CREDIT") {
-      await XenditMethod.xenditCreateToken(
+      PaymentService()
+          .fetchCreditCardTokenId(
               cardNumber: selectedPayment!.card_number!,
-              cvn: selectedPayment!.cvv.toString(),
-              expMonth: selectedPayment!.exp_month.toString(),
-              expYear: "20" + selectedPayment!.exp_year.toString())
+              expiryMonth: selectedPayment!.exp_month.toString(),
+              expiryYear: selectedPayment!.exp_year.toString(),
+              cvv: selectedPayment!.cvv.toString())
           .then((value) async {
-        tokenId = value;
-        notifyListeners();
-        await XenditMethod.xenditCreateAuthentication(
-                tokenId: value, amount: orderSummary!.totalPay ?? 0)
-            .then((val) async {
-          _view!.onProgressStart();
-          authenticationId = val;
+        if (value['status']) {
+          tokenId = value['data']['card']['card_information']['token_id'];
           notifyListeners();
-          await Future.delayed(Duration(seconds: 2));
-          webViewUrl = null;
-          notifyListeners();
-          if (product != null) {
-            fnStoreOrderBuyNowCreditCard(context);
-          } else {
-            fnStoreOrderCreditCardChart(context);
-          }
-        });
+          await XenditMethod.xenditCreateAuthentication(
+                  tokenId: value['data']['card']['card_information']
+                      ['token_id'],
+                  amount: orderSummary!.totalPay ?? 0)
+              .then((val) async {
+            _view!.onProgressStart();
+            authenticationId = val;
+            print(authenticationId);
+            notifyListeners();
+            await Future.delayed(Duration(seconds: 2));
+            webViewUrl = null;
+            notifyListeners();
+            if (product != null) {
+              fnStoreOrderBuyNowCreditCard(context);
+            } else {
+              fnStoreOrderCreditCardChart(context);
+            }
+          });
+        }
+        print(value);
       });
+      // await XenditMethod.xenditCreateToken(
+      //         cardNumber: selectedPayment!.card_number!,
+      //         cvn: selectedPayment!.cvv.toString(),
+      //         expMonth: selectedPayment!.exp_month.toString(),
+      //         expYear: "20" + selectedPayment!.exp_year.toString())
+      //     .then((value) async {
+      //   tokenId = value;
+      //   notifyListeners();
+      // });
     } else if (selectedPayment?.name == "dana") {
       var res = await _service.purchaseEwallet(
           idAddress: addressId.toString(),

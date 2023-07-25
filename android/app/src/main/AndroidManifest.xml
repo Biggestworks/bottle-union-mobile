@@ -30,6 +30,7 @@
      <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
    <application
        android:label="Bottle Union"
+       tools:replace="android:label"
        android:icon="@mipmap/launcher_icon"
        android:usesCleartextTraffic="true"
        tools:ignore="GoogleAppIndexingWarning, AllowBackup"
@@ -92,8 +93,10 @@
                     android:pathPrefix="/link" />
             </intent-filter>
         </activity>
+        <activity android:name="com.xendit.XenditActivity"/>
        <meta-data android:name="com.google.android.geo.API_KEY"
            android:value="AIzaSyCuLLX57qWxuKkqQaoG1L3uXdF2xRXQMVs" />
+           
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />

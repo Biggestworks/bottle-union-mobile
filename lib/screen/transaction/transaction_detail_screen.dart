@@ -20,6 +20,7 @@ import 'package:get/route_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TransactionDetailScreen extends StatefulWidget {
@@ -789,192 +790,130 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen>
       child: Consumer<TransactionDetailProvider>(
         builder: (context, provider, _) {
           var _data = provider.transactionDetail.result;
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                AppLocalizations.instance.text('TXT_SHIPMENT_INFORMATION'),
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Card(
-                color: CustomColor.GREY_LIGHT_BG,
-                elevation: 0,
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 130,
-                            child: Text(
-                                AppLocalizations.instance.text('TXT_COURIER')),
-                          ),
-                          Flexible(
-                            child: Text(
-                                '${_data?.courierName ?? '-'} '
-                                '${_data?.courierEtd ?? '-'} '
-                                '(${FormatterHelper.moneyFormatter(_data?.courierCost ?? 0)})',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                )),
-                          ),
-                        ],
-                      ),
-                      Divider(
-                        height: 20,
-                        thickness: 1,
-                      ),
-                      Row(
-                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            width: 130,
-                            child: Text(AppLocalizations.instance
-                                .text('TXT_DELIVERY_ADDRESS')),
-                          ),
-                          Flexible(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  _data?.data?[0].shipment?.receiver ?? '-',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 4),
-                                Text(_data?.data?[0].shipment?.phone ?? '-'),
-                                SizedBox(height: 4),
-                                Text(_data?.data?[0].shipment?.address ?? '-'),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+          if (_data != null) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  AppLocalizations.instance.text('TXT_SHIPMENT_INFORMATION'),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              if (_data!.gosend != null && _data.gosend!.isNotEmpty)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Gosend Information",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Card(
-                      color: CustomColor.GREY_LIGHT_BG,
-                      elevation: 0,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
+                SizedBox(
+                  height: 10,
+                ),
+                Card(
+                  color: CustomColor.GREY_LIGHT_BG,
+                  elevation: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      children: [
+                        Row(
                           children: [
-                            Row(
-                              children: [
-                                Container(
-                                  width: 130,
-                                  child: Text("Type "),
-                                ),
-                                Flexible(
-                                  child: Text(
-                                      _data.gosend!.first.bookingType
-                                          .toString(),
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                      )),
-                                ),
-                              ],
+                            Container(
+                              width: 130,
+                              child: Text(AppLocalizations.instance
+                                  .text('TXT_COURIER')),
                             ),
-                            Divider(
-                              height: 20,
-                              thickness: 1,
+                            Flexible(
+                              child: Text(
+                                  '${_data?.courierName ?? '-'} '
+                                  '${_data?.courierEtd ?? '-'} '
+                                  '(${FormatterHelper.moneyFormatter(_data?.courierCost ?? 0)})',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  )),
                             ),
-                            if (_data.gosend != null &&
-                                _data.gosend!.first.status != null)
+                          ],
+                        ),
+                        Divider(
+                          height: 20,
+                          thickness: 1,
+                        ),
+                        Row(
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: 130,
+                              child: Text(AppLocalizations.instance
+                                  .text('TXT_DELIVERY_ADDRESS')),
+                            ),
+                            Flexible(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    _data?.data?[0].shipment?.receiver ?? '-',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(_data?.data?[0].shipment?.phone ?? '-'),
+                                  SizedBox(height: 4),
+                                  Text(
+                                      _data?.data?[0].shipment?.address ?? '-'),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                if (_data!.gosend != null && _data.gosend!.isNotEmpty)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Gosend Information",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Card(
+                        color: CustomColor.GREY_LIGHT_BG,
+                        elevation: 0,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            children: [
                               Row(
-                                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Container(
                                     width: 130,
-                                    child: Text("Order Status"),
+                                    child: Text("Type "),
                                   ),
                                   Flexible(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          _data.gosend!.first.status.toString(),
-                                          style: TextStyle(
-                                            color: _data.gosend!.first.status ==
-                                                    "Completed"
-                                                ? Colors.green
-                                                : _data.gosend!.first.status ==
-                                                        "Cancelled"
-                                                    ? Colors.red
-                                                    : Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                    child: Text(
+                                        _data.gosend!.first.bookingType
+                                            .toString(),
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                        )),
                                   ),
                                 ],
                               ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            if (_data.gosend != null &&
-                                _data.gosend!.first.driverName != null)
-                              Row(
-                                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    width: 130,
-                                    child: Text("Driver Name"),
-                                  ),
-                                  Flexible(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          _data.gosend!.first.driverName
-                                              .toString(),
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                              Divider(
+                                height: 20,
+                                thickness: 1,
                               ),
-                            if (_data.gosend != null &&
-                                _data.gosend!.first.driverPhone != null)
-                              Container(
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                child: Row(
+                              if (_data.gosend != null &&
+                                  _data.gosend!.first.status != null)
+                                Row(
                                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Container(
                                       width: 130,
-                                      child: Text("Phone Number"),
+                                      child: Text("Status Pengiriman"),
                                     ),
                                     Flexible(
                                       child: Column(
@@ -982,7 +921,125 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen>
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            _data.gosend!.first.driverPhone
+                                            _data.gosend!.first.status
+                                                        .toString() ==
+                                                    "Enroute Pickup"
+                                                ? "Driver ditugaskan dan sedang dalam perjalanan ke lokasi pick-up"
+                                                : _data.gosend!.first.status
+                                                            .toString() ==
+                                                        "Enroute Drop"
+                                                    ? "Driver sedang dalam perjalanan ke lokasi tujuan"
+                                                    : _data.gosend!.first.status
+                                                                .toString() ==
+                                                            "Completed"
+                                                        ? "Barang berhasil di antarkan ke lokasi penerima"
+                                                        : _data.gosend!.first
+                                                                        .status
+                                                                        .toString() ==
+                                                                    "Cancelled" ||
+                                                                _data
+                                                                        .gosend!
+                                                                        .first
+                                                                        .status
+                                                                        .toString() ==
+                                                                    "Rejected"
+                                                            ? "Pengiriman dibatalkan, pengirim akan menjadwalkan ulang pengiriman"
+                                                            : _data
+                                                                        .gosend!
+                                                                        .first
+                                                                        .status
+                                                                        .toString() ==
+                                                                    "Driver not found"
+                                                                ? "Driver tidak ditemukan mohon tunggu beberapa saat..."
+                                                                : _data.gosend!.first
+                                                                            .status
+                                                                            .toString() ==
+                                                                        "Finding Driver"
+                                                                    ? "Sedang mencari Driver..."
+                                                                    : _data
+                                                                        .gosend!
+                                                                        .first
+                                                                        .status
+                                                                        .toString(),
+                                            style: TextStyle(
+                                              color:
+                                                  _data.gosend!.first.status ==
+                                                          "Completed"
+                                                      ? Colors.green
+                                                      : _data.gosend!.first
+                                                                  .status ==
+                                                              "Cancelled"
+                                                          ? Colors.red
+                                                          : Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              if (_data.gosend != null &&
+                                  _data.gosend!.first.status != null)
+                                Row(
+                                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      width: 130,
+                                      child: Text("Booking ID"),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          _data.gosend!.first.orderNo
+                                              .toString(),
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        IconButton(
+                                          onPressed: () async {
+                                            await Clipboard.setData(
+                                                ClipboardData(
+                                                    text: _data.gosend!.first
+                                                        .orderNo));
+                                          },
+                                          icon: Icon(
+                                            Icons.document_scanner,
+                                            size: 15,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              if (_data.gosend != null &&
+                                  _data.gosend!.first.driverName != null)
+                                Row(
+                                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      width: 130,
+                                      child: Text("Nama"),
+                                    ),
+                                    Flexible(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            _data.gosend!.first.driverName
                                                 .toString(),
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
@@ -993,41 +1050,78 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen>
                                     ),
                                   ],
                                 ),
-                              ),
-                            if (_data.gosend != null &&
-                                _data.gosend!.first.vehicleNumber != null)
-                              Row(
-                                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    width: 130,
-                                    child: Text("Vehicle Number"),
-                                  ),
-                                  Flexible(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          _data.gosend!.first.vehicleNumber
-                                              .toString(),
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
+                              if (_data.gosend != null &&
+                                  _data.gosend!.first.driverPhone != null)
+                                Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 10),
+                                  child: Row(
+                                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        width: 130,
+                                        child: Text("Nomor Hp"),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            _data.gosend!.first.driverPhone
+                                                .toString(),
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
+                                          IconButton(
+                                            onPressed: () {
+                                              launch(
+                                                  'tel:${_data.gosend!.first.driverPhone}');
+                                            },
+                                            icon: Icon(
+                                              Icons.phone,
+                                              color: Colors.redAccent,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                          ],
+                                ),
+                              if (_data.gosend != null &&
+                                  _data.gosend!.first.vehicleNumber != null)
+                                Row(
+                                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      width: 130,
+                                      child: Text("Plat Nomor"),
+                                    ),
+                                    Flexible(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            _data.gosend!.first.vehicleNumber
+                                                .toString(),
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-            ],
-          );
+                    ],
+                  ),
+              ],
+            );
+          }
+          return Container();
         },
       ),
     );
@@ -1134,23 +1228,29 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen>
       ),
     );
 
-    Widget _mainContent = SingleChildScrollView(
-      child: Column(
-        children: [
-          _orderInfoContent,
-          SizedBox(
-            height: 5,
-          ),
-          _orderDetailContent,
-          SizedBox(
-            height: 5,
-          ),
-          _shipmentDetailContent,
-          SizedBox(
-            height: 5,
-          ),
-          _paymentDetailContent,
-        ],
+    Widget _mainContent = SmartRefresher(
+      controller: _provider.refreshController,
+      onRefresh: () {
+        _provider.fnGetTransactionDetail();
+      },
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            _orderInfoContent,
+            SizedBox(
+              height: 5,
+            ),
+            _orderDetailContent,
+            SizedBox(
+              height: 5,
+            ),
+            _shipmentDetailContent,
+            SizedBox(
+              height: 5,
+            ),
+            _paymentDetailContent,
+          ],
+        ),
       ),
     );
 
@@ -1289,10 +1389,10 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen>
                                             .result?.deepLink ??
                                         '';
                                     log(_url);
-                                    await LaunchUrlHelper.launchUrl(
-                                        context: provider
-                                            .scaffoldKey.currentContext!,
-                                        url: _url);
+                                    // await LaunchUrlHelper.launchUrl(
+                                    //     context: provider
+                                    //         .scaffoldKey.currentContext!,
+                                    //     url: _url);
                                   }),
                             );
                           default:
@@ -1304,31 +1404,55 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen>
                 }
               },
             ),
-            Container(
-              color: Colors.white,
-              width: MediaQuery.of(context).size.width,
-              child: CustomWidget.roundBtn(
-                label: AppLocalizations.instance.text('TXT_TRACK_ORDER'),
-                btnColor: CustomColor.MAIN,
-                lblColor: Colors.white,
-                isBold: true,
-                radius: 8,
-                fontSize: 16,
-                function: () {
-                  if (_provider.transactionDetail.result!.gosend != null) {
-                    launchUrl(Uri.parse(_provider
-                        .transactionDetail.result!.gosend!.first.liveTrackingUrl
-                        .toString()));
-                  } else {
-                    Get.toNamed(TrackOrderScreen.tag,
-                        arguments: TrackOrderScreen(
-                          orderId: _provider.orderId,
-                          regionId: _provider.regionId,
-                        ));
-                  }
-                },
+            if (_provider.transactionDetail.result != null)
+              Container(
+                color: Colors.white,
+                width: MediaQuery.of(context).size.width,
+                child: CustomWidget.roundBtn(
+                  label: _provider.transactionDetail.result!.gosend != null &&
+                          _provider.transactionDetail.result!.gosend!.isNotEmpty
+                      ? "GoSend Track"
+                      : AppLocalizations.instance.text('TXT_TRACK_ORDER'),
+                  btnColor: CustomColor.MAIN,
+                  lblColor: Colors.white,
+                  isBold: true,
+                  radius: 8,
+                  fontSize: 16,
+                  function: () {
+                    if (_provider.transactionDetail.result!.gosend != null &&
+                        _provider
+                            .transactionDetail.result!.gosend!.isNotEmpty) {
+                      print(_provider.transactionDetail.result!.gosend!.first
+                          .liveTrackingUrl
+                          .toString() =="null");
+                      if (_provider.transactionDetail.result!.gosend!.first
+                              .liveTrackingUrl
+                              .toString()
+                              .trim() ==
+                          "null") {
+                        Get.toNamed(TrackOrderScreen.tag,
+                            arguments: TrackOrderScreen(
+                              orderId: _provider.orderId,
+                              regionId: _provider.regionId,
+                            ));
+                      } else {
+                        Get.toNamed(InvoiceWebviewScreen.tag,
+                            arguments: InvoiceWebviewScreen(
+                              url: _provider.transactionDetail.result!.gosend!
+                                      .first.liveTrackingUrl ??
+                                  "",
+                            ));
+                      }
+                    } else {
+                      Get.toNamed(TrackOrderScreen.tag,
+                          arguments: TrackOrderScreen(
+                            orderId: _provider.orderId,
+                            regionId: _provider.regionId,
+                          ));
+                    }
+                  },
+                ),
               ),
-            ),
           ],
         ),
       ),

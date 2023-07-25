@@ -673,10 +673,12 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                                         final _url =
                                                                             provider.transactionList!.result?.data?[index].deeplink ??
                                                                                 '';
-                                                                        await LaunchUrlHelper.launchUrl(
-                                                                            context:
-                                                                                _scaffoldKey!.currentContext!,
-                                                                            url: _url);
+                                                                        print(
+                                                                            _url);
+                                                                        // await LaunchUrlHelper.launchUrl(
+                                                                        //     context:
+                                                                        //         _scaffoldKey!.currentContext!,
+                                                                        //     url: _url);
                                                                       }),
                                                             )
                                                           : const SizedBox()
@@ -726,27 +728,27 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                         radius: 5,
                                                         isBold: true,
                                                         function: () {
-                                                          if (_data.gosend !=
-                                                                  null &&
-                                                              _data.gosend!
-                                                                  .isNotEmpty) {
-                                                            launchUrl(Uri.parse(_data
-                                                                .gosend!
-                                                                .first
-                                                                .liveTrackingUrl
-                                                                .toString()));
-                                                          } else {
-                                                            Get.toNamed(
-                                                                TrackOrderScreen
-                                                                    .tag,
-                                                                arguments:
-                                                                    TrackOrderScreen(
-                                                                  orderId: _data
-                                                                      .codeTransaction,
-                                                                  regionId: _data
-                                                                      .idRegion,
-                                                                ));
-                                                          }
+                                                          // if (_data.gosend !=
+                                                          //         null &&
+                                                          //     _data.gosend!
+                                                          //         .isNotEmpty) {
+                                                          // launchUrl(Uri.parse(_data
+                                                          //     .gosend!
+                                                          //     .first
+                                                          //     .liveTrackingUrl
+                                                          //     .toString()));
+                                                          // } else {
+                                                          Get.toNamed(
+                                                              TrackOrderScreen
+                                                                  .tag,
+                                                              arguments:
+                                                                  TrackOrderScreen(
+                                                                orderId: _data
+                                                                    .codeTransaction,
+                                                                regionId: _data
+                                                                    .idRegion,
+                                                              ));
+                                                          // }
                                                         },
                                                       ),
                                                     ),

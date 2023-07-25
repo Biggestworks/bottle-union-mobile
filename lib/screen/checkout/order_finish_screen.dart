@@ -1330,10 +1330,11 @@ class _OrderFinishScreenState extends State<OrderFinishScreen>
                                 function: () async {
                                   final _url =
                                       provider.orderNow?.deepLink ?? '';
-                                  await LaunchUrlHelper.launchUrl(
-                                      context:
-                                          provider.scaffoldKey.currentContext!,
-                                      url: _url);
+                                  print(_url);
+                                  // await LaunchUrlHelper.launchUrl(
+                                  //     context:
+                                  //         provider.scaffoldKey.currentContext!,
+                                  //     url: _url);
                                 },
                               ),
                             );
@@ -1386,10 +1387,11 @@ class _OrderFinishScreenState extends State<OrderFinishScreen>
                                 function: () async {
                                   final _url =
                                       provider.orderCart?.deeplink ?? '';
-                                  await LaunchUrlHelper.launchUrl(
-                                      context:
-                                          provider.scaffoldKey.currentContext!,
-                                      url: _url);
+                                  print(_url);
+                                  // await LaunchUrlHelper.launchUrl(
+                                  //     context:
+                                  //         provider.scaffoldKey.currentContext!,
+                                  //     url: _url);
                                 },
                               ),
                             );

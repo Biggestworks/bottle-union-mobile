@@ -38,7 +38,9 @@ class _InvoiceWebviewScreenState extends State<InvoiceWebviewScreen> {
           onPageFinished: (String url) {},
           onWebResourceError: (WebResourceError error) {},
           onNavigationRequest: (NavigationRequest request) {
-            if (request.url.startsWith(_args.url.toString())) {
+            if (_args.url.toString().contains('gojek')) {
+              return NavigationDecision.navigate;
+            } else if (request.url.startsWith(_args.url.toString())) {
               return NavigationDecision.prevent;
             }
             return NavigationDecision.navigate;
@@ -51,7 +53,9 @@ class _InvoiceWebviewScreenState extends State<InvoiceWebviewScreen> {
       appBar: AppBar(
         backgroundColor: CustomColor.MAIN,
         centerTitle: true,
-        title: Text('Invoice'),
+        title: Text(
+          _args.url.toString().contains('gojek') ? "GoSend Track" : 'Invoice',
+        ),
         // actions: [
         //   Padding(
         //     padding: const EdgeInsets.only(right: 10),

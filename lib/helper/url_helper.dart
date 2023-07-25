@@ -36,6 +36,9 @@ class URLHelper {
   ///BANNER
   static final bannerUrl = baseUrl + '/banner';
 
+  /// CONTACT  US
+  static final contactUsUrl = baseUrl + '/dashboard/';
+
   ///USER
   static final userUrl = baseUrl + '/auth/user';
   static final updateProfileUrl = baseUrl + '/user/update-profile';

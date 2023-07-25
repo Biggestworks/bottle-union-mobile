@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "644292534336",
+    "project_id": "bottle-union",
+    "storage_bucket": "bottle-union.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:644292534336:android:d346d0b86cecfd96c5bfa5",
+        "android_client_info": {
+          "package_name": "com.toras.eight_barrels"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "644292534336-uoviquujq6v7a0d8vop4v4ibi10guma3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.toras.eight_barrels",
+            "certificate_hash": "fa5b50e3cbf238827b5392af2516978f6806d19c"
+          }
+        },
+        {
+          "client_id": "644292534336-dq8pfk2nr80eb9ctrmu0879iq4s6kv0a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmkY_616peLkgVD6EHIKckXBMQ3fNJjhs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "644292534336-dq8pfk2nr80eb9ctrmu0879iq4s6kv0a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

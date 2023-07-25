@@ -84,9 +84,7 @@ class ProfileService extends GetConnect {
         ).type,
       );
 
-      FormData _data = new FormData({
-        "image": _imageFile
-      });
+      FormData _data = new FormData({"image": _imageFile});
 
       Response _response = await post(
         URLHelper.updateAvatarUrl,
@@ -144,14 +142,15 @@ class ProfileService extends GetConnect {
       Response _response = await post(
         URLHelper.resetPasswordUrl,
         _data,
-        headers: await _headersAuth(),
+        headers: {"Authorization": "Bearer " + token},
       );
-      _model = DefaultModel.fromJson(_response.body);
-    } catch (e) {
-      print(e);
-    }
 
-    return _model;
+      print(_response.body);
+      _model = DefaultModel.fromJson(_response.body);
+      return _model;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<DefaultModel?> deleteAccount() async {
@@ -169,5 +168,4 @@ class ProfileService extends GetConnect {
 
     return _model;
   }
-
 }

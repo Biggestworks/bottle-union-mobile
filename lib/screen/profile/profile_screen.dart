@@ -4,6 +4,7 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/provider/profile/profile_provider.dart';
+import 'package:eight_barrels/screen/auth/fp_webview_screen.dart';
 import 'package:eight_barrels/screen/auth/tac_webview_screen.dart';
 import 'package:eight_barrels/screen/product/wishlist_screen.dart';
 import 'package:eight_barrels/screen/profile/address_list_screen.dart';
@@ -428,6 +429,7 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
             ),
           ),
           Card(
+            margin: const EdgeInsets.symmetric(vertical: 20),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadiusDirectional.circular(10),
             ),
@@ -484,6 +486,33 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
                     size: 15,
                   ),
                   onTap: () => Get.toNamed(TacWebviewScreen.tag),
+                ),
+                Divider(
+                  thickness: 1,
+                ),
+                ListTile(
+                  dense: true,
+                  title: Text(
+                    'Refund Policy',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                    ),
+                  ),
+                  leading: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Icon(
+                      FontAwesomeIcons.userShield,
+                      color: CustomColor.GREY_TXT,
+                      size: 18,
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    color: CustomColor.GREY_TXT,
+                    size: 15,
+                  ),
+                  onTap: () => Get.toNamed(FbWebviewScreen.tag),
                 ),
               ],
             ),

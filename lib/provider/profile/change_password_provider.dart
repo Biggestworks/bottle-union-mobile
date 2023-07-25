@@ -28,7 +28,8 @@ class ChangePasswordProvider extends ChangeNotifier {
   }
 
   fnGetArguments(BuildContext context) {
-    final _args = ModalRoute.of(context)!.settings.arguments as ChangePasswordScreen;
+    final _args =
+        ModalRoute.of(context)!.settings.arguments as ChangePasswordScreen;
     token = _args.token ?? null;
     notifyListeners();
   }
@@ -75,11 +76,14 @@ class ChangePasswordProvider extends ChangeNotifier {
         Get.back(result: true);
       } else {
         _view!.onProgressFinish();
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
+        await CustomWidget.showSnackBar(
+            context: context, content: Text(_res.message.toString()));
       }
     } else {
       _view!.onProgressFinish();
-      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+      await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
     notifyListeners();
   }
@@ -99,18 +103,20 @@ class ChangePasswordProvider extends ChangeNotifier {
         CustomWidget.showSuccessDialog(
           context,
           desc: 'Success reset password. Please login again.',
-          function: () => Get.offAndToNamed(LoginScreen.tag, arguments: LoginScreen()),
+          function: () =>
+              Get.offAndToNamed(LoginScreen.tag, arguments: LoginScreen()),
         );
       } else {
         _view!.onProgressFinish();
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
+        await CustomWidget.showSnackBar(
+            context: context, content: Text(_res.message.toString()));
       }
     } else {
       _view!.onProgressFinish();
-      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+      await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
     notifyListeners();
   }
-
-
 }

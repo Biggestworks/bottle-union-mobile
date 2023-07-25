@@ -71,6 +71,8 @@ class DeliveryService extends GetConnect {
         body: json.encode(_data),
         headers: await _headersAuth(),
       );
+
+      print(_response.body);
       _model = CourierListModel.fromJson(json.decode(_response.body));
 
       ///GET CONNECT BUG

@@ -33,9 +33,9 @@ class _TacWebviewScreenState extends State<TacWebviewScreen> {
             onPageFinished: (String url) {},
             onWebResourceError: (WebResourceError error) {},
             onNavigationRequest: (NavigationRequest request) {
-              if (request.url.startsWith(dotenv.get('TOC_URL').toString())) {
-                return NavigationDecision.prevent;
-              }
+              // if (request.url.startsWith(dotenv.get('TOC_URL').toString())) {
+              //   return NavigationDecision.prevent;
+              // }
               return NavigationDecision.navigate;
             },
           ),
@@ -53,10 +53,8 @@ class _TacWebviewScreenState extends State<TacWebviewScreen> {
         centerTitle: true,
         title: Text('Term & Condition'),
       ),
-      body: SafeArea(
-        child: WebViewWidget(
-          controller: webViewController,
-        ),
+      body: WebViewWidget(
+        controller: webViewController,
       ),
     );
   }

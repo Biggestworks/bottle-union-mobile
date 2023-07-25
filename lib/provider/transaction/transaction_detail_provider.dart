@@ -10,11 +10,13 @@ import 'package:eight_barrels/service/review/review_service.dart';
 import 'package:eight_barrels/service/transaction/transcation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class TransactionDetailProvider extends ChangeNotifier {
   TransactionService _service = new TransactionService();
   // PaymentService _paymentService = new PaymentService();
   ReviewService _reviewService = new ReviewService();
+  RefreshController refreshController = RefreshController();
   String? orderId;
   int? regionId;
   TransactionDetailModel transactionDetail = new TransactionDetailModel();
@@ -36,7 +38,8 @@ class TransactionDetailProvider extends ChangeNotifier {
   }
 
   fnGetArguments(BuildContext context) {
-    final _args = ModalRoute.of(context)!.settings.arguments as TransactionDetailScreen;
+    final _args =
+        ModalRoute.of(context)!.settings.arguments as TransactionDetailScreen;
     orderId = _args.orderId!;
     regionId = _args.regionId!;
     notifyListeners();
@@ -44,8 +47,11 @@ class TransactionDetailProvider extends ChangeNotifier {
 
   Future fnGetTransactionDetail() async {
     _view!.onProgressStart();
-    transactionDetail = (await _service.getTransactionDetail(orderId: orderId!, regionId: regionId!))!;
+    transactionDetail = (await _service.getTransactionDetail(
+        orderId: orderId!, regionId: regionId!))!;
     _view!.onProgressFinish();
+    refreshController.loadComplete();
+    refreshController.refreshCompleted(resetFooterState: false);
     notifyListeners();
   }
 
@@ -69,7 +75,8 @@ class TransactionDetailProvider extends ChangeNotifier {
   //   notifyListeners();
   // }
 
-  String fnGetSubtotal(int price, int qty) => FormatterHelper.moneyFormatter((price * qty));
+  String fnGetSubtotal(int price, int qty) =>
+      FormatterHelper.moneyFormatter((price * qty));
 
   String fnGetStatus(int id) {
     switch (id) {
@@ -99,11 +106,14 @@ class TransactionDetailProvider extends ChangeNotifier {
         await fnGetTransactionDetail();
       } else {
         _view!.onProgressFinish();
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message ?? '-'));
+        await CustomWidget.showSnackBar(
+            context: context, content: Text(_res.message ?? '-'));
       }
     } else {
       _view!.onProgressFinish();
-      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+      await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
     _view!.onProgressFinish();
     notifyListeners();
@@ -123,13 +133,23 @@ class TransactionDetailProvider extends ChangeNotifier {
           gradient: LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            colors: [Colors.white, CustomColor.STAR_1, CustomColor.STAR_1, CustomColor.STAR_1, Colors.white],
+            colors: [
+              Colors.white,
+              CustomColor.STAR_1,
+              CustomColor.STAR_1,
+              CustomColor.STAR_1,
+              Colors.white
+            ],
           ),
         ),
-        child: Text(AppLocalizations.instance.text('TXT_STAR_REVIEW_1'), style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ), textAlign: TextAlign.center,),
+        child: Text(
+          AppLocalizations.instance.text('TXT_STAR_REVIEW_1'),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
       );
     } else if (starRating == 2.0) {
       return Container(
@@ -139,13 +159,23 @@ class TransactionDetailProvider extends ChangeNotifier {
           gradient: LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            colors: [Colors.white, CustomColor.STAR_1, CustomColor.STAR_1, CustomColor.STAR_1, Colors.white],
+            colors: [
+              Colors.white,
+              CustomColor.STAR_1,
+              CustomColor.STAR_1,
+              CustomColor.STAR_1,
+              Colors.white
+            ],
           ),
         ),
-        child: Text(AppLocalizations.instance.text('TXT_STAR_REVIEW_2'), style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ), textAlign: TextAlign.center,),
+        child: Text(
+          AppLocalizations.instance.text('TXT_STAR_REVIEW_2'),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
       );
     } else if (starRating == 3.0) {
       return Container(
@@ -155,13 +185,23 @@ class TransactionDetailProvider extends ChangeNotifier {
           gradient: LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            colors: [Colors.white, CustomColor.STAR_3, CustomColor.STAR_3, CustomColor.STAR_3, Colors.white],
+            colors: [
+              Colors.white,
+              CustomColor.STAR_3,
+              CustomColor.STAR_3,
+              CustomColor.STAR_3,
+              Colors.white
+            ],
           ),
         ),
-        child: Text(AppLocalizations.instance.text('TXT_STAR_REVIEW_3'), style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ), textAlign: TextAlign.center,),
+        child: Text(
+          AppLocalizations.instance.text('TXT_STAR_REVIEW_3'),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
       );
     } else if (starRating == 4.0) {
       return Container(
@@ -171,13 +211,23 @@ class TransactionDetailProvider extends ChangeNotifier {
           gradient: LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            colors: [Colors.white, CustomColor.STAR_5, CustomColor.STAR_5, CustomColor.STAR_5, Colors.white],
+            colors: [
+              Colors.white,
+              CustomColor.STAR_5,
+              CustomColor.STAR_5,
+              CustomColor.STAR_5,
+              Colors.white
+            ],
           ),
         ),
-        child: Text(AppLocalizations.instance.text('TXT_STAR_REVIEW_4'), style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ), textAlign: TextAlign.center,),
+        child: Text(
+          AppLocalizations.instance.text('TXT_STAR_REVIEW_4'),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
       );
     } else if (starRating == 5.0) {
       return Container(
@@ -187,20 +237,31 @@ class TransactionDetailProvider extends ChangeNotifier {
           gradient: LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            colors: [Colors.white, CustomColor.STAR_5, CustomColor.STAR_5, CustomColor.STAR_5, Colors.white],
+            colors: [
+              Colors.white,
+              CustomColor.STAR_5,
+              CustomColor.STAR_5,
+              CustomColor.STAR_5,
+              Colors.white
+            ],
           ),
         ),
-        child: Text(AppLocalizations.instance.text('TXT_STAR_REVIEW_5'), style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ), textAlign: TextAlign.center,),
+        child: Text(
+          AppLocalizations.instance.text('TXT_STAR_REVIEW_5'),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
       );
     } else {
       return SizedBox();
     }
   }
 
-  fnGetTotalPrice(int pay, int deliveryCost) => FormatterHelper.moneyFormatter(pay - deliveryCost);
+  fnGetTotalPrice(int pay, int deliveryCost) =>
+      FormatterHelper.moneyFormatter(pay - deliveryCost);
 
   Future fnGetLocale() async {
     final _storage = new FlutterSecureStorage();
@@ -239,14 +300,19 @@ class TransactionDetailProvider extends ChangeNotifier {
     if (_res!.status != null) {
       if (_res.status == true) {
         _view!.onProgressFinish();
-        await CustomWidget.showSnackBar(context: context, content: Text('Thank you for reviewing'));
+        await CustomWidget.showSnackBar(
+            context: context, content: Text('Thank you for reviewing'));
       } else {
         _view!.onProgressFinish();
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message != null ? _res.message.toString() : ''));
+        await CustomWidget.showSnackBar(
+            context: context,
+            content: Text(_res.message != null ? _res.message.toString() : ''));
       }
     } else {
       _view!.onProgressFinish();
-      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+      await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
     _view!.onProgressFinish();
     notifyListeners();
@@ -261,17 +327,19 @@ class TransactionDetailProvider extends ChangeNotifier {
     if (_res!.status != null) {
       if (_res.status == true) {
         _view!.onProgressFinish();
-
       } else {
         _view!.onProgressFinish();
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message != null ? _res.message.toString() : ''));
+        await CustomWidget.showSnackBar(
+            context: context,
+            content: Text(_res.message != null ? _res.message.toString() : ''));
       }
     } else {
       _view!.onProgressFinish();
-      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+      await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
     _view!.onProgressFinish();
     notifyListeners();
   }
-
 }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:eight_barrels/helper/url_helper.dart';
@@ -45,6 +46,10 @@ class TransactionService extends GetConnect {
         _data,
         headers: await _headersAuth(),
       );
+
+      // print(json.encode(_data));
+      // print(URLHelper.transactionUrl);
+      // print(await _headersAuth());
 
       print(_response.body);
 

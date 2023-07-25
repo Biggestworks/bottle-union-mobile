@@ -140,7 +140,8 @@ class Datum {
         vaNumber: json["va_number"],
         deeplink: json["deeplink"],
         gosend: json['gosend'] != null
-            ? List<Gosend>.from(json["gosend"].map((x) => Gosend.fromJson(x)))
+            ? List<Gosend>.from(json["gosend"]
+                .map((x) => x != null ? Gosend.fromJson(x) : Gosend()))
             : null,
         codeTransaction: json["code_transaction"],
         orderedAt: DateTime.parse(json["ordered_at"]),
