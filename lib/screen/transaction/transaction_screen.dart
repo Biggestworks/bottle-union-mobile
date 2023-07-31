@@ -675,10 +675,10 @@ class _TransactionScreenState extends State<TransactionScreen>
                                                                                 '';
                                                                         print(
                                                                             _url);
-                                                                        // await LaunchUrlHelper.launchUrl(
-                                                                        //     context:
-                                                                        //         _scaffoldKey!.currentContext!,
-                                                                        //     url: _url);
+                                                                        await LaunchUrlHelper.launchUrl(
+                                                                            context:
+                                                                                _scaffoldKey!.currentContext!,
+                                                                            url: _url);
                                                                       }),
                                                             )
                                                           : const SizedBox()

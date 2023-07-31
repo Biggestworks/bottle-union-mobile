@@ -1388,11 +1388,11 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen>
                                     final _url = provider.transactionDetail
                                             .result?.deepLink ??
                                         '';
-                                    log(_url);
-                                    // await LaunchUrlHelper.launchUrl(
-                                    //     context: provider
-                                    //         .scaffoldKey.currentContext!,
-                                    //     url: _url);
+
+                                    await LaunchUrlHelper.launchUrl(
+                                        context: provider
+                                            .scaffoldKey.currentContext!,
+                                        url: _url);
                                   }),
                             );
                           default:
