@@ -144,11 +144,12 @@ class PaymentProvider extends ChangeNotifier {
       if (_res['status']) {
         orderCartModel = orderCart.OrderCartModel.fromJson(_res);
 
-        print(_res['result_dana']['actions']['mobile_web_checkout_url']
-            .toString());
-        webViewUrl = _res['result_dana']['actions']['mobile_web_checkout_url']
-            .toString();
-        notifyListeners();
+        _view!.onProgressFinish();
+        Get.offNamedUntil(OrderFinishScreen.tag, (route) => route.isFirst,
+            arguments: OrderFinishScreen(
+              orderCart: orderCartModel,
+              mapResult: _res,
+            ));
       } else {
         _view!.onProgressFinish();
         await CustomWidget.showSnackBar(
@@ -166,10 +167,17 @@ class PaymentProvider extends ChangeNotifier {
       if (_res['status']) {
         orderCartModel = orderCart.OrderCartModel.fromJson(_res);
 
-        webViewUrl = _res['result_shopee']['actions']
-                ['mobile_deeplink_checkout_url']
-            .toString();
-        notifyListeners();
+        _view!.onProgressFinish();
+        Get.offNamedUntil(OrderFinishScreen.tag, (route) => route.isFirst,
+            arguments: OrderFinishScreen(
+              orderCart: orderCartModel,
+              mapResult: _res,
+            ));
+
+        // webViewUrl = _res['result_shopee']['actions']
+        //         ['mobile_deeplink_checkout_url']
+        //     .toString();
+        // notifyListeners();
       } else {
         _view!.onProgressFinish();
         await CustomWidget.showSnackBar(
@@ -317,9 +325,16 @@ class PaymentProvider extends ChangeNotifier {
 
       orderNowModel = order.OrderNowModel.fromJson(res);
 
-      webViewUrl =
-          res['result_dana']['actions']['mobile_web_checkout_url'].toString();
-      notifyListeners();
+      _view!.onProgressFinish();
+      Get.offNamedUntil(OrderFinishScreen.tag, (route) => route.isFirst,
+          arguments: OrderFinishScreen(
+            mapResult: res,
+            orderNow: orderNowModel,
+          ));
+
+      // webViewUrl =
+      //     res['result_dana']['actions']['mobile_web_checkout_url'].toString();
+      // notifyListeners();
     } else if (selectedPayment?.name == "shopee-pay") {
       var res = await _service.purchaseEwallet(
           idAddress: addressId.toString(),
@@ -335,10 +350,17 @@ class PaymentProvider extends ChangeNotifier {
 
       orderNowModel = order.OrderNowModel.fromJson(res);
 
-      webViewUrl = res['result_shopee']['actions']
-              ['mobile_deeplink_checkout_url']
-          .toString();
-      notifyListeners();
+      _view!.onProgressFinish();
+      Get.offNamedUntil(OrderFinishScreen.tag, (route) => route.isFirst,
+          arguments: OrderFinishScreen(
+            mapResult: res,
+            orderNow: orderNowModel,
+          ));
+
+      // webViewUrl = res['result_shopee']['actions']
+      //         ['mobile_deeplink_checkout_url']
+      //     .toString();
+      // notifyListeners();
     } else {
       var _res = await _service.storeOrderBuyNow(
         addressId: addressId,

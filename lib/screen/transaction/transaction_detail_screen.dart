@@ -1395,6 +1395,54 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen>
                                         url: _url);
                                   }),
                             );
+                          case 'E-Wallet (DANA)':
+                            return Container(
+                              color: Colors.white,
+                              width: MediaQuery.of(context).size.width,
+                              child: CustomWidget.roundIconBtn(
+                                  icon: MdiIcons.shieldCheck,
+                                  label: AppLocalizations.instance
+                                      .text('TXT_FINISH_PAYMENT'),
+                                  btnColor: Colors.green,
+                                  lblColor: Colors.white,
+                                  isBold: true,
+                                  radius: 8,
+                                  fontSize: 16,
+                                  function: () async {
+                                    final _url = provider.transactionDetail
+                                            .result?.deepLink ??
+                                        '';
+
+                                    await LaunchUrlHelper.launchUrl(
+                                        context: provider
+                                            .scaffoldKey.currentContext!,
+                                        url: _url);
+                                  }),
+                            );
+                          case 'E-Wallet (Shopee Pay)':
+                            return Container(
+                              color: Colors.white,
+                              width: MediaQuery.of(context).size.width,
+                              child: CustomWidget.roundIconBtn(
+                                  icon: MdiIcons.shieldCheck,
+                                  label: AppLocalizations.instance
+                                      .text('TXT_FINISH_PAYMENT'),
+                                  btnColor: Colors.green,
+                                  lblColor: Colors.white,
+                                  isBold: true,
+                                  radius: 8,
+                                  fontSize: 16,
+                                  function: () async {
+                                    final _url = provider.transactionDetail
+                                            .result?.deepLink ??
+                                        '';
+
+                                    await LaunchUrlHelper.launchUrl(
+                                        context: provider
+                                            .scaffoldKey.currentContext!,
+                                        url: _url);
+                                  }),
+                            );
                           default:
                             return skeleton!;
                         }
@@ -1423,8 +1471,9 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen>
                         _provider
                             .transactionDetail.result!.gosend!.isNotEmpty) {
                       print(_provider.transactionDetail.result!.gosend!.first
-                          .liveTrackingUrl
-                          .toString() =="null");
+                              .liveTrackingUrl
+                              .toString() ==
+                          "null");
                       if (_provider.transactionDetail.result!.gosend!.first
                               .liveTrackingUrl
                               .toString()

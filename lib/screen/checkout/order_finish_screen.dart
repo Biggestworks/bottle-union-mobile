@@ -24,8 +24,10 @@ class OrderFinishScreen extends StatefulWidget {
   static String tag = '/order-finish-screen';
   final OrderNowModel? orderNow;
   final OrderCartModel? orderCart;
+  final Map<String, dynamic>? mapResult;
 
-  const OrderFinishScreen({Key? key, this.orderNow, this.orderCart})
+  const OrderFinishScreen(
+      {Key? key, this.orderNow, this.orderCart, this.mapResult})
       : super(key: key);
 
   @override
@@ -1328,8 +1330,15 @@ class _OrderFinishScreenState extends State<OrderFinishScreen>
                                 radius: 8,
                                 fontSize: 16,
                                 function: () async {
-                                  final _url =
-                                      provider.orderNow?.deepLink ?? '';
+                                  var _url = '';
+                                  if (provider.mapResult != null) {
+                                    _url = provider.mapResult!['data'][0]
+                                        ['deeplink'];
+                                  } else {
+                                    _url = provider.orderNow?.deepLink ?? '';
+                                  }
+
+                                  print(_url);
 
                                   await LaunchUrlHelper.launchUrl(
                                       context:
@@ -1370,6 +1379,62 @@ class _OrderFinishScreenState extends State<OrderFinishScreen>
                                 )),
                           ),
                         );
+                      case 'E-Wallet (Shopee Pay)':
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: CustomWidget.roundIconBtn(
+                            icon: MdiIcons.shieldCheck,
+                            label: AppLocalizations.instance
+                                .text('TXT_FINISH_PAYMENT'),
+                            btnColor: Colors.green,
+                            lblColor: Colors.white,
+                            isBold: true,
+                            radius: 8,
+                            fontSize: 16,
+                            function: () async {
+                              var _url = '';
+                              if (provider.mapResult != null) {
+                                _url = provider.mapResult!['result_shopee']
+                                    ['actions']['mobile_deeplink_checkout_url'];
+                              } else {
+                                _url = provider.orderCart?.deeplink ?? '';
+                              }
+
+                              await LaunchUrlHelper.launchUrl(
+                                  context: provider.scaffoldKey.currentContext!,
+                                  url: _url);
+                            },
+                          ),
+                        );
+                      case 'E-Wallet (DANA)':
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: CustomWidget.roundIconBtn(
+                            icon: MdiIcons.shieldCheck,
+                            label: AppLocalizations.instance
+                                .text('TXT_FINISH_PAYMENT'),
+                            btnColor: Colors.green,
+                            lblColor: Colors.white,
+                            isBold: true,
+                            radius: 8,
+                            fontSize: 16,
+                            function: () async {
+                              var _url = '';
+                              if (provider.mapResult != null) {
+                                _url = provider.mapResult!['result_dana']
+                                    ['actions']['mobile_web_checkout_url'];
+
+                                print(_url);
+                              } else {
+                                _url = provider.orderCart?.deeplink ?? '';
+                              }
+
+                              await LaunchUrlHelper.launchUrl(
+                                  context: provider.scaffoldKey.currentContext!,
+                                  url: _url);
+                            },
+                          ),
+                        );
                       default:
                         switch (provider.orderCart?.result?[0].vaNumber) {
                           case null:
@@ -1385,13 +1450,19 @@ class _OrderFinishScreenState extends State<OrderFinishScreen>
                                 radius: 8,
                                 fontSize: 16,
                                 function: () async {
-                                  final _url =
-                                      provider.orderCart?.deeplink ?? '';
+                                  var _url = '';
+                                  if (provider.mapResult != null) {
+                                    print(provider.mapResult!['result_shopee']);
+                                    // _url = provider.mapResult!['data'][0]
+                                    //     ['deeplink'];
+                                  } else {
+                                    _url = provider.orderCart?.deeplink ?? '';
+                                  }
 
-                                  await LaunchUrlHelper.launchUrl(
-                                      context:
-                                          provider.scaffoldKey.currentContext!,
-                                      url: _url);
+                                  // await LaunchUrlHelper.launchUrl(
+                                  //     context:
+                                  //         provider.scaffoldKey.currentContext!,
+                                  //     url: _url);
                                 },
                               ),
                             );

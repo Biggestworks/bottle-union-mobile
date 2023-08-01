@@ -11,6 +11,7 @@ class OrderFinishProvider extends ChangeNotifier {
   // PaymentService _paymentService = new PaymentService();
   OrderNowModel? orderNow;
   OrderCartModel? orderCart;
+  Map<String, dynamic>? mapResult;
 
   LoadingView? _view;
 
@@ -25,6 +26,7 @@ class OrderFinishProvider extends ChangeNotifier {
         ModalRoute.of(context)!.settings.arguments as OrderFinishScreen;
     orderNow = _args.orderNow;
     orderCart = _args.orderCart;
+    mapResult = _args.mapResult;
     notifyListeners();
   }
 
