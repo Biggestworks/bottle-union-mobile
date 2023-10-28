@@ -1008,8 +1008,9 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen>
                                           onPressed: () async {
                                             await Clipboard.setData(
                                                 ClipboardData(
-                                                    text: _data.gosend!.first
-                                                        .orderNo));
+                                                    text: _data
+                                                        .gosend!.first.orderNo
+                                                        .toString()));
                                           },
                                           icon: Icon(
                                             Icons.document_scanner,
