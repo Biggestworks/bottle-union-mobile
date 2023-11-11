@@ -37,6 +37,9 @@ class BaseHomeProvider extends ChangeNotifier {
 
   String? firstTime;
   String? isGuest;
+  String? selectedCountry;
+  String? selectedCity;
+  String? selectedBranch;
 
   LoadingView? _view;
 

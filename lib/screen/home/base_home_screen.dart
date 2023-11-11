@@ -7,6 +7,7 @@ import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/helper/user_preferences.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/screen/auth/start_screen.dart';
+import 'package:eight_barrels/screen/home/choose_country_page.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -57,14 +58,23 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> with LoadingView {
 
   @override
   void initState() {
-    Future.delayed(Duration.zero, () {
-      Provider.of<BaseHomeProvider>(context, listen: false).fnGetView(this);
-      Provider.of<BaseHomeProvider>(context, listen: false).fnGetArguments(context).whenComplete(() {
-        _fnCheckUserToken(context, (Provider.of<BaseHomeProvider>(context, listen: false).isGuest ?? 'false'));
-        Provider.of<BaseHomeProvider>(context, listen: false).fnStartShowcase(context);
-      });
-      Provider.of<BaseHomeProvider>(context, listen: false).fnGetCartCount();
-    },);
+    Future.delayed(
+      Duration.zero,
+      () {
+        Provider.of<BaseHomeProvider>(context, listen: false).fnGetView(this);
+        Provider.of<BaseHomeProvider>(context, listen: false)
+            .fnGetArguments(context)
+            .whenComplete(() {
+          _fnCheckUserToken(
+              context,
+              (Provider.of<BaseHomeProvider>(context, listen: false).isGuest ??
+                  'false'));
+          Provider.of<BaseHomeProvider>(context, listen: false)
+              .fnStartShowcase(context);
+        });
+        Provider.of<BaseHomeProvider>(context, listen: false).fnGetCartCount();
+      },
+    );
     super.initState();
   }
 
@@ -76,7 +86,6 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> with LoadingView {
 
   @override
   Widget build(BuildContext context) {
-
     Widget _bottomNavBar = Consumer<BaseHomeProvider>(
       child: Container(),
       builder: (context, provider, skeleton) {
@@ -145,39 +154,83 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> with LoadingView {
 
     return Scaffold(
       body: Consumer<BaseHomeProvider>(
-        child: Container(),
-        builder: (context, provider, skeleton) {
-          switch (_isLoad) {
-            case true:
+          child: Container(),
+          builder: (context, provider, skeleton) {
+            if (_isLoad) {
+              return Text('ini');
               return skeleton!;
-            default:
-              // return provider.screenList2();
-              switch (provider.isGuest) {
-                case 'true':
-                  return provider.guestScreenList();
-                default:
+            } else {
+              if (provider.isGuest == 'true') {
+                return provider.guestScreenList();
+              } else {
+                if (provider.selectedCountry != null &&
+                    provider.selectedCity != null &&
+                    provider.selectedBranch != null) {
                   return provider.screenList();
+                } else {
+                  return ChooseCountryPage();
+                }
               }
-          }
-        }
-      ),
+              // switch (provider.isGuest) {
+              //   case 'true':
+              //     return provider.guestScreenList();
+              //   default:
+              //     return ChooseCountryPage();
+              //   // return provider.screenList();
+              // }
+            }
+            // switch (_isLoad) {
+            //   case true:
+            //     return skeleton!;
+            //   default:
+            //     // return provider.screenList2();
+            //     switch (provider.isGuest) {
+            //       case 'true':
+            //         return provider.guestScreenList();
+            //       default:
+            //         return ChooseCountryPage();
+            //         return provider.screenList();
+            //     }
+            // }
+          }),
       bottomNavigationBar: Consumer<BaseHomeProvider>(
-        child: Container(),
-        builder: (context, provider, skeleton) {
-          switch (_isLoad) {
-            case true:
+          child: Container(),
+          builder: (context, provider, skeleton) {
+            if (_isLoad) {
               return skeleton!;
-            default:
-              switch (provider.firstTime) {
-                case 'false':
+            } else {
+              if (provider.firstTime == 'false') {
+                if (provider.selectedCountry != null &&
+                    provider.selectedCity != null &&
+                    provider.selectedBranch != null) {
                   return _bottomNavBar;
-                default:
-                  return _showcaseBottomNavBar;
+                } else {
+                  return Container(
+                    height: 0,
+                  );
+                }
+              } else {
+                return _showcaseBottomNavBar;
               }
-          }
-
-        }
-      ),
+              // switch (provider.firstTime) {
+              //   case 'false':
+              //     return _bottomNavBar;
+              //   default:
+              //     return _showcaseBottomNavBar;
+              // }
+            }
+            // switch (_isLoad) {
+            //   case true:
+            //     return skeleton!;
+            //   default:
+            //     switch (provider.firstTime) {
+            //       case 'false':
+            //         return _bottomNavBar;
+            //       default:
+            //         return _showcaseBottomNavBar;
+            //     }
+            // }
+          }),
     );
   }
 
@@ -196,5 +249,4 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> with LoadingView {
       setState(() {});
     }
   }
-
 }
