@@ -28,4 +28,9 @@ class KeyHelper {
   static const REMOVE_FAVORITE_KEY = 'remove favorite';
   static const REMOVE_CART_KEY = 'remove cart';
   static const BUY_KEY = 'buy';
+
+  /// BRANCH SELECTION
+  static const SELECTED_COUNTRY_KEY = 'selected_country';
+  static const SELECTED_CITY_KEY = 'selected_city';
+  static const SELECTED_BRANCH_KEY = 'selected_branch';
 }

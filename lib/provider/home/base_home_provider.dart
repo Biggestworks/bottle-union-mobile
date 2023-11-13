@@ -47,6 +47,34 @@ class BaseHomeProvider extends ChangeNotifier {
     this._view = view;
   }
 
+  saveBranchSelection(bool isSave, String selectedCountries,
+      String selectedCities, String selectedBranchs) async {
+    if (isSave) {
+      final _storage = new FlutterSecureStorage();
+      _storage.write(
+          key: KeyHelper.SELECTED_COUNTRY_KEY, value: selectedCountries);
+      _storage.write(key: KeyHelper.SELECTED_CITY_KEY, value: selectedCities);
+      _storage.write(
+          key: KeyHelper.SELECTED_BRANCH_KEY, value: selectedBranchs);
+    }
+    selectedCountry = selectedCountries;
+    selectedCity = selectedCities;
+    selectedBranch = selectedBranchs;
+    notifyListeners();
+  }
+
+  checkBranchSelection() async {
+    final _storage = new FlutterSecureStorage();
+    final country = await _storage.read(key: KeyHelper.SELECTED_COUNTRY_KEY);
+    final city = await _storage.read(key: KeyHelper.SELECTED_CITY_KEY);
+    final branch = await _storage.read(key: KeyHelper.SELECTED_BRANCH_KEY);
+
+    selectedCountry = country;
+    selectedCity = city;
+    selectedBranch = branch;
+    notifyListeners();
+  }
+
   Future fnGetArguments(BuildContext context) async {
     _view!.onProgressStart();
     final _args = ModalRoute.of(context)!.settings.arguments as BaseHomeScreen;

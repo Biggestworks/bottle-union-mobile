@@ -2,8 +2,10 @@ import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/model/branch_models/branch_models.dart';
 import 'package:eight_barrels/model/city_models/city_models.dart';
 import 'package:eight_barrels/model/country/country_models.dart';
+import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:provider/provider.dart';
 
 class ChooseCountryPage extends StatefulWidget {
   const ChooseCountryPage({Key? key});
@@ -19,6 +21,7 @@ class _ChooseCountryPageState extends State<ChooseCountryPage> {
   bool isSaveSelection = false;
   @override
   Widget build(BuildContext context) {
+    //  Provider.of<BaseHomeProvider>(context, listen: false).selectedBranch = 0;
     return Scaffold(
       backgroundColor: CustomColor.MAIN,
       body: Column(
@@ -66,6 +69,7 @@ class _ChooseCountryPageState extends State<ChooseCountryPage> {
                     setState(() {
                       selectedCountry = e;
                       selectedCity = null;
+                      selectedBranch = null;
                     });
                   },
                   child: Container(
@@ -123,6 +127,7 @@ class _ChooseCountryPageState extends State<ChooseCountryPage> {
                         onTap: () {
                           setState(() {
                             selectedCity = e;
+                            selectedBranch = null;
                           });
                         },
                         child: Container(
@@ -262,7 +267,18 @@ class _ChooseCountryPageState extends State<ChooseCountryPage> {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              onPressed: () {},
+              onPressed: selectedCountry != null &&
+                      selectedCity != null &&
+                      selectedBranch != null
+                  ? () {
+                      Provider.of<BaseHomeProvider>(context, listen: false)
+                          .saveBranchSelection(
+                              isSaveSelection,
+                              selectedCountry!.id,
+                              selectedCity!.id,
+                              selectedBranch!.id);
+                    }
+                  : null,
               child: Text(
                 "Continue",
                 style: TextStyle(

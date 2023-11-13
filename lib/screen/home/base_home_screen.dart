@@ -63,6 +63,8 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> with LoadingView {
       () {
         Provider.of<BaseHomeProvider>(context, listen: false).fnGetView(this);
         Provider.of<BaseHomeProvider>(context, listen: false)
+            .checkBranchSelection();
+        Provider.of<BaseHomeProvider>(context, listen: false)
             .fnGetArguments(context)
             .whenComplete(() {
           _fnCheckUserToken(

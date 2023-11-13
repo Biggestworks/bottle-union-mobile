@@ -1404,7 +1404,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
             children: [
               _productHeaderContent,
               _descriptionContent,
-              _productRegionContent,
+              // _productRegionContent,
               _productDetailContent,
               if (_provider.isGuest != 'true') _productDiscussionContent,
             ],
