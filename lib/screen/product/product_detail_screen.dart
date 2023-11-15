@@ -51,9 +51,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
             .fnCheckWishlist();
         Provider.of<ProductDetailProvider>(context, listen: false)
             .fnFetchDiscussionList();
+        Provider.of<ProductDetailProvider>(context, listen: false)
+            .fnGetSelectedRegionProduct();
       });
-      Provider.of<ProductDetailProvider>(context, listen: false)
-          .fnGetSelectedRegionProduct();
     });
     super.initState();
   }
@@ -207,9 +207,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                             ),
                                             child: Container(
                                               decoration: BoxDecoration(
-                                                color: provider.selectedRegion
-                                                            .selectedRegionId ==
+                                                color: provider.regionId ==
                                                         _productRegion?.idRegion
+                                                            .toString()
                                                     ? CustomColor.MAIN
                                                     : Colors.transparent,
                                                 borderRadius:
@@ -222,11 +222,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                                 child: Text(
                                                   '${_productRegion?.region?.name ?? '-'} (${_productRegion?.stock.toString() ?? '0'} ${_productRegion?.stock == 1 ? 'stock' : 'stocks'})',
                                                   style: TextStyle(
-                                                    color: provider
-                                                                .selectedRegion
-                                                                .selectedRegionId ==
+                                                    color: provider.regionId ==
                                                             _productRegion
                                                                 ?.idRegion
+                                                                .toString()
                                                         ? Colors.white
                                                         : Colors.black,
                                                   ),
@@ -273,10 +272,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                               return IconButton(
                                 onPressed: () async {
                                   Get.back();
-                                  if (provider.selectedRegion
-                                              .selectedRegionId !=
-                                          null &&
-                                      provider.selectedRegion.stock != 0) {
+                                  if (provider.regionId != null &&
+                                      provider.selectedRegion != null &&
+                                      provider.selectedRegion!.stock != 0) {
                                     await provider.fnStoreWishlist(
                                         provider.scaffoldKey.currentContext!);
                                   } else {
@@ -329,10 +327,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                         radius: 5,
                                         function: () async {
                                           Get.back();
-                                          if (provider.selectedRegion
-                                                      .selectedRegionId !=
-                                                  null &&
-                                              provider.selectedRegion.stock !=
+                                          if (provider.regionId != null &&
+                                              provider.selectedRegion != null &&
+                                              provider.selectedRegion!.stock !=
                                                   0) {
                                             await _provider
                                                 .fnStoreCart(_provider
@@ -364,21 +361,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                         radius: 5,
                                         function: () async {
                                           Get.back();
-                                          if (provider.selectedRegion
-                                                      .selectedRegionId !=
-                                                  null &&
-                                              provider.selectedRegion.stock !=
+                                          if (provider.regionId != null &&
+                                              provider.selectedRegion != null &&
+                                              provider.selectedRegion!.stock !=
                                                   0) {
                                             Get.toNamed(DeliveryBuyScreen.tag,
                                                 arguments: DeliveryBuyScreen(
                                                   product: _provider.product,
                                                   isCart: false,
-                                                  selectedRegionId: provider
-                                                      .selectedRegion
-                                                      .selectedRegionId,
-                                                  selectedProvinceId: provider
-                                                      .selectedRegion
-                                                      .selectedProvinceId,
+                                                  selectedRegionId: int.parse(
+                                                      provider.regionId
+                                                          .toString()),
+                                                  selectedProvinceId: 0,
                                                 ));
                                           } else {
                                             await CustomWidget.showSnackBar(
@@ -489,10 +483,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                   btnColor: CustomColor.MAIN,
                                   isBold: true,
                                   radius: 5,
-                                  function: () {
+                                  function: () async {
                                     if (provider.isGuest != 'true') {
-                                      _showProductRegionSheet(
-                                          _provider.product.data);
+                                      // _showProductRegionSheet(
+                                      //     _provider.product.data);
+                                      await _provider
+                                          .fnStoreCart(_provider
+                                              .scaffoldKey.currentContext!)
+                                          .then((_) async => await _baseProvider
+                                              .fnGetCartCount());
                                     } else {
                                       _showRegisterConfirmation();
                                     }
@@ -512,8 +511,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                   radius: 5,
                                   function: () {
                                     if (provider.isGuest != 'true') {
-                                      _showProductRegionSheet(
-                                          _provider.product.data);
+                                      // _showProductRegionSheet(
+                                      //     _provider.product.data);
+                                      Get.toNamed(DeliveryBuyScreen.tag,
+                                          arguments: DeliveryBuyScreen(
+                                            product: _provider.product,
+                                            isCart: false,
+                                            selectedRegionId: int.parse(
+                                                provider.regionId.toString()),
+                                            selectedProvinceId: 0,
+                                          ));
                                     } else {
                                       _showRegisterConfirmation();
                                     }
@@ -893,9 +900,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                     margin: EdgeInsets.only(
                                         right: 10, left: index == 0 ? 10 : 0),
                                     decoration: BoxDecoration(
-                                      color: provider.selectedRegion
-                                                  .selectedRegionId ==
+                                      color: provider.regionId ==
                                               _productRegion?.idRegion
+                                                  .toString()
                                           ? CustomColor.MAIN
                                           : Colors.transparent,
                                       borderRadius: BorderRadius.circular(15),
@@ -907,9 +914,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                         Text(
                                           _productRegion?.region?.name ?? '-',
                                           style: TextStyle(
-                                            color: provider.selectedRegion
-                                                        .selectedRegionId ==
+                                            color: provider.regionId ==
                                                     _productRegion?.idRegion
+                                                        .toString()
                                                 ? Colors.white
                                                 : Colors.black,
                                           ),
@@ -920,9 +927,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                         Text(
                                           '(${_productRegion?.stock.toString() ?? '0'} ${_productRegion?.stock == 1 ? 'stock' : 'stocks'})',
                                           style: TextStyle(
-                                            color: provider.selectedRegion
-                                                        .selectedRegionId ==
+                                            color: provider.regionId ==
                                                     _productRegion?.idRegion
+                                                        .toString()
                                                 ? Colors.white
                                                 : Colors.black,
                                           ),
@@ -1459,16 +1466,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
               case true:
                 return skeleton!;
               default:
-                switch (provider.product.data?.stock) {
-                  case 0:
-                    return _bottomMenuDisabledContent;
-                  default:
-                    switch (provider.product.data?.productRegion?.length) {
-                      case 0:
-                        return _bottomMenuDisabledContent;
-                      default:
-                        return _bottomMenuContent;
-                    }
+                if (provider.selectedRegion != null) {
+                  switch (provider.selectedRegion!.stock) {
+                    case 0:
+                      return _bottomMenuDisabledContent;
+                    default:
+                      switch (provider.product.data?.productRegion?.length) {
+                        case 0:
+                          return _bottomMenuDisabledContent;
+                        default:
+                          return _bottomMenuContent;
+                      }
+                  }
+                } else {
+                  return SizedBox();
                 }
             }
           }),

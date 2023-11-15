@@ -107,4 +107,9 @@ class URLHelper {
   static final tokenIdUrl = xenditUrl + '/getTokenId';
   static final authorizationIdUrl = xenditUrl + '/getAuthorized';
   static final chargeV2Url = xenditUrl + '/v2/charge';
+
+  /// COUNTRY
+  static final countryUrl = baseUrl + '/country';
+  static final cityUrl = baseUrl + '/city/country/';
+  static final branchUrl = baseUrl + '/region/city/';
 }

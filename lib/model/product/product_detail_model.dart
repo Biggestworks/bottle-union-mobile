@@ -55,34 +55,34 @@ class Data {
 
   Data(
       {this.id,
-        this.idBrand,
-        this.idCategory,
-        this.manufactureCountry,
-        this.originCountry,
-        this.year,
-        this.name,
-        this.price,
-        this.regularPrice,
-        this.salePrice,
-        this.description,
-        this.weight,
-        this.publish,
-        this.isPopular,
-        this.image1,
-        this.image2,
-        this.image3,
-        this.image4,
-        this.image5,
-        this.stock,
-        this.width,
-        this.height,
-        this.rating,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt,
-        this.productRegion,
-        this.categories,
-        this.brand});
+      this.idBrand,
+      this.idCategory,
+      this.manufactureCountry,
+      this.originCountry,
+      this.year,
+      this.name,
+      this.price,
+      this.regularPrice,
+      this.salePrice,
+      this.description,
+      this.weight,
+      this.publish,
+      this.isPopular,
+      this.image1,
+      this.image2,
+      this.image3,
+      this.image4,
+      this.image5,
+      this.stock,
+      this.width,
+      this.height,
+      this.rating,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt,
+      this.productRegion,
+      this.categories,
+      this.brand});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -178,7 +178,7 @@ class ProductRegion {
     idRegion = json['id_region'];
     stock = json['stock'];
     region =
-    json['region'] != null ? new Region.fromJson(json['region']) : null;
+        json['region'] != null ? new Region.fromJson(json['region']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -227,13 +227,13 @@ class Categories {
 
   Categories(
       {this.id,
-        this.name,
-        this.description,
-        this.publish,
-        this.image,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt});
+      this.name,
+      this.description,
+      this.publish,
+      this.image,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt});
 
   Categories.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -271,12 +271,12 @@ class Brand {
 
   Brand(
       {this.id,
-        this.name,
-        this.image,
-        this.publish,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt});
+      this.name,
+      this.image,
+      this.publish,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt});
 
   Brand.fromJson(Map<String, dynamic> json) {
     id = json['id'];

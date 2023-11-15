@@ -46,8 +46,10 @@ class DeliveryBuyProvider extends ChangeNotifier {
   fnGetArguments(BuildContext context) {
     final _args =
         ModalRoute.of(context)!.settings.arguments as DeliveryBuyScreen;
+    print(_args);
     product = _args.product;
     isCart = _args.isCart;
+    print(_args.selectedRegionId);
     selectedRegionId = _args.selectedRegionId;
     selectedProvinceId = _args.selectedProvinceId;
     notifyListeners();
@@ -129,7 +131,7 @@ class DeliveryBuyProvider extends ChangeNotifier {
 
   Future fnFetchCourierList() async {
     _view!.onProgressStart();
-
+    print(selectedRegionId);
     courierList = (await _deliveryService.getCourierList(
       idRegion: selectedRegionId ?? 0,
       idAddress: selectedAddress != null ? selectedAddress!.id! : 0,

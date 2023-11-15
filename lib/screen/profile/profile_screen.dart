@@ -6,6 +6,7 @@ import 'package:eight_barrels/helper/color_helper.dart';
 import 'package:eight_barrels/provider/profile/profile_provider.dart';
 import 'package:eight_barrels/screen/auth/fp_webview_screen.dart';
 import 'package:eight_barrels/screen/auth/tac_webview_screen.dart';
+import 'package:eight_barrels/screen/home/choose_country_page.dart';
 import 'package:eight_barrels/screen/product/wishlist_screen.dart';
 import 'package:eight_barrels/screen/profile/address_list_screen.dart';
 import 'package:eight_barrels/screen/profile/change_password_screen.dart';
@@ -392,9 +393,15 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
                           width: 5,
                         ),
                         GestureDetector(
-                          onTap: () => CustomWidget.showInfoPopup(context,
-                              desc: AppLocalizations.instance
-                                  .text('TXT_REGION_PREFERENCE_INFO')),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChooseCountryPage()));
+                          },
+                          // onTap: () => CustomWidget.showInfoPopup(context,
+                          //     desc: AppLocalizations.instance
+                          //         .text('TXT_REGION_PREFERENCE_INFO')),
                           child: Icon(
                             FontAwesomeIcons.questionCircle,
                             size: 18,
@@ -422,7 +429,13 @@ class _ProfileScreenState extends State<ProfileScreen> with LoadingView {
                       color: CustomColor.GREY_TXT,
                       size: 15,
                     ),
-                    onTap: () => _showRegionDialog(),
+                    // onTap: () => _showRegionDialog(),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChooseCountryPage()));
+                    },
                   );
                 }),
               ],

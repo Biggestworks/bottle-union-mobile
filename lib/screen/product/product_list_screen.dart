@@ -489,7 +489,22 @@ class _ProductListScreenState extends State<ProductListScreen>
                                 itemBuilder: (context, index) {
                                   var _data =
                                       provider.productList.result?.data?[index];
-                                  switch (_data?.stock) {
+                                  var stock = 0;
+                                  for (var i = 0;
+                                      i < _data!.productRegion!.length;
+                                      i++) {
+                                    var e = _data.productRegion![i];
+                                    if (e.idRegion.toString() ==
+                                        provider.regionId) {
+                                      stock = e.stock!;
+                                    }
+                                  }
+                                  // return Column(
+                                  //   children: _data!.productRegion!.map((e) {
+                                  //     return Text(e.stock.toString());
+                                  //   }).toList(),
+                                  // );
+                                  switch (stock) {
                                     case 0:
                                       return provider.emptyProductCard(
                                         context: context,

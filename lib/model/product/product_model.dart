@@ -1,3 +1,5 @@
+import 'package:eight_barrels/model/product/product_detail_model.dart';
+
 class ProductListModel {
   bool? status;
   String? message;
@@ -9,7 +11,7 @@ class ProductListModel {
     status = json['status'];
     message = json['message'];
     result =
-    json['result'] != null ? new Result.fromJson(json['result']) : null;
+        json['result'] != null ? new Result.fromJson(json['result']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -39,17 +41,17 @@ class Result {
 
   Result(
       {this.currentPage,
-        this.data,
-        this.firstPageUrl,
-        this.from,
-        this.lastPage,
-        this.lastPageUrl,
-        this.nextPageUrl,
-        this.path,
-        this.perPage,
-        this.prevPageUrl,
-        this.to,
-        this.total});
+      this.data,
+      this.firstPageUrl,
+      this.from,
+      this.lastPage,
+      this.lastPageUrl,
+      this.nextPageUrl,
+      this.path,
+      this.perPage,
+      this.prevPageUrl,
+      this.to,
+      this.total});
 
   Result.fromJson(Map<String, dynamic> json) {
     currentPage = json['current_page'];
@@ -119,37 +121,39 @@ class Data {
   String? updatedAt;
   String? deletedAt;
   Categories? categories;
+  List<ProductRegion>? productRegion;
   Brand? brand;
 
   Data(
       {this.id,
-        this.idBrand,
-        this.idCategory,
-        this.manufactureCountry,
-        this.originCountry,
-        this.year,
-        this.name,
-        this.price,
-        this.regularPrice,
-        this.salePrice,
-        this.description,
-        this.weight,
-        this.publish,
-        this.isPopular,
-        this.image1,
-        this.image2,
-        this.image3,
-        this.image4,
-        this.image5,
-        this.stock,
-        this.width,
-        this.height,
-        this.rating,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt,
-        this.categories,
-        this.brand});
+      this.idBrand,
+      this.idCategory,
+      this.manufactureCountry,
+      this.originCountry,
+      this.year,
+      this.name,
+      this.price,
+      this.regularPrice,
+      this.salePrice,
+      this.description,
+      this.weight,
+      this.publish,
+      this.isPopular,
+      this.image1,
+      this.image2,
+      this.image3,
+      this.image4,
+      this.image5,
+      this.stock,
+      this.width,
+      this.height,
+      this.rating,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt,
+      this.categories,
+      this.productRegion,
+      this.brand});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -178,6 +182,12 @@ class Data {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     deletedAt = json['deleted_at'];
+    if (json['product_region'] != null) {
+      productRegion = <ProductRegion>[];
+      json['product_region'].forEach((v) {
+        productRegion!.add(new ProductRegion.fromJson(v));
+      });
+    }
     categories = json['categories'] != null
         ? new Categories.fromJson(json['categories'])
         : null;
@@ -234,13 +244,13 @@ class Categories {
 
   Categories(
       {this.id,
-        this.name,
-        this.description,
-        this.publish,
-        this.image,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt});
+      this.name,
+      this.description,
+      this.publish,
+      this.image,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt});
 
   Categories.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -278,12 +288,12 @@ class Brand {
 
   Brand(
       {this.id,
-        this.name,
-        this.image,
-        this.publish,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt});
+      this.name,
+      this.image,
+      this.publish,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt});
 
   Brand.fromJson(Map<String, dynamic> json) {
     id = json['id'];

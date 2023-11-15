@@ -1,13 +1,25 @@
+import 'dart:developer';
+
+import 'package:eight_barrels/helper/app_localization.dart';
 import 'package:eight_barrels/helper/color_helper.dart';
-import 'package:eight_barrels/model/branch_models/branch_models.dart';
-import 'package:eight_barrels/model/city_models/city_models.dart';
-import 'package:eight_barrels/model/country/country_models.dart';
+import 'package:eight_barrels/helper/key_helper.dart';
+
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
+import 'package:eight_barrels/service/region/region_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
+import '../../model/region/branch_models.dart';
+import '../../model/region/city_models.dart';
+import '../../model/region/country_models.dart';
+import '../splash/splash_screen.dart';
+import '../widget/custom_widget.dart';
+
 class ChooseCountryPage extends StatefulWidget {
+  static String tag = '/choose-country-page';
   const ChooseCountryPage({Key? key});
 
   @override
@@ -15,10 +27,25 @@ class ChooseCountryPage extends StatefulWidget {
 }
 
 class _ChooseCountryPageState extends State<ChooseCountryPage> {
-  CountryModels? selectedCountry;
-  CityModels? selectedCity;
-  BranchModels? selectedBranch;
+  CountryModels? listCountry;
+  CountryData? selectedCountry;
+  CityModels? listCity;
+  CityData? selectedCity;
+  BranchModels? listBranch;
+  BranchData? selectedBranch;
   bool isSaveSelection = false;
+
+  @override
+  void initState() {
+    new RegionService().fetchCountry().then((value) {
+      setState(() {
+        listCountry = value;
+        checkSelectedRegion();
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     //  Provider.of<BaseHomeProvider>(context, listen: false).selectedBranch = 0;
@@ -45,56 +72,70 @@ class _ChooseCountryPageState extends State<ChooseCountryPage> {
           const SizedBox(
             height: 60,
           ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              "Choose Country",
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            child: Wrap(
-              spacing: 12,
-              runSpacing: 10,
-              children: CountryModels.listCountry().map((e) {
-                return InkWell(
-                  onTap: () {
-                    setState(() {
-                      selectedCountry = e;
-                      selectedCity = null;
-                      selectedBranch = null;
-                    });
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: selectedCountry != null &&
-                              selectedCountry!.name == e.name
-                          ? Colors.white.withOpacity(.5)
-                          : null,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.white),
-                    ),
-                    child: Text(
-                      e.name,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
+          if (listCountry != null)
+            Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    "Choose Country",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
                     ),
                   ),
-                );
-              }).toList(),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Wrap(
+                    spacing: 12,
+                    runSpacing: 10,
+                    children: listCountry!.data.map((e) {
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedCountry = e;
+                            listCity = null;
+                            selectedCity = null;
+                            selectedBranch = null;
+                            listBranch = null;
+                            new RegionService().fetchCity(e.id).then((value) {
+                              log(value.toString());
+                              setState(() {
+                                listCity = value;
+                              });
+                            });
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: selectedCountry != null &&
+                                    selectedCountry!.name == e.name
+                                ? Colors.white.withOpacity(.5)
+                                : null,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: Colors.white),
+                          ),
+                          child: Text(
+                            e.name,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
             ),
-          ),
-          if (selectedCountry != null)
+          if (selectedCountry != null && listCity != null)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -119,15 +160,19 @@ class _ChooseCountryPageState extends State<ChooseCountryPage> {
                   child: Wrap(
                     spacing: 12,
                     runSpacing: 10,
-                    children: CityModels.fetchListCity()
-                        .where((element) =>
-                            element.country_id == selectedCountry!.id)
-                        .map((e) {
+                    children: listCity!.data.map((e) {
                       return InkWell(
                         onTap: () {
                           setState(() {
                             selectedCity = e;
                             selectedBranch = null;
+                            listBranch = null;
+
+                            new RegionService().fetchBranch(e.id).then((value) {
+                              setState(() {
+                                listBranch = value;
+                              });
+                            });
                           });
                         },
                         child: Container(
@@ -155,7 +200,7 @@ class _ChooseCountryPageState extends State<ChooseCountryPage> {
                 ),
               ],
             ),
-          if (selectedCity != null)
+          if (selectedCity != null && listBranch != null)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -180,9 +225,7 @@ class _ChooseCountryPageState extends State<ChooseCountryPage> {
                   child: Wrap(
                     spacing: 12,
                     runSpacing: 10,
-                    children: BranchModels.fetchBranch()
-                        .where((element) => element.city_id == selectedCity!.id)
-                        .map((e) {
+                    children: listBranch!.data.map((e) {
                       return InkWell(
                         onTap: () {
                           setState(() {
@@ -274,9 +317,18 @@ class _ChooseCountryPageState extends State<ChooseCountryPage> {
                       Provider.of<BaseHomeProvider>(context, listen: false)
                           .saveBranchSelection(
                               isSaveSelection,
-                              selectedCountry!.id,
-                              selectedCity!.id,
-                              selectedBranch!.id);
+                              selectedCountry!.id.toString(),
+                              selectedCity!.id.toString(),
+                              selectedBranch!.id.toString(),
+                              selectedBranch!.name.toString());
+
+                      CustomWidget.showSuccessDialog(
+                        context,
+                        desc: AppLocalizations.instance
+                            .text('TXT_REGION_PREFERENCE_SUCCESS'),
+                        function: () => Get.offNamedUntil(
+                            SplashScreen.tag, (route) => false),
+                      );
                     }
                   : null,
               child: Text(
@@ -292,5 +344,39 @@ class _ChooseCountryPageState extends State<ChooseCountryPage> {
         ],
       ),
     );
+  }
+
+  void checkSelectedRegion() async {
+    final _storage = new FlutterSecureStorage();
+    var country = await _storage.read(key: KeyHelper.SELECTED_COUNTRY_KEY);
+    var city = await _storage.read(key: KeyHelper.SELECTED_CITY_KEY);
+    var branch = await _storage.read(key: KeyHelper.SELECTED_BRANCH_KEY);
+
+    if (country != null) {
+      setState(() {
+        selectedCountry = listCountry!.data
+            .firstWhere((element) => element.id.toString() == country);
+      });
+    }
+
+    if (city != null) {
+      new RegionService().fetchCity(country).then((value) {
+        setState(() {
+          listCity = value;
+          selectedCity =
+              value.data.firstWhere((element) => element.id.toString() == city);
+        });
+      });
+    }
+
+    if (branch != null) {
+      new RegionService().fetchBranch(city).then((value) {
+        setState(() {
+          listBranch = value;
+          selectedBranch =
+              value.data.firstWhere((e) => e.id.toString() == branch);
+        });
+      });
+    }
   }
 }

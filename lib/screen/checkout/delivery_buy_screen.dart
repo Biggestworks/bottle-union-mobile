@@ -715,7 +715,8 @@ class _DeliveryBuyScreenState extends State<DeliveryBuyScreen>
                                               width: 5,
                                             ),
                                             Text(
-                                              '${_data?.productRegion?.firstWhere((i) => i.idRegion == provider.selectedRegionId).region?.name ?? '-'}',
+                                              "-",
+                                              // '${_data?.productRegion?.firstWhere((i) => i.idRegion == provider.selectedRegionId).region?.name ?? '-'}',
                                               style: TextStyle(
                                                 color: CustomColor.GREY_TXT,
                                               ),

@@ -33,7 +33,8 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
 
   bool isWishlist = false;
   int? productId;
-  SelectedRegion selectedRegion = new SelectedRegion();
+  String? regionId;
+  SelectedRegion? selectedRegion;
   String? isGuest;
 
   LoadingView? _view;
@@ -45,8 +46,11 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
   }
 
   Future fnGetArguments(BuildContext context) async {
-    final _args = ModalRoute.of(context)!.settings.arguments as ProductDetailScreen;
+    final _args =
+        ModalRoute.of(context)!.settings.arguments as ProductDetailScreen;
     productId = _args.productId!;
+    regionId = await _storage.read(key: KeyHelper.KEY_USER_REGION_ID);
+    print(regionId);
     isGuest = await _userPreferences.getGuestStatus();
     notifyListeners();
   }
@@ -87,7 +91,7 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
   Future fnStoreWishlist(BuildContext context) async {
     var _res = await _wishlistService.storeWishlist(
       productId: product.data?.id ?? 0,
-      regionId: selectedRegion.selectedRegionId ?? 0,
+      regionId: selectedRegion != null ? selectedRegion!.selectedRegionId! : 0,
     );
 
     if (_res!.status != null) {
@@ -108,26 +112,35 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
             onPressed: () => Get.toNamed(WishListScreen.tag),
           ),
         );
-      } else if (_res.status == true && _res.message == 'Success remove wishlist') {
+      } else if (_res.status == true &&
+          _res.message == 'Success remove wishlist') {
         await fnStoreLog(
           productId: [product.data?.id ?? 0],
           categoryId: null,
           notes: KeyHelper.REMOVE_WISHLIST_KEY,
         );
         await fnCheckWishlist();
-        await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_WISHLIST_DELETE_SUCCESS')));
+        await CustomWidget.showSnackBar(
+            context: context,
+            content: Text(
+                AppLocalizations.instance.text('TXT_WISHLIST_DELETE_SUCCESS')));
       } else {
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
+        await CustomWidget.showSnackBar(
+            context: context, content: Text(_res.message.toString()));
       }
     } else {
-      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+      await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
   }
 
   Future fnStoreCart(BuildContext context) async {
     var _res = await _cartService.storeCart(
       productIds: [product.data?.id ?? 0],
-      regionIds: [selectedRegion.selectedRegionId ?? 0],
+      regionIds: [
+        selectedRegion != null ? selectedRegion!.selectedRegionId ?? 0 : 0
+      ],
     );
 
     if (_res!.status != null) {
@@ -145,14 +158,21 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
           action: SnackBarAction(
             label: 'Go to cart',
             textColor: Colors.white,
-            onPressed: () => Get.offNamedUntil(BaseHomeScreen.tag, (route) => false, arguments: BaseHomeScreen(pageIndex: 2,)),
+            onPressed: () =>
+                Get.offNamedUntil(BaseHomeScreen.tag, (route) => false,
+                    arguments: BaseHomeScreen(
+                      pageIndex: 2,
+                    )),
           ),
         );
       } else {
-        await CustomWidget.showSnackBar(context: context, content: Text(_res.message.toString()));
+        await CustomWidget.showSnackBar(
+            context: context, content: Text(_res.message.toString()));
       }
     } else {
-      await CustomWidget.showSnackBar(context: context, content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
+      await CustomWidget.showSnackBar(
+          context: context,
+          content: Text(AppLocalizations.instance.text('TXT_MSG_ERROR')));
     }
     notifyListeners();
   }
@@ -160,7 +180,8 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
   Future fnFetchDiscussionList() async {
     if (isGuest != 'true') {
       _view!.onProgressStart();
-      discussionList = (await _discussionService.getDiscussionList(productId: product.data?.id ?? 0))!;
+      discussionList = (await _discussionService.getDiscussionList(
+          productId: product.data?.id ?? 0))!;
       _view!.onProgressFinish();
     }
     notifyListeners();
@@ -169,25 +190,38 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
   fnConvertHtmlString(String text) => parse(text).body?.text;
 
   Future fnGetSelectedRegionProduct() async {
+    _view!.onProgressStart();
     if (isGuest != 'true') {
-      await _userPreferences.getUserData().then((value) {
-        if (product.data?.productRegion?.length != 0) {
-          selectedRegion.selectedRegionId = product.data?.productRegion?.singleWhereOrNull(
-                  (i) => i.idRegion == (value?.region?.id ?? 0))?.idRegion;
-          selectedRegion.selectedProvinceId = product.data?.productRegion?.singleWhereOrNull(
-                  (i) => i.idRegion == (value?.region?.id ?? 0))?.region?.idProvince;
-          selectedRegion.stock = product.data?.productRegion?.singleWhereOrNull(
-                  (i) => i.idRegion == (value?.region?.id ?? 0))?.stock ?? 0;
-        }
-      });
+      var regionId = await _storage.read(key: KeyHelper.KEY_USER_REGION_ID);
+      // await _userPreferences.getUserData().then((value) {
+      if (product.data?.productRegion?.length != 0) {
+        selectedRegion = SelectedRegion(
+          selectedRegionId: product.data?.productRegion
+              ?.firstWhereOrNull((i) => i.idRegion.toString() == regionId)
+              ?.idRegion,
+          selectedProvinceId: product.data?.productRegion
+              ?.firstWhereOrNull((i) => i.idRegion.toString() == regionId)
+              ?.region
+              ?.idProvince,
+          stock: product.data?.productRegion
+                  ?.firstWhereOrNull((i) => i.idRegion.toString() == regionId)
+                  ?.stock ??
+              0,
+        );
+      }
+      // });
     }
+    _view!.onProgressFinish();
     notifyListeners();
   }
 
-  fnOnSelectRegionProduct({required int regionId, required int provinceId, required int stock}) {
-    selectedRegion.selectedRegionId = regionId;
-    selectedRegion.selectedProvinceId = provinceId;
-    selectedRegion.stock = stock;
+  fnOnSelectRegionProduct(
+      {required int regionId, required int provinceId, required int stock}) {
+    selectedRegion = SelectedRegion(
+        selectedRegionId: regionId,
+        selectedProvinceId: provinceId,
+        stock: stock);
+
     notifyListeners();
   }
 
@@ -201,7 +235,6 @@ class ProductDetailProvider extends ChangeNotifier with ProductLog {
     }
     return _disc;
   }
-
 }
 
 class SelectedRegion {

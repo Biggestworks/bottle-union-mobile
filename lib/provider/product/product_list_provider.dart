@@ -2,12 +2,14 @@ import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/abstract/pagination_interface.dart';
 import 'package:eight_barrels/abstract/product_card_interface.dart';
 import 'package:eight_barrels/abstract/product_filter_interface.dart';
+import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/model/product/brand_model.dart';
 import 'package:eight_barrels/model/product/category_model.dart';
 import 'package:eight_barrels/model/product/product_model.dart';
 import 'package:eight_barrels/service/product/product_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/route_manager.dart';
 
 class ProductListProvider extends ChangeNotifier
@@ -15,6 +17,7 @@ class ProductListProvider extends ChangeNotifier
   ProductService _service = new ProductService();
   ProductListModel productList = new ProductListModel();
   BrandListModel brandList = new BrandListModel();
+  var _storage = new FlutterSecureStorage();
   CategoryListModel categoryList = new CategoryListModel();
 
   final TextEditingController searchController = new TextEditingController();
@@ -26,6 +29,7 @@ class ProductListProvider extends ChangeNotifier
   List<FilterChips> filterVal = [];
 
   int? selectedBrandIndex;
+  String? regionId;
   bool isBrandSelected = false;
   int? selectedCategoryIndex;
   bool isCategorySelected = false;
@@ -43,7 +47,7 @@ class ProductListProvider extends ChangeNotifier
     _view!.onProgressStart();
 
     super.currentPage = 1;
-
+    regionId = await _storage.read(key: KeyHelper.KEY_USER_REGION_ID);
     productList = (await _service.productList(
       name: searchController.text,
       brand: selectedBrandIndex != null
@@ -183,5 +187,4 @@ class ProductListProvider extends ChangeNotifier
     isPaginateLoad = true;
     notifyListeners();
   }
-
 }

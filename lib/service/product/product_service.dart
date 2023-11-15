@@ -52,6 +52,7 @@ class ProductService extends GetConnect {
         query: _query,
         headers: await _headersAuth(),
       );
+
       _model = ProductListModel.fromJson(_response.body);
     } catch (e) {
       print(e);
@@ -161,5 +162,4 @@ class ProductService extends GetConnect {
 
     return _model;
   }
-
 }
