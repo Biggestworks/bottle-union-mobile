@@ -8,6 +8,7 @@ import 'package:eight_barrels/helper/key_helper.dart' as key;
 import 'package:eight_barrels/helper/validation.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/product/product_list_provider.dart';
+import 'package:eight_barrels/screen/home/choose_country_page.dart';
 import 'package:eight_barrels/screen/widget/custom_widget.dart';
 
 import 'package:flutter/material.dart';
@@ -580,6 +581,18 @@ class _ProductListScreenState extends State<ProductListScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          CustomWidget.textIconBtn(
+            icon: MdiIcons.home,
+            label: 'Region Preferences',
+            lblColor: CustomColor.BROWN_LIGHT_TXT,
+            icColor: CustomColor.BROWN_TXT,
+            icSize: 22,
+            fontSize: 16,
+            function: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ChooseCountryPage()));
+            },
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

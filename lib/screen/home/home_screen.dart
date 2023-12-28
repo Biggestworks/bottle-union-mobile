@@ -10,6 +10,7 @@ import 'package:eight_barrels/helper/xendit_method.dart';
 import 'package:eight_barrels/provider/home/base_home_provider.dart';
 import 'package:eight_barrels/provider/home/home_provider.dart';
 import 'package:eight_barrels/screen/home/banner_detail_screen.dart';
+import 'package:eight_barrels/screen/home/choose_country_page.dart';
 import 'package:eight_barrels/screen/home/notification_screen.dart';
 import 'package:eight_barrels/screen/id_card/id_card_screen.dart';
 import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
@@ -564,32 +565,56 @@ class _HomeScreenState extends State<HomeScreen>
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                AppLocalizations.instance.text('TXT_TITLE_RECOMMENDED_REGION'),
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChooseCountryPage()));
+                },
+                child: Text(
+                  "Region Preferences",
+                  style: TextStyle(
+                    color: CustomColor.MAIN,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-              Flexible(
-                child: GestureDetector(
-                  onTap: () => Get.toNamed(ProductByRegionScreen.tag,
-                      arguments: ProductByRegionScreen(
-                        regionId: _provider.userRegionId,
-                        region: _provider.userRegion,
-                      )),
-                  child: Text(
-                    AppLocalizations.instance.text('TXT_SEE_ALL'),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    AppLocalizations.instance
+                        .text('TXT_TITLE_RECOMMENDED_REGION'),
                     style: TextStyle(
-                      color: CustomColor.MAIN,
+                      fontSize: 16,
+                      color: Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
+                  Flexible(
+                    child: GestureDetector(
+                      onTap: () => Get.toNamed(ProductByRegionScreen.tag,
+                          arguments: ProductByRegionScreen(
+                            regionId: _provider.userRegionId,
+                            region: _provider.userRegion,
+                          )),
+                      child: Text(
+                        AppLocalizations.instance.text('TXT_SEE_ALL'),
+                        style: TextStyle(
+                          color: CustomColor.MAIN,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -680,7 +705,7 @@ class _HomeScreenState extends State<HomeScreen>
                                     itemBuilder: (context, index) {
                                       var _data = provider.regionProductList
                                           .result?.data?[index];
-                                      switch (_data!.stock) {
+                                      switch (_data!.regionStock) {
                                         case 0:
                                           return Padding(
                                             padding: EdgeInsets.only(right: 10),
@@ -838,7 +863,8 @@ class _HomeScreenState extends State<HomeScreen>
                                     itemBuilder: (context, index) {
                                       var _data = provider.popularProductList
                                           .result?.data?[index];
-                                      switch (_data!.stock) {
+
+                                      switch (_data!.regionStock) {
                                         case 0:
                                           return provider
                                               .popularEmptyProductCard(

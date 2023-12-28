@@ -95,7 +95,11 @@ class HomeProvider extends ChangeNotifier
 
   Future fnFetchPopularProductList() async {
     super.currentPage = 1;
+
+    var region = await _storage.read(key: KeyHelper.KEY_USER_REGION_ID);
+    print(region);
     popularProductList = (await _productService.getPopularProductList(
+      regionId: region != null ? region : null,
       page: super.currentPage.toString(),
     ))!;
     notifyListeners();

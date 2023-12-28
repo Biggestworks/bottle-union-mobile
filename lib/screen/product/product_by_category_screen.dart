@@ -18,7 +18,8 @@ class ProductByCategoryScreen extends StatefulWidget {
   const ProductByCategoryScreen({Key? key, this.category}) : super(key: key);
 
   @override
-  _ProductByCategoryScreenState createState() => _ProductByCategoryScreenState();
+  _ProductByCategoryScreenState createState() =>
+      _ProductByCategoryScreenState();
 }
 
 class _ProductByCategoryScreenState extends State<ProductByCategoryScreen>
@@ -27,17 +28,24 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen>
 
   @override
   void initState() {
-    Future.delayed(Duration.zero, () {
-      Provider.of<ProductByCategoryProvider>(context, listen: false).fnGetArguments(context);
-      Provider.of<ProductByCategoryProvider>(context, listen: false).fnGetView(this);
-      Provider.of<ProductByCategoryProvider>(context, listen: false).fnFetchProductList();
-    },);
+    Future.delayed(
+      Duration.zero,
+      () {
+        Provider.of<ProductByCategoryProvider>(context, listen: false)
+            .fnGetArguments(context);
+        Provider.of<ProductByCategoryProvider>(context, listen: false)
+            .fnGetView(this);
+        Provider.of<ProductByCategoryProvider>(context, listen: false)
+            .fnFetchProductList();
+      },
+    );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final _provider = Provider.of<ProductByCategoryProvider>(context, listen: false);
+    final _provider =
+        Provider.of<ProductByCategoryProvider>(context, listen: false);
 
     Widget _productListContent = Flexible(
       child: Consumer<ProductByCategoryProvider>(
@@ -55,7 +63,8 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen>
                       case 0:
                         return CustomWidget.emptyScreen(
                           image: 'assets/images/ic_empty_product.png',
-                          title: AppLocalizations.instance.text('TXT_NO_PRODUCT'),
+                          title:
+                              AppLocalizations.instance.text('TXT_NO_PRODUCT'),
                           size: 180,
                         );
                       default:
@@ -71,10 +80,27 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen>
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 2,
                                 mainAxisSpacing: 4,
-                                itemCount: provider.productList.result!.data!.length,
+                                itemCount:
+                                    provider.productList.result!.data!.length,
                                 itemBuilder: (context, index) {
-                                  var _data = provider.productList.result!.data![index];
-                                  switch (_data.stock) {
+                                  var _data =
+                                      provider.productList.result!.data![index];
+                                  int stock = 0;
+                                  for (var i = 0;
+                                      i < _data.productRegion!.length;
+                                      i++) {
+                                    var e = _data.productRegion![i];
+                                    if (e.idRegion.toString() ==
+                                        provider.regionId) {
+                                      stock = e.stock!;
+                                    }
+                                  }
+                                  // return Column(
+                                  //   children: _data.productRegion!.map((e) {
+                                  //     return Text(e.stock.toString());
+                                  //   }).toList(),
+                                  // );
+                                  switch (stock) {
                                     case 0:
                                       return emptyProductCard(
                                         context: context,
@@ -93,22 +119,29 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen>
                                             context: context,
                                             data: _data,
                                             index: index,
-                                            storeClickLog: () async => await fnStoreLog(
+                                            storeClickLog: () async =>
+                                                await fnStoreLog(
                                               productId: [_data.id ?? 0],
                                               categoryId: null,
-                                              notes: KeyHelper.CLICK_PRODUCT_KEY,
+                                              notes:
+                                                  KeyHelper.CLICK_PRODUCT_KEY,
                                             ),
-                                            storeCartLog: () async => await fnStoreLog(
+                                            storeCartLog: () async =>
+                                                await fnStoreLog(
                                               productId: [_data.id ?? 0],
                                               categoryId: null,
                                               notes: KeyHelper.SAVE_CART_KEY,
                                             ),
-                                            storeWishlistLog: () async => await fnStoreLog(
+                                            storeWishlistLog: () async =>
+                                                await fnStoreLog(
                                               productId: [_data.id ?? 0],
                                               categoryId: null,
-                                              notes: KeyHelper.SAVE_WISHLIST_KEY,
+                                              notes:
+                                                  KeyHelper.SAVE_WISHLIST_KEY,
                                             ),
-                                            onUpdateCart: () async => await baseProvider.fnGetCartCount(),
+                                            onUpdateCart: () async =>
+                                                await baseProvider
+                                                    .fnGetCartCount(),
                                           );
                                         },
                                       );
@@ -119,7 +152,11 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen>
                                 height: provider.isPaginateLoad ? 50 : 0,
                                 child: Center(
                                   child: provider.isPaginateLoad
-                                      ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(CustomColor.MAIN),)
+                                      ? CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  CustomColor.MAIN),
+                                        )
                                       : SizedBox(),
                                 ),
                               ),
@@ -129,8 +166,7 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen>
                     }
                 }
             }
-          }
-      ),
+          }),
     );
 
     Widget _mainContent = Container(
@@ -138,24 +174,33 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20,),
+          SizedBox(
+            height: 20,
+          ),
           TextFormField(
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(50),
                 borderSide: BorderSide.none,
               ),
-              contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               hintText: AppLocalizations.instance.text('TXT_SEARCH_PRODUCT'),
               isDense: true,
               filled: true,
-              suffixIcon: Icon(Icons.search, size: 24,),
+              suffixIcon: Icon(
+                Icons.search,
+                size: 24,
+              ),
               fillColor: CustomColor.GREY_BG,
             ),
             cursorColor: CustomColor.MAIN,
-            onChanged: (value) async => await _provider.fnOnSearchProduct(value),
+            onChanged: (value) async =>
+                await _provider.fnOnSearchProduct(value),
           ),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           _productListContent,
         ],
       ),
@@ -166,9 +211,12 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen>
       appBar: AppBar(
         backgroundColor: CustomColor.BG,
         centerTitle: true,
-        title: Text(_provider.category ?? 'Title', style: TextStyle(
-          color: CustomColor.BROWN_TXT,
-        ),),
+        title: Text(
+          _provider.category ?? 'Title',
+          style: TextStyle(
+            color: CustomColor.BROWN_TXT,
+          ),
+        ),
         iconTheme: IconThemeData(
           color: Colors.black,
         ),
@@ -192,5 +240,4 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen>
       setState(() {});
     }
   }
-
 }

@@ -123,6 +123,8 @@ class ProductService extends GetConnect {
       "perPage": '6',
     };
 
+    print(_query);
+
     try {
       Response _response = await get(
         URLHelper.popularProductListUrl,

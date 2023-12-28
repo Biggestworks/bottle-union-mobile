@@ -1,16 +1,20 @@
 import 'package:eight_barrels/abstract/loading.dart';
 import 'package:eight_barrels/abstract/pagination_interface.dart';
+import 'package:eight_barrels/helper/key_helper.dart';
 import 'package:eight_barrels/model/product/product_model.dart';
 import 'package:eight_barrels/screen/product/product_by_category_screen.dart';
 import 'package:eight_barrels/service/product/product_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ProductByCategoryProvider extends ChangeNotifier
     with PaginationInterface {
   ProductService _productService = new ProductService();
   ProductListModel productList = new ProductListModel();
   final TextEditingController searchController = new TextEditingController();
+  var _storage = new FlutterSecureStorage();
   String? category;
+  String? regionId;
 
   bool isPaginateLoad = false;
 
@@ -21,7 +25,8 @@ class ProductByCategoryProvider extends ChangeNotifier
   }
 
   fnGetArguments(BuildContext context) {
-    final _args = ModalRoute.of(context)!.settings.arguments as ProductByCategoryScreen;
+    final _args =
+        ModalRoute.of(context)!.settings.arguments as ProductByCategoryScreen;
     category = _args.category;
     notifyListeners();
   }
@@ -29,6 +34,7 @@ class ProductByCategoryProvider extends ChangeNotifier
   Future fnFetchProductList() async {
     _view!.onProgressStart();
 
+    regionId = await _storage.read(key: KeyHelper.KEY_USER_REGION_ID);
     productList = (await _productService.productList(
       category: category ?? null,
       page: super.currentPage.toString(),

@@ -9,7 +9,7 @@ class PopularProductListModel {
     status = json['status'];
     message = json['message'];
     result =
-    json['result'] != null ? new Result.fromJson(json['result']) : null;
+        json['result'] != null ? new Result.fromJson(json['result']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -39,17 +39,17 @@ class Result {
 
   Result(
       {this.currentPage,
-        this.data,
-        this.firstPageUrl,
-        this.from,
-        this.lastPage,
-        this.lastPageUrl,
-        this.nextPageUrl,
-        this.path,
-        this.perPage,
-        this.prevPageUrl,
-        this.to,
-        this.total});
+      this.data,
+      this.firstPageUrl,
+      this.from,
+      this.lastPage,
+      this.lastPageUrl,
+      this.nextPageUrl,
+      this.path,
+      this.perPage,
+      this.prevPageUrl,
+      this.to,
+      this.total});
 
   Result.fromJson(Map<String, dynamic> json) {
     currentPage = json['current_page'];
@@ -95,6 +95,7 @@ class Data {
   int? id;
   String? name;
   String? image;
+  int? regionStock;
   int? regularPrice;
   int? salePrice;
   int? stock;
@@ -105,15 +106,16 @@ class Data {
 
   Data(
       {this.id,
-        this.name,
-        this.image,
-        this.regularPrice,
-        this.salePrice,
-        this.stock,
-        this.rating,
-        this.flag,
-        this.publish,
-        this.createdAt});
+      this.name,
+      this.image,
+      this.regularPrice,
+      this.salePrice,
+      this.stock,
+      this.regionStock,
+      this.rating,
+      this.flag,
+      this.publish,
+      this.createdAt});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -122,6 +124,7 @@ class Data {
     regularPrice = json['regular_price'];
     salePrice = json['sale_price'];
     stock = json['stock'];
+    regionStock = json['regionStock'] != null ? json['regionStock'] : null;
     rating = json['rating'];
     flag = json['flag'];
     publish = json['publish'];

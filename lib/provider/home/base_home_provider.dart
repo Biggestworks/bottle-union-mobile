@@ -53,17 +53,16 @@ class BaseHomeProvider extends ChangeNotifier {
       String selectedCities,
       String selectedBranchs,
       String selectedBranchName) async {
-    if (isSave) {
-      final _storage = new FlutterSecureStorage();
-      _storage.write(
-          key: KeyHelper.SELECTED_COUNTRY_KEY, value: selectedCountries);
-      _storage.write(key: KeyHelper.SELECTED_CITY_KEY, value: selectedCities);
-      _storage.write(
-          key: KeyHelper.SELECTED_BRANCH_KEY, value: selectedBranchs);
-      _storage.write(key: KeyHelper.KEY_USER_REGION_ID, value: selectedBranchs);
-      _storage.write(
-          key: KeyHelper.KEY_USER_REGION_NAME, value: selectedBranchName);
-    }
+    // if (isSave) {
+    final _storage = new FlutterSecureStorage();
+    _storage.write(
+        key: KeyHelper.SELECTED_COUNTRY_KEY, value: selectedCountries);
+    _storage.write(key: KeyHelper.SELECTED_CITY_KEY, value: selectedCities);
+    _storage.write(key: KeyHelper.SELECTED_BRANCH_KEY, value: selectedBranchs);
+    _storage.write(key: KeyHelper.KEY_USER_REGION_ID, value: selectedBranchs);
+    _storage.write(
+        key: KeyHelper.KEY_USER_REGION_NAME, value: selectedBranchName);
+    // }
     selectedCountry = selectedCountries;
     selectedCity = selectedCities;
     selectedBranch = selectedBranchs;

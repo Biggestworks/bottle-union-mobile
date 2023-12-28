@@ -257,47 +257,48 @@ class _ChooseCountryPageState extends State<ChooseCountryPage> {
                 ),
               ],
             ),
-          Container(
-            margin: const EdgeInsets.only(left: 16, top: 30),
-            child: Row(
-              children: [
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      isSaveSelection = !isSaveSelection;
-                    });
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(right: 10),
-                    width: 20,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(3),
-                      color: isSaveSelection ? Colors.white : null,
-                      border: Border.all(
-                        color: Colors.white,
-                      ),
-                    ),
-                    child: Center(
-                      child: Icon(
-                        FontAwesome.check,
-                        size: 15,
-                        color:
-                            isSaveSelection ? Colors.black : Colors.transparent,
-                      ),
-                    ),
-                  ),
-                ),
-                Text(
-                  "Save store selection",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Container(
+          //   margin: const EdgeInsets.only(left: 16, top: 30),
+          //   child: Row(
+          //     children: [
+          //       InkWell(
+          //         onTap: () {
+          //           setState(() {
+          //             isSaveSelection = !isSaveSelection;
+          //           });
+          //         },
+          //         child: Container(
+          //           margin: const EdgeInsets.only(right: 10),
+          //           width: 20,
+          //           height: 20,
+          //           decoration: BoxDecoration(
+          //             borderRadius: BorderRadius.circular(3),
+          //             color: isSaveSelection ? Colors.white : null,
+          //             border: Border.all(
+          //               color: Colors.white,
+          //             ),
+          //           ),
+          //           child: Center(
+          //             child: Icon(
+          //               FontAwesome.check,
+          //               size: 15,
+          //               color:
+          //                   isSaveSelection ? Colors.black : Colors.transparent,
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //       Text(
+          //         "Save store selection",
+          //         style: TextStyle(
+          //           fontSize: 14,
+          //           color: Colors.white,
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+
           const SizedBox(
             height: 20,
           ),
